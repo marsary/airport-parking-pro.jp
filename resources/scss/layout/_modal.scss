@@ -1,0 +1,94 @@
+@use '../foundation/variables' as *;
+
+.l-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0);
+  justify-content: center;
+  align-items: center;
+  // .5sでmodalがフェードイン
+  transition: background-color 1s;
+  z-index: 101;
+
+  // display: none;
+  &.is-active {
+    width: 100%;
+    height: 100vh;
+    opacity: 1;
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.8);
+
+    .l-modal__inner {
+      display: grid;
+    }
+  }
+
+  &__inner {
+    width: 80%;
+    min-width: 960px;
+    height: 90%;
+    background-color: #fff;
+    border-radius: 2rem;
+    position: relative;
+    display: grid;
+    grid-template-areas: "head" "content";
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: 4rem 1fr;
+    gap: 2rem;
+    display: none;
+  }
+
+  &__head {
+    color: white;
+    background-color: $gray;
+    text-align: center;
+    height: 4rem;
+    display: grid;
+    align-items: center;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+    grid-area: head;
+  }
+
+  &__content {
+    width: 0;
+    height: 0;
+
+    input {
+      margin-bottom: 0.75rem;
+    }
+
+    .is-active & {
+      display: block;
+      width: 900px;
+      height: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      grid-area: content;
+      overflow-y: auto;
+      &.p-register {
+        height: 85%;
+        width: 85%;
+      }
+    }
+  }
+
+  // closeボタン
+  &__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+  }
+
+}

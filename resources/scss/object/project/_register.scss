@@ -1,0 +1,181 @@
+@use '../../foundation/variables' as *;
+
+.p-register {
+  &__optionWrap {
+    border: 1px solid $gray;
+    margin-bottom: 0.25rem;
+  }
+  &__optionItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    &:not(:last-child) {
+      border-bottom: 1px solid $gray;
+    }
+    input {
+      margin-bottom: 0;
+    }
+    &--right {
+      display: grid;
+      grid-template-columns: 60px 40px 120px;
+      align-items: center;
+      gap: 0.5rem;
+
+      >div:last-child {
+        text-align: right;
+      }
+    }
+  }
+  &__optionPrice {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  &__total {
+    background-color: $green;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+}
+
+
+// 決済モーダル
+.p-register {
+  &__settlement {
+    .l-modal__content & {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 2rem;
+    // grid-template-columns: auto 1fr;
+    // grid-template-rows: auto 130px;
+    }
+
+
+    &--foot {
+      grid-area: foot;
+      background-color: $light-gray;
+      height: 15%;
+      display: grid;
+      border-bottom-right-radius: 2rem;
+      border-bottom-left-radius: 2rem;
+      align-items: center;
+    }
+  }
+
+  // 電卓
+  &__calculator {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    font-size: 2rem;
+     label {
+      border-radius: 0;
+      border: none;
+     }
+  }
+}
+
+[class^="p-register__calculator--"] {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 0.125rem;
+
+  >* {
+    background-color: $light-gray;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    height: 80px;
+    line-height: 80px;
+    cursor: pointer;
+  }
+
+  &:last-child {
+    display: block;
+    text-align: center;
+    height: 80px;
+    line-height: 80px;
+    cursor: pointer;
+    background-color: $light-gray;
+  }
+}
+
+// 決済モーダル　右側
+.p-register {
+  &__adjustment {
+    label {
+      height: 40px;
+      // width: calc(25% - (1.5rem / 4));
+    }
+  }
+  &__paymentMethod {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: .5rem;
+    margin-top: 1rem;
+    font-size: .875rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+
+    label {
+      border: none;
+    }
+
+    select {
+      background-color: $light-gray;
+      border: none;
+      font-size: .875rem;
+      font-weight: 500;
+    }
+  }
+}
+
+.p-register-checkout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  &__head {
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid $gray;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+
+  &__price {
+    font-weight: 500;
+    font-size: 1.5rem;
+    text-align: right;
+    .p-register-checkout__amount-received & {
+        font-size: 1.75rem;
+      }
+    &--big {
+      text-align: right;
+      font-weight: 500;
+      font-size: 2.25rem;
+      .p-register-checkout__total-change & {
+        color: $yellow;
+      }
+    }
+  }
+
+  &__amount-received {
+    margin-top: auto;
+  }
+}
+
+[class^="p-register-checkout__total-"] {
+  padding-bottom: .5rem;
+  border-bottom: 1px solid $gray;
+}

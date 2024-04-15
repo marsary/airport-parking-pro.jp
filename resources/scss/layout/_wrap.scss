@@ -1,0 +1,27 @@
+.l-wrap {
+  display: grid;
+  grid-template-areas: 
+    "header header"
+    "nav main";
+  grid-template-columns: 160px 1fr;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+
+  &__header {
+    grid-area: header;
+  }
+  &__nav {
+    grid-area: nav;
+    height: 100%;
+  }
+
+  &__main {
+    grid-area: main;
+    margin-bottom: 3rem;
+  }
+
+  &__breadcrumb {
+    padding: 2rem 2rem 0 3rem;
+    margin-bottom: 2.25rem;
+  }
+}

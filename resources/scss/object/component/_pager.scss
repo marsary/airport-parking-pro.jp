@@ -1,0 +1,46 @@
+@use '../../foundation/variables' as *;
+
+.c-pager {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  &__list {
+    display: flex;
+    align-items: center;
+  }
+  &__item {
+    padding: 0.25rem .5rem;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &--next, &--prev, &--first, &--last {
+      padding: 0.25rem .5rem;
+    }
+
+    &--next, &--last {
+      transform: rotate(180deg);
+    }
+  
+    &:hover {
+      background-color: $light-gray;
+      color: $text-color;
+    }
+  }
+  
+  &__input-pageNumber {
+    width: 3rem;
+  }
+
+  input, select {
+    height: 2rem;
+    margin-bottom: 0;
+  }
+  select {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-left: 0.5rem;
+    padding-right: 2rem;
+  }
+}

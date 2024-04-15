@@ -1,0 +1,33 @@
+.l-flex {
+  display: flex;
+  align-items: center;
+}
+
+.l-flex--column {
+  @extend .l-flex;
+  flex-direction: column;
+}
+
+.l-flex--center {
+  @extend .l-flex;
+  justify-content: center;
+}
+.l-flex--sb {
+  @extend .l-flex;
+  justify-content: space-between;
+}
+.l-flex--start {
+  @extend .l-flex;
+  justify-content: flex-start;
+}
+.l-flex--end {
+  @extend .l-flex;
+  justify-content: flex-end;
+}
+.l-flex--item-end {
+  align-items: flex-end;
+}
+
+.l-flex--self-end {
+  align-self: end;
+}

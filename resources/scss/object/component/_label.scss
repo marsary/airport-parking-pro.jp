@@ -1,0 +1,80 @@
+@use '../../foundation/variables' as *;
+
+// ヘッダー
+.c-label-header-admin-info {
+  display: inline-block;
+  background: white;
+  color: $green;
+  border-radius: 7px;
+  width: 44px;
+  height: 16px;
+  text-align: center;
+  font-size: 0.625rem;
+  line-height: 16px;
+  margin-right: 0.5rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+
+  &--lg {
+    @extend .c-label-header-admin-info;
+    width: 66px;
+  }
+}
+
+.c-label {
+  text-align: center;
+  border-radius: 0.25rem;
+  color: #fff;
+  background-color: $yellow;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  display: inline-block;
+  line-height: 1;
+  &--delay {
+    @extend .c-label;
+    margin-left: 0.25rem;
+  }
+  &--lg {
+    @extend .c-label;
+    font-size: 0.875rem;
+    padding: 5px 1rem;
+  }
+  &__light-deep-gray {
+    // ラベル(入庫済)のBG色
+    @extend .c-label;
+    background-color: $light-deep-gray;
+    &--lg {
+      @extend .c-label--lg;
+      background-color: $light-deep-gray;
+    }
+  }
+  &__dark-gray { // ラベル(入庫済)のBG色
+    @extend .c-label;
+    background-color: $dark-gray;
+  }
+  &__deep-gray { // ラベル(有)のBG色
+    @extend .c-label;
+    background-color: $deep-gray;
+    &.--status-yes {
+      width: 44px;
+      /* 有の場合のテキストカラー */
+    }
+  }
+  &__blue {
+    @extend .c-label;
+    background-color: $blue;
+  }
+  &__green {
+    @extend .c-label;
+    background-color: $green;
+  }
+
+  &__light-green {
+    @extend .c-label;
+    background-color: $light-green;
+    .l-header__center & {
+      border-radius: 11px;
+      width: 100%;
+    }
+  }
+}

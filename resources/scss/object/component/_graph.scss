@@ -1,0 +1,9 @@
+@use '../../foundation/variables' as *;
+// グラフの　wrap
+.c-graph {
+  &__wrap {
+    border-radius: 0.5rem;
+    border: 0.75px solid $gray;
+    padding: 1rem;
+  }
+}

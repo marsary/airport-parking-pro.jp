@@ -1,0 +1,1 @@
+{"version":3,"sources":["object/project/p-user-input.scss"],"names":[],"mappings":"AAGI,6BACE,YAAA,CACA,yCAAA,CACA,UAAA","file":"../../../object/project/p-user-input.css","sourcesContent":[".p-user-input {\r\n\r\n  &--confirm {\r\n    &__wrap {\r\n      display: grid;\r\n      grid-template-columns: 150px 1fr 150px 1fr;\r\n      width: 100%;\r\n    }\r\n  }\r\n}"]}

@@ -1,0 +1,80 @@
+@use '../../foundation/variables' as *;
+
+.c-nav {
+  &__wrap {
+    width: 160px;
+    background: $light-gray;
+    padding-top: 2rem;
+  }
+
+  &__list {
+    text-align: left;
+    border-top: 1px solid $gray;
+  }
+
+  &__item {
+    height: 100px;
+    border-bottom: 1px solid $gray;
+  }
+
+  &__link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+
+    &.--current {
+      background: white;
+    }
+    &::before {
+      content: "";
+      display: block;
+      width: 22px;
+      height: 22px;
+    }
+    &.--reserve::before {
+      background: url('../images/icon/reserve.svg') no-repeat center center;
+    }
+    &.--list::before {
+      background: url('../images/icon/list.svg') no-repeat center center;
+    }
+    &.--en::before {
+      background: url('../images/icon/en.svg') no-repeat center center;
+    }
+    &.--setting::before {
+      background: url('../images/icon/setting.svg') no-repeat center center;
+    }
+  }
+
+  // QR
+  &__qr {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    width: 100%;
+    align-items: center;
+    background-image: url('../images/icon/qr_bg.png');
+    background-position: center top;
+    background-size: 60px 60px;
+    img {
+      width: 45px;
+      height: auto;
+      padding-top: 7.5px;
+    }
+    figcaption {
+      font-size: 0.75rem;
+      text-align: center;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+  }
+}

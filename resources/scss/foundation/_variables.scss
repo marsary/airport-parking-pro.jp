@@ -1,0 +1,33 @@
+// color
+$text-color: #3C3C3C;
+
+$off-white: #FBFBFB;
+
+$green: #31B6A2;
+$light-green: #A7DFD7;
+
+$yellow: #FAA03C;
+$light-yellow: #FEE8D0;
+
+$blue: #4472C4;
+
+$gray: #B4B4B4;       // サイドバーのボーダー色 モーダルのヘッドBG色
+$light-gray: #ECECEC; // サイドバーのBG色 ipnutのBG色
+$dark-gray: #7F7F7F;  // ラベル(入庫済)のBG色
+$deep-gray: #666666;  // ラベル(有)のBG色
+$light-deep-gray: #888888; // ラベル(無)のBG色
+
+$light-gray2: #BEBEBE;
+
+// $orange: #ff6d00;
+
+// $red: #FF0000;
+$red: #C1272D;
+$blue: #4696DC;
+
+
+:root {
+  --gap-s: 12px;
+  --caution-color: #FF0000;
+  --note-color: #FF0000;
+}

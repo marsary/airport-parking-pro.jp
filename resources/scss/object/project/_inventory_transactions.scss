@@ -1,0 +1,20 @@
+// 出庫一覧、入庫一覧のスタイル
+@use '../../foundation/variables' as *;
+
+.incoming-inventory-list,
+.outgoing-inventory-list {
+  display: none;
+  &.is-active {
+    display: block;
+  }
+}
+
+.p-inventoryTransactions-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}

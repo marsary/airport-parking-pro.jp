@@ -1,0 +1,31 @@
+@use '../../foundation/variables' as *;
+.c-link-no-border {
+  text-decoration: none;
+}
+
+.c-link--update {
+  color: $red;
+  font-weight: 600;
+  text-decoration: none;
+  &:visited {
+    color: var(--caution-color);
+  }
+}
+
+.c-link--return {
+  color: $blue;
+  font-weight: 600;
+  text-decoration: none;
+  &:visited {
+    color: $blue;
+  }
+}
+
+.c-link-text {
+  color: $green;
+  text-decoration: underline;
+
+  &:visited {
+    color: $green;
+  }
+}

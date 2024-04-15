@@ -1,0 +1,66 @@
+@use '../../foundation/variables' as *;
+
+// カラー
+.u-font {
+  &--white {
+    color: white;
+  }
+  &--green{
+    color: $green;
+  } 
+  &--blue {
+    color: $blue;
+  }
+}
+
+// フォントサイズ
+.u-font {
+  &--10 {
+    font-size: 0.625rem;
+  }
+  &--12 {
+    font-size: 0.75rem;
+  }
+  &--14 {
+    font-size: 0.875rem;
+  }
+  &--18 {
+    font-size: 1.125rem;
+  }
+  &--20 {
+    font-size: 1.25rem;
+  }
+  &--24 {
+    font-size: 1.5rem;
+  }
+  &--28 {
+    font-size: 1.75rem;
+  }
+  &--36 {
+    font-size: 2.25rem;
+  }
+  &--46 {
+    font-size: 2.875rem;
+  }
+}
+
+// フォントウェイト
+.u-font {
+  &--medium {
+    font-weight: 500;
+  }
+  &--bold {
+    font-weight: bold;
+  }
+}
+
+// テキストアライン
+.u-font-lh {
+  &--2 {
+    line-height: 2;
+  }
+}
+
+.u-font-yen {
+  font-size: 0.75em;
+}

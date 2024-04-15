@@ -1,0 +1,27 @@
+@use '../../foundation/variables' as *;
+
+.u-bg {
+  &--white {
+    background-color: white;
+  }
+  &--off-white {
+    background-color: $off-white;
+  }
+  &--green{
+    background-color: $green;
+  } 
+  &--blue {
+    background-color: $blue;
+  }
+  &--light-gray {
+    background-color: $light-gray;
+  }
+  &--red {
+    background-color: $red;
+    color: white;
+  }
+  &--yellow {
+    color: white;
+    background-color: $yellow;
+  }
+}

@@ -1,0 +1,603 @@
+@use '../../foundation/variables' as *;
+
+// 複数ボタンのレイアウト
+.c-button-group {
+  &__form {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+  &__pager {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// ボタン各種
+.c-button {
+    border-radius: 0.5rem;
+    color: white;
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: .05em;
+    // margin-top: 3rem;
+    padding: 0 1rem;
+    white-space: nowrap;
+    display: grid;
+    align-items: center;
+    height: 40px;
+  &__submit {
+    @extend .c-button;
+    width: 160px;
+    height: 48px;
+    background: $yellow;
+    color: white;
+    &:visited {
+      color: white;
+    }
+    &:link {
+      color: white;
+    }
+
+    &--yellow {
+      @extend .c-button__submit;
+      background: $yellow;
+    }
+
+    &--gray {
+      @extend .c-button__submit;
+      background: #888888;
+    }
+    &--light-gray {
+      @extend .c-button__submit;
+      background: $light-gray;
+    }
+    &--light-gray2 {
+      @extend .c-button__submit;
+      background: $light-gray2; // #BEBEBE
+    }
+    &--dark-gray {
+      @extend .c-button__submit;
+      background: $text-color;
+    }
+    &--deep-gray {
+      @extend .c-button__submit;
+      background: $deep-gray;
+    }
+    &--light-deep-gray {
+      @extend .c-button__submit;
+      background: $light-deep-gray;
+    }
+    &--green {
+      @extend .c-button__submit;
+      background: $green;
+    }
+    &.--disabled {
+      background: $light-gray;
+      cursor: not-allowed;
+    }
+    &.--disabled2 {
+      background: $light-gray2;
+      cursor: not-allowed;
+    }
+  
+    &.--enable {
+      background: $yellow;
+      cursor: pointer;
+    }
+  }
+
+  &__clear {
+    @extend .c-button__submit;
+    color: $text-color;
+    background-color: white;
+  }
+
+  // 割引クーポンなどの適用ボタン
+  &__apply {
+    @extend .c-button__submit;
+    width: 88px;
+    height: 40px;
+    background: $yellow;
+
+    &--green {
+      @extend .c-button__apply;
+      background: $green;
+      &.--disabled {
+        background: $light-green;
+      }
+    }
+    &--light-green {
+      @extend .c-button__apply;
+      background: $light-green;
+    }
+    
+    &--wide {
+      @extend .c-button__apply;
+      width: 160px;
+    }
+    &--auto {
+      @extend .c-button__apply;
+      width: auto;
+    }
+  }
+
+  // color  こっちは幅が自由
+  &--white {
+    @extend .c-button;
+    background-color: white;
+    color: $text-color;
+    border: 1px solid $gray;
+  }
+  &--yellow {
+    @extend .c-button;
+    background: $yellow;
+  }
+  &--green {
+    @extend .c-button;
+    background: $green;
+  }
+  &--gray {
+    @extend .c-button;
+    background: $gray;
+  }
+  &--light-gray {
+    @extend .c-button;
+    background-color: $light-gray;
+    color: $text-color;
+  }
+  &--light-deep-gray {
+    @extend .c-button;
+    background-color: $light-deep-gray;
+  }
+
+  // selection選択ボタン
+  &__select {
+    background: $green;
+    color: white;
+    border-radius: 0.5rem;
+    text-align: center;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    &--h90 {
+      @extend .c-button__select;
+      height: 90px;
+    }
+    &--gray {
+      @extend .c-button__select;
+      border: 1px solid $gray;
+      background: $light-gray;
+      color: $text-color;
+      padding: 2rem;
+      cursor: pointer;
+    }
+    &.--unselected {
+      background: $light-gray;
+    }
+  }
+
+  // c-labelと同じサイズのボタン
+  &--sm {
+    text-align: center;
+    border-radius: 0.25rem;
+    color: #fff;
+    background-color: $yellow;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    display: inline-block;
+    line-height: 1;
+    display: block;
+    &--text-color {
+      @extend .c-button--sm;
+      background-color: $text-color;
+    }
+  }
+
+  // 編集ボタン
+  &__edit {
+    background: $green;
+    text-align: center;
+    color: white;
+    border-radius: 0.5rem;
+    width: 100px;
+    height: 30px;
+    display: grid;
+    align-items: center;
+  }
+
+  // 検索ボタン
+  &__search {
+    background-color: $text-color;
+    color: white;
+    display: grid;
+    align-items: center;
+    border-radius: 0.5rem;
+    width: 90px;
+    height: 40px;
+    letter-spacing: 0.05em;
+  }
+
+  // アップロード　ダウンロード共通ボタン
+  &__load {
+    @extend .c-button__submit;
+    background: $light-deep-gray;
+  }
+
+
+  &__memo {
+    @extend .c-button__edit;
+    width: 65px;
+    background-color: $deep-gray;
+  }
+
+  // フォームの「次のページ」「前のページ」系ボタン
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: $light-gray;
+    cursor: pointer;
+
+    &--next {
+      background: $yellow;
+      color: white;
+      text-align: center;
+      display: grid;
+      place-items: center;
+      width: 170px;
+      height: 50px;
+      cursor: pointer;
+      position: relative;
+      &:visited {
+        color: white;
+      }
+    
+      // 右に三角形を表示
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: -25px;
+        transform: translateY(-50%);
+        // 高さ50pxの三角形を作成
+        border-top: 25px solid transparent;
+        border-left: 25px solid $yellow;
+        border-bottom: 25px solid transparent;
+      }
+    }
+
+    &--return {
+      background-color: $text-color;
+      color: white;
+      text-align: center;
+      display: grid;
+      place-items: center;
+      width: 170px;
+      height: 50px;
+      cursor: pointer;
+      position: relative;
+    
+      // 右に三角形を表示
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -25px;
+        transform: translateY(-50%);
+        // 高さ50pxの三角形を作成
+        border-top: 25px solid transparent;
+        border-right: 25px solid $text-color;
+        border-bottom: 25px solid transparent;
+      }
+    }
+    &--back {
+      @extend .c-button__pagination--return;
+      background-color: $gray;
+      color: white;
+      &:visited {
+        color: white;
+      }
+      &::after {
+        border-right: 25px solid $gray;
+      }
+    }
+  }
+
+  // 「計算する」ボタン
+  &__calculate {
+    background: $blue;
+    color: white;
+    border-radius: 0.5rem;
+    text-align: center;
+    display: grid;
+    place-items: center;
+    width: 80px;
+    height: 30px;
+  }
+}
+
+// 
+// ここから個別指定
+// 
+
+// 表示非表示ボタン
+// 三角形のアイコンを表示
+.c-button {
+  &__close {
+    position: relative;
+    font-size: 0.875rem;
+    font-weight: 300;
+    padding-right: 1rem;
+  
+    &::after {
+      position: absolute;
+      top: 6px;
+      right: 0;
+      content: "";
+      width: 0;
+      height: 0;
+      // 上向きの三角形をborderで作成
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 10px solid white;
+      display: inline-block;
+    }
+  }
+
+  &__open {
+    @extend .c-button__close;
+
+    &::after {
+      position: absolute;
+      top: 6px;
+      right: 0;
+      content: "";
+      width: 0;
+      height: 0;
+      // 上向きの三角形をborderで作成
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 10px solid white;
+      border-bottom: 0;
+      display: inline-block;
+    }
+  }
+}
+
+// 追加ボタン（＋）のアイコン
+.c-button__add {
+  position: relative;
+  padding-right: 35px;
+  font-size: 0.75rem;
+  line-height: 30px;
+
+  &::after {
+    content: "+";
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: $yellow;
+    color: white;
+    border-radius: 6px;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}
+
+// オプション選択の解除ボタン
+.c-button__remove {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: -1.25rem;
+}
+
+// 複数選択のセレクトボタン
+.c-button-optionSelect {
+  label {
+    border-radius: 0.5rem;
+    border: 1px solid $gray;
+    background: $light-gray;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+  }
+  // チェックされたら背景色を変える
+  input[type="checkbox"]:checked+label {
+    background: $green;
+    color: white;
+  }
+  // チェックされたら背景色を変える
+  input[type="radio"]:checked+label {
+    background: $green;
+    color: white;
+  }
+
+  input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    display: contents;
+  }
+  input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    display: contents;
+  }
+}
+// 複数選択のセレクトボタン
+.c-button-optionSelect-light {
+  label {
+    border-radius: 0.5rem;
+    background: $light-gray;
+    color: #BEBEBE;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // チェックされたら背景色を変える
+  input[type="checkbox"]:checked+label {
+    background: $green;
+    color: white;
+  }
+
+  // チェックされたら背景色を変える
+  input[type="radio"]:checked+label {
+    background: $green;
+    color: white;
+  }
+
+  input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    display: contents;
+  }
+
+  input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    display: contents;
+  }
+}
+
+// 入出庫一覧用のトグルボタン
+.c-button-toggle {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 16px;
+
+  &__input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  
+    &:checked+.c-button-toggle__slider {
+      background: $green;
+  
+      &:before {
+        transform: translateX(10px);
+      }
+    }
+  
+    &:focus-visible+.c-button-toggle__slider {
+      outline: 2px solid;
+    }
+  }
+
+  &__slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 64px;
+  
+    &::before {
+      border-radius: 50%;
+      position: absolute;
+      content: "";
+      height: 10px;
+      width: 10px;
+      left: 6px;
+      bottom: 3px;
+      background: #fff;
+      transition: 0.3s;
+      boxshadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+// ソートボタン
+// 入出庫リストのソートボタン
+.c-button-sort {
+  line-height: 1.25;
+  display: flex;
+  flex-direction: column;
+  // gap: 0.15rem;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &.--asc {
+    &::before {
+      padding-top: 0.1rem;
+      font-size: 0.625rem;
+      content: "▲";
+    }
+  }
+
+  &.--desc {
+    &::before {
+      padding-top: 0.1rem;
+      font-size: 0.625rem;
+      content: "▼";
+    }
+  }
+}
+
+// 個数増減ボタン
+.c-button-quantity {
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  cursor: pointer;
+  color: $gray;
+  border: 1px solid $gray;
+  font-weight: bold;
+  line-height: 1.4rem;
+
+  &.--plus {
+    &::before {
+      content: "+";
+      color: $gray;
+    }
+  }
+
+  &.--minus {
+    &::before {
+      content: "-";
+      color: $gray;
+    }
+  }
+}
+
+// ページ右固定ボタン
+.c-button__right-fixed {
+  &--gray {
+    position: fixed;
+    bottom: 5rem;
+    right: 0;
+    background: $text-color;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    cursor: pointer;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+  }
+}
