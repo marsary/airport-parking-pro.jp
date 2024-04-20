@@ -15,9 +15,30 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            // AirportSeeder::class,
+            // OfficeSeeder::class,
+            // MemberTypeSeeder::class,
+            // UserSeeder::class,
+            // MemberSeeder::class,
+            // CarMakerSeeder::class,
+            // CarColorSeeder::class,
+            // CarSeeder::class,
+            // CarCautionSeeder::class,
+            // AgencySeeder::class,
+            // AirlineSeeder::class,
+            // AirportTerminalSeeder::class,
+            // LabelSeeder::class,
+            // TagSeeder::class,
+            // ParkingLimitSeeder::class,
+            // PriceSeeder::class,
+            // AgencyPriceSeeder::class,
+            // GoodCategorySeeder::class,
+            // TagMemberSeeder::class,
+            // MemberCarSeeder::class,
+            // CarCautionMemberCarSeeder::class,
+            // GoodSeeder::class,
+            // DealSeeder::class,
         ]);
     }
 }
