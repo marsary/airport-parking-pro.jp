@@ -17,9 +17,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'office_id',
+        'status',
+        'role',
         'name',
         'email',
         'password',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -43,5 +48,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function office()
+    {
+        return $this->belongsTo(Office::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function getRedirectRoute()
+    {
+        return 'manage.home';
     }
 }
