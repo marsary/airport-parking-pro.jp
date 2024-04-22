@@ -9,15 +9,16 @@ Route::get('/', function () {
 
 // 管理用のルーティング
 Route::prefix('manage')->name('manage.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Manage\TopController::class, 'index'])->name('home');
-    Route::get('/deals/search', [\App\Http\Controllers\Manage\DealsController::class, 'search'])->name('deals.search');
-    Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
-    Route::resource('registers', \App\Http\Controllers\Manage\RegistersController::class);
-    Route::get('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
-    Route::get('reserves/entry_info', [\App\Http\Controllers\Manage\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
-    Route::get('reserves/confirm', [\App\Http\Controllers\Manage\ReservesController::class, 'confirm'])->name('reserves.confirm');
-    Route::resource('reserves', \App\Http\Controllers\Manage\ReservesController::class);
-
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/', [\App\Http\Controllers\Manage\TopController::class, 'index'])->name('home');
+        Route::get('/deals/search', [\App\Http\Controllers\Manage\DealsController::class, 'search'])->name('deals.search');
+        Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
+        Route::resource('registers', \App\Http\Controllers\Manage\RegistersController::class);
+        Route::get('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
+        Route::get('reserves/entry_info', [\App\Http\Controllers\Manage\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
+        Route::get('reserves/confirm', [\App\Http\Controllers\Manage\ReservesController::class, 'confirm'])->name('reserves.confirm');
+        Route::resource('reserves', \App\Http\Controllers\Manage\ReservesController::class);
+    });
 
 });
 
@@ -31,3 +32,6 @@ Route::resource('reserves', \App\Http\Controllers\Member\ReservesController::cla
 
 
 
+
+require __DIR__.'/manage_auth.php';
+require __DIR__.'/member_auth.php';
