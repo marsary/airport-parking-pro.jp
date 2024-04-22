@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('member_cars', function (Blueprint $table) {
             $table->id();
             $table->foreignId('office_id')->constrained('offices')->restrictOnDelete();
-            $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
+            $table->foreignId('member_id')->nullable()->constrained('members')->cascadeOnDelete();
             $table->foreignId('car_id')->constrained('cars')->restrictOnDelete();
             $table->foreignId('car_color_id')->constrained('car_colors')->restrictOnDelete();
             $table->smallInteger('number');

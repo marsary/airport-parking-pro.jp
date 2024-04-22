@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             // CarCautionMemberCarSeeder::class,
             // GoodSeeder::class,
             // DealSeeder::class,
+            // ArrivalFlightSeeder::class,
         ]);
     }
 }
