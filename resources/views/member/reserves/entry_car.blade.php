@@ -6,58 +6,80 @@
 @include('include.step', ['step' => "entry"])
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->
-  <form action="option_user_select.php" method="POST">
-
+  <form action="{{route('reserves.entry_car')}}" method="POST">
+    @csrf
     <!-- 詳細情報入力 -->
     <div class="p-user-input-auto-output__wrap l-flex--item-end">
       <!-- 入力エリア -->
       <div class="l-grid--col2-auto l-grid--cgap2">
         <div>
-          <label for="maker">メーカー</label>
+          <label for="car_maker_id">メーカー</label>
           <!-- 車メーカーのselect -->
           <div class="c-form-select-color">
-            <select name="maker" id="maker">
-              <option value="トヨタ">トヨタ</option>
+            <select name="car_maker_id" id="car_maker_id">
+              @foreach ($carMakers as $carMaker)
+                <option value="{{ $carMaker->id }}"
+                  {{old('car_maker_id', $reserve->car_maker_id)==$carMaker->id ? 'selected':''}}>
+                  {{$carMaker->name }}
+                </option>
+              @endforeach
+
+              {{--  <option value="トヨタ">トヨタ</option>
               <option value="日産">日産</option>
               <option value="フォルクスワーゲン">フォルクスワーゲン</option>
-              <option value="アウディ">メルセデス・ベンツ</option>
+              <option value="アウディ">メルセデス・ベンツ</option>  --}}
             </select>
           </div>
         </div>
         <div>
-          <label for="car">車種</label>
+          <label for="car_id">車種</label>
           <div class="c-form-select-color">
-            <select id="car" name="car">
-              <option value="選択してください" selected disabled>選択してください</option>
-              <option value="ダミーダミー">ダミーダミー</option>
+            <select id="car_id" name="car_id">
+              @if (!empty(old('car_id', $reserve->car_id)))
+                <option value="選択してください" disabled>選択してください</option>
+                @foreach ($cars as $car)
+                  <option value="{{ $car->id }}"
+                    {{old('car_id', $reserve->car_id)==$car->id ? 'selected':''}}>
+                    {{$car->name }}
+                  </option>
+                @endforeach
+              @else
+                <option value="" disabled></option>
+              @endif
             </select>
           </div>
         </div>
         <div>
-          <label for="color">色</label>
+          <label for="car_color_id">色</label>
           <div class="c-form-select-color">
-            <select id="color" name="color">
-              <option value="選択してください" selected disabled>選択してください</option>
-              <option value="ダミーダミー">ダミーダミー</option>
+            <select id="car_color_id" name="car_color_id">
+              <option value="選択してください" disabled>選択してください</option>
+              @foreach ($carColors as $carColor)
+                <option value="{{ $carColor->id }}"
+                  {{old('car_color_id', $reserve->car_color_id)==$carColor->id ? 'selected':''}}>
+                  {{$carColor->name }}
+                </option>
+              @endforeach
             </select>
           </div>
         </div>
         <div>
-          <label for="number">ナンバー（※4桁の数字）</label>
-          <input type="text" id="number" name="number" maxlength="4" minlength="4" class="u-w-full-wide">
+          <label for="car_number">ナンバー（※4桁の数字）</label>
+          <input type="text" id="car_number" name="car_number" maxlength="4" minlength="4" class="u-w-full-wide" value="{{old('car_number', $reserve->car_number)}}">
         </div>
         <div>
-          <label for="arrival">到着便（例：JL200，NH300）</label>
-          <input type="text" id="arrival" name="arrival" class="u-w-full-wide">
+          <label for="flight_no">到着便（例：JL200，NH300）</label>
+          <input type="text" id="flight_no" name="flight_no" class="u-w-full-wide" value="{{old('flight_no', $reserve->flight_no)}}">
         </div>
         <div>
-          <label for="date">到着日</label>
-          <input type="date" id="date" name="date" class="u-w-full-wide u-mb025">
-          <p class="text-center">到着日がお迎え日と異なる</p>
+          <label for="arrive_date">到着日</label>
+          <input type="hidden" id="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
+          <input type="date" id="arrive_date" name="arrive_date" class="u-w-full-wide u-mb025" value="{{old('arrive_date', $reserve->arrive_date ?  $reserve->arrive_date->format('Y-m-d'): $reserve->unload_date_plan?->format('Y-m-d'))}}">
+          <p class="text-center arrival_flg hidden">到着日がお迎え日と異なる</p>
         </div>
         <div>
-          <label for="people">ご利用人数</label>
-          <input type="text" id="people" name="people">
+          <label for="num_members">ご利用人数</label>
+          <input type="text" id="num_members" name="num_members" value="{{old('num_members', $reserve->num_members)}}">
         </div>
       </div><!-- 入力エリア -->
 
@@ -65,22 +87,22 @@
       <div class="p-user-input-auto-output__right u-mb1">
         <dl class="l-grid--col2 u-mb3">
           <dt>航空会社名</dt>
-          <dd class="text-right">日本航空</dd>
+          <dd class="text-right" id="airline_name">日本航空</dd>
           <!-- 福岡空港 成田空港 18:20 -->
           <dt>出発空港</dt>
-          <dd class="text-right">福岡空港</dd>
+          <dd class="text-right" id="dep_airport_name">福岡空港</dd>
           <dt>到着空港</dt>
-          <dd class="text-right">成田空港</dd>
+          <dd class="text-right" id="arr_airport_name">成田空港</dd>
           <dt>到着予定時間</dt>
-          <dd class="text-right">18:20</dd>
+          <dd class="text-right" id="arrive_time">18:20</dd>
         </dl>
-        <div>到着日がお迎え日と異なる</div>
+        <div class="arrival_flg hidden">到着日がお迎え日と異なる</div>
       </div>
     </div>
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" class="c-button__pagination--return">前のページに戻る</a>
+      <a id="returnButton" href="{{route('reserves.entry_info')}}" class="c-button__pagination--return">前のページに戻る</a>
       <button type="submit" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>
@@ -89,6 +111,7 @@
 
 @endsection
 @push("scripts")
+<script src="{{ asset('js/pages/member/entry_car.js') }}"></script>
 <script>
 </script>
 @endpush
