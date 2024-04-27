@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
+            $table->foreignId('member_id')->nullable()->constrained('members')->nullOnDelete();
             $table->foreignId('office_id')->constrained('offices')->restrictOnDelete();
             $table->foreignId('agency_id')->nullable()->constrained('agencies')->nullOnDelete()->comment('予約経路としても使用');
             $table->smallInteger('status')->nullable()->default(1);
             $table->string('reserve_code', 50);
-            $table->string('receipt_code', 50);
+            $table->string('receipt_code', 50)->nullable();
             $table->dateTime('reserve_date');
             $table->date('load_date')->nullable();
             $table->time('load_time')->nullable();
