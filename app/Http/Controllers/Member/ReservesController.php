@@ -8,9 +8,16 @@ use App\Http\Requests\Member\EntryCarRequest;
 use App\Http\Requests\Member\EntryDateRequest;
 use App\Http\Requests\Member\EntryInfoRequest;
 use App\Http\Requests\Member\OptionSelectRequest;
+use App\Models\Car;
+use App\Models\CarColor;
 use App\Models\CarMaker;
+use App\Models\Coupon;
+use App\Models\Good;
+use App\Models\GoodCategory;
+use App\Services\Member\ReserveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReservesController extends Controller
 {
@@ -59,16 +66,34 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
         $carMakers = CarMaker::select('name', 'id')->get();
+        $cars = [];
+        if(null != old('car_maker_id', $reserve->car_maker_id)) {
+            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->get();
+        }
+        $carColors = CarColor::select('name', 'id')->get();
 
         return view('member.reserves.entry_car', [
             'reserve' => $reserve,
+            'carMakers' => $carMakers,
+            'cars' => $cars,
+            'carColors' => $carColors,
         ]);
     }
 
     public function postEntryCar(EntryCarRequest $request)
     {
         $reserve = $this->getReserveForm();
+        if($request->flight_no && $request->arrive_date) {
+            $arrivalFlight = DB::table('arrival_flights')
+                ->where('flight_no', $request->flight_no)
+                ->where('arrive_date', $request->arrive_date)
+                ->first();
+            $reserve->arr_flight_id = $arrivalFlight->id;
+        }
+
         $reserve->fill($request->all());
+        // 到着便の到着日と出庫日が異なる場合にチェック
+        $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
         session()->put('reserve', $reserve);
         return redirect()->route('reserves.option_select');
     }
@@ -77,8 +102,19 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
 
+        $goodCategories = GoodCategory::with('goods')->get();
+        $goods = Good::all();
+        $goodsMap = getKeyMapCollection($goods);
+        $coupons = Coupon::whereDate('start_date','<=', $reserve->load_date->toDateString())
+            ->whereDate('end_date','>', $reserve->load_date->toDateString())
+            ->get();
+        $couponsMap = getKeyMapCollection($coupons);
+
         return view('member.reserves.option_select', [
             'reserve' => $reserve,
+            'goodCategories' => $goodCategories,
+            'goodsMap' => $goodsMap,
+            'couponsMap' => $couponsMap,
         ]);
     }
 
@@ -118,15 +154,16 @@ class ReservesController extends Controller
     public function store()
     {
         $reserve = $this->getReserveForm();
+        $service = new ReserveService($reserve);
 
-        return redirect()->route('reserves.complete');
+        return redirect(route('reserves.complete'));
     }
 
 
     public function complete(Request $request)
     {
         return view('member.reserves.complete', [
-            'reserveCode' => $request->code
+            'reserveCode' => $request->query('code')
         ]);
     }
 
