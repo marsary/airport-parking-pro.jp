@@ -20,4 +20,9 @@ class GoodCategory extends Model
         'type',
         'memo',
     ];
+
+    public function goods()
+    {
+        return $this->hasMany(Good::class);
+    }
 }
