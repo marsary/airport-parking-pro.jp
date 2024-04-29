@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Member\Forms;
 use App\Enums\DealStatus;
 use App\Enums\TaxType;
 use App\Helpers\StdObject;
+use App\Models\Car;
 use App\Models\CarCautionMemberCar;
+use App\Models\Coupon;
 use App\Models\Good;
 use App\Models\Member;
 use App\Models\MemberCar;
@@ -67,6 +69,19 @@ class ReserveForm extends StdObject
     public $reception_memo;
     public $remarks;
 
+    public $good_ids = [];
+    public $modal_good_ids = [];
+    public $coupon_ids = [];
+    public $coupon_code;
+    /** @var Coupon */
+    public $coupons = [];
+
+    public $flight_no;
+    public $arrive_date;
+
+    public $total_tax_8;
+    public $total_tax_10;
+
     protected $cast = [
         'load_date' => 'date',
         'unload_date_plan' => 'date',
@@ -96,6 +111,21 @@ class ReserveForm extends StdObject
                 $this->{$property} = $value;
             }
         }
+        $this->setRelatedData();
+    }
+
+    private function setRelatedData()
+    {
+        if($this->coupon_ids && !$this->coupons) {
+            $this->coupons = Coupon::whereIn('id', $this->coupon_ids)->get();
+        }
+        if($this->car_id && !$this->size_type) {
+            $this->size_type = Car::where('id', $this->car_id)->first()?->size_type;
+        }
+        if($this->total_price < $this->price) {
+            $this->total_tax = $this->tax;
+            $this->total_price = $this->price;
+        }
     }
 
     public function setMember(Member $member = null)
@@ -108,6 +138,67 @@ class ReserveForm extends StdObject
         $this->fill($member);
     }
 
+    private function clearTotals()
+    {
+        $this->total_tax_8 = 0;
+        $this->total_tax_10 = 0;
+        $this->total_price = 0;
+        $this->total_tax = 0;
+    }
+
+    public function handleGoodsAndTotals()
+    {
+        $this->clearTotals();
+
+        $this->total_tax = $this->tax;
+        $this->total_price = $this->price;
+        $this->addToEachTaxType($this->tax, TaxType::TEN_PERCENT->value);
+
+        $numOfEachGood = 1;
+        $this->dealGoodData = [];
+        if($this->good_ids) {
+            $this->goodsMap = getKeyMapCollection(Good::whereIn('id', $this->good_ids)->get());
+            foreach ($this->good_ids as $goodId) {
+                $good = $this->goodsMap[$goodId];
+                $goodTotalPrice = $good->price * $numOfEachGood;
+                $goodTotalTax = roundTax(TaxType::tryFrom($good->tax_type)?->rate() * $goodTotalPrice);
+                $this->dealGoodData[] = [
+                    'good_id' => $good->id,
+                    'num' => $numOfEachGood,
+                    'price' => $good->price,
+                    'total_price' => $goodTotalPrice,
+                    'total_tax' => $goodTotalTax,
+                    'name' => $good->name,
+                    'tax_type_label' => $this->getTaxTypeLabel($good->tax_type),
+                ];
+
+                $this->total_tax += $goodTotalTax;
+                $this->total_price += $good->price * $numOfEachGood;
+                $this->addToEachTaxType($goodTotalTax, $good->tax_type);
+            }
+        }
+
+        // TODO クーポンの処理
+    }
+
+    public function getTaxTypeLabel($taxType)
+    {
+        return match ($taxType) {
+            TaxType::EIGHT_PERCENT->value => '税別' . TaxType::EIGHT_PERCENT->label(),
+            TaxType::TEN_PERCENT->value => '税別' . TaxType::TEN_PERCENT->label(),
+            TaxType::EXEMPT->value => TaxType::EXEMPT->label(),
+            default => "",
+        };
+    }
+
+    private function addToEachTaxType($tax, $taxType)
+    {
+        if($taxType == TaxType::EIGHT_PERCENT->value) {
+            $this->total_tax_8 += $tax;
+        } else {
+            $this->total_tax_10 += $tax;
+        }
+    }
 
     protected function cast($property, $value)
     {
@@ -116,5 +207,18 @@ class ReserveForm extends StdObject
             'date' => Carbon::parse($value),
             default => $value,
         };
+    }
+
+    public function totalCharge()
+    {
+        return $this->total_price + $this->total_tax;
+    }
+
+    public function pricePerDay()
+    {
+        if(empty($this->num_days)) {
+            return $this->price;
+        }
+        return (int) ($this->price / $this->num_days);
     }
 }
