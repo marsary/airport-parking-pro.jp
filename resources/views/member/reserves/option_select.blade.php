@@ -227,6 +227,32 @@
     }
   }
 
+  window.addEventListener('DOMContentLoaded', function() {
+    checkedOptionList = document.getElementById('checked-option-list');
+    goodIdsElem = document.getElementById('good_ids');
+    couponIdsElem = document.getElementById('coupon_ids');
+    couponCodeElem = document.getElementById('coupon_code');
+    const couponCodeBtnElem = document.getElementById('coupon_code_btn');
+    couponInfoElem = document.getElementById('selected-coupon-info');
+    const removeCouponBtnElems = Array.from(document.getElementsByClassName('coupon_remove'));
+    const removeGoodBtnElems = Array.from(document.getElementsByClassName('button_remove'));
+
+    couponCodeBtnElem.addEventListener('click', function() {
+      addCoupon();
+    });
+
+    removeCouponBtnElems.forEach((btnElem) => btnElem.addEventListener('click', function() {
+      removeCoupon(btnElem);
+    }))
+
+    removeGoodBtnElems.forEach((btnElem) => btnElem.addEventListener('click', function() {
+      removeOption(btnElem);
+    }))
+
+    // 初期表示
+    updateOptionList()
+    updateCouponList()
+  })
 </script>
 @endpush
 @push('css')
