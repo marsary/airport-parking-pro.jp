@@ -22,4 +22,9 @@ class CarCautionMemberCar extends Model
         'car_caution_id',
         'sort',
     ];
+
+    public function carCaution()
+    {
+        return $this->belongsTo(CarCaution::class);
+    }
 }

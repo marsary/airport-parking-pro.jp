@@ -25,4 +25,9 @@ class MemberCar extends Model
         'created_by',
         'updated_by',
     ];
+
+    public function car()
+    {
+        return $this->belongsTo(Car::class);
+    }
 }
