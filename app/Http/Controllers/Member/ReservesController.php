@@ -8,16 +8,21 @@ use App\Http\Requests\Member\EntryCarRequest;
 use App\Http\Requests\Member\EntryDateRequest;
 use App\Http\Requests\Member\EntryInfoRequest;
 use App\Http\Requests\Member\OptionSelectRequest;
+use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarColor;
 use App\Models\CarMaker;
 use App\Models\Coupon;
+use App\Models\Deal;
 use App\Models\Good;
 use App\Models\GoodCategory;
+use App\Models\MemberCar;
+use App\Services\LabelTagManager;
 use App\Services\Member\ReserveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReservesController extends Controller
 {
@@ -129,9 +134,21 @@ class ReservesController extends Controller
     public function confirm()
     {
         $reserve = $this->getReserveForm();
+        $reserve->handleGoodsAndTotals();
+
+        LabelTagManager::attachTagDataToMember($reserve->member);
+        $arrivalFlight = ArrivalFlight::with('airline','depAirport','arrAirport')->where('flight_no', $reserve->flight_no)
+            ->where('arrive_date', $reserve->arrive_date)->first();
+        $carMaker = CarMaker::where('id', $reserve->car_maker_id)->first();
+        $car = Car::where('id', $reserve->car_id)->first();
+        $carColor = CarColor::where('id', $reserve->car_color_id)->first();
 
         return view('member.reserves.confirm', [
             'reserve' => $reserve,
+            'arrivalFlight' => $arrivalFlight,
+            'carMaker' => $carMaker,
+            'car' => $car,
+            'carColor' => $carColor,
         ]);
     }
 
@@ -155,8 +172,9 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
         $service = new ReserveService($reserve);
+        session()->forget('reserve');
 
-        return redirect(route('reserves.complete'));
+        return redirect(route('reserves.complete', ['code' => (string) $service->deal->reserve_code]));
     }
 
 
