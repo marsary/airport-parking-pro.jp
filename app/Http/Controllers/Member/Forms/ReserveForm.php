@@ -136,6 +136,27 @@ class ReserveForm extends StdObject
         $this->member_id = $member->id;
         $this->member = $member;
         $this->fill($member);
+
+        $memberCar = MemberCar::with('car.carMaker')->where('member_id', $member->id)
+            ->where('office_id', $this->office_id)
+            ->orderBy('default_flg', 'desc')->first();
+
+        if($memberCar) {
+            $this->car_maker_id = $memberCar->car->carMaker->id;
+            $this->car_id = $memberCar->car_id;
+            $this->car_color_id = $memberCar->car_color_id;
+            $this->car_number = $memberCar->number;
+            $this->member_car_id = $memberCar->id;
+
+            // 車両取扱
+            $this->carCautions = DB::table('car_cautions')
+                ->join('car_caution_member_cars', 'car_cautions.id', '=', 'car_caution_member_cars.car_caution_id')
+                ->where('car_caution_member_cars.member_id', $member->id)
+                ->where('car_caution_member_cars.office_id', $this->office_id)
+                ->where('car_caution_member_cars.member_car_id', $memberCar->id)
+                ->orderBy('car_cautions.sort')
+                ->pluck('car_cautions.name')->implode('name', ', ');
+        }
     }
 
     private function clearTotals()
