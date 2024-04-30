@@ -172,6 +172,15 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
         $service = new ReserveService($reserve);
+        try {
+            DB::transaction(function () use($service){
+                $service->store();
+            });
+        } catch (\Throwable $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
+        }
+        //
         session()->forget('reserve');
 
         return redirect(route('reserves.complete', ['code' => (string) $service->deal->reserve_code]));
