@@ -27,7 +27,7 @@ class EntryInfoRequest extends FormRequest
             'name'	=> 'required',
             'kana'	=> 'required',
             'tel'	=> ['required','max:15', new PhoneRule],
-            'zip'	=> ['required','max:8', new ZipcodeRule],
+            'zip'	=> ['nullable','max:8', new ZipcodeRule],
             'email'	=> 'required|email',
             'receipt_address'	=> 'nullable|max:100',
             'remarks'	=> 'nullable',

@@ -26,10 +26,10 @@ class EntryCarRequest extends FormRequest
             'car_maker_id' => 'nullable',
             'car_id' => 'nullable',
             'car_color_id' => 'nullable',
-            'car_number' => 'nullable',
+            'car_number' => 'nullable|numeric|digits:4',
             'flight_no' => ['nullable', new FlightNoDateRule],
             'arrive_date' => 'nullable|date',
-            'num_members' => 'nullable|numeric|digits:4',
+            'num_members' => 'nullable|numeric',
         ];
     }
 
