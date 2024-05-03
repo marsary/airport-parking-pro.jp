@@ -4,6 +4,7 @@ $text-color: #3C3C3C;
 $off-white: #FBFBFB;
 
 $green: #31B6A2;
+
 $light-green: #A7DFD7;
 
 $yellow: #FAA03C;
@@ -25,6 +26,11 @@ $light-gray2: #BEBEBE;
 $red: #C1272D;
 $blue: #4696DC;
 
+// 予約
+$reserved-red: #E50012;
+$available-green: #24A12C;
+$some-available-orange: #F7931E;
+$calendar-bg: #EAEAEA;
 
 :root {
   --gap-s: 12px;

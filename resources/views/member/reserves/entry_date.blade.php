@@ -26,7 +26,145 @@
 
     <div class="u-mb6">
       <p class="text-center u-mb2 u-font--medium">入庫予定時間を指定してください</p>
-      <div class="c-title__calendar">2024年2月</div>
+      <div class="c-title__calendar u-mb1">2024年2月</div>
+      <div class="l-grid--col3-auto l-grid--gap05 l-grid--start">
+        <dl class="c-calendar__wrap">
+          <dt class="c-calendar__heading">午前</dt>
+          <dd>
+            <ul class="c-calendar-available-time__wrap">
+              <li class="c-calendar-available-time">
+                <div>0:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>1:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_some-available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>2:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_reserved.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>3:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_none.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>4:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>5:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>6:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>7:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>8:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>9:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>10:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>11:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+            </ul>
+          </dd>
+        </dl>
+        <dl class="c-calendar__wrap">
+          <dt class="c-calendar__heading">午後</dt>
+          <dd>
+            <ul class="c-calendar-available-time__wrap">
+              <li class="c-calendar-available-time">
+                <div>12:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>13:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>14:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>15:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>16:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>17:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>18:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>19:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>20:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>21:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>22:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>23:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+            </ul>
+          </dd>
+        </dl>
+
+        <!-- 時間 19:00から15分刻みの理由は不明　leftにpadding入れている理由も不明 -->
+        <dl class="c-calendar__wrap u-pl4">
+          <dt class="c-calendar__heading">時間</dt>
+          <dd>
+            <ul class="c-calendar-available-time__wrap">
+              <li class="c-calendar-available-time">
+                <div>19:00～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>19:15～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>19:30～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+              <li class="c-calendar-available-time">
+                <div>19:45～</div>
+                <div class="c-calendar__available-icon"><img src="../../images/svg/calendar_available.svg" alt=""></div>
+              </li>
+            </ul>
+          </dd>
+        </dl>
+
+      </div>
     </div>
 
     <div class="u-mb6">
