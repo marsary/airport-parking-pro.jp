@@ -31,6 +31,12 @@
     display: grid;
     grid-template-columns: repeat(5, auto);
   }
+  &--start {
+    align-items: start;
+  }
+  &--end {
+    align-items: end;
+  }
 }
 
 // gap
