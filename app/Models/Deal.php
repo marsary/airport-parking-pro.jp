@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Casts\TimeCast;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -55,8 +58,44 @@ class Deal extends Model
         'updated_by',
     ];
 
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'reserve_date' => 'datetime',
+            'load_date' => 'date',
+            'load_time' => TimeCast::class,
+            'visit_date_plan' => 'date',
+            'unload_date_plan' => 'date',
+            'unload_date' => 'date',
+            'password' => 'hashed',
+        ];
+    }
+
+
     public function dealGoods()
     {
         return $this->hasMany(DealGood::class);
     }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class);
+    }
+
+    public function agency()
+    {
+        return $this->belongsTo(Agency::class);
+    }
+
+    public function memberCar()
+    {
+        return $this->belongsTo(MemberCar::class, 'member_car_id');
+    }
+
 }

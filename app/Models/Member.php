@@ -54,6 +54,11 @@ class Member extends Authenticatable
         return $this->hasMany(MemberCar::class);
     }
 
+    public function tagMembers()
+    {
+        return $this->hasMany(TagMember::class);
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
