@@ -40,4 +40,13 @@ class AgencyPrice extends Model
         'lsize_rate',
         'no_discount_flg',
     ];
+
+
+    public function getPriceAt(int $dayNum)
+    {
+        if(isset($this->{'d' . $dayNum})) {
+            return $this->{'d' . $dayNum};
+        }
+        return $this->price_per_day;
+    }
 }
