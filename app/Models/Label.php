@@ -22,4 +22,10 @@ class Label extends Model
         'created_by',
         'updated_by',
     ];
+
+
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
 }
