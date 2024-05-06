@@ -24,7 +24,13 @@
         </div>
       </div>
       <div class="calendar_section">
+        <div class="prev_button">
+          <button type="button" id="cal1_prev">◀</button>
+        </div>
         <div id='calendar1'></div>
+        <div class="next_button">
+          <button type="button" id="cal1_next">▶</button>
+        </div>
       </div>
     </div>
 
@@ -184,7 +190,13 @@
         </div>
       </div>
       <div class="calendar_section">
+        <div class="prev_button">
+            <button type="button" id="cal2_prev">◀</button>
+          </div>
           <div id='calendar2'></div>
+          <div class="next_button">
+            <button type="button" id="cal2_next">▶</button>
+          </div>
       </div>
     </div>
 
@@ -203,6 +215,12 @@
           <div>:</div>
           <div id="disp_num_days"></div>
         </div>
+
+        <input type="hidden" name="load_date" value="{{old('load_date', $reserve->load_date)}}">
+        <input type="hidden" name="load_time" value="{{old('load_time', $reserve->load_time)}}">
+        <input type="hidden" name="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
+        <input type="hidden" name="unload_time_plan" value="{{old('unload_time_plan', $reserve->unload_time_plan)}}">
+        <input type="hidden" name="num_days" value="{{old('num_days', $reserve->num_days)}}">
 
         <button type="button" id="open_button" class="c-label__light-deep-gray--lg is-block u-horizontal-auto u-mb1">内訳を表示</button>
 
@@ -253,6 +271,8 @@
 @push("scripts")
 <!-- 表示非表示ボタン -->
 <script src="{{ asset('js/close_button_toggle.js') }}"></script>
+<script src="{{ asset('js/index.global.min.js') }}"></script>
+<script src="{{ asset('js/pages/member/entry_date.js') }}"></script>
 <script>
 </script>
 @endpush
