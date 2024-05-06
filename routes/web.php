@@ -12,6 +12,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/', [\App\Http\Controllers\Manage\TopController::class, 'index'])->name('home');
         Route::get('/deals/search', [\App\Http\Controllers\Manage\DealsController::class, 'search'])->name('deals.search');
+        Route::get('/deals/search_export', [\App\Http\Controllers\Manage\DealsController::class, 'searchExport'])->name('deals.search_export');
         Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
         Route::resource('registers', \App\Http\Controllers\Manage\RegistersController::class);
         Route::get('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
@@ -38,6 +39,11 @@ Route::resource('reserves', \App\Http\Controllers\Member\ReservesController::cla
 
 Route::get('car_makers/{car_maker_id}/cars', [\App\Http\Controllers\CarMakersController::class, 'cars'])->name('car_makers.cars');
 Route::get('arrival_flights/get_info', [\App\Http\Controllers\ArrivalFlightsController::class, 'getInfo'])->name('arrival_flights.get_info');
+Route::get('prices/table', [\App\Http\Controllers\PricesController::class, 'table'])->name('prices.table');
+
+Route::get('calendar/load_dates', [\App\Http\Controllers\CalendarController::class, 'loadDates'])->name('calendar.load_dates');
+Route::get('calendar/unload_dates', [\App\Http\Controllers\CalendarController::class, 'unloadDates'])->name('calendar.unload_dates');
+Route::get('calendar/load_hours', [\App\Http\Controllers\CalendarController::class, 'loadHours'])->name('calendar.load_hours');
 
 require __DIR__.'/manage_auth.php';
 require __DIR__.'/member_auth.php';
