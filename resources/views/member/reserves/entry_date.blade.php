@@ -278,5 +278,46 @@
 @endpush
 @push('css')
 <style>
+  .calendar_section {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .prev_button {
+    position: absolute;
+    left: -30px;
+  }
+  .next_button {
+    position: absolute;
+    right: -30px;
+  }
+  .fc-multimonth-title {
+    display: none;
+  }
+  div.fc-multimonth-month {
+    padding: 8px 10px 8px !important;
+  }
+  table.fc-multimonth-daygrid-table {
+    border-spacing: 4px;
+    border-collapse: separate;
+  }
+  table.fc-multimonth-header-table  {
+    border-spacing: 4px;
+    border-collapse: separate;
+  }
+  table.fc-multimonth-header-table tr  {
+    height: 25px;
+  }
+  .fc-day-disabled {
+    border: none !important;
+    background-color: #fff !important;
+  }
+  .fc-daygrid-day {
+    background-color: #eee;
+    text-align: center;
+  }
+  .fc-day.fc-day-today.fc-daygrid-day, .fc-day.fc-day-future.fc-daygrid-day {
+    cursor: pointer;
+  }
 </style>
 @endpush
