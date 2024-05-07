@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ParkingLimitDateChecker;
+use App\Services\ParkingLimitTimeChecker;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -36,6 +37,30 @@ class CalendarController extends Controller
         return response()->json($eventData);
     }
 
+    public function loadHours(Request $request)
+    {
+        $loadDate = $request->input('load_date');
+
+        $loadDate = Carbon::parse($loadDate);
+
+        $checker = new ParkingLimitTimeChecker($loadDate);
+        $hourlyData = [];
+        foreach ($checker->checkLoadHours() as $hour => $hourResult) {
+            $hourlyData[$hour] = [
+                'status' => $hourResult['hourVacant']->label(),
+                '00' => $hourResult['qurterResults']['00']->label(),
+                '15' => $hourResult['qurterResults']['15']->label(),
+                '30' => $hourResult['qurterResults']['30']->label(),
+                '45' => $hourResult['qurterResults']['45']->label(),
+            ];
+        }
+
+        // dd($eventData);
+        return response()->json([
+            'success' => true,
+            'data' => ['hourlyData' => $hourlyData],
+         ]);
+    }
 
     public function unloadDates(Request $request)
     {
