@@ -1,245 +1,33 @@
 <?php
 namespace App\Http\Controllers\Member\Forms;
 
-use App\Enums\DealStatus;
-use App\Enums\TaxType;
-use App\Helpers\StdObject;
-use App\Models\Car;
-use App\Models\CarCautionMemberCar;
-use App\Models\Coupon;
-use App\Models\Good;
+use App\Http\Controllers\Forms\ReserveFormBase;
 use App\Models\Member;
-use App\Models\MemberCar;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
-class ReserveForm extends StdObject
+class ReserveForm extends ReserveFormBase
 {
-    /** @var Member */
-    public $member;
-
-    public $carCautions;
-
-    /** @var array<int,Good> key が goodのID */
-    private $goodsMap;
-
-    /** @var array<array<string,mixed>> */
-    public $dealGoodData = [];
-
-    public $member_id;
-    public $office_id;
-    public $agency_id;
-    public $agency_code;
-    public $status;
-    public $reserve_code;
-    public $receipt_code;
-    public $reserve_date;
-    public $load_date;
-    public $load_time;
-    public $unload_date_plan;
-    public $unload_time_plan;
-    public $arrival_flg;
-    // public $unload_date;
-    // public $unload_time;
-    public $num_days;
-    public $num_members;
-    public $name;
-    public $kana;
-    public $zip;
-    public $tel;
-    public $email;
-    public $dsc_rate;
-    public $price;
-    public $tax;
-    public $total_price;
-    public $total_tax;
-    public $dep_flight_id;
-    public $arr_flight_id;
-    public $member_car_id;
-    public $car_maker_id;
-    public $car_id;
-    public $car_color_id;
-    public $car_number;
-    public $size_type;
-    // public $billing_type;
-    public $receipt_address;
-    public $reserve_memo;
-    public $reception_memo;
-    public $remarks;
-
-    public $good_ids = [];
-    public $modal_good_ids = [];
-    public $coupon_ids = [];
-    public $coupon_code;
-    /** @var Coupon */
-    public $coupons = [];
-
-    public $flight_no;
-    public $arrive_date;
-
-    public $total_tax_8;
-    public $total_tax_10;
-
-    protected $cast = [
-        'load_date' => 'date',
-        'unload_date_plan' => 'date',
-        'arrive_date' => 'date',
-        'reserve_date' => 'date',
-    ];
-
-    function __construct()
-    {
-        $this->office_id = config('const.commons.office_id');
-        $this->status = DealStatus::NOT_LOADED->value;
-        $this->reserve_date = Carbon::now();
-        $this->reserve_code = Str::ulid();
-    }
-
-
-    public function fill($data = [])
-    {
-        if($data instanceof Model) {
-            $data = $data->toArray();
-        }
-        if (!empty($data)) {
-            foreach ($data as $property => $value) {
-                if(isset($this->cast[$property])) {
-                    $value = $this->cast($property, $value);
-                }
-                $this->{$property} = $value;
-            }
-        }
-        $this->setRelatedData();
-    }
-
-    private function setRelatedData()
-    {
-        if($this->coupon_ids && !$this->coupons) {
-            $this->coupons = Coupon::whereIn('id', $this->coupon_ids)->get();
-        }
-        if($this->car_id && !$this->size_type) {
-            $this->size_type = Car::where('id', $this->car_id)->first()?->size_type;
-        }
-        if($this->total_price < $this->price) {
-            $this->total_tax = $this->tax;
-            $this->total_price = $this->price;
-        }
-    }
-
     public function setMember(Member $member = null)
     {
-        if($member === null) {
-            return;
-        }
-        $this->member_id = $member->id;
-        $this->member = $member;
-        $this->fill($member);
+        parent::setMember($member);
 
-        $memberCar = MemberCar::with('car.carMaker')->where('member_id', $member->id)
-            ->where('office_id', $this->office_id)
-            ->orderBy('default_flg', 'desc')->first();
-
-        if($memberCar) {
-            $this->car_maker_id = $memberCar->car->carMaker->id;
-            $this->car_id = $memberCar->car_id;
-            $this->car_color_id = $memberCar->car_color_id;
-            $this->car_number = $memberCar->number;
-            $this->member_car_id = $memberCar->id;
-
+        if($this->member_car_id) {
             // 車両取扱
             $this->carCautions = DB::table('car_cautions')
                 ->join('car_caution_member_cars', 'car_cautions.id', '=', 'car_caution_member_cars.car_caution_id')
                 ->where('car_caution_member_cars.member_id', $member->id)
                 ->where('car_caution_member_cars.office_id', $this->office_id)
-                ->where('car_caution_member_cars.member_car_id', $memberCar->id)
+                ->where('car_caution_member_cars.member_car_id', $this->member_car_id)
                 ->orderBy('car_cautions.sort')
                 ->pluck('car_cautions.name')->implode('name', ', ');
         }
     }
 
-    private function clearTotals()
-    {
-        $this->total_tax_8 = 0;
-        $this->total_tax_10 = 0;
-        $this->total_price = 0;
-        $this->total_tax = 0;
-    }
-
     public function handleGoodsAndTotals()
     {
-        $this->clearTotals();
-
-        $this->total_tax = $this->tax;
-        $this->total_price = $this->price;
-        $this->addToEachTaxType($this->tax, TaxType::TEN_PERCENT->value);
-
-        $numOfEachGood = 1;
-        $this->dealGoodData = [];
-        if($this->good_ids) {
-            $this->goodsMap = getKeyMapCollection(Good::whereIn('id', $this->good_ids)->get());
-            foreach ($this->good_ids as $goodId) {
-                $good = $this->goodsMap[$goodId];
-                $goodTotalPrice = $good->price * $numOfEachGood;
-                $goodTotalTax = roundTax(TaxType::tryFrom($good->tax_type)?->rate() * $goodTotalPrice);
-                $this->dealGoodData[] = [
-                    'good_id' => $good->id,
-                    'num' => $numOfEachGood,
-                    'price' => $good->price,
-                    'total_price' => $goodTotalPrice,
-                    'total_tax' => $goodTotalTax,
-                    'name' => $good->name,
-                    'tax_type_label' => $this->getTaxTypeLabel($good->tax_type),
-                ];
-
-                $this->total_tax += $goodTotalTax;
-                $this->total_price += $good->price * $numOfEachGood;
-                $this->addToEachTaxType($goodTotalTax, $good->tax_type);
-            }
-        }
+        parent::handleGoodsAndTotals();
 
         // TODO クーポンの処理
     }
 
-    public function getTaxTypeLabel($taxType)
-    {
-        return match ($taxType) {
-            TaxType::EIGHT_PERCENT->value => '税別' . TaxType::EIGHT_PERCENT->label(),
-            TaxType::TEN_PERCENT->value => '税別' . TaxType::TEN_PERCENT->label(),
-            TaxType::EXEMPT->value => TaxType::EXEMPT->label(),
-            default => "",
-        };
-    }
-
-    private function addToEachTaxType($tax, $taxType)
-    {
-        if($taxType == TaxType::EIGHT_PERCENT->value) {
-            $this->total_tax_8 += $tax;
-        } else {
-            $this->total_tax_10 += $tax;
-        }
-    }
-
-    protected function cast($property, $value)
-    {
-        $method = $this->cast[$property];
-        return match ($method) {
-            'date' => Carbon::parse($value),
-            default => $value,
-        };
-    }
-
-    public function totalCharge()
-    {
-        return $this->total_price + $this->total_tax;
-    }
-
-    public function pricePerDay()
-    {
-        if(empty($this->num_days)) {
-            return $this->price;
-        }
-        return (int) ($this->price / $this->num_days);
-    }
 }
