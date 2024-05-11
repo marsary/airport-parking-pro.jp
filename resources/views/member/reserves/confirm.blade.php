@@ -18,7 +18,7 @@
         <th>予約日時</th>
         <td>{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
         <th>予約経路</th>
-        <td>{{$reserve->agency_id}}{{--公式HP--}}</td>
+        <td>{{$agency->name}}{{--公式HP--}}</td>
       </tr>
       <tr>
         <th>入庫日時</th>
@@ -48,12 +48,14 @@
         </td>
       </tr>
       <tr>
-        @if ($reserve->member)
-          @foreach ($reserve->member->tagMembers as $tagMember)
-            <th>{{$tagMember->label->name}}</th>
-            <td>{{$tagMember->tag->name}}</td>
-          @endforeach
-        @endif
+        @for ($i = 0; $i < 4; $i++)
+          @if (isset($reserve->member->tagMembers[$i]))
+            <th>{{$reserve->member->tagMembers[$i]->label->name}}</th>
+            <td>{{$reserve->member->tagMembers[$i]->tag->name}}</td>
+          @else
+            <th></th><td></td>
+          @endif
+        @endfor
         {{--  <th>会員ランク</th>
         <td>シルバー</td>
         <th>ラベル2</th>
@@ -198,7 +200,7 @@
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" href="{{route('reserves.option_select')}}" class="c-button__pagination--return">前のページに戻る</a>
+      <button type="button" id="returnButton" onclick="location.href='{{route('reserves.option_select')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">お会計へ</button>
     </div>
   </form>

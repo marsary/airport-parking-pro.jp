@@ -75,7 +75,7 @@
 
     <!-- pager -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" href="{{route('reserves.entry_car')}}" class="c-button__pagination--return">前のページに戻る</a>
+      <button type="button" id="returnButton" onclick="location.href='{{route('reserves.entry_car')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">内容確認へ進む</button>
     </div>
   </form>

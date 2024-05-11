@@ -4,6 +4,7 @@
 @section('content')
 @include('include.reserve.header_information')
 @include('include.step', ['step' => "entry"])
+@include('include.messages.errors')
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->
   <form action="{{route('reserves.entry_car')}}" method="POST">
@@ -102,7 +103,7 @@
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" href="{{route('reserves.entry_info')}}" class="c-button__pagination--return">前のページに戻る</a>
+      <button type="button" id="returnButton" onclick="location.href='{{route('reserves.entry_info')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>
