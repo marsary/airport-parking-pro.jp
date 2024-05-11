@@ -16,8 +16,10 @@ class GoodCategory extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'office_id',
         'name',
         'type',
+        'regi_display_flag',
         'memo',
     ];
 

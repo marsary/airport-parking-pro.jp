@@ -98,4 +98,23 @@ class Deal extends Model
         return $this->belongsTo(MemberCar::class, 'member_car_id');
     }
 
+    public function arrivalFlight()
+    {
+        return $this->belongsTo(ArrivalFlight::class, 'arr_flight_id');
+    }
+
+    public function carCautionMemberCars()
+    {
+        return $this->hasMany(CarCautionMemberCar::class, 'member_car_id', 'member_car_id');
+    }
+
+    public function loadDateTime($format = "Y/m/d")
+    {
+        $datetimeStr = $this->load_date?->format($format);
+        if(!isBlank($this->load_time)) {
+            $datetimeStr .=  ' ' . formatDate($this->load_time, 'H:i');
+        }
+        return $datetimeStr;
+    }
+
 }
