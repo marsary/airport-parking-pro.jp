@@ -10,27 +10,35 @@
     <li class="l-breadcrumb__list">検索</li>
   </ul>
 
-  <div class="l-container__inner">
-    <form action="/admin/reservation_search_result.php" id="form1" method="POST" class="c-button-fixed__parent u-pb6">
+  @include('include.messages.errors')
 
+  <div class="l-container__inner">
+    <form action="{{route('manage.deals.index')}}" id="form1" method="GET" class="c-button-fixed__parent u-pb6">
+      @csrf
       <ul class="l-flex--end l-grid--cgap1">
         <li class="l-flex l-grid--cgap025">
-          <input type="checkbox" id="reservation" name="reservation" class="u-mb0"><label for="reservation">予約中</label>
+          <input type="checkbox" id="reserved" name="reserved" class="u-mb0" {{old('reserved', request('reserved')) ? 'checked ':''}} value="1">
+          <label for="reserved">予約中</label>
         </li>
         <li class="l-flex l-grid--cgap025">
-          <input type="checkbox" id="today_arrival" name="today_arrival" class="u-mb0"><label for="today_arrival">本日入庫予定</label>
+          <input type="checkbox" id="load_today" name="load_today" class="u-mb0" {{old('load_today') ? 'checked ':''}} value="1">
+          <label for="load_today">本日入庫予定</label>
         </li>
         <li class="l-flex l-grid--cgap025">
-          <input type="checkbox" id="in_storage" name="in_storage" class="u-mb0"><label for="in_storage">入庫中</label>
+          <input type="checkbox" id="loaded" name="loaded" class="u-mb0" {{old('loaded') ? 'checked ':''}} value="1">
+          <label for="loaded">入庫中</label>
         </li>
         <li class="l-flex l-grid--cgap025">
-          <input type="checkbox" id="today_departure" name="today_departure" class="u-mb0"><label for="today_departure">本日出庫予定</label>
+          <input type="checkbox" id="unload_plan_today" name="unload_plan_today" class="u-mb0" {{old('unload_plan_today') ? 'checked ':''}} value="1">
+          <label for="unload_plan_today">本日出庫予定</label>
         </li>
         <li class="l-flex l-grid--cgap025">
-          <input type="checkbox" id="pending" name="pending" class="u-mb0"><label for="pending">保留</label>
+          <input type="checkbox" id="pending" name="pending" class="u-mb0" {{old('pending') ? 'checked ':''}} value="1">
+          <label for="pending">保留</label>
         </li>
         <li class="l-flex l-grid--cgap025">
-          <input type="checkbox" id="departure" name="departure" class="u-mb0"><label for="departure">出庫済</label>
+          <input type="checkbox" id="unloaded" name="unloaded" class="u-mb0" {{old('unloaded') ? 'checked ':''}} value="1">
+          <label for="unloaded">出庫済</label>
         </li>
       </ul>
 
@@ -38,22 +46,25 @@
 
       <table class="l-table-input">
         <tr>
-          <th><label for="reservation_code">予約コード</label></th>
-          <td><input type="text" id="reservation_code" name="reservation_code" placeholder="1234567890" /></td>
+          <th><label for="reserve_code">予約コード</label></th>
+          <td><input type="text" id="reserve_code" name="reserve_code" placeholder="1234567890" value="{{old('reserve_code')}}" /></td>
           <!-- 受付コード -->
-          <th><label for="reception_code">受付コード</label></th>
-          <td><input type="text" id="reception_code" name="reception_code" placeholder="1234567890" /></td>
+          <th><label for="receipt_code">受付コード</label></th>
+          <td><input type="text" id="receipt_code" name="receipt_code" placeholder="1234567890" value="{{old('receipt_code')}}" /></td>
           <!-- 予約日時 -->
-          <th><label for="reservation_date">予約日時</label></th>
-          <td><input type="text" id="reservation_date" name="reservation_date" placeholder="2024/1/15(月)20:12" /></td>
+          <th><label for="reserve_date">予約日時</label></th>
+          <td><input type="text" id="reserve_date" name="reserve_date" placeholder="2024/1/15(月)20:12" value="{{old('reserve_date')}}" /></td>
           <th>予約経路</th>
           <td>
             <div class="c-form-select-wrap">
-              <select>
+              <select name="agency_id">
                 <!-- デフォルト 選択不可 -->
                 <option value="" selected disabled>未選択</option>
-                <option value="公式HP">公式HP</option>
-                <option value="公式HP">代理店</option>
+                @foreach ($agencies as $agency)
+                  <option value="{{$agency->id}}" {{($agency->id == old('agency_id') ) ? 'selected':''}}>{{$agency->name}}</option>
+                @endforeach
+                {{--  <option value="公式HP">公式HP</option>
+                <option value="公式HP">代理店</option>  --}}
               </select>
             </div>
           </td>
@@ -62,34 +73,34 @@
           <!-- 入庫日 -->
           <th><label for="storage_date">入庫日</label></th>
           <td colspan="3">
-            <input type="date" id="storage_date_forward" class="u-w-auto" name="storage_date" />～
-            <input type="date" id="storage_date_backward" class="u-w-auto" name="storage_date" />
+            <input type="date" id="load_date_start" class="u-w-auto" name="load_date_start" value="{{old('load_date_start')}}" />～
+            <input type="date" id="load_date_end" class="u-w-auto" name="load_date_end" value="{{old('load_date_end')}}" />
           </td>
           <!-- 入庫時間 -->
-          <th><label for="storage_time">入庫時間</label></th>
+          <th><label for="load_time">入庫時間</label></th>
           <td colspan="3">
-            <input type="time" id="storage_time_forward" class="u-w-auto" name="storage_time" placeholder="16:45" />～
-            <input type="time" id="storage_time_backward" class="u-w-auto" name="storage_time" placeholder="16:45" />
+            <input type="time" id="load_time_start" class="u-w-auto" name="load_time_start" placeholder="16:45" value="{{old('load_time_start')}}" />～
+            <input type="time" id="load_time_end" class="u-w-auto" name="load_time_end" placeholder="16:45" value="{{old('load_time_end')}}" />
         </tr>
         <!-- 予定日 -->
         <tr>
-          <th><label for="departure_scheduled_date">出庫予定日</label></th>
+          <th><label for="unload_date_plan">出庫予定日</label></th>
           <td colspan="3">
-            <input type="date" id="departure_scheduled_date_forward" class="u-w-auto" name="departure_scheduled_date" />～
-            <input type="date" id="departure_scheduled_date_backward" class="u-w-auto" name="departure_scheduled_date" />
+            <input type="date" id="unload_date_plan_start" class="u-w-auto" name="unload_date_plan_start" value="{{old('unload_date_plan_start')}}" />～
+            <input type="date" id="unload_date_plan_end" class="u-w-auto" name="unload_date_plan_end" value="{{old('unload_date_plan_end')}}" />
           </td>
-          <th><label for="departure_date">出庫日</label></th>
+          <th><label for="unload_date">出庫日</label></th>
           <td colspan="3">
-            <input type="date" id="departure_date_forward" class="u-w-auto" name="departure_date" />～
-            <input type="date" id="departure_date_backward" class="u-w-auto" name="departure_date" />
+            <input type="date" id="unload_date_start" class="u-w-auto" name="unload_date_start" value="{{old('unload_date_start')}}" />～
+            <input type="date" id="unload_date_end" class="u-w-auto" name="unload_date_end" value="{{old('unload_date_end')}}" />
           </td>
         </tr>
         <tr>
           <!-- 利用日数 -->
-          <th><label for="use_days">利用日数</label></th>
+          <th><label for="num_days">利用日数</label></th>
           <td colspan="6">
-            <input type="text" id="use_days_forward" name="use_days" placeholder="3" class="u-w50" />日間～
-            <input type="text" id="use_days_backward" name="use_days" placeholder="6" class="u-w50">日間
+            <input type="text" id="num_days_start" name="num_days_start" placeholder="3" class="u-w50" value="{{old('num_days_start')}}" />日間～
+            <input type="text" id="num_days_end" name="num_days_end" placeholder="6" class="u-w50" value="{{old('num_days_end')}}">日間
           </td>
         </tr>
       </table>
@@ -99,23 +110,38 @@
       <table class="l-table-input">
         <tr>
           <!-- 顧客コード -->
-          <th><label for="customer_code">顧客コード</label></th>
-          <td><input type="text" id="customer_code" name="customer_code" placeholder="1234567890" /></td>
+          <th><label for="member_code">顧客コード</label></th>
+          <td><input type="text" id="member_code" name="member_code" placeholder="1234567890" value="{{old('member_code')}}" /></td>
           <!-- お客様氏名 -->
-          <th><label for="customer_name">お客様氏名</label></th>
-          <td><input type="text" id="customer_name" name="customer_name" placeholder="サン太郎" /></td>
+          <th><label for="name">お客様氏名</label></th>
+          <td><input type="text" id="name" name="name" placeholder="サン太郎" value="{{old('name')}}" /></td>
           <!-- ふりがな -->
-          <th><label for="furigana">ふりがな</label></th>
-          <td><input type="text" id="furigana" name="furigana" placeholder="さんたろう" /></td>
+          <th><label for="kana">ふりがな</label></th>
+          <td><input type="text" id="kana" name="kana" placeholder="さんたろう" value="{{old('kana')}}" /></td>
           <!-- 利用回数 -->
-          <th><label for="use_count">利用回数</label></th>
-          <td><input type="text" id="use_count" name="use_count" placeholder="8回" /></td>
+          <th><label for="used_num">利用回数</label></th>
+          <td><input type="text" id="used_num" name="used_num" placeholder="8回" value="{{old('used_num')}}" /></td>
         </tr>
         <tr>
-          <!-- 会員ランク -->
-          <th><label for="member_rank">会員ランク</label></th>
-          <td><input type="text" id="member_rank" name="member_rank" placeholder="シルバー" /></td>
-          <!-- ラベル2 -->
+          @for ($i = 0; $i < 4; $i++)
+            @if (isset($labels[$i]))
+              @include('manage.deals.commons.label_tag_select', ['label' => $labels[$i]])
+            @else
+              <th></th><td></td>
+            @endif
+          @endfor
+          {{--  <!-- ラベル1 -->
+          <th><label for="label1">会員ランク</label></th>
+          <td>
+            <div class="c-form-select-wrap">
+              <select name="label1" id="label1">
+                <option value="" selected>未選択</option>
+                <option value="">ダミーダミー</option>
+              </select>
+            </div>
+          </td>  --}}
+          {{--  <td><input type="text" id="member_rank" name="member_rank" placeholder="シルバー" /></td>  --}}
+          {{--  <!-- ラベル2 -->
           <th><label for="label2">ラベル2</label></th>
           <td>
             <div class="c-form-select-wrap">
@@ -144,27 +170,27 @@
                 <option value="">ダミーダミー</option>
               </select>
             </div>
-          </td>
+          </td>  --}}
         </tr>
         <tr>
           <!-- 郵便番号 -->
-          <th><label for="postal_code">郵便番号</label></th>
-          <td><input type="text" id="postal_code" name="postal_code" placeholder="111-0000" /></td>
+          <th><label for="zip">郵便番号</label></th>
+          <td><input type="text" id="zip" name="zip" placeholder="111-0000" value="{{old('zip')}}" /></td>
           <!-- 電話番号 -->
           <th><label for="tel">電話番号</label></th>
-          <td><input type="text" id="tel" name="tel" placeholder="090-1234-5678" /></td>
+          <td><input type="text" id="tel" name="tel" placeholder="090-1234-5678" value="{{old('tel')}}" /></td>
           <!-- 以下2つは桁数次第ではレイアウトが崩れる分けてもよいかも -->
           <!-- Mail -->
-          <th><label for="mail">Mail</label></th>
-          <td><input type="text" id="mail" name="mail" placeholder="example@aaa.com" /></td>
+          <th><label for="email">Mail</label></th>
+          <td><input type="email" id="email" name="email" placeholder="example@aaa.com" value="{{old('email')}}" /></td>
           <!-- LINE ID -->
           <th><label for="line_id">LINE ID</label></th>
-          <td><input type="text" id="line_id" name="line_id" placeholder="sun123" /></td>
+          <td><input type="text" id="line_id" name="line_id" placeholder="sun123" value="{{old('line_id')}}" /></td>
         </tr>
         <tr>
           <!-- 領収書の宛名 -->
-          <th><label for="receipt_name">領収書の宛名</label></th>
-          <td colspan="3"><input type="text" id="receipt_name" name="receipt_name" placeholder="サン太郎" /></td>
+          <th><label for="receipt_address">領収書の宛名</label></th>
+          <td colspan="3"><input type="text" id="receipt_address" name="receipt_address" placeholder="サン太郎" value="{{old('receipt_address')}}" /></td>
         </tr>
       </table>
 
@@ -175,27 +201,30 @@
           <!-- 到着予定日 -->
           <th>到着予定日</th>
           <td colspan="3">
-            <input type="text" id="arrival_date" class="u-w-auto" name="arrival_date_forward" placeholder="2024/2/5(月)" />～
-            <input type="text" id="arrival_date" class="u-w-auto" name="arrival_date_backward" placeholder="2024/2/5(月)" />
+            <input type="date" id="arrive_date_start" class="u-w-auto" name="arrive_date_start" placeholder="2024/2/5(月)" value="{{old('arrive_date_start')}}" />～
+            <input type="date" id="arrive_date_end" class="u-w-auto" name="arrive_date_end" placeholder="2024/2/5(月)" value="{{old('arrive_date_end')}}" />
           </td>
           <!-- 到着予定時間 -->
           <th>到着予定時間</th>
           <td colspan="3">
-            <input type="text" id="arrival_time" class="u-w-auto" name="arrival_time_forward" placeholder="16：45" />～
-            <input type="text" id="arrival_time" class="u-w-auto" name="arrival_time_backward" placeholder="16：45" />
+            <input type="time" id="arrive_time_start" class="u-w-auto" name="arrive_time_start" placeholder="16：45" value="{{old('arrive_time_start')}}" />～
+            <input type="time" id="arrive_time_end" class="u-w-auto" name="arrive_time_end" placeholder="16：45" value="{{old('arrive_time_end')}}" />
           </td>
         </tr>
         <tr>
           <!-- 到着便 -->
           <th>到着便</th>
-          <td><input type="text" id="arrival_flight" name="arrival_flight" placeholder="NH205" /></td>
+          <td><input type="text" id="arrival_flight_name" name="arrival_flight_name" placeholder="NH205" value="{{old('arrival_flight_name')}}" /></td>
           <!-- 航空会社 -->
           <th>航空会社</th>
           <td>
             <div class="c-form-select-wrap">
-              <select name="airline" id="airline">
+              <select name="airline_id" id="airline_id">
                 <option value="" selected>未選択</option>
-                <option value="">ANA</option>
+                @foreach ($airlines as $airline)
+                  <option value="{{$airline->id}}" {{($airline->id == old('airline_id') ) ? 'selected':''}}>{{$airline->name}}</option>
+                @endforeach
+                {{--  <option value="">ANA</option>  --}}
               </select>
             </div>
           </td>
@@ -203,9 +232,12 @@
           <th>出発空港</th>
           <td>
             <div class="c-form-select-wrap">
-              <select name="departure_airport" id="departure_airport">
+              <select name="dep_airport_id" id="dep_airport_id">
                 <option value="" selected>未選択</option>
-                <option value="">LAX</option>
+                @foreach ($airports as $airport)
+                  <option value="{{$airport->id}}" {{($airport->id == old('dep_airport_id') ) ? 'selected':''}}>{{$airport->name}}</option>
+                @endforeach
+                {{--  <option value="">LAX</option>  --}}
               </select>
             </div>
           </td>
@@ -213,9 +245,12 @@
           <th>到着空港</th>
           <td>
             <div class="c-form-select-wrap">
-              <select name="arrival_airport" id="arrival_airport">
+              <select name="arr_airport_id" id="arr_airport_id">
                 <option value="" selected>未選択</option>
-                <option value="">NRT</option>
+                @foreach ($airports as $airport)
+                  <option value="{{$airport->id}}" {{($airport->id == old('arr_airport_id') ) ? 'selected':''}}>{{$airport->name}}</option>
+                @endforeach
+                {{--  <option value="">NRT</option>  --}}
               </select>
             </div>
           </td>
@@ -223,69 +258,101 @@
         <tr>
           <!-- 到着ターミナル -->
           <th>到着ターミナル</th>
-          <td><input type="text" id="arrival_terminal" name="arrival_terminal" placeholder="2" /></td>
+          <td><input type="text" id="terminal_id" name="terminal_id" placeholder="2" value="{{old('terminal_id')}}" /></td>
           <td colspan="6">
             <!-- 到着日とお迎え日が異なる　チェックボックス -->
-            <input type="checkbox" name="arrival_date_different" id="arrival_date_different" value="1"><label for="arrival_date_different">到着日とお迎え日が異なる</label>
+            <input type="checkbox" name="arrival_flg" id="arrival_flg" value="1" {{old('arrival_flg') ? 'checked ':''}}>
+            <label for="arrival_flg">到着日とお迎え日が異なる</label>
           </td>
         </tr>
       </table>
 
-      <!-- 到着予定 -->
+      <!-- 車両情報 -->
       <div class="c-title__table">車両情報</div>
       <table class="l-table-input">
         <tr>
           <!-- 車両コード -->
-          <th><label for="car_code">メーカー</label></th>
+          <th><label for="car_maker_id">メーカー</label></th>
           <!-- セレクト -->
           <td>
             <div class="c-form-select-wrap">
-              <select name="car_code" id="car_code">
+              <select name="car_maker_id" id="car_maker_id">
                 <option value="" selected>未選択</option>
-                <option value="">ダミーダミー</option>
+                @foreach ($carMakers as $carMaker)
+                  <option value="{{$carMaker->id}}" {{($carMaker->id == old('car_maker_id') ) ? 'selected':''}}>{{$carMaker->name}}</option>
+                @endforeach
+                {{--  <option value="">ダミーダミー</option>  --}}
               </select>
             </div>
           </td>
           <!-- 車種 -->
-          <th><label for="car_type">車種</label></th>
+          <th><label for="car_id">車種</label></th>
           <!-- セレクト -->
           <td>
             <div class="c-form-select-wrap">
-              <select name="car_type" id="car_type">
+              <select name="car_id" id="car_id">
                 <option value="" selected>未選択</option>
-                <option value="">ダミーダミー</option>
+                @foreach ($cars as $car)
+                  <option value="{{$car->id}}" {{($car->id == old('car_id') ) ? 'selected':''}}>{{$car->name}}</option>
+                @endforeach
+                {{--  <option value="">ダミーダミー</option>
                 <option value="">BMW5</option>
-                <option value="">なーーーーがーーーーい車種名</option>
+                <option value="">なーーーーがーーーーい車種名</option>  --}}
               </select>
             </div>
           </td>
           <!-- 車番 -->
-          <th><label for="car_number">車番</label></th>
-          <td><input type="text" id="car_number" name="car_number" placeholder="1234" /></td>
+          <th><label for="number">車番</label></th>
+          <td><input type="text" id="number" name="number" placeholder="1234" value="{{old('number')}}" /></td>
           <!-- 色 -->
-          <th><label for="color">色</label></th>
-          <td><input type="text" id="color" name="color" placeholder="黒" /></td>
+          <th><label for="car_color_id">色</label></th>
+          <td>
+            <div class="c-form-select-wrap">
+              <select name="car_color_id" id="car_color_id">
+                <option value="" selected>未選択</option>
+                @foreach ($carColors as $carColor)
+                  <option value="{{$carColor->id}}" {{($carColor->id == old('car_color_id') ) ? 'selected':''}}>{{$carColor->name}}</option>
+                @endforeach
+              </select>
+            </div>
+            {{--  <input type="text" id="color" name="color" placeholder="黒" />  --}}
+          </td>
         </tr>
         <tr>
           <!-- 区分 -->
           <th>区分</th>
           <!-- インプット -->
-          <td><input type="text" id="classification" name="classification" placeholder="普通" /></td>
+          <td>
+            <div class="c-form-select-wrap">
+              <select name="size_type" id="size_type">
+                <option value="" selected>未選択</option>
+                @foreach(\App\Enums\CarSize::cases() as $carSize)
+                  <option value="{{$carSize->value}}" {{old('size_type')==$carSize->value ? 'selected':''}}>
+                    {{$carSize->label()}}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+            {{--  <input type="text" id="classification" name="classification" placeholder="普通" />  --}}
+          </td>
           <!-- 人数 -->
           <th>人数</th>
           <td>
-            <input type="text" id="number_of_people" name="number_of_people" placeholder="3" class="u-w80" />名
+            <input type="text" id="num_members" name="num_members" placeholder="3" class="u-w80" value="{{old('num_members')}}" />名
           </td>
 
           <!-- 車両取扱 -->
           <th>
-            <label for="car_handling">車両取扱</label>
+            <label for="car_caution_id">車両取扱</label>
           </th>
           <td colspan="3">
             <div class="c-form-select-wrap">
-              <select name="car_handling" id="car_handling">
+              <select name="car_caution_id" id="car_caution_id">
                 <option value="" selected>未選択</option>
-                <option value="">ダミーダミー</option>
+                @foreach ($carCautions as $carCaution)
+                  <option value="{{$carCaution->id}}" {{($carCaution->id == old('car_caution_id') ) ? 'selected':''}}>{{$carCaution->name}}</option>
+                @endforeach
+                {{--  <option value="">ダミーダミー</option>  --}}
               </select>
             </div>
           </td>
@@ -296,7 +363,7 @@
   </div>
   <div class="l-container__button-fixed">
     <div class="c-button-group__form">
-      <button type="button" class="c-button__clear">すべてをクリア</button>
+      <input type="reset" class="c-button__clear" form="form1">すべてをクリア</input>
       <button type="submit" class="c-button__submit" form="form1">検索</button>
     </div>
 
