@@ -1,11 +1,20 @@
 <?php
 namespace App\Services;
 
+use App\Models\Label;
 use App\Models\Member;
 use App\Models\TagMember;
 
 class LabelTagManager
 {
+    public static function getLabelTags($officeId)
+    {
+        return Label::with('tags')->where('office_id', $officeId)
+            ->orderBy('sort','asc')
+            ->get();
+    }
+
+
     public static function attachTagDataToMember(Member $member = null)
     {
         if(!$member) {
