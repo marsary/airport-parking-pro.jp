@@ -26,6 +26,7 @@
     <!-- <link rel="stylesheet" type='text/css' media='all' href="/css/webslides.css"> -->
     <!-- Optional - CSS SVG Icons (Font Awesome) -->
     <link rel="stylesheet" type='text/css' media='all' href="{{ asset('css/svg-icons.css') }}">
+    <link rel="stylesheet" type='text/css' href="{{ asset('css/app.css') }}">
     @stack('css')
 
     <!-- CSRF Token -->
@@ -34,6 +35,10 @@
     <!-- base path -->
     <input type="hidden" value="{{url('/')}}" id="base_path" name="base_path">
 
+    <!-- js -->
+    <script src="{{ asset('js/request.js') }}" defer></script>
+    <script src="{{ asset('js/luxon.min.js') }}" defer></script>
+    <script src="{{ asset('js/global.js') }}" defer></script>
   </head>
   <body>
     <div class="l-wrap">
