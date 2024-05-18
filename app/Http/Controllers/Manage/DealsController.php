@@ -289,6 +289,18 @@ class DealsController extends Controller
     }
 
 
+    public function searchExport(Request $request)
+    {
+        $dealIds = explode(',', $request->input('deal_ids'));
+
+        /** @var DealSearchExport $export */
+        $export = new DealSearchExport($dealIds);
+
+        $fileName = Carbon::today()->format('Ymd') . '_search_result.xlsx';
+        return $export->download($fileName);
+
+    }
+
 
     /**
      * Show the form for creating a new resource.
