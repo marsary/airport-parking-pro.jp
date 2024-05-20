@@ -12,18 +12,33 @@
     <div class="l-grid--col2 l-grid--gap2">
       <div>
         <ul class="l-grid--col2 l-grid--gap1 u-pb2 u-mb2 u-border--bottom">
-          <li class="c-button__select--h90">ご予約情報</li>
-          <li class="c-button__select--h90">顧客情報</li>
+          <li class="c-button__select--h90">
+            <a id="to_deals_show" href="#" class="p-index__link">ご予約情報</a>
+          </li>
+          <li class="c-button__select--h90">
+            <a id="to_members_show" href="#" class="p-index__link">顧客情報</a>
+
+          </li>
         </ul>
 
         <!-- select ボタン -->
         <div class="p-input-user-option__select--input">
-          <div class="c-button__select button_select">洗車</div>
+          @foreach ($goodCategories as $goodCategory)
+            <div class="c-button__select button_select" onclick="openOptionModal({{$goodCategory->id}})">{{$goodCategory->name}}</div>
+            @include('include.option.option', [
+              'modalId' => $goodCategory->id,
+              'goods' => $goodCategory->goods,
+              'goodCategory' => $goodCategory,
+              ]
+            )
+          @endforeach
+
+          {{--  <div class="c-button__select button_select">洗車</div>
           <div class="c-button__select button_select">メンテナンス</div>
           <div class="c-button__select button_select">保険</div>
           <div class="c-button__select button_select">回数券</div>
           <div class="c-button__select button_select">物販</div>
-          <div class="c-button__select button_select">その他</div>
+          <div class="c-button__select button_select">その他</div>  --}}
         </div>
       </div>
 
@@ -103,7 +118,7 @@
   </div><!-- /.l-container__inner -->
 
   <!-- オプションをクリックしたら出てくるmodal -->
-  @include('include.option.option')
+  {{--  @include('include.option.option')  --}}
 
 
   <!-- 決済画面 -->
@@ -161,9 +176,14 @@
                 <div class="c-form-select-wrap">
                   <select id="coupon" name="coupon" class="">
                     <option value="0" selected>割引クーポンを選択して下さい</option>
-                    <option value="1">クーポンコード1</option>
+                    @foreach ($coupons as $coupon)
+                      <option value="{{ $coupon->id }}">
+                        {{$coupon->name }}
+                      </option>
+                    @endforeach
+                    {{--  <option value="1">クーポンコード1</option>
                     <option value="2">クーポンコード2</option>
-                    <option value="3">クーポンコード3</option>
+                    <option value="3">クーポンコード3</option>  --}}
                   </select>
                 </div>
                 <button type="button" class="apply_button c-button__apply--green --disabled u-mb1" disabled>適用</button>
@@ -290,16 +310,58 @@
 
 @endsection
 @push("scripts")
+<script src="{{ asset('js/commons/tax.js') }}"></script>
 <!-- モーダル -->
-<script src="{{ asset('js/modalOption.js') }}"></script>
+{{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
 <!-- 決済画面をモーダルで表示するスクリプト-->
 <script src="{{ asset('js/removeButton.js') }}"></script>
 <script src="{{ asset('js/modal.js') }}"></script>
 
 <script>
+  const goodsMap = @js($goodsMap);
+  let goodIds = [];
+  let deal = null;
+  let dealGoods = {};
+  let optionItemSection = null;
+
+  let reducedSubTotalDisp;
+  let reducedTaxDisp;
+  let subTotalDisp;
+  let taxDisp;
+  let taxExemptDisp;
+  let totalDisp;
+  let reducedSubTotalInput;
+  let reducedTaxInput;
+  let subTotalInput;
+  let taxInput;
+  let taxExemptInput;
+  let totalInput;
+
+  function openOptionModal(modalId) {
+    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
+    modalAreaOption.classList.add('is-active');
+  }
+  function closeOptionModal(modalId) {
+    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
+    modalAreaOption.classList.remove('is-active');
+  }
+
+  function addRemoveList(list, addingList, removingList = [])
+  {
+    list = Array.from(new Set([...list, ...addingList]));
+    return list.filter(x => !removingList.includes(x));
+  }
+
+
+
   // 数量変更ボタンのイベントリスナーを設定
   document.querySelectorAll('.c-button-quantity').forEach(function(button) {
     button.addEventListener('click', function() {
+      handleClickQuantityButton(button)
+    });
+  });
+
+  function handleClickQuantityButton(button) {
       // オプションアイテムの要素を取得
       let optionItem = button.closest('.p-register__optionItem');
       // 数量と価格の要素を取得
@@ -317,8 +379,7 @@
       // 数量と価格を更新
       countElement.textContent = count;
       priceElement.textContent = (pricePerItem * count).toLocaleString() + '円';
-    });
-  });
+  }
 </script>
 <script>
   // クーポンの選択要素を取得
