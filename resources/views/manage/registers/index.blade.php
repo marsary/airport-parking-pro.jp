@@ -186,7 +186,7 @@
                     <option value="3">クーポンコード3</option>  --}}
                   </select>
                 </div>
-                <button type="button" class="apply_button c-button__apply--green --disabled u-mb1" disabled>適用</button>
+                                <button type="button" class="apply_button c-button__apply--green --disabled u-mb1" disabled>適用</button>
               </div>
               <div class="p-register__adjustment c-button-optionSelect-light l-grid--col4 l-grid--gap05">
                 <div>
@@ -353,13 +353,251 @@
   }
 
 
+  function addOptions(modalId) {
+    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
+    const checkBoxList = modalAreaOption.querySelectorAll('input[type="checkbox"]');
+
+    let addingIds = [];
+    let removingIds = [];
+    // オプション選択項目を更新する。
+    checkBoxList.forEach((checkbox) => {
+      const goodId = parseInt(checkbox.value);
+      if(checkbox.checked) {
+        addingIds.push(goodId);
+      } else {
+        removingIds.push(goodId);
+      }
+    });
+
+    goodIds = addRemoveList(goodIds, addingIds, removingIds);
+    goodIds.forEach(goodId => {
+      if(dealGoods[goodId] == undefined) {
+        const good = goodsMap[goodId]
+        dealGoods[goodId] = {
+          good_id:goodId,
+          num:1,
+          total_price:good.price,
+          total_tax: calcTax(good.tax_type, good.price)
+        }
+      }
+    })
+    Object.keys(dealGoods).forEach((goodId) => {
+      const dealGood = dealGoods[goodId]
+      if(!goodIds.includes(parseInt(dealGood.good_id))) {
+        delete dealGoods[dealGood.good_id]
+      }
+    })
+    setTotalPrices()
+    updateOptionList()
+  }
+
+  function updateModalOptions() {
+    document.querySelectorAll('input[name*=modal_good_ids]').forEach(elem => {
+      if(goodIds.includes(parseInt(elem.value))) {
+        elem.checked = true;
+      } else {
+        elem.checked = false;
+      }
+    })
+  }
+
+  function updateOptionList() {
+    removeAllChildNodes(optionItemSection)
+    const el = document.createElement('div');
+    el.classList.add("p-register__optionItem")
+    el.innerHTML = `
+      <div class="">駐車料金（税抜）</div>
+      <div class="p-register__optionPrice">
+        ${formatCurrency(deal.price)}
+        <span class="u-font-yen">円</span>
+      </div>
+    `
+    optionItemSection.appendChild(el)
+
+    Object.keys(dealGoods).forEach((goodId) => {
+      const dealGood = dealGoods[goodId]
+      const good = goodsMap[goodId]
+      const row = makeOptionRow(good.name, dealGood.num, dealGood.total_price, dealGood.good_id)
+      optionItemSection.appendChild(row)
+    })
+  }
+
+  function makeOptionRow(name, count, price, goodId) {
+    const el = document.createElement('div');
+    el.classList.add("p-register__optionItem")
+
+    el.innerHTML = `
+    <div>${name}</div>
+    <div class="p-register__optionItem--right">
+      <div>
+        <button type="button" class="button c-button-quantity" onclick="updateQuantity(this, ${goodId}, '+')" data-operation="up">＋</button>
+        <button type="button" class="button c-button-quantity" onclick="updateQuantity(this, ${goodId}, '-')" data-operation="down">－</button>
+      </div>
+      <div><span class="count">${count}</span>点</div>
+      <div class="p-register__optionPrice optionPrice">
+        ${formatCurrency(price)}
+        <span class="u-font-yen">円</span>
+      </div>
+    </div>
+    `;
+
+    return el;
+  }
+
+  function updateQuantity(button, goodId, mode) {
+    const dealGood = dealGoods[goodId]
+    const good = goodsMap[goodId]
+    if(dealGood == undefined) {
+      return;
+    }
+    switch(mode) {
+      case '+':
+      dealGood.num += 1
+      break;
+      case '-':
+      dealGood.num -= 1
+      break;
+    }
+    dealGood.total_price = good.price * dealGood.num
+    dealGood.total_tax = calcTax(good.tax_type, dealGood.total_price)
+    setTotalPrices()
+    handleClickQuantityButton(button)
+    if(dealGood.num == 0) {
+      delete dealGoods[goodId]
+      updateOptionList()
+    }
+  }
+
+
+  function setTotalPrices() {
+    let tenPercentAmountExcludingTax = deal.price;
+    let tenPercentTax = deal.tax;
+    let totalAmount = deal.price + deal.tax;
+    let eightPercentAmountExcludingTax = 0;
+    let eightPercentTax = 0;
+    let NoTaxAmount = 0;
+
+    Object.keys(dealGoods).forEach((goodId) => {
+      const dealGood = dealGoods[goodId]
+      const good = goodsMap[goodId]
+      switch (good.tax_type) {
+        case TaxTypes.EIGHT_PERCENT:
+          eightPercentAmountExcludingTax += dealGood.total_price
+          eightPercentTax += dealGood.total_tax
+          break;
+        case TaxTypes.TEN_PERCENT:
+          tenPercentAmountExcludingTax += dealGood.total_price
+          tenPercentTax += dealGood.total_tax
+          break;
+        case TaxTypes.EXEMPT:
+          NoTaxAmount += dealGood.total_price
+          break;
+        default:
+          throw new Error(good.name + '取引商品に税種別がありません！');
+          break;
+      }
+      totalAmount += dealGood.total_price + dealGood.total_tax
+    })
+
+    // 12	対象予約の商品のうち、税区分が8％の商品の総額を表示する
+    reducedSubTotalDisp.textContent = formatCurrency(eightPercentAmountExcludingTax,null,' 円');
+    reducedSubTotalInput.value = eightPercentAmountExcludingTax;
+    // 13	上記商品の消費税を表示する
+    reducedTaxDisp.textContent = formatCurrency(eightPercentTax,null,' 円');
+    reducedTaxInput.value = eightPercentTax;
+    // 14	対象予約の商品のうち、税区分が10％の商品の総額を表示する
+    subTotalDisp.textContent = formatCurrency(tenPercentAmountExcludingTax,null,' 円');
+    subTotalInput.value = tenPercentAmountExcludingTax;
+    // 15	上記商品の消費税を表示する
+    taxDisp.textContent = formatCurrency(tenPercentTax,null,' 円');
+    taxInput.value = tenPercentTax;
+    // 16	対象予約の商品のうち、税区分が税無しの商品の総額を表示する
+    taxExemptDisp.textContent = formatCurrency(NoTaxAmount,null,' 円');
+    taxExemptInput.value = NoTaxAmount;
+    // 17	対象予約の総額を表示する
+    totalDisp.textContent = formatCurrency(totalAmount,null,' 円');
+    totalInput.value = totalAmount;
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    const BASE_PATH = document.getElementById('base_path').value;
+    optionItemSection = document.getElementById('optionItem');
+    reducedSubTotalDisp = document.getElementById('reduced_subTotal');
+    reducedTaxDisp = document.getElementById('reduced_tax');
+    subTotalDisp = document.getElementById('subTotal');
+    taxDisp = document.getElementById('tax');
+    taxExemptDisp = document.getElementById('tax_exempt');
+    totalDisp = document.getElementById('total');
+    reducedSubTotalInput = document.getElementById('reducedSubTotalInput');
+    reducedTaxInput = document.getElementById('reducedTaxInput');
+    subTotalInput = document.getElementById('subtotalInput');
+    taxInput = document.getElementById('taxInput');
+    taxExemptInput = document.getElementById('taxExemptInput');
+    totalInput = document.getElementById('totalInput');
+    toDealsShowLink = document.getElementById('to_deals_show');
+    toMembersShowLink = document.getElementById('to_members_show');
+
+
+    // オプション情報表示
+    async function dispOptionTable() {
+      const dealId = 18;
+
+      if(dealId == '') {
+        return;
+      }
+
+      // 取引IDをAPIに送信
+      const json = await apiRequest.get(BASE_PATH + "/manage/registers/" + dealId)
+
+      console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
+      if(json.success){
+        console.log(json.data);
+
+        deal = json.data.deal
+        dealGoods = json.data.dealGoods
+        goodIds = Object.keys(dealGoods).map(goodId => parseInt(goodId))
+
+        toDealsShowLink.href = BASE_PATH + "/manage/deals/" + deal.id
+        toMembersShowLink.href = BASE_PATH + "/manage/members/" + deal.member_id
+
+        // dealGoods
+        // 6	取引商品データの名前を表示する
+        // 9	上記商品の数量を表示する
+        // 10	上記商品の総額を表示する
+        updateOptionList()
+        updateModalOptions()
+        // totalPrices
+        // 12	対象予約の商品のうち、税区分が8％の商品の総額を表示する
+        reducedSubTotalDisp.textContent = formatCurrency(json.data.totalPrices.eightPercentAmountExcludingTax,null,' 円');
+        reducedSubTotalInput.value = json.data.totalPrices.eightPercentAmountExcludingTax;
+        // 13	上記商品の消費税を表示する
+        reducedTaxDisp.textContent = formatCurrency(json.data.totalPrices.eightPercentTax,null,' 円');
+        reducedTaxInput.value = json.data.totalPrices.eightPercentTax;
+        // 14	対象予約の商品のうち、税区分が10％の商品の総額を表示する
+        subTotalDisp.textContent = formatCurrency(json.data.totalPrices.tenPercentAmountExcludingTax,null,' 円');
+        subTotalInput.value = json.data.totalPrices.tenPercentAmountExcludingTax;
+        // 15	上記商品の消費税を表示する
+        taxDisp.textContent = formatCurrency(json.data.totalPrices.tenPercentTax,null,' 円');
+        taxInput.value = json.data.totalPrices.tenPercentTax;
+        // 16	対象予約の商品のうち、税区分が税無しの商品の総額を表示する
+        taxExemptDisp.textContent = formatCurrency(json.data.totalPrices.NoTaxAmount,null,' 円');
+        taxExemptInput.value = json.data.totalPrices.NoTaxAmount;
+        // 17	対象予約の総額を表示する
+        totalDisp.textContent = formatCurrency(json.data.totalPrices.totalAmount,null,' 円');
+        totalInput.value = json.data.totalPrices.totalAmount;
+      }
+    }
+
+    // 初期画面で取引を取得
+    dispOptionTable()
+  })
 
   // 数量変更ボタンのイベントリスナーを設定
-  document.querySelectorAll('.c-button-quantity').forEach(function(button) {
+  {{--  document.querySelectorAll('.c-button-quantity').forEach(function(button) {
     button.addEventListener('click', function() {
       handleClickQuantityButton(button)
     });
-  });
+  });  --}}
 
   function handleClickQuantityButton(button) {
       // オプションアイテムの要素を取得
