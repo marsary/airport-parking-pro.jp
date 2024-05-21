@@ -17,6 +17,7 @@
           @include('include.option.option', [
             'modalId' => $goodCategory->id,
             'goods' => $goodCategory->goods,
+            'goodCategory' => $goodCategory,
             ]
           )
         @endforeach

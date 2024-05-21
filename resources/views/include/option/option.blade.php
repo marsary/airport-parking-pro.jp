@@ -2,15 +2,15 @@
   <div id="modalAreaOption{{$modalId}}" class="l-modal modal-option">
     <!-- モーダルのinnerを記述   -->
     <div class="l-modal__inner">
-      <div class="l-modal__head">オプション選択：洗車</div>
+      <div class="l-modal__head">オプション選択：{{$goodCategory->name}}</div>
       <div class="l-modal__close modal_optionClose" onclick="closeOptionModal({{$modalId}})">×</div>
       <div class="l-modal__content">
         <div class="l-grid--col4 l-grid--gap1">
-          <!-- 洗車を押したら表示 -->
+          <!-- オプションを押したら表示 -->
           @foreach ($goods as $good)
             <div class="c-button-optionSelect">
               <input type="checkbox" id="modal_good_ids_{{$good->id}}" name="modal_good_ids[]" value="{{$good->id}}"
-                {{(in_array($good->id, old('modal_good_ids', $reserve->good_ids))) ? 'checked ':''}}
+                {{(in_array($good->id, old('modal_good_ids', isset($reserve) ? $reserve->good_ids: []))) ? 'checked ':''}}
               >
               <label for="modal_good_ids_{{$good->id}}" class="text-center u-pt2 u-pb2">{{$good->name}}<br>{{number_format($good->price)}}円</label>
             </div>
