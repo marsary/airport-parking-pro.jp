@@ -4,6 +4,7 @@
 @section('content')
 @include('include.reserve.header_information')
 @include('include.step', ['step' => "confirm"])
+@include('include.messages.errors')
 
 <div class="p-user-input__inner">
   <form action="{{route('reserves.store')}}" method="POST">
@@ -18,7 +19,7 @@
         <th>予約日時</th>
         <td>{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
         <th>予約経路</th>
-        <td>{{$agency->name}}{{--公式HP--}}</td>
+        <td>{{$agency?->name}}{{--公式HP--}}</td>
       </tr>
       <tr>
         <th>入庫日時</th>

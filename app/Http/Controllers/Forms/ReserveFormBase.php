@@ -96,7 +96,7 @@ class ReserveFormBase extends StdObject
         $this->office_id = config('const.commons.office_id');
         $this->status = DealStatus::NOT_LOADED->value;
         $this->reserve_date = Carbon::now();
-        // $this->reserve_code = Str::ulid();
+        $this->reserve_code = Str::ulid();
     }
 
 

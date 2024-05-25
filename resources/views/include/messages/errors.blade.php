@@ -1,3 +1,10 @@
+{{--  フラッシュメッセージ  --}}
+@if (session('failure'))
+  <div class="alert">
+    <span class="closebtn">&times;</span>
+    {{ session('failure') }}
+  </div>
+@endif
 {{--  バリデーションエラー  --}}
 @if (count($errors) > 0)
   <div class="alert">
