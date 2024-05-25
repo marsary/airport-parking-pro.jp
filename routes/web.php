@@ -14,6 +14,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('/deals/search', [\App\Http\Controllers\Manage\DealsController::class, 'search'])->name('deals.search');
         Route::get('/deals/search_export', [\App\Http\Controllers\Manage\DealsController::class, 'searchExport'])->name('deals.search_export');
         Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
+        Route::put('deals/{deal}/update_goods', [\App\Http\Controllers\Manage\DealsController::class, 'updateGoods'])->name('deals.update_goods');
         Route::resource('registers', \App\Http\Controllers\Manage\RegistersController::class);
         Route::get('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
         Route::get('reserves/entry_info', [\App\Http\Controllers\Manage\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
