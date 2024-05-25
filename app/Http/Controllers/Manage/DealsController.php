@@ -6,6 +6,7 @@ use App\Enums\DealStatus;
 use App\Exports\DealSearchExport;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\DealSearchRequest;
+use App\Http\Requests\Manage\DealUpdateGoodsRequest;
 use App\Models\Agency;
 use App\Models\Airline;
 use App\Models\Airport;
@@ -14,10 +15,13 @@ use App\Models\CarCaution;
 use App\Models\CarColor;
 use App\Models\CarMaker;
 use App\Models\Deal;
+use App\Models\DealGood;
 use App\Services\LabelTagManager;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DealsController extends Controller
 {
@@ -340,6 +344,51 @@ class DealsController extends Controller
     public function update(Request $request, string $id)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateGoods(DealUpdateGoodsRequest $request, string $id)
+    {
+        $deal = Deal::findOrFail($id);
+        try {
+            DB::transaction(function () use($request, $deal) {
+                // dealGoods[goodId] = {
+                //     good_id:goodId,
+                //     num:1,
+                //     total_price:good.price,
+                //     total_tax: calcTax(good.tax_type, good.price)
+                //   }
+                $deal->fill([
+                    // 'dsc_rate' => $this->reserve->dsc_rate,
+                    'total_price' => $request->total_price,
+                    'total_tax' => $request->total_tax,
+                ])->save();
+                $deal->dealGoods()->delete();
+                foreach ($request->dealGoods as $newDealGood) {
+                    $newDealGood['deal_id'] = $deal->id;
+                    $newDealGood['sales_date'] = Carbon::today();
+                    DealGood::create($newDealGood);
+                }
+                $deal->load('dealGoods');
+
+            });
+        } catch (\Throwable $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => '取引商品の更新に失敗しました。',
+             ]);
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'deal' => $deal
+            ],
+         ]);
     }
 
     /**
