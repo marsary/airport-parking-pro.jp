@@ -112,6 +112,7 @@
           <input type="hidden" name="tax_exempt" id="taxExemptInput" value="0" />
           <!-- 合計 -->
           <input type="hidden" name="total" id="totalInput" value="0" />
+          <input type="hidden" id="optionInfosSaved" value="0" />
         </form>
       </div>
     </div>
@@ -129,7 +130,8 @@
       <div class="l-modal__head">決済画面</div>
       <div id="modal_close" class="l-modal__close">×</div>
 
-      <form action="" method="POST">
+      <form id="payment_submit_form" action="{{route('manage.register.store', ['deal_id', $dealId])}}" method="POST">
+        @csrf
         <div class="l-modal__content p-register">
           <p class="text-center u-mb1">やまだたろう 様</p>
           <div class="p-register__settlement">
@@ -148,23 +150,23 @@
                   <label for="minus" class="c-button__calculator">-</label>
                 </div>
                 <!-- clear -->
-                <div>C</div>
+                <div data-key="C" class="numpad_key">C</div>
               </div>
               <div class="p-register__calculator--center">
-                <div>7</div>
-                <div>8</div>
-                <div>9</div>
-                <div>4</div>
-                <div>5</div>
-                <div>6</div>
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-                <div>0</div>
-                <div>00</div>
-                <div class="l-flex--center"><img src="{{ asset('images/icon/deleteButton.svg') }}" width="25" height="18" alt="deleteボタン"></div>
+                <div data-key="7" class="numpad_key">7</div>
+                <div data-key="8" class="numpad_key">8</div>
+                <div data-key="9" class="numpad_key">9</div>
+                <div data-key="4" class="numpad_key">4</div>
+                <div data-key="5" class="numpad_key">5</div>
+                <div data-key="6" class="numpad_key">6</div>
+                <div data-key="1" class="numpad_key">1</div>
+                <div data-key="2" class="numpad_key">2</div>
+                <div data-key="3" class="numpad_key">3</div>
+                <div data-key="0" class="numpad_key">0</div>
+                <div data-key="00" class="numpad_key">00</div>
+                <div data-key="Del" class="l-flex--center numpad_key"><img src="{{ asset('images/icon/deleteButton.svg') }}" width="25" height="18" alt="deleteボタン"></div>
               </div>
-              <div class="p-register__calculator--footer">ENTER</div>
+              <div id="enterButton" class="p-register__calculator--footer">ENTER</div>
             </div><!-- ./p-register__calculator -->
 
             <!-- right -->
@@ -186,14 +188,15 @@
                     <option value="3">クーポンコード3</option>  --}}
                   </select>
                 </div>
-                                <button type="button" class="apply_button c-button__apply--green --disabled u-mb1" disabled>適用</button>
+                <input type="hidden" id="couponData" value="{{json_encode(getKeyMapCollection($coupons))}}">
+                <button type="button" class="apply_button c-button__apply--green --disabled u-mb1" disabled>適用</button>
               </div>
               <div class="p-register__adjustment c-button-optionSelect-light l-grid--col4 l-grid--gap05">
                 <div>
-                  <input type="checkbox" id="campaign" name="campaign" value="値引き" /><label for="campaign" class="">値引き</label>
+                  <input type="checkbox" id="discount" name="discount" value="値引き" class="adjustItem" /><label for="discount" class="">値引き</label>
                 </div>
                 <div>
-                  <input type="checkbox" id="discount" name="discount" value="調整" /><label for="discount" class="">調整</label>
+                  <input type="checkbox" id="adjustment" name="adjustment" value="調整" class="adjustItem" /><label for="adjustment" class="">調整</label>
                 </div>
               </div>
               <!-- 支払方法　チェックボックス -->
@@ -204,33 +207,33 @@
                 </div>
                 <div class="c-form-select-wrap">
                   <select name="paymentMethod" id="paymentMethod_credit" class="">
-                    <option value="クレジット" selected>クレジット</option>
+                    <option value="" selected>クレジット</option>
                     <option value="クレジット">VISA</option>
                     <option value="クレジット">JCB</option>
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
                   <select name="paymentMethod" id="paymentMethod_emoney" class="">
-                    <option value="電子マネー" selected>電子マネー</option>
+                    <option value="" selected>電子マネー</option>
                     <option value="電子マネー">楽天Edy</option>
                     <option value="電子マネー">iD</option>
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
                   <select name="paymentMethod" id="paymentMethod_qrcode" class="">
-                    <option value="QRコード" selected>QRコード</option>
+                    <option value="" selected>QRコード</option>
                     <option value="QRコード">PayPay</option>
                     <option value="QRコード">LINE Pay</option>
                   </select>
                 </div>
                 <div class="c-button-optionSelect">
-                  <input type="checkbox" id="paymentMethod_certificate " name="paymentMethod" value="商品券" />
-                  <label for="paymentMethod_certificate " class="u-border--none c-button--light-gray">商品券</label>
+                  <input type="checkbox" id="paymentMethod_certificate" name="paymentMethod" value="商品券" />
+                  <label for="paymentMethod_certificate" class="u-border--none c-button--light-gray">商品券</label>
                 </div>
                 <div class="c-form-select-wrap">
                   <!-- 旅行支援 -->
                   <select name="paymentMethod" id="paymentMethod_travel" class="">
-                    <option value="旅行支援" selected>旅行支援</option>
+                    <option value="" selected>旅行支援</option>
                     <option value="旅行支援">Go To トラベル</option>
                     <option value="旅行支援">Go To Eat</option>
                   </select>
@@ -238,14 +241,14 @@
                 <div class="c-form-select-wrap">
                   <!-- バウチャー -->
                   <select name="paymentMethod" id="paymentMethod_voucher" class="">
-                    <option value="バウチャー" selected>バウチャー</option>
+                    <option value="" selected>バウチャー</option>
                     <option value="バウチャー">飲食券</option>
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
                   <!-- バウチャー -->
                   <select name="paymentMethod" id="paymentMethod_other" class="">
-                    <option value="その他" selected>その他</option>
+                    <option value="" selected>その他</option>
                     <option value="その他">その他1</option>
                     <option value="その他">その他2</option>
                   </select>
@@ -255,7 +258,7 @@
               <!-- 金額自動出力 -->
               <div class="p-register-checkout">
                 <div class="p-register-checkout__subtotal">
-                  <div class="p-register-checkout__head">
+                  <div id="register_subtotals" class="p-register-checkout__head">
                     <div class="p-register-checkout__item">
                       <div>小計</div>
                       <div class="p-register-checkout__price">0,000<span class="u-font-yen">円</span></div>
@@ -271,12 +274,12 @@
                   </div>
                   <div class="p-register-checkout__total-payment">
                     お支払い合計（税込）
-                    <div class="p-register-checkout__price--big">10,0000<span class="u-font-yen">円</span></div>
+                    <div id="register_total_amount" class="p-register-checkout__price--big">10,0000<span class="u-font-yen">円</span></div>
                   </div>
                 </div>
                 <div class="p-register-checkout__amount-received">
                   <div class="u-pl1">お預かり</div>
-                  <div class="p-register-checkout__head">
+                  <div id="register_received_items" class="p-register-checkout__head">
                     <div class="item-container p-register-checkout__item">
                       <div class="c-button__remove ">
                         <img src="{{ asset('images/icon/removeButton.svg') }}" width="16" height="16" class="button_remove">現金
@@ -289,7 +292,7 @@
                   </div>
                   <div class="p-register-checkout__total-change">
                     お釣り
-                    <div class="p-register-checkout__price--big">10,0000<span class="u-font-yen">円</span></div>
+                    <div id="register_total_change" class="p-register-checkout__price--big">10,0000<span class="u-font-yen">円</span></div>
                   </div>
                 </div>
               </div>
@@ -299,7 +302,7 @@
 
         <div class="l-modal__footer p-register__settlement--foot">
           <!-- disablesの時のクラス付与[--disabled2] -->
-          <button type="submit" class="is-block c-button__submit --disabled2 u-horizontal-auto" disabled>決済する</button>
+          <button id="paymentSubmitButton" type="submit" class="is-block c-button__submit --disabled2 u-horizontal-auto" disabled>決済する</button>
         </div>
       </form>
 
@@ -315,10 +318,12 @@
 {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
 <!-- 決済画面をモーダルで表示するスクリプト-->
 <script src="{{ asset('js/removeButton.js') }}"></script>
-<script src="{{ asset('js/modal.js') }}"></script>
+{{--  <script src="{{ asset('js/modal.js') }}"></script>  --}}
+<script src="{{ asset('js/pages/manage/register.js') }}"></script>
 
 <script>
   const goodsMap = @js($goodsMap);
+  {{--  const dealId = @js($dealId);  --}}
   let goodIds = [];
   let deal = null;
   let dealGoods = {};
@@ -536,7 +541,33 @@
     totalInput = document.getElementById('totalInput');
     toDealsShowLink = document.getElementById('to_deals_show');
     toMembersShowLink = document.getElementById('to_members_show');
+    const optionInfosSavedInput = document.getElementById('optionInfosSaved');
 
+    const modalArea = document.getElementById('modalArea');
+    const modalOpen = document.getElementById('modal_open');
+    const modalClose = document.getElementById('modal_close');
+
+    modalOpen.addEventListener('click', async function() {
+      optionInfosSavedInput.value = 0;
+      modalArea.classList.add('is-active');
+      // オプションデータをAPIに送信
+      const json = await apiRequest.put(BASE_PATH + "/manage/deals/" + dealId + "/update_goods", {
+        'dealGoods': dealGoods,
+        'total_price': parseInt(totalInput.value),
+        'total_tax': parseInt(reducedTaxInput.value) + parseInt(taxInput.value),
+      });
+
+      console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
+      if(json.success){
+        optionInfosSavedInput.value = 1;
+      } else {
+        alert(json.message);
+      }
+
+    });
+    modalClose.addEventListener('click', function() {
+      modalArea.classList.remove('is-active');
+    });
 
     // オプション情報表示
     async function dispOptionTable() {
@@ -551,6 +582,7 @@
 
       console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
       if(json.success){
+        optionInfosSavedInput.value = 0;
         console.log(json.data);
 
         deal = json.data.deal
