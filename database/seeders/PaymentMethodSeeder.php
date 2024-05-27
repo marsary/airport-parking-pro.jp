@@ -140,6 +140,24 @@ class PaymentMethodSeeder extends Seeder
                 'memo' => null,
                 'multiple' => true,
             ],
+            // 9：値引き
+            [
+                'id' => 15,
+                'office_id' => 1,
+                'name' => '値引き',
+                'type' => 9,
+                'memo' => null,
+                'multiple' => false,
+            ],
+            // 10：調整
+            [
+                'id' => 16,
+                'office_id' => 1,
+                'name' => '調整',
+                'type' => 10,
+                'memo' => null,
+                'multiple' => false,
+            ],
         ]);
     }
 }
