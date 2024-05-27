@@ -8,6 +8,8 @@
     <li class="l-breadcrumb__list">レジTOP</li>
   </ul>
 
+  @include('include.messages.errors')
+
   <div class="l-container__inner">
     <div class="l-grid--col2 l-grid--gap2">
       <div>
@@ -112,7 +114,10 @@
           <input type="hidden" name="tax_exempt" id="taxExemptInput" value="0" />
           <!-- 合計 -->
           <input type="hidden" name="total" id="totalInput" value="0" />
+          <input type="hidden" id="originalTotalChange" value="0" />
+          <input type="hidden" id="originalTotalPay" value="0" />
           <input type="hidden" id="optionInfosSaved" value="0" />
+          <input type="hidden" id="categoryPaymentDetailMap" value="">
         </form>
       </div>
     </div>
@@ -130,7 +135,7 @@
       <div class="l-modal__head">決済画面</div>
       <div id="modal_close" class="l-modal__close">×</div>
 
-      <form id="payment_submit_form" action="{{route('manage.register.store', ['deal_id', $dealId])}}" method="POST">
+      <form id="payment_submit_form" action="{{route('manage.registers.store', ['deal_id' => $dealId])}}" method="POST">
         @csrf
         <div class="l-modal__content p-register">
           <p class="text-center u-mb1">やまだたろう 様</p>
@@ -173,7 +178,7 @@
             <div class=" p-register__settlement--right">
 
               <!-- クーポンコード キャンペーン 伝票値引き option-->
-              <div class="l-grid--col3-auto l-grid--gap1">
+              <div class="l-grid--col3-auto l-grid--gap1 hidden">
                 <label for="coupon" class="c-button__apply--auto c-button__apply--green u-mb1">割引クーポン</label>
                 <div class="c-form-select-wrap">
                   <select id="coupon" name="coupon" class="">
@@ -193,64 +198,94 @@
               </div>
               <div class="p-register__adjustment c-button-optionSelect-light l-grid--col4 l-grid--gap05">
                 <div>
-                  <input type="checkbox" id="discount" name="discount" value="値引き" class="adjustItem" /><label for="discount" class="">値引き</label>
+                  <input type="checkbox" id="discount" name="discount" value="値引き" class="adjustItem entryType" /><label for="discount" class="">値引き</label>
                 </div>
                 <div>
-                  <input type="checkbox" id="adjustment" name="adjustment" value="調整" class="adjustItem" /><label for="adjustment" class="">調整</label>
+                  <input type="checkbox" id="adjustment" name="adjustment" value="調整" class="adjustItem entryType" /><label for="adjustment" class="">調整</label>
                 </div>
               </div>
               <!-- 支払方法　チェックボックス -->
               <div class="p-register__paymentMethod">
                 <div class="c-button-optionSelect">
-                  <input type="checkbox" id="paymentMethod_cash" name="paymentMethod" value="現金" checked />
+                  <input type="checkbox" id="paymentMethod_cash" name="paymentMethod" value="現金" checked class=" entryType" />
                   <label for="paymentMethod_cash" class="u-border--none c-button--light-gray">現金</label>
                 </div>
                 <div class="c-form-select-wrap">
-                  <select name="paymentMethod" id="paymentMethod_credit" class="">
+                  <select name="paymentMethod" id="paymentMethod_credit" class="entryType">
                     <option value="" selected>クレジット</option>
-                    <option value="クレジット">VISA</option>
-                    <option value="クレジット">JCB</option>
+                    @foreach (\Illuminate\Support\Arr::get($paymentMethodCategoryMap, 'credit', []) as $paymentMethod)
+                      <option value="{{ $paymentMethod->id }}">
+                        {{$paymentMethod->name }}
+                      </option>
+                    @endforeach
+                    {{--  <option value="クレジット">VISA</option>
+                    <option value="クレジット">JCB</option>  --}}
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
-                  <select name="paymentMethod" id="paymentMethod_emoney" class="">
+                  <select name="paymentMethod" id="paymentMethod_emoney" class="entryType">
                     <option value="" selected>電子マネー</option>
-                    <option value="電子マネー">楽天Edy</option>
-                    <option value="電子マネー">iD</option>
+                    @foreach (\Illuminate\Support\Arr::get($paymentMethodCategoryMap, 'electronicMoney', []) as $paymentMethod)
+                      <option value="{{ $paymentMethod->id }}">
+                        {{$paymentMethod->name }}
+                      </option>
+                    @endforeach
+                    {{--  <option value="電子マネー">楽天Edy</option>
+                    <option value="電子マネー">iD</option>  --}}
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
-                  <select name="paymentMethod" id="paymentMethod_qrcode" class="">
+                  <select name="paymentMethod" id="paymentMethod_qrcode" class="entryType">
                     <option value="" selected>QRコード</option>
-                    <option value="QRコード">PayPay</option>
-                    <option value="QRコード">LINE Pay</option>
+                    @foreach (\Illuminate\Support\Arr::get($paymentMethodCategoryMap, 'qrCode', []) as $paymentMethod)
+                      <option value="{{ $paymentMethod->id }}">
+                        {{$paymentMethod->name }}
+                      </option>
+                    @endforeach
+                    {{--  <option value="QRコード">PayPay</option>
+                    <option value="QRコード">LINE Pay</option>  --}}
                   </select>
                 </div>
                 <div class="c-button-optionSelect">
-                  <input type="checkbox" id="paymentMethod_certificate" name="paymentMethod" value="商品券" />
+                  <input type="checkbox" id="paymentMethod_certificate" name="paymentMethod" value="商品券" class="entryType" />
                   <label for="paymentMethod_certificate" class="u-border--none c-button--light-gray">商品券</label>
                 </div>
                 <div class="c-form-select-wrap">
                   <!-- 旅行支援 -->
-                  <select name="paymentMethod" id="paymentMethod_travel" class="">
+                  <select name="paymentMethod" id="paymentMethod_travel" class="entryType">
                     <option value="" selected>旅行支援</option>
-                    <option value="旅行支援">Go To トラベル</option>
-                    <option value="旅行支援">Go To Eat</option>
+                    @foreach (\Illuminate\Support\Arr::get($paymentMethodCategoryMap, 'travelAssistance', []) as $paymentMethod)
+                      <option value="{{ $paymentMethod->id }}">
+                        {{$paymentMethod->name }}
+                      </option>
+                    @endforeach
+                    {{--  <option value="旅行支援">Go To トラベル</option>
+                    <option value="旅行支援">Go To Eat</option>  --}}
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
                   <!-- バウチャー -->
-                  <select name="paymentMethod" id="paymentMethod_voucher" class="">
+                  <select name="paymentMethod" id="paymentMethod_voucher" class="entryType">
                     <option value="" selected>バウチャー</option>
-                    <option value="バウチャー">飲食券</option>
+                    @foreach (\Illuminate\Support\Arr::get($paymentMethodCategoryMap, 'voucher', []) as $paymentMethod)
+                      <option value="{{ $paymentMethod->id }}">
+                        {{$paymentMethod->name }}
+                      </option>
+                    @endforeach
+                    {{--  <option value="バウチャー">飲食券</option>  --}}
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
                   <!-- バウチャー -->
-                  <select name="paymentMethod" id="paymentMethod_other" class="">
+                  <select name="paymentMethod" id="paymentMethod_other" class="entryType">
                     <option value="" selected>その他</option>
-                    <option value="その他">その他1</option>
-                    <option value="その他">その他2</option>
+                    @foreach (\Illuminate\Support\Arr::get($paymentMethodCategoryMap, 'others', []) as $paymentMethod)
+                      <option value="{{ $paymentMethod->id }}">
+                        {{$paymentMethod->name }}
+                      </option>
+                    @endforeach
+                    {{--  <option value="その他">その他1</option>
+                    <option value="その他">その他2</option>  --}}
                   </select>
                 </div>
               </div>
@@ -323,7 +358,7 @@
 
 <script>
   const goodsMap = @js($goodsMap);
-  {{--  const dealId = @js($dealId);  --}}
+  const dealId = @js($dealId);
   let goodIds = [];
   let deal = null;
   let dealGoods = {};
@@ -542,14 +577,21 @@
     toDealsShowLink = document.getElementById('to_deals_show');
     toMembersShowLink = document.getElementById('to_members_show');
     const optionInfosSavedInput = document.getElementById('optionInfosSaved');
+    const originalTotalChangeInput = document.getElementById('originalTotalChange');
+    const originalTotalPayInput = document.getElementById('originalTotalPay');
+    const categoryPaymentDetailMapInput = document.getElementById('categoryPaymentDetailMap');
 
     const modalArea = document.getElementById('modalArea');
     const modalOpen = document.getElementById('modal_open');
     const modalClose = document.getElementById('modal_close');
 
     modalOpen.addEventListener('click', async function() {
-      optionInfosSavedInput.value = 0;
       modalArea.classList.add('is-active');
+      if(dealId == '') {
+        return;
+      }
+
+      optionInfosSavedInput.value = 0;
       // オプションデータをAPIに送信
       const json = await apiRequest.put(BASE_PATH + "/manage/deals/" + dealId + "/update_goods", {
         'dealGoods': dealGoods,
@@ -571,8 +613,6 @@
 
     // オプション情報表示
     async function dispOptionTable() {
-      const dealId = 18;
-
       if(dealId == '') {
         return;
       }
@@ -583,10 +623,15 @@
       console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
       if(json.success){
         optionInfosSavedInput.value = 0;
+        originalTotalChangeInput.value = json.data.payment?.cash_change;
+        originalTotalPayInput.value = json.data.payment?.total_pay;
+        categoryPaymentDetailMapInput.value = JSON.stringify(json.data.categoryPaymentDetailMap);
         console.log(json.data);
 
         deal = json.data.deal
-        dealGoods = json.data.dealGoods
+        if(isObject(json.data.dealGoods)) {
+          dealGoods = json.data.dealGoods
+        }
         goodIds = Object.keys(dealGoods).map(goodId => parseInt(goodId))
 
         toDealsShowLink.href = BASE_PATH + "/manage/deals/" + deal.id
