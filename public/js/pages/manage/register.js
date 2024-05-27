@@ -5,6 +5,8 @@ window.addEventListener('DOMContentLoaded', function() {
     const calculator = new Calculator(document.querySelector('input[name="symbol"]:checked').value);
     const registerSubtotalsSection = document.getElementById('register_subtotals');
     const registerReceivedItemsSection = document.getElementById('register_received_items');
+    const adjustmentInput = document.getElementById('adjustment');
+    const entryTypeInputList = document.querySelectorAll('.entryType');
 
     let paymentData;
     document.querySelectorAll('input[name=symbol]').forEach(elem => {
@@ -23,12 +25,39 @@ window.addEventListener('DOMContentLoaded', function() {
         })
     })
 
+    document.getElementById('modal_open').addEventListener('click', () => {
+        paymentData = initPaymentData();
+        initpaymentMethodInputs(paymentData);
+        togglePaymentSubmitButton();
+        // 初期表示
+        renderPaymentTable();
+    })
 
+    function initpaymentMethodInputs(paymentData) {
+        adjustmentInput.addEventListener('click', () => {
+            initpaymentMethodInput(adjustmentInput,paymentData, PaymentMethodTypes.adjustment,'adjustment')
+        })
+
+    }
+
+    function initpaymentMethodInput(elem, paymentData, selectedType,selectedItemName) {
+        uncheckSelectedMethods (elem);
+        if(paymentMethodTypeIsChecked(elem)) {
+            paymentData.setSelectedItem(selectedType, selectedItemName)
+            // updateItemAndRender()
+        }
+    }
+
+    function uncheckSelectedMethods (elem) {
+    }
+
+    function paymentMethodTypeIsChecked(elem) {
+    }
 
     function getSelectedPaymentMethod() {
         let paymentMethodName;
         let paymentMethodType;
-        document.querySelectorAll('input[name=paymentMethod]').forEach(elem => {
+        entryTypeInputList.forEach(elem => {
             if(elem.tagName === 'SELECT' && elem.value != '') {
                 paymentMethodName = elem.options[elem.selectedIndex].text;
                 paymentMethodType = getPaymentMethodTypeFromId(elem.id)
@@ -44,21 +73,36 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     function initPaymentData() {
+        const categoryPaymentDetailMap = JSON.parse(document.getElementById('categoryPaymentDetailMap').value);
         const reducedSubTotal = parseInt(document.getElementById('reducedSubTotalInput').value) || 0;
         const reducedTax = parseInt(document.getElementById('reducedTaxInput').value) || 0;
         const subTotal = parseInt(document.getElementById('subtotalInput').value) || 0;
         const tenPercentTax = parseInt(document.getElementById('taxInput').value) || 0;
         const taxExempt = parseInt(document.getElementById('taxExemptInput').value) || 0;
+        const originalTotalChange = parseInt(document.getElementById('originalTotalChange').value) || 0;
+        const originalTotalPayInput = parseInt(document.getElementById('originalTotalPay').value) || 0;
 
         //小計(税抜)
         const subtotal = reducedSubTotal + subTotal + taxExempt
         // 消費税
         const tax = reducedTax + tenPercentTax
         // お支払い合計（税込）
-        const totalAmount = subtotal + tax;
+        const totalAmount = originalTotalPayInput ?? subtotal + tax;
         const {paymentMethodName, paymentMethodType} = getSelectedPaymentMethod();
 
-        return new PaymentData(BASE_PATH, subtotal, tax, totalAmount, couponData, calculator, paymentMethodType, paymentMethodName,renderPaymentTable);
+        return new PaymentData(
+            BASE_PATH,
+            subtotal,
+            tax,
+            originalTotalChange,
+            totalAmount,
+            couponData,
+            calculator,
+            paymentMethodType,
+            paymentMethodName,
+            renderPaymentTable,
+            categoryPaymentDetailMap
+        );
     }
 
     function renderPaymentTable(updating = false) {
@@ -66,6 +110,9 @@ window.addEventListener('DOMContentLoaded', function() {
         removeAllChildNodes(registerReceivedItemsSection)
         registerSubtotalsSection
         const subtotalItems = paymentData.makeSubtotalItems();
+        subtotalItems.forEach(item => {
+            registerSubtotalsSection.appendChild(item)
+        })
 
     }
 
@@ -138,16 +185,29 @@ class PaymentData {
     selectedType
     selectedItemName
 
-    constructor(BASE_PATH, subtotal, tax, totalAmount, couponData, calculator, selectedType, selectedItemName,renderPaymentTable) {
+    constructor(
+        BASE_PATH,
+        subtotal,
+        tax,
+        totalChange,
+        totalAmount,
+        couponData,
+        calculator,
+        selectedType,
+        selectedItemName,
+        renderPaymentTable
+    ) {
         this.BASE_PATH = BASE_PATH
         this.subtotal = subtotal
         this.tax = tax
+        this.totalChange = totalChange
         this.totalAmount = totalAmount
         this.couponData = couponData
         this.calculator = calculator
         this.selectedType = selectedType
         this.selectedItemName = selectedItemName
         this.renderPaymentTable = renderPaymentTable
+
     }
 
     confirmInput() {
@@ -156,7 +216,7 @@ class PaymentData {
     }
 
     sumTotals() {
-        this.totalAmount = (parseInt(this.subtotal) || 0) + (parseInt(this.tax) || 0) - (parseInt(this.discount) || 0);
+        this.totalAmount = (parseInt(this.subtotal) || 0) + (parseInt(this.tax) || 0) - (parseInt(this.discount) || 0) + (parseInt(this.adjustment) || 0);
         this.totalPay = (parseInt(this.cash) || 0) + (parseInt(this.giftCertificates) || 0)
         for(const paymentType of this.listPaymentTypes) {
             Object.keys(this[paymentType]).forEach(key => {
@@ -164,8 +224,11 @@ class PaymentData {
                 this.totalPay += (parseInt(value) || 0);
             })
         }
-
-        this.totalChange = this.totalAmount - this.totalPay;
+        if(this.totalPay - this.totalAmount > 0) {
+            this.totalChange = this.totalPay - this.totalAmount;
+        } else {
+            this.totalChange = 0;
+        }
     }
 
     canSubmit() {
@@ -178,7 +241,7 @@ class PaymentData {
         if(shouldClear) {
             this.calculator.clear()
         }
-        paymentData.isDirty = true
+        this.isDirty = true
     }
 
     updateItem() {
@@ -199,6 +262,10 @@ class PaymentData {
         // 値引き
         if(this.discount != null) {
             items.push(this.makeItemContainerWithRemoveButton('discount', '値引き', this.discount))
+        }
+        // 調整
+        if(this.adjustment != null) {
+            items.push(this.makeItemContainerWithRemoveButton('adjustment', '調整', this.adjustment))
         }
         // 消費税
         items.push(this.makeItemContainer('消費税', this.tax))
@@ -316,17 +383,17 @@ class PaymentData {
         return {
             appliedCoupons: this.appliedCoupons,
             subtotal: this.subtotal,
-            discount: this.discount,
-            adjustment: this.adjustment,
+            discount: this.discount ?? '',
+            adjustment: this.adjustment ?? '',
             tax: this.tax,
             totalAmount: this.totalAmount,
             totalChange: this.totalChange,
             totalPay: this.totalPay,
-            cash: this.cash,
+            cash: this.cash ?? '',
             credit: this.credit,
             electronicMoney: this.electronicMoney,
             qrCode: this.qrCode,
-            giftCertificates: this.giftCertificates,
+            giftCertificates: this.giftCertificates ?? '',
             travelAssistance: this.travelAssistance,
             voucher: this.voucher,
             others: this.others,
