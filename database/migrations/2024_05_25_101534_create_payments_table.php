@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->integer('payment_code');
+            $table->string('payment_code', 50);
             $table->dateTime('payment_date');
             $table->foreignId('cash_register_id')->nullable()->constrained('cash_registers')->nullOnDelete();
             $table->foreignId('office_id')->constrained('offices')->restrictOnDelete();

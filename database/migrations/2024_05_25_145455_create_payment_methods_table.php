@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payment_methods', function (Blueprint $table) {
             $table->id();
             $table->foreignId('office_id')->constrained('offices')->restrictOnDelete();
-            $table->string('name', 100);
+            $table->string('name', 100)->unique();
             $table->tinyInteger('type')->comment('1：現金、2：クレジット、３：電子マネー、４：QRコード、５：商品券、６：旅行支援、７：バウチャー、８：その他');
             $table->text('memo')->nullable();
             $table->boolean('multiple');
