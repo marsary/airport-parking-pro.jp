@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const loadTime = luxon.DateTime.fromISO(json.data.arrivalFlight.arriveTime);
       if(loadTime.isValid) {
         arriveTimeElem.textContent = loadTime.toFormat("HH:mm")
+      } else {
+        arriveTimeElem.textContent = '';
       }
     }
   }

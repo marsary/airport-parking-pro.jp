@@ -35,18 +35,20 @@ class OptionSelectRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        $good_ids = [];
         if(!empty($this->good_ids)) {
             $good_ids = explode(',', $this->good_ids);
-            $this->merge([
-                'good_ids' => $good_ids,
-            ]);
         }
+        $this->merge([
+            'good_ids' => $good_ids,
+        ]);
+        $coupon_ids = [];
         if(!empty($this->coupon_ids)) {
             $coupon_ids = explode(',', $this->coupon_ids);
-            $this->merge([
-                'coupon_ids' => $coupon_ids,
-            ]);
         }
+        $this->merge([
+            'coupon_ids' => $coupon_ids,
+        ]);
     }
 
     public function attributes()

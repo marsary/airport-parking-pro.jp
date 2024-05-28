@@ -24,9 +24,9 @@ class EntryCarRequest extends FormRequest
     {
         return [
             'car_maker_id' => 'nullable',
-            'car_id' => 'nullable',
-            'car_color_id' => 'nullable',
-            'car_number' => 'nullable|numeric|digits:4',
+            'car_id' => 'required',
+            'car_color_id' => 'required',
+            'car_number' => 'required|numeric|digits:4',
             'flight_no' => ['nullable', new FlightNoDateRule],
             'arrive_date' => 'nullable|date',
             'num_members' => 'nullable|numeric',
