@@ -61,7 +61,7 @@ class Payment extends Model
         return $this->hasMany(PaymentGood::class);
     }
 
-    public function payment_details()
+    public function paymentDetails()
     {
         return $this->hasMany(PaymentDetail::class);
     }

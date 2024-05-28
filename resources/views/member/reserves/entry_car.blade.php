@@ -88,14 +88,14 @@
       <div class="p-user-input-auto-output__right u-mb1">
         <dl class="l-grid--col2 u-mb3">
           <dt>航空会社名</dt>
-          <dd class="text-right" id="airline_name">日本航空</dd>
+          <dd class="text-right" id="airline_name"></dd>
           <!-- 福岡空港 成田空港 18:20 -->
           <dt>出発空港</dt>
-          <dd class="text-right" id="dep_airport_name">福岡空港</dd>
+          <dd class="text-right" id="dep_airport_name"></dd>
           <dt>到着空港</dt>
-          <dd class="text-right" id="arr_airport_name">成田空港</dd>
+          <dd class="text-right" id="arr_airport_name"></dd>
           <dt>到着予定時間</dt>
-          <dd class="text-right" id="arrive_time">18:20</dd>
+          <dd class="text-right" id="arrive_time"></dd>
         </dl>
         <div class="arrival_flg hidden">到着日がお迎え日と異なる</div>
       </div>

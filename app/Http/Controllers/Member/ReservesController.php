@@ -38,7 +38,6 @@ class ReservesController extends Controller
     public function entryDate()
     {
         $reserve = $this->getReserveForm();
-
         return view('member.reserves.entry_date', [
             'reserve' => $reserve
         ]);
@@ -46,6 +45,7 @@ class ReservesController extends Controller
 
     public function postEntryDate(EntryDateRequest $request)
     {
+        session()->forget('reserve');
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
 
