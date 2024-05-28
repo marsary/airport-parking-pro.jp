@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('deal_id')->constrained('deals')->restrictOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('user_name');
-            $table->foreignId('member_id')->constrained('members')->restrictOnDelete();
+            $table->foreignId('member_id')->nullable()->constrained('members')->nullOnDelete();
             $table->date('load_date');
             $table->date('unload_date_plan')->default('9999-1-1');
             $table->date('unload_date')->nullable();

@@ -5,7 +5,22 @@ window.addEventListener('DOMContentLoaded', function() {
     const calculator = new Calculator(document.querySelector('input[name="symbol"]:checked').value);
     const registerSubtotalsSection = document.getElementById('register_subtotals');
     const registerReceivedItemsSection = document.getElementById('register_received_items');
+    const registerTotalAmountDisp = document.getElementById('register_total_amount');
+    const registerTotalChangeDisp = document.getElementById('register_total_change');
+    const couponApplyButton = document.querySelector('.apply_button');
+    const discountInput = document.getElementById('discount');
     const adjustmentInput = document.getElementById('adjustment');
+    const paymentMethodCashInput = document.getElementById('paymentMethod_cash');
+    const paymentMethodCreditInput = document.getElementById('paymentMethod_credit');
+    const paymentMethodEmoneyInput = document.getElementById('paymentMethod_emoney');
+    const paymentMethodQrcodeInput = document.getElementById('paymentMethod_qrcode');
+    const paymentMethodCertificateInput = document.getElementById('paymentMethod_certificate');
+    const paymentMethodTravelInput = document.getElementById('paymentMethod_travel');
+    const paymentMethodVoucherInput = document.getElementById('paymentMethod_voucher');
+    const paymentMethodOtherInput = document.getElementById('paymentMethod_other');
+    const enterButton = document.getElementById('enterButton');
+    const paymentSubmitButton = document.getElementById('paymentSubmitButton');
+    const paymentSubmitForm = document.getElementById('payment_submit_form');
     const entryTypeInputList = document.querySelectorAll('.entryType');
 
     let paymentData;
@@ -33,11 +48,76 @@ window.addEventListener('DOMContentLoaded', function() {
         renderPaymentTable();
     })
 
+    document.getElementById('optionInfosSaved').addEventListener('change', () => {
+        togglePaymentSubmitButton();
+    })
+
+    enterButton.addEventListener('click', () => {
+        paymentData.confirmInput();
+        togglePaymentSubmitButton();
+        // 初期表示
+        renderPaymentTable();
+    })
+
+    paymentSubmitButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        handlePaymentSubmit();
+
+    })
+
+    function handlePaymentSubmit() {
+        if(paymentData.canSubmit()) {
+            appendDataToFormElem(paymentSubmitForm, paymentData.toFormParams())
+            paymentSubmitForm.submit();
+        } else {
+            return false;
+        }
+    }
+
+    function togglePaymentSubmitButton() {
+        if(paymentData == null) {
+            return;
+        }
+        if(paymentData.canSubmit()) {
+            paymentSubmitButton.disabled = false;
+            paymentSubmitButton.classList.remove('--disabled2');
+        } else {
+            paymentSubmitButton.classList.add('--disabled2');
+            paymentSubmitButton.disabled = true;
+        }
+    }
+
     function initpaymentMethodInputs(paymentData) {
         adjustmentInput.addEventListener('click', () => {
             initpaymentMethodInput(adjustmentInput,paymentData, PaymentMethodTypes.adjustment,'adjustment')
         })
-
+        discountInput.addEventListener('click', () => {
+            initpaymentMethodInput(discountInput,paymentData, PaymentMethodTypes.discount,'discount')
+        })
+        paymentMethodCashInput.addEventListener('click', () => {
+            initpaymentMethodInput(paymentMethodCashInput,paymentData, PaymentMethodTypes.cash,'cash')
+        })
+        paymentMethodCreditInput.addEventListener('change', () => {
+            initpaymentMethodInput(paymentMethodCreditInput,paymentData, PaymentMethodTypes.credit,paymentMethodCreditInput.options[paymentMethodCreditInput.selectedIndex].text)
+        })
+        paymentMethodEmoneyInput.addEventListener('change', () => {
+            initpaymentMethodInput(paymentMethodEmoneyInput,paymentData, PaymentMethodTypes.electronicMoney,paymentMethodEmoneyInput.options[paymentMethodEmoneyInput.selectedIndex].text)
+        })
+        paymentMethodQrcodeInput.addEventListener('change', () => {
+            initpaymentMethodInput(paymentMethodQrcodeInput,paymentData, PaymentMethodTypes.qrCode,paymentMethodQrcodeInput.options[paymentMethodQrcodeInput.selectedIndex].text)
+        })
+        paymentMethodCertificateInput.addEventListener('click', () => {
+            initpaymentMethodInput(paymentMethodCertificateInput,paymentData, PaymentMethodTypes.giftCertificates,'giftCertificates')
+        })
+        paymentMethodTravelInput.addEventListener('change', () => {
+            initpaymentMethodInput(paymentMethodTravelInput,paymentData, PaymentMethodTypes.travelAssistance,paymentMethodTravelInput.options[paymentMethodTravelInput.selectedIndex].text)
+        })
+        paymentMethodVoucherInput.addEventListener('change', () => {
+            initpaymentMethodInput(paymentMethodVoucherInput,paymentData, PaymentMethodTypes.voucher,paymentMethodVoucherInput.options[paymentMethodVoucherInput.selectedIndex].text)
+        })
+        paymentMethodOtherInput.addEventListener('change', () => {
+            initpaymentMethodInput(paymentMethodOtherInput,paymentData, PaymentMethodTypes.others,paymentMethodOtherInput.options[paymentMethodOtherInput.selectedIndex].text)
+        })
     }
 
     function initpaymentMethodInput(elem, paymentData, selectedType,selectedItemName) {
@@ -45,13 +125,43 @@ window.addEventListener('DOMContentLoaded', function() {
         if(paymentMethodTypeIsChecked(elem)) {
             paymentData.setSelectedItem(selectedType, selectedItemName)
             // updateItemAndRender()
+            renderPaymentTable(true);
+        } else {
+            if(paymentData.selectedItemName == selectedItemName) {
+                paymentData.setSelectedItem(null, null);
+                // paymentData.removeRegisterItem(selectedItemName);
+                paymentData.confirmInput();
+                renderPaymentTable();
+            }
         }
     }
 
     function uncheckSelectedMethods (elem) {
+        entryTypeInputList.forEach(entryTypeInput => {
+            if(elem.id == entryTypeInput.id) {
+            }else if(entryTypeInput.checked) {
+                entryTypeInput.checked = false
+            }else if(entryTypeInput.value != '') {
+                entryTypeInput.value = ''
+            }
+        })
     }
 
     function paymentMethodTypeIsChecked(elem) {
+        if(elem.tagName === 'SELECT') {
+            if(elem.value != '') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else if(elem.tagName === 'INPUT' && elem.type === 'checkbox') {
+            if(elem.checked) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     function getSelectedPaymentMethod() {
@@ -113,7 +223,14 @@ window.addEventListener('DOMContentLoaded', function() {
         subtotalItems.forEach(item => {
             registerSubtotalsSection.appendChild(item)
         })
-
+        const receivedItems = paymentData.makeReceivedItems();
+        receivedItems.forEach(item => {
+            registerReceivedItemsSection.appendChild(item)
+        })
+        if(!updating) {
+            registerTotalAmountDisp.innerHTML = formatCurrency(paymentData.totalAmount) + '<span class="u-font-yen">円</span>';
+            registerTotalChangeDisp.innerHTML = formatCurrency(paymentData.totalChange) + '<span class="u-font-yen">円</span>';
+        }
     }
 
     function updateItemAndRender() {
@@ -195,7 +312,8 @@ class PaymentData {
         calculator,
         selectedType,
         selectedItemName,
-        renderPaymentTable
+        renderPaymentTable,
+        categoryPaymentDetailMap = {}
     ) {
         this.BASE_PATH = BASE_PATH
         this.subtotal = subtotal
@@ -208,6 +326,19 @@ class PaymentData {
         this.selectedItemName = selectedItemName
         this.renderPaymentTable = renderPaymentTable
 
+        if(Object.keys(categoryPaymentDetailMap).length > 0) {
+            Object.keys(categoryPaymentDetailMap).forEach((category) => {
+                const detail = categoryPaymentDetailMap[category];
+                if(this.listPaymentTypes.includes(category)) {
+                    Object.keys(detail).forEach((itemName) => {
+                        this[category][itemName] = detail[itemName];
+                    });
+                } else {
+                    this[category] = detail;
+                }
+            })
+        }
+        this.sumTotals();
     }
 
     confirmInput() {

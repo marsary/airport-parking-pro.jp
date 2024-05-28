@@ -24,4 +24,23 @@ class DealGood extends Model
         'sales_date',
         'return_date',
     ];
+
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'sales_date' => 'date',
+            'return_date' => 'date',
+        ];
+    }
+
+    public function good()
+    {
+        return $this->belongsTo(Good::class);
+    }
 }

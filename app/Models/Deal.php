@@ -78,6 +78,11 @@ class Deal extends Model
     }
 
 
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
     public function dealGoods()
     {
         return $this->hasMany(DealGood::class);
@@ -115,6 +120,17 @@ class Deal extends Model
             $datetimeStr .=  ' ' . formatDate($this->load_time, 'H:i');
         }
         return $datetimeStr;
+    }
+
+    public function dealGoodsTotalPrice()
+    {
+        $totalPrice = 0;
+        if($this->dealGoods()->count() > 0) {
+            foreach ($this->dealGoods as $dealGood) {
+                $totalPrice += $dealGood->total_price + $dealGood->total_tax;
+            }
+        }
+        return $totalPrice;
     }
 
 }
