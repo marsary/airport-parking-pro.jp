@@ -7,15 +7,18 @@ use App\Exports\DealSearchExport;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\DealSearchRequest;
 use App\Http\Requests\Manage\DealUpdateGoodsRequest;
+use App\Http\Requests\Manage\DealUpdateMemoRequest;
 use App\Models\Agency;
 use App\Models\Airline;
 use App\Models\Airport;
+use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarCaution;
 use App\Models\CarColor;
 use App\Models\CarMaker;
 use App\Models\Deal;
 use App\Models\DealGood;
+use App\Services\Deal\ExtraPaymentManager;
 use App\Services\LabelTagManager;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -327,7 +330,16 @@ class DealsController extends Controller
      */
     public function show(string $id)
     {
-        return view('manage.deals.detail');
+        $deal = Deal::findOrFail($id);
+        LabelTagManager::attachTagDataToMember($deal->member);
+        $extraPayment = new ExtraPaymentManager($deal);
+        $extraPayment->calcPayment();
+
+        return view('manage.deals.detail', [
+            'deal' => $deal,
+            'arrivalFlight' => $deal->arrivalFlight,
+            'extraPayment' => $extraPayment,
+        ]);
     }
 
     /**
@@ -354,12 +366,6 @@ class DealsController extends Controller
         $deal = Deal::findOrFail($id);
         try {
             DB::transaction(function () use($request, $deal) {
-                // dealGoods[goodId] = {
-                //     good_id:goodId,
-                //     num:1,
-                //     total_price:good.price,
-                //     total_tax: calcTax(good.tax_type, good.price)
-                //   }
                 $deal->fill([
                     // 'dsc_rate' => $this->reserve->dsc_rate,
                     'total_price' => $request->total_price,
@@ -367,6 +373,12 @@ class DealsController extends Controller
                 ])->save();
                 $deal->dealGoods()->delete();
                 foreach ($request->dealGoods as $newDealGood) {
+                    // dealGoods[goodId] = {
+                    //     good_id,
+                    //     num,
+                    //     total_price,
+                    //     total_tax
+                    //   }
                     $newDealGood['deal_id'] = $deal->id;
                     $newDealGood['sales_date'] = Carbon::today();
                     DealGood::create($newDealGood);
