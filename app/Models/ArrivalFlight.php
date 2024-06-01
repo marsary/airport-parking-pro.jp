@@ -24,7 +24,20 @@ class ArrivalFlight extends Model
         'terminal_id',
         'arrive_date',
         'arrive_time',
+        'is_delayed',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'arrive_date' => 'date',
+        ];
+    }
 
     public function depAirport()
     {
