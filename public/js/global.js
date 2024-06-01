@@ -61,3 +61,34 @@ function checkAllCheckboxes(tableElem, checkboxName, shouldCheck) {
         checkbox.checked = shouldCheck;
     });
 }
+
+/**
+ *
+ * @param {HTMLFormElement} form
+ * @param {Object} data
+ */
+function appendDataToFormElem(form, data) {
+    Object.keys(data).forEach(inputName => {
+        inputValue = data[inputName];
+        if(isObject(inputValue)) {
+            Object.keys(inputValue).forEach(objectKey => {
+                const input = document.createElement('input');//prepare a new input DOM element
+                input.setAttribute('name', inputName + '[' + objectKey + ']');//set the param name
+                input.setAttribute('value', inputValue[objectKey]);//set the value
+                input.setAttribute('type', 'hidden')//set the type, like "hidden" or other
+                form.appendChild(input);
+            })
+        } else {
+            const input = document.createElement('input');//prepare a new input DOM element
+            input.setAttribute('name', inputName);//set the param name
+            input.setAttribute('value', inputValue);//set the value
+            input.setAttribute('type', 'hidden')//set the type, like "hidden" or other
+            form.appendChild(input);
+        }
+    });
+}
+
+function isObject(obj)
+{
+    return obj != null && obj.constructor.name === "Object"
+}
