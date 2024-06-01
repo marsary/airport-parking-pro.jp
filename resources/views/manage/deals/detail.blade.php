@@ -10,37 +10,37 @@
     <div class="l-container__inner">
 
       <div class="l-breadcrumb-step__wrap">
-        <div class="l-breadcrumb-step__item-gray">予約済み</div>
-        <div class="l-breadcrumb-step__item-gray">入庫済</div>
-        <div class="l-breadcrumb-step__item-gray --current">出庫済</div>
+        <div class="l-breadcrumb-step__item-gray {{ $deal->status == \App\Enums\DealStatus::NOT_LOADED->value ? '--current':'' }}">予約済み</div>
+        <div class="l-breadcrumb-step__item-gray {{ $deal->status == \App\Enums\DealStatus::LOADED->value ? '--current':'' }}">入庫済</div>
+        <div class="l-breadcrumb-step__item-gray {{ $deal->status == \App\Enums\DealStatus::UNLOADED->value ? '--current':'' }}">出庫済</div>
       </div>
 
       <div class="c-title__table">予約情報</div>
       <div class="l-table-top-parent">
-        <div class="l-table-top-list">
-          <div class="l-table-top-item u-bg--red">追加清算あり[1,500円]</div>
-          <div class="l-table-top-item u-bg--yellow">保留: 3日</div>
+        <div class="l-table-top-list {{ $extraPayment->needPayment ? '':'hidden' }}">
+          <div class="l-table-top-item u-bg--red">追加清算あり[{{ number_format($extraPayment->additionalCharge) }}円]</div>
+          <div class="l-table-top-item u-bg--yellow">保留: {{ $extraPayment->pendingDays }}日</div>
         </div>
         <table class=" l-table-confirm">
           <tr>
             <th>予約コード</th>
-            <td>1234567890</td>
+            <td>{{$deal->reserve_code}}</td>
             <th>受付コード</th>
-            <td>1234567890</td>
+            <td>{{$deal->receipt_code}}</td>
             <th>予約日時</th>
-            <td>2024/1/15(月)20:12</td>
+            <td>{{$deal->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
             <th>予約経路</th>
-            <td>公式HP</td>
+            <td>{{$deal->agency?->name}}</td>
           </tr>
           <tr>
-            <th>入庫日時予定</th>
-            <td>2024/1/31(水) 10:00</td>
+            {{--  <th>入庫日時予定</th>
+            <td>2024/1/31(水) 10:00</td>  --}}
             <th>入庫日時</th>
-            <td>2024/2/1(木) 10:35</td>
+            <td>{{$deal->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $deal->load_time}}</td>
             <th>出庫予定日</th>
-            <td>2024/2/1(木)</td>
+            <td>{{$deal->unload_date_plan->isoFormat('YYYY/M/D(ddd)')}}</td>
             <th>利用日数</th>
-            <td>5日</td>
+            <td>{{$deal->num_days}}日</td>
           </tr>
         </table>
       </div>
@@ -50,34 +50,48 @@
       <table class="l-table-confirm">
         <tr>
           <th>顧客コード</th>
-          <td>1234567890</td>
+          <td>{{$deal->member?->member_code}}</td>
           <th>お客様氏名</th>
-          <td>サン太郎</td>
+          <td>{{$deal->name}}</td>
           <th>ふりがな</th>
-          <td>さんたろう</td>
+          <td>{{$deal->kana}}</td>
           <th>利用回数</th>
-          <td>8回</td>
+          <td>
+            @if (isset($deal->member?->used_num))
+              {{$deal->member?->used_num}}回
+            @endif
+          </td>
         </tr>
-        <tr>
-          <th>会員ランク</th>
-          <td>シルバー</td>
-          <th>ラベル2</th>
-          <td>ダミーダミー</td>
-          <th>ラベル3</th>
-          <td>ダミーダミー</td>
-          <th>ラベル4</th>
-          <td>ダミーダミー</td>
-        </tr>
+        @if (isset($deal->member->tagMembers))
+          <tr>
+            @for ($i = 0; $i < 4; $i++)
+              @if (isset($deal->member->tagMembers[$i]))
+                <th>{{$deal->member->tagMembers[$i]->label->name}}</th>
+                <td>{{$deal->member->tagMembers[$i]->tag->name}}</td>
+              @else
+                <th></th><td></td>
+              @endif
+            @endfor
+            {{--  <th>会員ランク</th>
+            <td>シルバー</td>
+            <th>ラベル2</th>
+            <td>ダミーダミー</td>
+            <th>ラベル3</th>
+            <td>ダミーダミー</td>
+            <th>ラベル4</th>
+            <td>ダミーダミー</td>  --}}
+          </tr>
+        @endif
         <tr>
           <th>郵便番号</th>
-          <td>111-0000</td>
+          <td>{{$deal->zip}}{{--111-0000--}}</td>
           <th>電話番号</th>
-          <td>090-1234-5678</td>
+          <td>{{$deal->tel}}{{--090-1234-5678--}}</td>
           <!-- 以下2つは桁数次第ではレイアウトが崩れる分けてもよいかも -->
           <th>Mail</th>
-          <td>testaaatestaaaatestaaatest@test.jp</td>
+          <td>{{$deal->email}}</td>
           <th>LINE ID</th>
-          <td>sun123</td>
+          <td>{{$deal->member?->line_id}}{{--sun123--}}</td>
         </tr>
       </table>
 
@@ -85,24 +99,32 @@
       <div class="c-title__table">到着予定</div>
       <table class="l-table-confirm">
         <tr>
+          {{--  <td>16:45<span class="c-label--delay">遅延</span></td>  --}}
           <th>到着予定日</th>
-          <td>2024/2/5(月)</td>
+          <td>{{$arrivalFlight?->arrive_date?->isoFormat('YYYY/M/D(ddd)')}}</td>
           <th>到着予定時間</th>
-          <td>16:45<span class="c-label--delay">遅延</span></td>
+          <td>
+            {{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}}
+            @if ($arrivalFlight?->is_delayed)
+              <span class="c-label--delay">遅延</span>
+            @endif
+          </td>
           <th>到着便</th>
-          <td>NH205</td>
+          <td>{{$arrivalFlight?->flight_no}}{{--NH205--}}</td>
           <th>航空会社</th>
-          <td>ANA</td>
+          <td>{{$arrivalFlight?->airline->name}}{{--ANA--}}</td>
         </tr>
         <tr>
           <th>出発空港</th>
-          <td>LAX</td>
+          <td>{{$arrivalFlight?->depAirport->name}}{{--LAX--}}</td>
           <th>到着空港</th>
-          <td>NRT</td>
+          <td>{{$arrivalFlight?->arrAirport->name}}{{--NRT--}}</td>
           <th>到着ターミナル</th>
-          <td>2</td>
+          <td>{{$arrivalFlight?->terminal_id}}</td>
           <td colspan="3">
-            <div class="c-label--lg">到着日とお迎え日が異なる</div>
+            @if ($deal->arrival_flg)
+              <div class="c-label--lg">到着日とお迎え日が異なる</div>
+            @endif
           </td>
         </tr>
       </table>
@@ -112,54 +134,62 @@
       <table class="l-table-confirm">
         <tr>
           <th>メーカー</th>
-          <td>BMW</td>
+          <td>{{$deal->memberCar->car->carMaker->name}}</td>
           <th>車種</th>
-          <td>BMW5</td>
+          <td>{{$deal->memberCar->car->name}}</td>
           <th>車番</th>
-          <td>1234</td>
+          <td>{{$deal->memberCar->number}}</td>
           <th>色</th>
-          <td>黒</td>
+          <td>{{$deal->memberCar->carColor->name}}</td>
         </tr>
         <tr>
           <th>区分</th>
-          <td>普通</td>
+          <td>{{$deal->memberCar->car->size_label}}</td>
           <th>人数</th>
-          <td>3名</td>
+          <td>{{$deal->num_members}}名</td>
           <th>車両取扱</th>
-          <td colspan="3">MT車</td>
+          <td colspan="3">{{$deal->carCautions()}}</td>
         </tr>
         <tr>
           <th>備考</th>
-          <td colspan="3">文字が長い場合があるので独立行にした</td>
+          <td colspan="3">{{$deal->remarks}}</td>
         </tr>
       </table>
 
-      <a href="/admin/reservation_edit.php" class="u-mb3 u-horizontal-auto c-link-no-border c-button__submit--dark-gray">予約内容を変更</a>
+      <a href="{{route('manage.deals.edit', [$deal->id])}}" class="u-mb3 u-horizontal-auto c-link-no-border c-button__submit--dark-gray">予約内容を変更</a>
 
-      <form action="" method="POST">
+      <form action="{{route('manage.deals.update_memo', [$deal->id])}}" method="POST">
+        @csrf
+        @method('PUT')
         <div class="u-p2 u-bg--light-gray l-grid--col3 l-grid--gap2">
-          <div>
-            <label class="c-title__table">顧客メモ</label>
-            <textarea name="customer-note" id="customer-note" class="u-bg--white u-w-full-wide u-mb05" rows="3"></textarea>
-            <button type="summit" class="c-button--sm--text-color u-horizontal-auto">保存</button>
-          </div>
+          @if (isset($deal->member))
+            <div>
+              <label class="c-title__table">顧客メモ</label>
+              <textarea name="member_memo" id="customer-note" class="u-bg--white u-w-full-wide u-mb05" rows="3">{{$deal->member?->memo}}</textarea>
+              <button name="save_member_memo_btn" type="submit" class="c-button--sm--text-color u-horizontal-auto">保存</button>
+            </div>
+          @endif
           <div>
             <label class="c-title__table">予約メモ</label>
-            <textarea name="reservation-note" id="reservation-note" class="u-bg--white u-w-full-wide u-mb05" rows="3"></textarea>
-            <button type="summit" class="c-button--sm--text-color u-horizontal-auto">保存</button>
+            <textarea name="reserve_memo" id="reservation-note" class="u-bg--white u-w-full-wide u-mb05" rows="3">{{$deal->reserve_memo}}</textarea>
+            <button name="save_reserve_memo_btn" type="submit" class="c-button--sm--text-color u-horizontal-auto">保存</button>
           </div>
           <div>
             <label class="c-title__table">受付メモ</label>
-            <textarea name="reception-note" id="reception-note" class="u-bg--white u-w-full-wide u-mb05" rows="3"></textarea>
-            <button type="summit" class="c-button--sm--text-color u-horizontal-auto">保存</button>
+            <textarea name="reception_memo" id="reception-note" class="u-bg--white u-w-full-wide u-mb05" rows="3">{{$deal->reception_memo}}</textarea>
+            <button name="save_reception_memo_btn" type="submit" class="c-button--sm--text-color u-horizontal-auto">保存</button>
           </div>
         </div>
       </form>
 
       <!--  -->
       <div class="c-button-group__form u-mt3">
-        <a href="" class="c-button__submit--gray c-link-no-border">追加精算に進む</a>
-        <a href="" class="c-button__pagination--next c-link-no-border">出庫済</a>
+        <a href="{{route('manage.registers.index', ['deal_id' => $deal->id])}}" class="c-button__submit--gray c-link-no-border">追加精算に進む</a>
+        <form action="{{route('manage.deals.unload', [$deal->id])}}" method="post">
+          @csrf
+          @method('PUT')
+          <button type="submit" class="c-button__pagination--next c-link-no-border">出庫済</button>
+        </form>
       </div>
 
     </div><!-- ./p-user-container__inner -->
