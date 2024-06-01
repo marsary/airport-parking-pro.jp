@@ -30,4 +30,9 @@ class MemberCar extends Model
     {
         return $this->belongsTo(Car::class);
     }
+
+    public function carColor()
+    {
+        return $this->belongsTo(CarColor::class);
+    }
 }
