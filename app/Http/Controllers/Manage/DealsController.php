@@ -361,6 +361,43 @@ class DealsController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    public function updateMemo(DealUpdateMemoRequest $request, string $id)
+    {
+        $deal = Deal::findOrFail($id);
+
+        if($request->has('save_member_memo_btn')) {
+            $member = $deal->member;
+            $member->memo = $request->member_memo;
+            $member->save();
+        } elseif($request->has('save_reserve_memo_btn')) {
+            $deal->reserve_memo = $request->reserve_memo;
+            $deal->save();
+        } elseif($request->has('save_reception_memo_btn')) {
+            $deal->reception_memo = $request->reception_memo;
+            $deal->save();
+        }
+
+        return redirect(route('manage.deals.show', [$deal->id]));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function unload(string $id)
+    {
+        $deal = Deal::findOrFail($id);
+        $now = Carbon::now();
+        $deal->unload_date = $now->toDateString();
+        $deal->unload_time = $now->toTimeString();
+        $deal->status = DealStatus::UNLOADED->value;
+        $deal->save();
+
+        return redirect(route('manage.deals.show', [$deal->id]));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
     public function updateGoods(DealUpdateGoodsRequest $request, string $id)
     {
         $deal = Deal::findOrFail($id);
