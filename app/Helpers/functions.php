@@ -17,6 +17,19 @@ function roundTax($tax):int
 }
 
 
+/**
+ * 日付データのフォーマット
+ *
+ * @param Carbon|string|null $date
+ * @return string
+ */
+function formatDate($date, $format = 'Y-m-d')
+{
+    if(is_string($date)) {
+        $date = Carbon::parse($date);
+    }
+    return $date ? $date->format($format): '';
+}
 
 function getKeyMapCollection(Collection $collect, $key = "id")
 {

@@ -2,6 +2,7 @@
 @extends('layouts.member.authenticated')
 
 @section('content')
+@include('include.messages.errors')
 <div class="p-user-input__inner u-mt3">
   <form action="{{route('reserves.entry_date')}}" method="POST">
     @csrf
@@ -318,6 +319,37 @@
   }
   .fc-day.fc-day-today.fc-daygrid-day, .fc-day.fc-day-future.fc-daygrid-day {
     cursor: pointer;
+  }
+  .fc-daygrid-day-events {
+    margin: 5px;
+  }
+  .fc-col-header-cell.fc-day {
+    background-color: black;
+    color:#fff;
+  }
+  .fc-col-header-cell.fc-day.fc-day-sat {
+    background-color: #1f6aaa;
+  }
+  .fc-col-header-cell.fc-day.fc-day-sun {
+    background-color: #d82528;
+  }
+  a.fc-col-header-cell-cushion {
+    padding: 10px !important;
+  }
+  a.fc-daygrid-day-number {
+    display: block;
+    width:100%;
+  }
+  .fc .fc-daygrid-day-top {
+    margin-top: 5px;
+  }
+  .hour_label_cell, .quarter_hour_label_cell {
+    cursor: pointer;
+  }
+
+  .day_selected, .hour_selected, .quater_hour_selected {
+    border-color: rgb(167, 207, 249) !important;
+    background-color: rgb(167, 207, 249) !important;
   }
 </style>
 @endpush

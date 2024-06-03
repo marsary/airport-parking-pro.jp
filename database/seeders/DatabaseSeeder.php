@@ -40,6 +40,8 @@ class DatabaseSeeder extends Seeder
             // GoodSeeder::class,
             // DealSeeder::class,
             // ArrivalFlightSeeder::class,
+            // CashRegisterSeeder::class,
+            // PaymentMethodSeeder::class,
         ]);
     }
 }

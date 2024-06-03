@@ -1,7 +1,7 @@
 <?php
 namespace App\Services\Member;
 
-use App\Http\Controllers\Member\Forms\ReserveForm;
+use App\Http\Controllers\Forms\ReserveFormBase;
 use App\Models\Deal;
 use App\Models\DealGood;
 use App\Models\Member;
@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class ReserveService
 {
-    /** @var ReserveForm */
+    /** @var ReserveFormBase */
     private $reserve;
 
     /** @var Deal */
     public $deal;
 
 
-    function __construct(ReserveForm $reserve)
+    function __construct(ReserveFormBase $reserve)
     {
         $this->reserve = $reserve;
     }
@@ -55,7 +55,7 @@ class ReserveService
         }
 
         if($memberCar) {
-            $memberCar = $memberCar->fill([
+            $memberCar->fill([
                 'office_id' => config('const.commons.office_id'),
                 'member_id' => $this->reserve->member?->id,
                 'car_id' => $this->reserve->car_id,
@@ -69,7 +69,7 @@ class ReserveService
                 DB::table('member_cars')->where('member_id', $this->reserve->member->id)
                     ->whereNot('id', $memberCar->id)
                     ->where('office_id', config('const.commons.office_id'))
-                    ->update(['default_flg', false]);
+                    ->update(['default_flg' => false]);
             }
         } else {
             $memberCar = MemberCar::create([
@@ -102,8 +102,9 @@ class ReserveService
             'unload_date_plan' => $this->reserve->unload_date_plan,
             'unload_time_plan' => $this->reserve->unload_time_plan,
             'arrival_flg' => $this->reserve->arrival_flg,
+            'visit_date_plan' => $this->reserve->visit_date_plan,
             'num_days' => $this->reserve->num_days,
-            'num_members' => $this->reserve->num_members,
+            'num_members' => $this->reserve->num_members ?? 1,
             'name' => $this->reserve->name,
             'kana' => $this->reserve->kana,
             'zip' => $this->reserve->zip,

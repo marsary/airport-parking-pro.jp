@@ -8,6 +8,7 @@ use App\Http\Requests\Member\EntryCarRequest;
 use App\Http\Requests\Member\EntryDateRequest;
 use App\Http\Requests\Member\EntryInfoRequest;
 use App\Http\Requests\Member\OptionSelectRequest;
+use App\Models\Agency;
 use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarColor;
@@ -19,6 +20,7 @@ use App\Models\GoodCategory;
 use App\Models\MemberCar;
 use App\Services\LabelTagManager;
 use App\Services\Member\ReserveService;
+use App\Services\PriceTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +38,6 @@ class ReservesController extends Controller
     public function entryDate()
     {
         $reserve = $this->getReserveForm();
-
         return view('member.reserves.entry_date', [
             'reserve' => $reserve
         ]);
@@ -44,8 +45,16 @@ class ReservesController extends Controller
 
     public function postEntryDate(EntryDateRequest $request)
     {
+        session()->forget('reserve');
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
+
+        $table = PriceTable::getPriceTable($reserve->load_date, $reserve->unload_date_plan, [], $reserve->agency_id);
+        $reserve->fill([
+            'price' => $table->subTotal,
+            'tax' => $table->tax,
+            'num_days' => $table->numDays,
+        ]);
         session()->put('reserve', $reserve);
         return redirect()->route('reserves.entry_info');
     }
@@ -99,6 +108,8 @@ class ReservesController extends Controller
         $reserve->fill($request->all());
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
+        $reserve->visit_date_plan = $reserve->unload_date_plan;
+
         session()->put('reserve', $reserve);
         return redirect()->route('reserves.option_select');
     }
@@ -142,6 +153,7 @@ class ReservesController extends Controller
         $carMaker = CarMaker::where('id', $reserve->car_maker_id)->first();
         $car = Car::where('id', $reserve->car_id)->first();
         $carColor = CarColor::where('id', $reserve->car_color_id)->first();
+        $agency = Agency::find($reserve->agency_id);
 
         return view('member.reserves.confirm', [
             'reserve' => $reserve,
@@ -149,6 +161,7 @@ class ReservesController extends Controller
             'carMaker' => $carMaker,
             'car' => $car,
             'carColor' => $carColor,
+            'agency' => $agency,
         ]);
     }
 

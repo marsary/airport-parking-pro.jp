@@ -17,6 +17,7 @@
           @include('include.option.option', [
             'modalId' => $goodCategory->id,
             'goods' => $goodCategory->goods,
+            'goodCategory' => $goodCategory,
             ]
           )
         @endforeach
@@ -48,7 +49,7 @@
     </div>
 
     <div class="p-user-input-auto-output__wrap u-mb4">
-      <div class="l-flex--start l-flex--item-end l-grid--gap05">
+      <div class="l-flex--start l-flex--item-end l-grid--gap05 hidden">
         <div>
           <label for="coupon_code">割引クーポン</label>
           <!-- クーポン -->
@@ -75,7 +76,7 @@
 
     <!-- pager -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" href="{{route('reserves.entry_car')}}" class="c-button__pagination--return">前のページに戻る</a>
+      <button type="button" id="returnButton" onclick="location.href='{{route('reserves.entry_car')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">内容確認へ進む</button>
     </div>
   </form>

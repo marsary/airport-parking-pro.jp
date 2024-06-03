@@ -49,7 +49,7 @@ class Member extends Authenticatable
         return $this->belongsTo(MemberType::class);
     }
 
-    public function memberCar()
+    public function memberCars()
     {
         return $this->hasMany(MemberCar::class);
     }

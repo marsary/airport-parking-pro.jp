@@ -78,6 +78,11 @@ class Deal extends Model
     }
 
 
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
     public function dealGoods()
     {
         return $this->hasMany(DealGood::class);
@@ -96,6 +101,36 @@ class Deal extends Model
     public function memberCar()
     {
         return $this->belongsTo(MemberCar::class, 'member_car_id');
+    }
+
+    public function arrivalFlight()
+    {
+        return $this->belongsTo(ArrivalFlight::class, 'arr_flight_id');
+    }
+
+    public function carCautionMemberCars()
+    {
+        return $this->hasMany(CarCautionMemberCar::class, 'member_car_id', 'member_car_id');
+    }
+
+    public function loadDateTime($format = "Y/m/d")
+    {
+        $datetimeStr = $this->load_date?->format($format);
+        if(!isBlank($this->load_time)) {
+            $datetimeStr .=  ' ' . formatDate($this->load_time, 'H:i');
+        }
+        return $datetimeStr;
+    }
+
+    public function dealGoodsTotalPrice()
+    {
+        $totalPrice = 0;
+        if($this->dealGoods()->count() > 0) {
+            foreach ($this->dealGoods as $dealGood) {
+                $totalPrice += $dealGood->total_price + $dealGood->total_tax;
+            }
+        }
+        return $totalPrice;
     }
 
 }
