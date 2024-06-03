@@ -7,6 +7,9 @@
     <ul class="l-wrap__breadcrumb l-breadcrumb">
       <li class="l-breadcrumb__list">予約詳細</li>
     </ul>
+
+    @include('include.messages.errors')
+
     <div class="l-container__inner">
 
       <div class="l-breadcrumb-step__wrap">
@@ -72,26 +75,18 @@
                 <th></th><td></td>
               @endif
             @endfor
-            {{--  <th>会員ランク</th>
-            <td>シルバー</td>
-            <th>ラベル2</th>
-            <td>ダミーダミー</td>
-            <th>ラベル3</th>
-            <td>ダミーダミー</td>
-            <th>ラベル4</th>
-            <td>ダミーダミー</td>  --}}
           </tr>
         @endif
         <tr>
           <th>郵便番号</th>
-          <td>{{$deal->zip}}{{--111-0000--}}</td>
+          <td>{{$deal->zip}}</td>
           <th>電話番号</th>
-          <td>{{$deal->tel}}{{--090-1234-5678--}}</td>
+          <td>{{$deal->tel}}</td>
           <!-- 以下2つは桁数次第ではレイアウトが崩れる分けてもよいかも -->
           <th>Mail</th>
           <td>{{$deal->email}}</td>
           <th>LINE ID</th>
-          <td>{{$deal->member?->line_id}}{{--sun123--}}</td>
+          <td>{{$deal->member?->line_id}}</td>
         </tr>
       </table>
 
@@ -110,15 +105,15 @@
             @endif
           </td>
           <th>到着便</th>
-          <td>{{$arrivalFlight?->flight_no}}{{--NH205--}}</td>
+          <td>{{$arrivalFlight?->flight_no}}</td>
           <th>航空会社</th>
-          <td>{{$arrivalFlight?->airline->name}}{{--ANA--}}</td>
+          <td>{{$arrivalFlight?->airline->name}}</td>
         </tr>
         <tr>
           <th>出発空港</th>
-          <td>{{$arrivalFlight?->depAirport->name}}{{--LAX--}}</td>
+          <td>{{$arrivalFlight?->depAirport->name}}</td>
           <th>到着空港</th>
-          <td>{{$arrivalFlight?->arrAirport->name}}{{--NRT--}}</td>
+          <td>{{$arrivalFlight?->arrAirport->name}}</td>
           <th>到着ターミナル</th>
           <td>{{$arrivalFlight?->terminal_id}}</td>
           <td colspan="3">
@@ -196,7 +191,9 @@
 
 </main><!-- /.l-wrap__main -->
 <!-- サイド固定ボタン -->
-<button onclick="window.print(); return false;" class="c-button__right-fixed--gray"><img src="{{ asset('images/icon/print.svg') }}" width="30" height="32" /></button>
+<button onclick="window.print(); return false;" class="c-button__right-fixed--gray">
+  <img src="{{ asset('images/icon/print.svg') }}" width="30" height="32" />
+</button>
 
 
 @endsection
