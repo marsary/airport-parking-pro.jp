@@ -15,12 +15,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     {{--  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="preload" as="style" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />  --}}
-
+<!--test-->
     <!-- 電卓で使用 -->
     {{--  <link href="https://fonts.googleapis.com/css?family=Reem+Kufi" rel="stylesheet">  --}}
 
     <!-- css -->
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/form/style.css') }}" rel="stylesheet">
     <!-- web slides -->
     <!-- CSS WebSlides -->
     <!-- <link rel="stylesheet" type='text/css' media='all' href="/css/webslides.css"> -->
@@ -41,8 +42,9 @@
     <script src="{{ asset('js/global.js') }}" defer></script>
   </head>
   <body>
+    @include('include.form.header')
     @yield('content')
-
+    @include('include.form.footer')
     @stack('scripts')
   </body>
 </html>

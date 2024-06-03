@@ -1,7 +1,8 @@
 <!-- B-1-0 forward calendar -->
-@extends('layouts.member.authenticated')
+@extends('layouts.form.authenticated')
 
 @section('content')
+@include('include.messages.errors')
 <div class="p-user-input__inner u-mt3">
   <form action="{{route('reserves.entry_date')}}" method="POST">
     @csrf
@@ -191,12 +192,12 @@
       </div>
       <div class="calendar_section">
         <div class="prev_button">
-            <button type="button" id="cal2_prev">◀</button>
-          </div>
-          <div id='calendar2'></div>
-          <div class="next_button">
-            <button type="button" id="cal2_next">▶</button>
-          </div>
+          <button type="button" id="cal2_prev">◀</button>
+        </div>
+        <div id='calendar2'></div>
+        <div class="next_button">
+          <button type="button" id="cal2_next">▶</button>
+        </div>
       </div>
     </div>
 
@@ -261,7 +262,7 @@
 
       <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
     </div><!-- /.p-input-user-total-parking-charges -->
-
+    </div>
   </form>
 
 </div>

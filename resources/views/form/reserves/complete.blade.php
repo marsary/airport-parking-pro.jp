@@ -1,4 +1,4 @@
-@extends('layouts.member.authenticated')
+@extends('layouts.form.authenticated')
 
 @section('content')
 <div class="p-user-input-header">

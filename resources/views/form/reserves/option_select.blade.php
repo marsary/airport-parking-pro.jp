@@ -1,5 +1,5 @@
 <!-- B-1-3 オプション選択 -->
-@extends('layouts.member.authenticated')
+@extends('layouts.form.authenticated')
 
 @section('content')
 @include('include.reserve.header_information')

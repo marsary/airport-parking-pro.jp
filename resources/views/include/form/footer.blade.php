@@ -4,14 +4,14 @@
     <div class="footer__wrap">
       <ul class="footer-nav">
         <li class="footer-nav__item"><a href="/ag/">TOP</a></li>
-        <li class="footer-nav__item"><a href="/ag/company.php?o_id=<?=$_SESSION['office_id']?>">サンパーキングについて</a></li>
-        <li class="footer-nav__item"><a href="/ag/security.php?o_id=<?=$_SESSION['office_id']?>">当サイトのセキュリティについて</a></li>
-        <li class="footer-nav__item"><a href="/ag/rule.php?o_id=<?=$_SESSION['office_id']?>">免責約款</a></li>
-        <li class="footer-nav__item"><a href="/ag/inquiry.php?o_id=<?=$_SESSION['office_id']?>">お問い合わせ</a></li>
-        <li class="footer-nav__item"><a href="/form/rsv1.php?o_id=<?=$_SESSION['office_id']?>">予約フォーム</a></li>
-        <li class="footer-nav__item"><a href="/ag/cookie.php?o_id=<?=$_SESSION['office_id']?>">Cookieの設定</a></li>
-        <li class="footer-nav__item"><a href="/ag/sitepolicy.php?o_id=<?=$_SESSION['office_id']?>">サイトポリシー・プライバシーポリシー</a></li>
-        <li class="footer-nav__item"><a href="/ag/notation.php?o_id=<?=$_SESSION['office_id']?>">特定商取引法に基づく表記</a></li>
+        <li class="footer-nav__item"><a href="/">サンパーキングについて</a></li>
+        <li class="footer-nav__item"><a href="/">当サイトのセキュリティについて</a></li>
+        <li class="footer-nav__item"><a href="/">免責約款</a></li>
+        <li class="footer-nav__item"><a href="/">お問い合わせ</a></li>
+        <li class="footer-nav__item"><a href="/">予約フォーム</a></li>
+        <li class="footer-nav__item"><a href="/">Cookieの設定</a></li>
+        <li class="footer-nav__item"><a href="/">サイトポリシー・プライバシーポリシー</a></li>
+        <li class="footer-nav__item"><a href="/">特定商取引法に基づく表記</a></li>
       </ul>
 
       <p class="copyright">Copyright © Sunport Co., Ltd. All rights reserved.</p>
@@ -24,8 +24,8 @@
 
   <!-- 固定ボタン -->
   <ul class="button-fixed">
-    <li class="button-fixed__item --orange"><a href="/ag/price.php?o_id=<?=$_SESSION['office_id']?>" target="_blank" rel="noreferrer noopener">料金確認</a></li>
-    <li class="button-fixed__item --purple"><a href="/ag/inquiry.php?o_id=<?=$_SESSION['office_id']?>" target="_blank" rel="noreferrer noopener">お問い合わせ</a></li>
+    <li class="button-fixed__item --orange"><a href="/" target="_blank" rel="noreferrer noopener">料金確認</a></li>
+    <li class="button-fixed__item --purple"><a href="/" target="_blank" rel="noreferrer noopener">お問い合わせ</a></li>
   </ul>
 
   <!-- Go To Top Button -->

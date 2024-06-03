@@ -1,5 +1,5 @@
 <!-- B-1-1 受付入力 -->
-@extends('layouts.member.authenticated')
+@extends('layouts.form.authenticated')
 
 @section('content')
 @include('include.reserve.header_information')
