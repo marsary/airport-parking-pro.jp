@@ -28,14 +28,12 @@ Route::prefix('manage')->name('manage.')->group(function () {
 
 // 予約フォーム用のルーティング
 Route::prefix('form')->name('form.')->group(function () {
-    Route::middleware(['auth'])->group(function () {
-        Route::get('reserves/entry_date', [\App\Http\Controllers\Form\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
-        Route::get('reserves/entry_info', [\App\Http\Controllers\Form\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
-        Route::post('reserves/entry_date', [\App\Http\Controllers\Form\ReservesController::class, 'postEntryDate'])->name('reserves.post_entry_date');
-        Route::post('reserves/entry_info', [\App\Http\Controllers\Form\ReservesController::class, 'postEntryInfo'])->name('reserves.post_entry_info');
-        Route::get('reserves/confirm', [\App\Http\Controllers\Form\ReservesController::class, 'confirm'])->name('reserves.confirm');
-        Route::resource('reserves', \App\Http\Controllers\Form\ReservesController::class);
-    });
+    Route::get('reserves/entry_date', [\App\Http\Controllers\Form\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
+    Route::get('reserves/entry_info', [\App\Http\Controllers\Form\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
+    Route::post('reserves/entry_date', [\App\Http\Controllers\Form\ReservesController::class, 'postEntryDate'])->name('reserves.post_entry_date');
+    Route::post('reserves/entry_info', [\App\Http\Controllers\Form\ReservesController::class, 'postEntryInfo'])->name('reserves.post_entry_info');
+    Route::get('reserves/confirm', [\App\Http\Controllers\Form\ReservesController::class, 'confirm'])->name('reserves.confirm');
+    Route::resource('reserves', \App\Http\Controllers\Form\ReservesController::class);
 
 });
 
