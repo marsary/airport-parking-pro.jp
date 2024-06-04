@@ -5,7 +5,7 @@
       <img src="{{ asset('images/svg/logo.svg') }}" width="100%" alt="logo">
       <p class="u-font--medium u-font--14">ダミーパーキング成田店</p>
       <p class="l-header-logo--right">
-        （R4 事業再構築 機-R0000E00000000）
+        （事業再構築　R2128E00068000）
         <img src="{{ asset('images/icon/gear.svg') }}" width="14" height="14" alt="歯車">
       </p>
     </div>
