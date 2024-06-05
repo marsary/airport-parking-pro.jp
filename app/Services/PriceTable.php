@@ -42,7 +42,7 @@ class PriceTable
         $table->unloadDate = $unloadDate->addDay();
         $table->numDays = (int) ceil($unloadDate->diffInDays($loadDate, true));
 
-        if(isset($agencyId) $$ !empty($agencyId)) {
+        if(isset($agencyId) && !empty($agencyId)) {
             $price = AgencyPrice::where('agency_id', $agencyId)
                 ->where('office_id', config('const.commons.office_id'))->first();
         } else {

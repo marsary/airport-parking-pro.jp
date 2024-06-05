@@ -6,7 +6,7 @@
 @include('include.step', ['step' => "entry"])
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->
-  <form action="{{route('reserves.entry_car')}}" method="POST">
+  <form action="{{route('form.reserves.entry_car')}}" method="POST">
     @csrf
     <!-- 詳細情報入力 -->
     <div class="p-user-input-auto-output__wrap l-flex--item-end">
@@ -102,7 +102,7 @@
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" href="{{route('reserves.entry_info')}}" class="c-button__pagination--return">前のページに戻る</a>
+      <a id="returnButton" href="{{route('form.reserves.entry_info')}}" class="c-button__pagination--return">前のページに戻る</a>
       <button type="submit" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>

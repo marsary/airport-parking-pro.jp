@@ -6,7 +6,7 @@
 @include('include.step', ['step' => "confirm"])
 
 <div class="p-user-input__inner">
-  <form action="{{route('reserves.store')}}" method="POST">
+  <form action="{{route('form.reserves.store')}}" method="POST">
     @csrf
     <div class="c-title__table">予約情報</div>
     <table class="l-table-confirm">
@@ -198,7 +198,7 @@
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" href="{{route('reserves.option_select')}}" class="c-button__pagination--return">前のページに戻る</a>
+      <a id="returnButton" href="{{route('form.reserves.option_select')}}" class="c-button__pagination--return">前のページに戻る</a>
       <button type="submit" class="c-button__pagination--next">お会計へ</button>
     </div>
   </form>

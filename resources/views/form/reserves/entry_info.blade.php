@@ -6,7 +6,7 @@
 @include('include.step', ['step' => "entry"])
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->
-  <form action="{{route('reserves.post_entry_info')}}" method="POST">
+  <form action="{{route('form.reserves.post_entry_info')}}" method="POST">
     @csrf
     <!-- 基本情報 -->
     <div class="l-flex l-grid--gap1">

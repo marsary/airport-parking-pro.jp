@@ -5,7 +5,7 @@
 @include('include.reserve.header_information')
 @include('include.step', ['step' => "option"])
 <div class="p-user-input__inner--sm">
-  <form action="{{route('reserves.option_select')}}" method="POST">
+  <form action="{{route('form.reserves.option_select')}}" method="POST">
     @csrf
     <div class="p-user-input-auto-output__wrap u-mb3 u-pb3 u-border--bottom-green">
       <!-- select ボタン -->
@@ -75,7 +75,7 @@
 
     <!-- pager -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" href="{{route('reserves.entry_car')}}" class="c-button__pagination--return">前のページに戻る</a>
+      <a id="returnButton" href="{{route('form.reserves.entry_car')}}" class="c-button__pagination--return">前のページに戻る</a>
       <button type="submit" class="c-button__pagination--next">内容確認へ進む</button>
     </div>
   </form>

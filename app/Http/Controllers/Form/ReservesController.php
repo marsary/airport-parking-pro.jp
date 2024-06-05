@@ -56,7 +56,7 @@ class ReservesController extends Controller
             'num_days' => $table->numDays,
         ]);
         session()->put('reserve', $reserve);
-        return redirect()->route('reserves.entry_info');
+        return redirect()->route('form.reserves.entry_info');
     }
 
     public function entryInfo()
@@ -73,7 +73,7 @@ class ReservesController extends Controller
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
         session()->put('reserve', $reserve);
-        return redirect()->route('reserves.entry_car');
+        return redirect()->route('form.reserves.entry_car');
     }
 
     public function entryCar()
@@ -111,7 +111,7 @@ class ReservesController extends Controller
         $reserve->visit_date_plan = $reserve->unload_date_plan;
 
         session()->put('reserve', $reserve);
-        return redirect()->route('reserves.option_select');
+        return redirect()->route('form.reserves.option_select');
     }
 
     public function optionSelect()
@@ -139,7 +139,7 @@ class ReservesController extends Controller
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
         session()->put('reserve', $reserve);
-        return redirect()->route('reserves.confirm');
+        return redirect()->route('form.reserves.confirm');
     }
 
     public function confirm()
@@ -196,7 +196,7 @@ class ReservesController extends Controller
         //
         session()->forget('reserve');
 
-        return redirect(route('reserves.complete', ['code' => (string) $service->deal->reserve_code]));
+        return redirect(route('form.reserves.complete', ['code' => (string) $service->deal->reserve_code]));
     }
 
 
