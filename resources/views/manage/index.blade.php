@@ -10,7 +10,7 @@
     <div class="l-container__inner">
       <ul class="p-index__list">
         <li class="p-index__item">
-          <a href="{{ route('login') }}" target="_blank" rel="noreferrer noopener" class="p-index__link">新規予約<br>（お客さまで入力）</a>
+          <a href="{{ route('reserves.entry_date') }}" target="_blank" rel="noreferrer noopener" class="p-index__link">新規予約<br>（お客さまで入力）</a>
         </li>
         <li class="p-index__item">
           <a href="{{ route('manage.reserves.entry_date') }}" class="p-index__link">新規予約<br>（スタッフが入力）</a>

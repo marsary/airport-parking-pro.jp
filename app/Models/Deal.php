@@ -133,4 +133,14 @@ class Deal extends Model
         return $totalPrice;
     }
 
+    public function carCautions():string
+    {
+        $carCautionList = [];
+        foreach ($this->carCautionMemberCars as $carCautionMemberCar) {
+            $carCautionList[] = $carCautionMemberCar->carCaution->name;
+        }
+
+        return implode(', ', $carCautionList);
+    }
+
 }

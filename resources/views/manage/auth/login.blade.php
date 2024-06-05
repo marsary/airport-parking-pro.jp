@@ -1,7 +1,7 @@
 @extends('layouts.manage.app')
 
 @section('content')
-<div style="text-align: right; padding-right:20px;">事業再構築　機-１<br>R2128E00068000</div>
+<div style="text-align: right; padding-right: 50px;">事業再構築　R2128E00068000</div>
 <div class="l-container__admin">
   <figure class="u-mb1"><img src="{{asset('images/svg/logo.svg')}}" alt="ロゴ" width="255px" height="auto" class="u-horizontal-auto is-block"></figure>
   <div class="c-form__admin--title">ユーザーログイン</div>
