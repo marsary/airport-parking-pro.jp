@@ -2,14 +2,15 @@
 
 namespace Database\Factories;
 
+use App\Models\CashRegister;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Deal>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Payment>
  */
-class DealFactory extends Factory
+class PaymentFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,29 +19,29 @@ class DealFactory extends Factory
      */
     public function definition(): array
     {
+        $deal = \App\Models\Deal::inRandomOrder()->first();
         $loadDate = $this->faker->date();
         $numOfDays = fake()->randomNumber(2);
         $unloadDate = Carbon::parse($loadDate)->addDays($numOfDays);
-        $member = \App\Models\Member::has('memberCars')->inRandomOrder()->first();
         $price = fake()->randomNumber(5);
+        $user = \App\Models\User::first();
         return [
-            'member_id' => $member->id,
+            'payment_code' => Str::random(10),
+            'payment_date' => Carbon::now(),
+            'cash_register_id' => CashRegister::first()->id,
             'office_id' => \App\Models\Office::first(),
-            'reserve_code' => Str::random(10),
-            'receipt_code' => Str::random(10),
-            'reserve_date' => $this->faker->dateTime(),
+            'deal_id' => $deal->id,
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'member_id' => $deal->member?->id,
             'load_date' => $loadDate,
-            'load_time' => $this->faker->time(),
+            'unload_date' => $unloadDate,
             'unload_date_plan' => $unloadDate,
-            'unload_time_plan' => $this->faker->time(),
-            'num_days' => $numOfDays,
+            'days' => $numOfDays,
             'price' => $price,
-            'tax' => (int) $price * 0.1,
             'total_price' => $price,
+            'demand_price' => (int) $price * 1.1,
             'total_tax' => (int) $price * 0.1,
-            'name' => $member->name,
-            'kana' => $member->kana,
-            'member_car_id' => \App\Models\MemberCar::where('member_id', $member->id)->first(),
             'created_by' => \App\Models\User::first(),
             'updated_by' => \App\Models\User::first(),
         ];

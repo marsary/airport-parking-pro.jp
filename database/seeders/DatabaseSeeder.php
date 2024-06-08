@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             // ArrivalFlightSeeder::class,
             // CashRegisterSeeder::class,
             // PaymentMethodSeeder::class,
+            // MonthlySalesTargetSeeder::class,
         ]);
     }
 }

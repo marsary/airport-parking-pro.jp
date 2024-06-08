@@ -16,13 +16,14 @@ class DealGoodFactory extends Factory
      */
     public function definition(): array
     {
-        $price = $this->faker->randomNumber(5);
+        $good = \App\Models\Good::inRandomOrder()->first();
+
         return [
             'deal_id' => \App\Models\Deal::inRandomOrder()->first(),
-            'good_id' => \App\Models\Good::inRandomOrder()->first(),
+            'good_id' => $good->id,
             'num' => $this->faker->randomNumber(2),
-            'total_price' => $price,
-            'total_tax' => (int)$price * 0.1,
+            'total_price' => $good->price,
+            'total_tax' => $good->tax,
         ];
     }
 }
