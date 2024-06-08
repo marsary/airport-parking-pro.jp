@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\TaxType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Good extends Model
 {
@@ -30,4 +32,18 @@ class Good extends Model
         'created_by',
         'updated_by',
     ];
+
+    public function tax(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                return roundTax(TaxType::tryFrom($attributes['tax_type'])->rate() * $attributes['price']);
+            }
+        );
+    }
+
+    public function goodCategory()
+    {
+        return $this->belongsTo(GoodCategory::class);
+    }
 }
