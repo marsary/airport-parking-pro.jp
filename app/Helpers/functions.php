@@ -37,3 +37,10 @@ function getKeyMapCollection(Collection $collect, $key = "id")
         return [$item->{$key} => $item];
     })->all();
 }
+
+
+
+function zeroPadding($number, $digit):string
+{
+    return str_pad($number, $digit, '0', STR_PAD_LEFT);
+}
