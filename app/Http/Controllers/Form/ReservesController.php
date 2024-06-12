@@ -56,6 +56,10 @@ class ReservesController extends Controller
             'num_days' => $table->numDays,
         ]);
         session()->put('reserve', $reserve);
+
+        if(Auth::guard('web')->check()) {
+            return redirect()->route('form.login');
+        }
         return redirect()->route('form.reserves.entry_info');
     }
 
@@ -171,6 +175,9 @@ class ReservesController extends Controller
         $reserve = session()->get('reserve');
         if(!$reserve) {
             $reserve = new ReserveForm();
+            $member = Auth::guard('members')->user();
+            $reserve->setMember($member);
+        } elseif (!$reserve->member && Auth::guard('members')->check()) {
             $member = Auth::guard('members')->user();
             $reserve->setMember($member);
         }

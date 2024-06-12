@@ -4,6 +4,7 @@
 @section('content')
 @include('include.reserve.header_information')
 @include('include.step', ['step' => "entry"])
+@include('include.messages.errors')
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->
   <form action="{{route('form.reserves.entry_car')}}" method="POST">
@@ -87,14 +88,14 @@
       <div class="p-user-input-auto-output__right u-mb1">
         <dl class="l-grid--col2 u-mb3">
           <dt>航空会社名</dt>
-          <dd class="text-right" id="airline_name">日本航空</dd>
+          <dd class="text-right" id="airline_name"></dd>
           <!-- 福岡空港 成田空港 18:20 -->
           <dt>出発空港</dt>
-          <dd class="text-right" id="dep_airport_name">福岡空港</dd>
+          <dd class="text-right" id="dep_airport_name"></dd>
           <dt>到着空港</dt>
-          <dd class="text-right" id="arr_airport_name">成田空港</dd>
+          <dd class="text-right" id="arr_airport_name"></dd>
           <dt>到着予定時間</dt>
-          <dd class="text-right" id="arrive_time">18:20</dd>
+          <dd class="text-right" id="arrive_time"></dd>
         </dl>
         <div class="arrival_flg hidden">到着日がお迎え日と異なる</div>
       </div>
@@ -102,7 +103,7 @@
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-      <a id="returnButton" href="{{route('form.reserves.entry_info')}}" class="c-button__pagination--return">前のページに戻る</a>
+      <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.entry_info')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>

@@ -4,6 +4,7 @@
 @section('content')
 @include('include.reserve.header_information')
 @include('include.step', ['step' => "entry"])
+@include('include.messages.errors')
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->
   <form action="{{route('form.reserves.post_entry_info')}}" method="POST">
