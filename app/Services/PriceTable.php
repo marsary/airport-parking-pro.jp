@@ -65,6 +65,28 @@ class PriceTable
 
         return $table;
     }
+
+    public static function calcAdditionalCharge(Carbon $loadDate,Carbon $unloadDate, $pendingDays, $agencyId = null)
+    {
+        if(isset($agencyId)) {
+            $price = AgencyPrice::where('agency_id', $agencyId)
+                ->where('office_id', config('const.commons.office_id'))->first();
+        } else {
+            $price = Price::where('office_id', config('const.commons.office_id'))->first();
+        }
+
+        $numDays = (int) ceil($unloadDate->diffInDays($loadDate->subDay(), true));
+
+        /** @var Price|AgencyPrice $price */
+        $additionalCharge = 0;
+
+        for ($i=$numDays; $i < $numDays + $pendingDays; $i++) {
+            $dayPrice = $price->getPriceAt($i + 1);
+            $additionalCharge += $dayPrice;
+        }
+
+        return $additionalCharge;
+    }
 }
 
 

@@ -29,4 +29,10 @@ class PaymentGood extends Model
         'created_by',
         'updated_by',
     ];
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
 }

@@ -71,4 +71,9 @@ class Payment extends Model
         return $this->belongsTo(CashRegister::class);
     }
 
+    public function deal()
+    {
+        return $this->belongsTo(Deal::class);
+    }
+
 }
