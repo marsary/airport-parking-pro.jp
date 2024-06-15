@@ -321,6 +321,9 @@ document.addEventListener('DOMContentLoaded', function () {
   loadDateInput.addEventListener('change', function() {
     updateDispLoadDate()
   })
+  loadTimeInput.addEventListener('change', function() {
+    updateSelectedDateTime()
+  })
   unloadDateInput.addEventListener('change', function() {
     updateDispUnloadDate()
   })
@@ -331,6 +334,23 @@ document.addEventListener('DOMContentLoaded', function () {
     loadPriceTable()
   })
 
+
+
+  function updateSelectedDateTime() {
+    if(loadTimeInput.value == '') {
+      selectedDateTime = null;
+    }
+    let loadDate = luxon.DateTime.fromISO(loadDateInput.value);
+    if(!loadDate.isValid) {
+      return
+    }
+    if(loadTimeInput.value != '') {
+        const [hour, min] = loadTimeInput.value.split(':')
+        loadDate = loadDate.plus({ hours: hour, minutes: min });
+    }
+    selectedDateTime = loadDate
+  }
+
   function updateDispLoadDate() {
     const loadDate = luxon.DateTime.fromISO(loadDateInput.value);
     if(!loadDate.isValid) {
@@ -339,6 +359,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     dispLoadDateElem.textContent = loadDate.toFormat(`M/dd`) + '(' + loadDate.weekdayShort + ')';
     loadTimetableTitle.textContent = loadDate.toFormat('yyyy年M月d日');
+
   }
 
   function updateDispUnloadDate() {
@@ -359,8 +380,119 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+
+  async function dispLoadHourTable() {
+    const loadDate = loadDateInput.value;
+
+    if(loadDate == '') {
+      return;
+    }
+    removeHourSelected()
+    // 入庫日をAPIに送信
+    const json = await apiRequest.get(BASE_PATH + "/calendar/load_hours",
+      {load_date:loadDate}
+    )
+
+    console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
+    if(json.success){
+      // 入庫時間空き情報の取得
+      //   alert(json.data);
+      hourlyData = json.data.hourlyData;
+      const loadDateObj = luxon.DateTime.fromISO(loadDateInput.value);
+      let isSelectedDay = false;
+      if(selectedDateTime && loadDateObj.hasSame(selectedDateTime, 'day')) {
+          isSelectedDay = true;
+      }
+      hourVacancyCells.forEach(hourVacancyCell => {
+        const hour = hourVacancyCell.dataset.hour;
+        hourVacancyCell.textContent = hourlyData[hour]?.status;
+        setVacancyColor(hourVacancyCell, hourlyData[hour]?.status)
+      });
+      hourLabelCells.forEach(cellElem => {
+        const hour = cellElem.dataset.hour;
+        if(isSelectedDay && isSelectedHour(hour)) {
+          removeHourSelected()
+          cellElem.classList.add("hour_selected");
+          updateQuarterMinTable(cellElem, true)
+        }
+      });
+
+      if(!isSelectedDay) {
+        resetQuarterMinTable()
+      }
+    }
+  }
+
+  function isSelectedHour(hour) {
+    return hour == selectedDateTime.hour
+  }
+
+  function isSelectedmin(min) {
+    return min == selectedDateTime.minute
+  }
+
+  function updateQuarterMinTable(cellElem, isSelectedDayHour = false) {
+    removeQuaterHourSelected()
+    const hour = cellElem.dataset.hour;
+    quarterHourLabelCells.forEach(labelCell => {
+      const min = labelCell.dataset.min;
+      labelCell.textContent = hour + ':' + min + '～';
+      labelCell.dataset.time = hour + ':' + min;
+
+      if(isSelectedDayHour && isSelectedmin(min)) {
+        removeQuaterHourSelected()
+        labelCell.classList.add("quater_hour_selected");
+      }
+    });
+    quarterHourVacancyCells.forEach(vacancyCell => {
+      const min = vacancyCell.dataset.min;
+      vacancyCell.textContent = hourlyData[hour][min];
+      setVacancyColor(vacancyCell, hourlyData[hour][min])
+    });
+  }
+  function resetQuarterMinTable() {
+    removeQuaterHourSelected()
+    quarterHourLabelCells.forEach(labelCell => {
+      const min = labelCell.dataset.min;
+      labelCell.textContent = ':' + min + '～';
+      labelCell.dataset.time = ':' + min;
+    });
+    quarterHourVacancyCells.forEach(vacancyCell => {
+      vacancyCell.textContent = '';
+    });
+  }
+
+  function setVacancyColor(cell, status) {
+    removeAllChildNodes(cell);
+    const img = document.createElement('img')
+
+    switch (status) {
+      case '〇':
+        img.src = BASE_PATH +  '/images/svg/calendar_available.svg';
+        cell.appendChild(img);
+        break;
+      case '△':
+        img.src = BASE_PATH +  '/images/svg/calendar_some-available.svg';
+        cell.appendChild(img);
+        break;
+      case '×':
+        img.src = BASE_PATH +  '/images/svg/calendar_reserved.svg';
+        cell.appendChild(img);
+        break;
+      case '-':
+        img.src = BASE_PATH +  '/images/svg/calendar_none.svg';
+        cell.appendChild(img);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+
   // 初期表示
   updateDispLoadDate()
   updateDispUnloadDate()
   calcNumDays()
+  updateSelectedDateTime()
 });
