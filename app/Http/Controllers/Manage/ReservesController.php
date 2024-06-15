@@ -5,9 +5,18 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Controllers\Manage\Forms\ManageReserveForm;
 use App\Http\Requests\Manage\EntryDateRequest;
+use App\Http\Requests\Manage\EntryInfoRequest;
+use App\Models\Car;
+use App\Models\CarCaution;
+use App\Models\CarColor;
+use App\Models\CarMaker;
+use App\Models\Good;
+use App\Models\GoodCategory;
 use App\Models\Member;
 use App\Services\PriceTable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 class ReservesController extends Controller
 {
     /**
@@ -55,11 +64,52 @@ class ReservesController extends Controller
     public function entryInfo()
     {
         $reserve = $this->getReserveForm();
+        $carMakers = CarMaker::select('name', 'id')->get();
+        $cars = [];
+        if(null != old('car_maker_id', $reserve->car_maker_id)) {
+            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->get();
+        }
+        $carColors = CarColor::select('name', 'id')->get();
+        $goodCategories = GoodCategory::with('goods')->get();
+        $goods = Good::all();
+        $goodsMap = getKeyMapCollection($goods);
+        $carCautions = CarCaution::where('office_id', $reserve->office_id)->get();
+
+
 
         return view('manage.reserves.entry_info', [
             'reserve' => $reserve,
+            'carMakers' => $carMakers,
+            'cars' => $cars,
+            'carColors' => $carColors,
+            'goodCategories' => $goodCategories,
+            'goodsMap' => $goodsMap,
+            'carCautions' => $carCautions,
         ]);
     }
+
+
+    public function postEntryInfo(EntryInfoRequest $request)
+    {
+        $reserve = $this->getReserveForm();
+        $reserve->setMember($this->getMember($request));
+        if($request->flight_no && $request->arrive_date) {
+            $arrivalFlight = DB::table('arrival_flights')
+                ->where('flight_no', $request->flight_no)
+                ->where('arrive_date', $request->arrive_date)
+                ->first();
+            $reserve->arr_flight_id = $arrivalFlight->id;
+        }
+        $reserve->fill($request->all());
+        // 到着便の到着日と出庫日が異なる場合にチェック
+        $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
+        $reserve->visit_date_plan = $reserve->unload_date_plan;
+
+        session()->put('manage_reserve', $reserve);
+        return redirect()->route('manage.reserves.confirm');
+    }
+
+
 
     public function confirm()
     {
