@@ -277,12 +277,141 @@
 
 @endsection
 @push("scripts")
+<script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ asset('js/select2.min.js') }}"></script>
+<script src="{{ asset('js/ja.js') }}"></script>
+<script src="{{ asset('js/commons/cars.js') }}"></script>
+<script src="{{ asset('js/pages/manage/entry_info.js') }}"></script>
 {{--  <script src="{{ asset('js/modalOption.js') }}"></script>
 <script src="{{ asset('js/removeButton.js') }}"></script>  --}}
 <script>
+  const goodsMap = @js($goodsMap);
+  let goodIds = @js($reserve->good_ids);
+  let checkedOptionList = null;
+  let goodIdsElem = null;
+  function openOptionModal(modalId) {
+    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
+    modalAreaOption.classList.add('is-active');
+  }
+  function closeOptionModal(modalId) {
+    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
+    modalAreaOption.classList.remove('is-active');
+  }
+
+  function initOptionList()
+  {
+    if(goodIdsElem.value != '') {
+        goodIds = goodIdsElem.value.split(',');
+    } else {
+        goodIdsElem.value = goodIds.join(',')
+    }
+    removeAllChildNodes(checkedOptionList)
+    goodIds.forEach((goodId) => {
+      const good = goodsMap[goodId];
+      const div = document.createElement('div')
+      const img = document.createElement('img')
+      const span = document.createElement('span')
+      div.classList.add("button__remove","item-container", "remove_good")
+      // div.value = good.id
+      img.src = "{{ asset('images/icon/removeButton.svg') }}"
+      img.width = 16
+      img.height = 16
+      img.classList.add("button_remove")
+      img.value = goodId;
+      img.addEventListener('click', function() {
+        removeOption(img);
+      });
+
+      span.textContent = good?.name + formatCurrency(good?.price, ' ¥');
+      div.appendChild(img)
+      div.appendChild(span)
+      checkedOptionList.appendChild(div)
+    })
+
+  }
+
+  function updateOptionList()
+  {
+    removeAllChildNodes(checkedOptionList)
+    goodIds.forEach((goodId) => {
+      const good = goodsMap[goodId];
+      const div = document.createElement('div')
+      const img = document.createElement('img')
+      const span = document.createElement('span')
+      div.classList.add("button__remove","item-container", "remove_good")
+      // div.value = good.id
+      img.src = "{{ asset('images/icon/removeButton.svg') }}"
+      img.width = 16
+      img.height = 16
+      img.classList.add("button_remove")
+      img.value = goodId;
+      img.addEventListener('click', function() {
+        removeOption(img);
+      });
+
+      span.textContent = good?.name + formatCurrency(good?.price, ' ¥');
+      div.appendChild(img)
+      div.appendChild(span)
+      checkedOptionList.appendChild(div)
+    })
+
+    goodIdsElem.value = goodIds.join(',')
+  }
+
+  function addRemoveList(list, addingList, removingList = [])
+  {
+    list = Array.from(new Set([...list, ...addingList]));
+    return list.filter(x => !removingList.includes(x));
+  }
+
+  function addOptions(modalId) {
+    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
+    const checkBoxList = modalAreaOption.querySelectorAll('input[type="checkbox"]');
+
+    let addingIds = [];
+    let removingIds = [];
+    // オプション選択項目を更新する。
+    checkBoxList.forEach((checkbox) => {
+      const goodId = checkbox.value;
+      if(checkbox.checked) {
+        addingIds.push(goodId);
+      } else {
+        removingIds.push(goodId);
+      }
+    });
+
+    goodIds = addRemoveList(goodIds, addingIds, removingIds);
+    updateOptionList()
+  }
+
+  function removeOption(btnElem) {
+    const removingId = btnElem.value
+    goodIds = addRemoveList(goodIds, [], [removingId]);
+    updateOptionList()
+
+    const parent = btnElem.closest('.item-container');
+    if (parent) {
+      parent.remove();
+    }
+    document.getElementById('modal_good_ids_' + removingId).checked = false;
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    checkedOptionList = document.getElementById('checked-option-list');
+    goodIdsElem = document.getElementById('good_ids');
+    const removeGoodBtnElems = Array.from(document.getElementsByClassName('button_remove'));
+
+    removeGoodBtnElems.forEach((btnElem) => btnElem.addEventListener('click', function() {
+      removeOption(btnElem);
+    }))
+
+    // 初期表示
+    initOptionList()
+  })
 </script>
 @endpush
 @push('css')
+<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 <style>
 </style>
 @endpush
