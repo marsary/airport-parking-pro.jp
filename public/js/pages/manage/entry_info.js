@@ -9,17 +9,37 @@ document.addEventListener('DOMContentLoaded', function () {
   const arriveTimeInput = document.getElementById('arrive_time');
   const unloadDateElem = document.getElementById('unload_date_plan');
 
+  const searchBtn = document.getElementById('search_btn');
+  const telInput = document.querySelector('input[name=tel]')
+  const kanaInput = document.querySelector('input[name=kana]')
+  const nameInput = document.querySelector('input[name=name]')
+  const zipInput = document.querySelector('input[name=zip]')
+  const emailInput = document.querySelector('input[name=email]')
+  const carColorSelect = document.getElementById('car_color_id');
+  const carNumberInput = document.getElementById('car_number');
   const carCautionSelect = document.getElementById('car_caution_ids');
+  const dispMemberCodeElem = document.getElementById('disp_member_code');
+  const memberInfosElem = document.getElementById('member_infos');
+  const dispUsedNumElem = document.getElementById('disp_used_num');
+  const dispCarSizeElem = document.getElementById('disp_car_size');
+  const carMakersElem = document.getElementById('car_maker_id');
+  const carsElem = document.getElementById('car_id');
   const arrivalFlgElems = Array.from(document.getElementsByClassName('arrival_flg'));
 
   $(carCautionSelect).select2();
 
+  searchBtn.addEventListener('click', function() {
+    loadMember()
+  });
   flightNoElem.addEventListener('change', function() {
     dispArrivalFlight()
   });
   arriveDateElem.addEventListener('change', function() {
     dispArrivalFlight()
     dispArrivalFlg()
+  });
+  carMakersElem.addEventListener('change', function() {
+    loadCars()
   });
 
   function dispArrivalFlg() {
@@ -38,6 +58,75 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   }
 
+  async function loadMember(init = false) {
+    const tel = telInput.value;
+    const kana = kanaInput.value;
+
+    if(tel == '' || kana == '') {
+      if(!init) {
+        alert('顧客情報を検索するには携帯番号とふりがなの両方を入力してください。')
+      }
+      return;
+    }
+
+    // フリガナ・電話番号をAPIに送信
+    const json = await apiRequest.get(BASE_PATH + "/members/load_member",
+      {kana:kana, tel:tel}
+    )
+
+    console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
+    if(json.success){
+      console.log(json.data);
+      if(json.data.member == '') {
+        if(!init) {
+          alert('入力された顧客情報が存在しません。')
+        }
+        return;
+      }
+
+      if(!init) {
+        nameInput.value = json.data.member.name
+        zipInput.value = json.data.member.zip
+        emailInput.value = json.data.member.email
+      }
+      dispMemberCodeElem.textContent = json.data.member.member_code
+      dispUsedNumElem.textContent = json.data.member.used_num
+
+      document.querySelectorAll('.disp_tag_member').forEach(e => e.remove());
+      if(json.data.member.tagMembers != '') {
+        json.data.member.tagMembers.forEach(tagMember => {
+          const labelDiv = document.createElement('div')
+          const tagDiv = document.createElement('div')
+          labelDiv.classList.add('disp_tag_member')
+          tagDiv.classList.add('disp_tag_member')
+          labelDiv.textContent = tagMember.label.name
+          tagDiv.textContent = tagMember.tag.name
+          memberInfosElem.appendChild(labelDiv)
+          memberInfosElem.appendChild(tagDiv)
+        })
+      }
+
+      if(Array.isArray(json.data.member.member_cars) && json.data.member.member_cars[0] != undefined) {
+        dispCarSizeElem.textContent = carSizeLabel(json.data.member.member_cars[0].car.size_type)
+
+        if(!init) {
+          carMakersElem.value = json.data.member.member_cars[0].car.car_maker_id
+          carColorSelect.value = json.data.member.member_cars[0].car_color_id
+          carNumberInput.value = json.data.member.member_cars[0].number
+          if(json.data.member.car_caution_ids.length > 0) {
+            updateCarCaution(json.data.member.car_caution_ids)
+          }
+          await loadCars()
+          carsElem.value = json.data.member.member_cars[0].car_id
+        }
+      }
+
+    }
+  }
+
+  function updateCarCaution(carCuationIds = []) {
+    $(carCautionSelect).select2("val", carCuationIds);
+  }
 
   // 到着便情報の表示
   async function dispArrivalFlight() {
@@ -75,6 +164,32 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  async function loadCars() {
+    // 選択メーカーIDをAPIに送信
+    // 車種リストの取得
+    const carMakerId = carMakersElem.value
+    const carId = carsElem.value
+    const json = await apiRequest.get(BASE_PATH + `/car_makers/${carMakerId}/cars`)
+    if(json.success){
+      while (carsElem.options.length > 1) carsElem.remove(1);
+        // car_id の select のオプションを更新する。
+        json.data.cars.forEach((car) => {
+            const option = document.createElement('option')
+            option.value = car.id;
+            option.textContent = car.name;
+            if(carId == car.id) {
+              option.selected = true
+            }
+            carsElem.appendChild(option)
+        });
+    }
+  }
+
+  // 初期表示
+  if(carsElem.value == '') {
+    loadCars()
+  }
   dispArrivalFlight()
   dispArrivalFlg()
+  loadMember(true)
 });
