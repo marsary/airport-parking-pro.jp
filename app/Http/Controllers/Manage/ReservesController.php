@@ -6,16 +6,23 @@ use App\Http\Controllers\Manage\Controller;
 use App\Http\Controllers\Manage\Forms\ManageReserveForm;
 use App\Http\Requests\Manage\EntryDateRequest;
 use App\Http\Requests\Manage\EntryInfoRequest;
+use App\Models\Agency;
+use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarCaution;
 use App\Models\CarColor;
 use App\Models\CarMaker;
+use App\Models\Coupon;
 use App\Models\Good;
 use App\Models\GoodCategory;
 use App\Models\Member;
+use App\Services\LabelTagManager;
+use App\Services\Member\ReserveService;
 use App\Services\PriceTable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReservesController extends Controller
 {
@@ -104,6 +111,7 @@ class ReservesController extends Controller
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
         $reserve->visit_date_plan = $reserve->unload_date_plan;
+        $reserve->setCarCautions();
 
         session()->put('manage_reserve', $reserve);
         return redirect()->route('manage.reserves.confirm');
@@ -114,9 +122,23 @@ class ReservesController extends Controller
     public function confirm()
     {
         $reserve = $this->getReserveForm();
+        $reserve->handleGoodsAndTotals();
+
+        LabelTagManager::attachTagDataToMember($reserve->member);
+        $arrivalFlight = ArrivalFlight::with('airline','depAirport','arrAirport')->where('flight_no', $reserve->flight_no)
+            ->where('arrive_date', $reserve->arrive_date)->first();
+        $carMaker = CarMaker::where('id', $reserve->car_maker_id)->first();
+        $car = Car::where('id', $reserve->car_id)->first();
+        $carColor = CarColor::where('id', $reserve->car_color_id)->first();
+        $agency = Agency::find($reserve->agency_id);
 
         return view('manage.reserves.confirm', [
             'reserve' => $reserve,
+            'arrivalFlight' => $arrivalFlight,
+            'carMaker' => $carMaker,
+            'car' => $car,
+            'carColor' => $carColor,
+            'agency' => $agency,
         ]);
     }
 
@@ -126,6 +148,17 @@ class ReservesController extends Controller
     public function store(Request $request)
     {
         $reserve = $this->getReserveForm();
+        $service = new ReserveService($reserve);
+        try {
+            DB::transaction(function () use($service){
+                $service->store();
+            });
+        } catch (\Throwable $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
+        }
+        //
+
         return redirect(route('manage.deals.index'));
     }
 
