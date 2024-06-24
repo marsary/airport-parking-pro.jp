@@ -61,6 +61,8 @@ Route::get('car_makers/{car_maker_id}/cars', [\App\Http\Controllers\CarMakersCon
 Route::get('arrival_flights/get_info', [\App\Http\Controllers\ArrivalFlightsController::class, 'getInfo'])->name('arrival_flights.get_info');
 Route::get('prices/table', [\App\Http\Controllers\PricesController::class, 'table'])->name('prices.table');
 
+Route::get('members/load_member', [\App\Http\Controllers\MembersController::class, 'loadMember'])->name('members.load_member');
+
 Route::get('calendar/load_dates', [\App\Http\Controllers\CalendarController::class, 'loadDates'])->name('calendar.load_dates');
 Route::get('calendar/unload_dates', [\App\Http\Controllers\CalendarController::class, 'unloadDates'])->name('calendar.unload_dates');
 Route::get('calendar/load_hours', [\App\Http\Controllers\CalendarController::class, 'loadHours'])->name('calendar.load_hours');

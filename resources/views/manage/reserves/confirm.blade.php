@@ -11,29 +11,31 @@
     <li class="l-breadcrumb__list">予約内容確認</li>
   </ul>
 
+  @include('include.messages.errors')
+
   <div class="l-container__inner">
 
-    <form action="/register/register_index.php" method="POST">
-
+    <form action="{{route('manage.reserves.store')}}" method="POST">
+      @csrf
       <div class="c-title__table">予約情報</div>
       <table class="l-table-confirm">
         <tr>
           <th>予約コード</th>
-          <td>1234567890</td>
+          <td>{{$reserve->reserve_code}}</td>
           <th>受付コード</th>
           <td>1234567890</td>
           <th>予約日時</th>
-          <td>2024/1/15(月)20:12</td>
+          <td>{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
           <th>予約経路</th>
-          <td>公式HP</td>
+          <td>{{$agency?->name}}</td>
         </tr>
         <tr>
           <th>入庫日時</th>
-          <td>2024/2/1(木) 10:35</td>
+          <td>{{$reserve->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $reserve->load_time}}</td>
           <th>出庫予定日</th>
-          <td>2024/2/1(木)</td>
+          <td>{{$reserve->unload_date_plan->isoFormat('YYYY/M/D(ddd)')}}</td>
           <th>利用日数</th>
-          <td>5日</td>
+          <td>{{$reserve->num_days}}日</td>
         </tr>
       </table>
 
@@ -42,38 +44,50 @@
       <table class="l-table-confirm">
         <tr>
           <th>顧客コード</th>
-          <td>1234567890</td>
+          <td>{{$reserve->member?->member_code}}</td>
           <th>お客様氏名</th>
-          <td>サン太郎</td>
+          <td>{{$reserve->name}}</td>
           <th>ふりがな</th>
-          <td>さんたろう</td>
+          <td>{{$reserve->kana}}</td>
           <th>利用回数</th>
-          <td>8回</td>
+          <td>
+            @if (isset($reserve->member?->used_num))
+              {{$reserve->member?->used_num}}回
+            @endif
+          </td>
         </tr>
         <tr>
-          <th>会員ランク</th>
+          @for ($i = 0; $i < 4; $i++)
+            @if (isset($reserve->member->tagMembers[$i]))
+              <th>{{$reserve->member->tagMembers[$i]->label->name}}</th>
+              <td>{{$reserve->member->tagMembers[$i]->tag->name}}</td>
+            @else
+              <th></th><td></td>
+            @endif
+          @endfor
+          {{--  <th>会員ランク</th>
           <td>シルバー</td>
           <th>ラベル2</th>
           <td>ダミーダミー</td>
           <th>ラベル3</th>
           <td>ダミーダミー</td>
           <th>ラベル4</th>
-          <td>ダミーダミー</td>
+          <td>ダミーダミー</td>  --}}
         </tr>
         <tr>
           <th>郵便番号</th>
-          <td>111-0000</td>
+          <td>{{$reserve->zip}}</td>
           <th>電話番号</th>
-          <td>090-1234-5678</td>
+          <td>{{$reserve->tel}}</td>
           <!-- 以下2つは桁数次第ではレイアウトが崩れる分けてもよいかも -->
           <th>Mail</th>
-          <td>testaaatestaaaatestaaatest@test.jp</td>
+          <td>{{$reserve->email}}</td>
           <th>LINE ID</th>
-          <td>sun123</td>
+          <td>{{$reserve->member?->line_id}}{{--sun123--}}</td>
         </tr>
         <tr>
           <th>領収書のあて名</th>
-          <td colspan="3">ダミーダミーダミー</td>
+          <td colspan="3">{{$reserve->receipt_address}}</td>
         </tr>
       </table>
 
@@ -82,23 +96,29 @@
       <table class="l-table-confirm">
         <tr>
           <th>到着予定日</th>
-          <td>2024/2/5(月)</td>
+          <td>{{$reserve->arrive_date?->isoFormat('YYYY/M/D(ddd)')}}</td>
           <th>到着予定時間</th>
-          <td>16:45 <span class="c-label--delay">遅延</span> </td>
+          <td>{{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}}
+            @if (false)
+              <span class="c-label--delay">遅延</span>
+            @endif
+          </td>
           <th>到着便</th>
-          <td>NH205</td>
+          <td>{{$arrivalFlight?->flight_no}}</td>
           <th>航空会社</th>
-          <td>ANA</td>
+          <td>{{$arrivalFlight?->airline->name}}</td>
         </tr>
         <tr>
           <th>出発空港</th>
-          <td>LAX</td>
+          <td>{{$arrivalFlight?->depAirport->name}}</td>
           <th>到着空港</th>
-          <td>NRT</td>
+          <td>{{$arrivalFlight?->arrAirport->name}}</td>
           <th>到着ターミナル</th>
-          <td>2</td>
+          <td>{{$arrivalFlight?->terminal_id}}</td>
           <td colspan="3">
-            <div class="c-label--lg">到着日とお迎え日が異なる</div>
+            @if ($reserve->arrival_flg)
+              <div class="c-label--lg">到着日とお迎え日が異なる</div>
+            @endif
           </td>
         </tr>
       </table>
@@ -108,34 +128,34 @@
       <table class="l-table-confirm">
         <tr>
           <th>メーカー</th>
-          <td>BMW</td>
+          <td>{{$carMaker->name}}</td>
           <th>車種</th>
-          <td>BMW5</td>
+          <td>{{$car->name}}</td>
           <th>車番</th>
-          <td>1234</td>
+          <td>{{$reserve->car_number}}</td>
           <th>色</th>
-          <td>黒</td>
+          <td>{{$carColor->name}}</td>
         </tr>
         <tr>
           <th>区分</th>
-          <td>普通</td>
+          <td>{{$car->size_label}}</td>
           <th>人数</th>
-          <td>3名</td>
+          <td>{{$reserve->num_members ?? 1}}名</td>
           <th>車両取扱</th>
-          <td colspan="3">MT車</td>
+          <td colspan="3">{{$reserve->carCautions}}</td>
         </tr>
         <tr>
           <th>備考</th>
-          <td>文字が長い場合があるので独立行にした</td>
+          <td>{{$reserve->reserve_memo}}</td>
         </tr>
       </table>
 
 
       <!--  -->
       <div class="c-button-group__form u-mt3">
-        <button id="returnButton" class="c-button__submit--dark-gray u-h50">修正する</button>
+        <button type="button" id="returnButton" onclick="location.href='{{route('manage.reserves.entry_info')}}';" class="c-button__submit--dark-gray u-h50">修正する</button>
         <button type="submit" value="1" id="confirmButton" class="c-button__submit--green u-h50">予約を完了する</button>
-        <button type="submit" value="0" class="c-button__pagination--next">お会計へ</button>
+        <button type="submit" name="to_register" value="0" class="c-button__pagination--next">お会計へ</button>
       </div>
     </form>
   </div><!-- /.l-container__inner -->

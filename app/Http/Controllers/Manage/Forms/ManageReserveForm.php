@@ -10,6 +10,9 @@ class ManageReserveForm extends ReserveFormBase
 {
     public $car_caution_ids = [];
 
+    public $arrive_time;
+
+
     function __construct()
     {
         parent::__construct();
@@ -24,6 +27,16 @@ class ManageReserveForm extends ReserveFormBase
                 ->leftJoin('car_caution_member_cars', 'car_cautions.id', '=', 'car_caution_member_cars.car_caution_id')
                 ->where('car_caution_member_cars.member_car_id', $this->member_car_id)
                 ->pluck('car_cautions.id')->toArray();
+        }
+    }
+
+    public function setCarCautions()
+    {
+        // 車両取扱
+        if($this->car_caution_ids) {
+            $this->carCautions = CarCaution::whereIn('id', $this->car_caution_ids)->pluck('name')->implode('name', ', ');
+        } else {
+            $this->carCautions = '';
         }
     }
 

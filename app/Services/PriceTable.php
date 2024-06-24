@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Enums\TaxType;
 use App\Models\AgencyPrice;
+use App\Models\Coupon;
 use App\Models\Price;
 use Carbon\Carbon;
 
@@ -17,6 +18,8 @@ class PriceTable
     public $taxLabel;
     /** @var int */
     public $subTotal;
+    public $discountedSubTotal;
+    public $coupons = [];
     /** @var int */
     public $tax;
     /** @var int */
@@ -29,7 +32,7 @@ class PriceTable
         $this->taxLabel = TaxType::TEN_PERCENT->label();
     }
 
-    public static function getPriceTable($loadDate, $unloadDate, $agencyId = null)
+    public static function getPriceTable($loadDate, $unloadDate, $couponIds = [], $agencyId = null)
     {
         $table = new self;
         if(! $loadDate instanceof Carbon) {
@@ -60,8 +63,9 @@ class PriceTable
 
             $rowDate->addDay();
         }
-        $table->tax = roundTax($table->taxType->rate() * $table->subTotal);
-        $table->total = $table->subTotal + $table->tax;
+        $table->discountedSubTotal = $table->subTotal;
+        $table->tax = roundTax($table->taxType->rate() * $table->discountedSubTotal);
+        $table->total = $table->discountedSubTotal + $table->tax;
 
         return $table;
     }
@@ -87,6 +91,7 @@ class PriceTable
 
         return $additionalCharge;
     }
+
 }
 
 
