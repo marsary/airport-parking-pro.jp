@@ -317,7 +317,7 @@
     background-color: #eee;
     text-align: center;
   }
-  .fc-day.fc-day-today.fc-daygrid-day, .fc-day.fc-day-future.fc-daygrid-day {
+  .fc-day.fc-day-today.fc-daygrid-day:not(.day_full), .fc-day.fc-day-future.fc-daygrid-day:not(.day_full) {
     cursor: pointer;
   }
   .fc-daygrid-day-events {
