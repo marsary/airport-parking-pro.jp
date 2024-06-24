@@ -13,8 +13,10 @@ class PricesController extends Controller
         $loadDate = $request->input('load_date');
         $unloadDate = $request->input('unload_date');
         $agencyCode = $request->input('agency_code');
+        $couponIds = [];
+
         $agencyId = DB::table('agencies')->where('code', $agencyCode)->first()?->id;
-        $table = PriceTable::getPriceTable($loadDate, $unloadDate, $agencyId);
+        $table = PriceTable::getPriceTable($loadDate, $unloadDate, $couponIds, $agencyId);
 
         return response()->json([
             'success' => true,
