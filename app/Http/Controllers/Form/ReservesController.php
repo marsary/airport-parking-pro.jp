@@ -9,6 +9,7 @@ use App\Http\Requests\Member\EntryDateRequest;
 use App\Http\Requests\Member\EntryInfoRequest;
 use App\Http\Requests\Member\OptionSelectRequest;
 use App\Models\Agency;
+use App\Models\Airline;
 use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarColor;
@@ -89,12 +90,14 @@ class ReservesController extends Controller
             $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->get();
         }
         $carColors = CarColor::select('name', 'id')->get();
+        $airlines = Airline::select('name', 'id')->get();
 
         return view('form.reserves.entry_car', [
             'reserve' => $reserve,
             'carMakers' => $carMakers,
             'cars' => $cars,
             'carColors' => $carColors,
+            'airlines' => $airlines,
         ]);
     }
 

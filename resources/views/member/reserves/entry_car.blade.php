@@ -69,7 +69,21 @@
           <input type="text" id="car_number" name="car_number" maxlength="4" minlength="4" class="u-w-full-wide" value="{{old('car_number', $reserve->car_number)}}">
         </div>
         <div>
-          <label for="flight_no">到着便（例：JL200，NH300）</label>
+          <label for="car_color_id">到着便航空会社</label>
+          <div class="c-form-select-color">
+            <select id="airline_id" name="airline_id">
+              <option value="選択してください" disabled>選択してください</option>
+              @foreach ($airlines as $airline)
+                <option value="{{ $airline->id }}"
+                  {{old('airline_id')==$airline->id ? 'selected':''}}>
+                  {{$airline->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="flight_no">到着便名（例：200,300）</label>
           <input type="text" id="flight_no" name="flight_no" class="u-w-full-wide" value="{{old('flight_no', $reserve->flight_no)}}">
         </div>
         <div>
