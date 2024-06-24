@@ -156,10 +156,14 @@ document.addEventListener('DOMContentLoaded', function () {
         el.closest('.fc-daygrid-day').classList.add('day_selected');
         dispLoadHourTable()
       }
+      if(e.event.toPlainObject().title == '×') {
+        el.classList.add('event_full');
+        el.closest('.fc-daygrid-day').classList.add('day_full');
+      }
     },
     eventClick: function(info) {
-      if(info.el.classList.contains("fc-event-past")) {
-        return;
+      if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
+          return;
       }
       alert(info.event.start);
       const startDate = luxon.DateTime.fromJSDate(info.event.start);
@@ -174,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
       info.el.closest('td').classList.add("day_selected");
     },
     dateClick: function(info) {
-      if(info.dayEl.classList.contains("fc-day-past")) {
+      if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
         return;
       }
       alert(info.date);
@@ -246,9 +250,13 @@ document.addEventListener('DOMContentLoaded', function () {
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
       }
+      if(e.event.toPlainObject().title == '×') {
+        el.classList.add('event_full');
+        el.closest('.fc-daygrid-day').classList.add('day_full');
+      }
     },
     eventClick: function(info) {
-      if(info.el.classList.contains("fc-event-past")) {
+      if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
         return;
       }
       alert(info.event.start);
@@ -262,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
       info.el.closest('td').classList.add("day_selected");
     },
     dateClick: function(info) {
-      if(info.dayEl.classList.contains("fc-day-past")) {
+      if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
         return;
       }
       alert(info.date);
