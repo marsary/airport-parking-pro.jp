@@ -38,8 +38,12 @@ document.addEventListener('DOMContentLoaded', function () {
     dispArrivalFlight()
     dispArrivalFlg()
   });
-  carMakersElem.addEventListener('change', function() {
-    loadCars()
+  carMakersElem.addEventListener('change', async function() {
+    await loadCars()
+    setCarSize()
+  });
+  carsElem.addEventListener('change', function() {
+    setCarSize()
   });
 
   function dispArrivalFlg() {
@@ -118,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
           await loadCars()
           carsElem.value = json.data.member.member_cars[0].car_id
+          setCarSize()
         }
       }
 
@@ -176,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
         json.data.cars.forEach((car) => {
             const option = document.createElement('option')
             option.value = car.id;
+            option.dataset.size = car.size_type;
             option.textContent = car.name;
             if(carId == car.id) {
               option.selected = true
@@ -185,9 +191,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function setCarSize() {
+    const sizeType = carsElem.options[carsElem.selectedIndex].getAttribute('data-size')
+    dispCarSizeElem.textContent = carSizeLabel(sizeType) ?? ''
+
+  }
+
   // 初期表示
   if(carsElem.value == '') {
-    loadCars()
+    const initCarData = async () => {
+        await loadCars()
+        setCarSize()
+    };
+    initCarData()
   }
   dispArrivalFlight()
   dispArrivalFlg()

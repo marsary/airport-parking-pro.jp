@@ -66,7 +66,7 @@
           <div>利用回数: </div>
           <div class="text-right" id="disp_used_num"></div>
           <div class="disp_tag_member">会員ランク: </div>
-          <div class="text-right disp_tag_member">S</div>
+          <div class="text-right disp_tag_member"></div>
           {{--  <div>トラブル: </div>
           <div class="text-right">あり</div>
           <div>ラベル3: </div>
@@ -99,10 +99,11 @@
               <label for="car">車種</label>
               <div class="c-form-select-color c-form-input--w100">
                 <select id="car_id" name="car_id">
+                  <option value="選択してください" disabled>選択してください</option>
                   @if (!empty(old('car_id', $reserve->car_id)))
-                    <option value="選択してください" disabled>選択してください</option>
                     @foreach ($cars as $car)
                       <option value="{{ $car->id }}"
+                        data-size="{{$car->size_type}}"
                         {{old('car_id', $reserve->car_id)==$car->id ? 'selected':''}}>
                         {{$car->name }}
                       </option>
@@ -227,12 +228,6 @@
                 ]
               )
             @endforeach
-            {{--  <div class="c-button__select--gray button_select">洗車</div>
-            <div class="c-button__select--gray button_select">メンテナンス</div>
-            <div class="c-button__select--gray button_select">保険</div>
-            <div class="c-button__select--gray button_select">回数券</div>
-            <div class="c-button__select--gray button_select">物販</div>
-            <div class="c-button__select--gray button_select">その他</div>  --}}
           </div>
         </div>
 
