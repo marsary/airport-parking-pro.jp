@@ -158,6 +158,11 @@ class ReservesController extends Controller
             return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
         }
         //
+        session()->forget('manage_reserve');
+
+        if($request->has('to_register')) {
+            return redirect(route('manage.registers.index', ['deal_id' => $service->deal->id]));
+        }
 
         return redirect(route('manage.deals.index'));
     }
