@@ -27,7 +27,7 @@
           <th>予約日時</th>
           <td>{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
           <th>予約経路</th>
-          <td>{{$agency->name}}</td>
+          <td>{{$agency?->name}}</td>
         </tr>
         <tr>
           <th>入庫日時</th>
@@ -98,7 +98,11 @@
           <th>到着予定日</th>
           <td>{{$reserve->arrive_date?->isoFormat('YYYY/M/D(ddd)')}}</td>
           <th>到着予定時間</th>
-          <td>{{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}} <span class="c-label--delay">遅延</span> </td>
+          <td>{{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}}
+            @if (false)
+              <span class="c-label--delay">遅延</span>
+            @endif
+          </td>
           <th>到着便</th>
           <td>{{$arrivalFlight?->flight_no}}</td>
           <th>航空会社</th>
@@ -151,7 +155,7 @@
       <div class="c-button-group__form u-mt3">
         <button type="button" id="returnButton" onclick="location.href='{{route('manage.reserves.entry_info')}}';" class="c-button__submit--dark-gray u-h50">修正する</button>
         <button type="submit" value="1" id="confirmButton" class="c-button__submit--green u-h50">予約を完了する</button>
-        <button type="submit" name="to_register" value="0" class="c-button__pagination--next hidden">お会計へ</button>
+        <button type="submit" name="to_register" value="0" class="c-button__pagination--next">お会計へ</button>
       </div>
     </form>
   </div><!-- /.l-container__inner -->
