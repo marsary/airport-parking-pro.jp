@@ -92,3 +92,11 @@ function isObject(obj)
 {
     return obj != null && obj.constructor.name === "Object"
 }
+
+function parseDateInput(inputValue) {
+    let dateObj = luxon.DateTime.fromISO(inputValue)
+    if(!dateObj.isValid) {
+        dateObj = luxon.DateTime.fromFormat(inputValue, 'yyyy-MM-dd HH:mm:ss')
+    }
+    return dateObj;
+}
