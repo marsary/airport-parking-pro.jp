@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const unloadDateInput = document.querySelector('input[name=unload_date_plan]')
   const numDaysInput = document.querySelector('input[name=num_days]')
 
-  const initLoadDate = luxon.DateTime.fromISO(loadDateInput.value);
-  const initUnloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+  const initLoadDate = parseDateInput(loadDateInput.value);
+  const initUnloadDate = parseDateInput(unloadDateInput.value);
 
   const loadTimetableTitle = document.getElementById('load_timetable_title');
   const loadTimeSectionElem = document.getElementById('load_time_section');
@@ -147,15 +147,19 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     eventDidMount: function(e) {
       const startDate = luxon.DateTime.fromJSDate(e.event.start);
+      let el = e.el;
       if(startDate.hasSame(initLoadDate, 'day')) {
-        let el = e.el;
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
         dispLoadHourTable()
       }
+      if(e.event.toPlainObject().title == '×') {
+        el.classList.add('event_full');
+        el.closest('.fc-daygrid-day').classList.add('day_full');
+      }
     },
     eventClick: function(info) {
-      if(info.el.classList.contains("fc-event-past")) {
+      if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
         return;
       }
       alert(info.event.start);
@@ -171,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
       info.el.closest('td').classList.add("day_selected");
     },
     dateClick: function(info) {
-      if(info.dayEl.classList.contains("fc-day-past")) {
+      if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
         return;
       }
       alert(info.date);
@@ -243,10 +247,14 @@ document.addEventListener('DOMContentLoaded', function () {
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
       }
+      if(e.event.toPlainObject().title == '×') {
+        el.classList.add('event_full');
+        el.closest('.fc-daygrid-day').classList.add('day_full');
+      }
     },
     eventClick: function(info) {
-      if(info.el.classList.contains("fc-event-past")) {
-        return;
+      if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
+          return;
       }
       alert(info.event.start);
       unloadDateInput.value = luxon.DateTime.fromJSDate(info.event.start).toISODate();
@@ -259,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
       info.el.closest('td').classList.add("day_selected");
     },
     dateClick: function(info) {
-      if(info.dayEl.classList.contains("fc-day-past")) {
+      if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
         return;
       }
       alert(info.date);
@@ -306,8 +314,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function calcNumDays() {
-    const loadDate = luxon.DateTime.fromISO(loadDateInput.value);
-    const unloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+    const loadDate = parseDateInput(loadDateInput.value)
+    const unloadDate = parseDateInput(unloadDateInput.value)
     if(!loadDate.isValid || !unloadDate.isValid) {
       numDaysInput.value = ''
       return
@@ -340,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if(loadTimeInput.value == '') {
       selectedDateTime = null;
     }
-    let loadDate = luxon.DateTime.fromISO(loadDateInput.value);
+    let loadDate = parseDateInput(loadDateInput.value)
     if(!loadDate.isValid) {
       return
     }
@@ -352,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateDispLoadDate() {
-    const loadDate = luxon.DateTime.fromISO(loadDateInput.value);
+    const loadDate = parseDateInput(loadDateInput.value)
     if(!loadDate.isValid) {
         dispLoadDateElem.textContent = ''
         return
@@ -363,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateDispUnloadDate() {
-    const unloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+    const unloadDate = parseDateInput(unloadDateInput.value)
     if(!unloadDate.isValid) {
         dispUnloadDateElem.textContent = ''
         return
@@ -398,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // 入庫時間空き情報の取得
       //   alert(json.data);
       hourlyData = json.data.hourlyData;
-      const loadDateObj = luxon.DateTime.fromISO(loadDateInput.value);
+      const loadDateObj = parseDateInput(loadDateInput.value)
       let isSelectedDay = false;
       if(selectedDateTime && loadDateObj.hasSame(selectedDateTime, 'day')) {
           isSelectedDay = true;
