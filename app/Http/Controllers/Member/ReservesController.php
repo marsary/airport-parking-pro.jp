@@ -9,6 +9,7 @@ use App\Http\Requests\Member\EntryDateRequest;
 use App\Http\Requests\Member\EntryInfoRequest;
 use App\Http\Requests\Member\OptionSelectRequest;
 use App\Models\Agency;
+use App\Models\Airline;
 use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarColor;
@@ -89,12 +90,14 @@ class ReservesController extends Controller
             $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->get();
         }
         $carColors = CarColor::select('name', 'id')->get();
+        $airlines = Airline::select('name', 'id')->get();
 
         return view('member.reserves.entry_car', [
             'reserve' => $reserve,
             'carMakers' => $carMakers,
             'cars' => $cars,
             'carColors' => $carColors,
+            'airlines' => $airlines,
         ]);
     }
 
@@ -103,6 +106,7 @@ class ReservesController extends Controller
         $reserve = $this->getReserveForm();
         if($request->flight_no && $request->arrive_date) {
             $arrivalFlight = DB::table('arrival_flights')
+                ->where('airline_id', $request->airline_id)
                 ->where('flight_no', $request->flight_no)
                 ->where('arrive_date', $request->arrive_date)
                 ->first();
@@ -152,8 +156,13 @@ class ReservesController extends Controller
         $reserve->handleGoodsAndTotals();
 
         LabelTagManager::attachTagDataToMember($reserve->member);
-        $arrivalFlight = ArrivalFlight::with('airline','depAirport','arrAirport')->where('flight_no', $reserve->flight_no)
-            ->where('arrive_date', $reserve->arrive_date)->first();
+        $arrivalFlight = null;
+        if($reserve->flight_no && $reserve->arrive_date) {
+            $arrivalFlight = ArrivalFlight::with('airline','depAirport','arrAirport')
+                ->where('airline_id', $reserve->airline_id)
+                ->where('flight_no', $reserve->flight_no)
+                ->where('arrive_date', $reserve->arrive_date)->first();
+        }
         $carMaker = CarMaker::where('id', $reserve->car_maker_id)->first();
         $car = Car::where('id', $reserve->car_id)->first();
         $carColor = CarColor::where('id', $reserve->car_color_id)->first();
