@@ -81,7 +81,7 @@ class ReservesController extends Controller
         $goods = Good::all();
         $goodsMap = getKeyMapCollection($goods);
         $carCautions = CarCaution::where('office_id', $reserve->office_id)->get();
-
+        $airlines = Airline::select('name', 'id')->get();
 
 
         return view('manage.reserves.entry_info', [
@@ -92,6 +92,7 @@ class ReservesController extends Controller
             'goodCategories' => $goodCategories,
             'goodsMap' => $goodsMap,
             'carCautions' => $carCautions,
+            'airlines' => $airlines,
         ]);
     }
 
