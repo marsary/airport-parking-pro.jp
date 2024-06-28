@@ -1,21 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Form;
 
-use App\Http\Controllers\Manage\Controller;
-use App\Http\Controllers\Manage\Forms\ManageReserveForm;
-use App\Http\Requests\Manage\EntryDateRequest;
-use App\Http\Requests\Manage\EntryInfoRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Member\Forms\ReserveForm;
+use App\Http\Requests\Member\EntryCarRequest;
+use App\Http\Requests\Member\EntryDateRequest;
+use App\Http\Requests\Member\EntryInfoRequest;
+use App\Http\Requests\Member\OptionSelectRequest;
 use App\Models\Agency;
+use App\Models\Airline;
 use App\Models\ArrivalFlight;
 use App\Models\Car;
-use App\Models\CarCaution;
 use App\Models\CarColor;
 use App\Models\CarMaker;
 use App\Models\Coupon;
+use App\Models\Deal;
 use App\Models\Good;
 use App\Models\GoodCategory;
-use App\Models\Member;
+use App\Models\MemberCar;
 use App\Services\LabelTagManager;
 use App\Services\Member\ReserveService;
 use App\Services\PriceTable;
@@ -31,44 +34,54 @@ class ReservesController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     public function entryDate()
     {
         $reserve = $this->getReserveForm();
-
-        return view('manage.reserves.entry_date', [
-            'reserve' => $reserve,
+        return view('form.reserves.entry_date', [
+            'reserve' => $reserve
         ]);
     }
 
     public function postEntryDate(EntryDateRequest $request)
     {
+        session()->forget('reserve');
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
 
-        $table = PriceTable::getPriceTable($reserve->load_date, $reserve->unload_date_plan, $reserve->coupon_ids, $reserve->agency_id);
+        $table = PriceTable::getPriceTable($reserve->load_date, $reserve->unload_date_plan, [], $reserve->agency_id);
         $reserve->fill([
-            'price' => $table->discountedSubTotal,
+            'price' => $table->subTotal,
             'tax' => $table->tax,
             'num_days' => $table->numDays,
-            'total_tax' => $table->tax,
-            'total_price' => $table->discountedSubTotal,
         ]);
-        session()->put('manage_reserve', $reserve);
-        return redirect()->route('manage.reserves.entry_info');
+        session()->put('reserve', $reserve);
+
+        if(Auth::guard('web')->check()) {
+            return redirect()->route('form.login');
+        }
+        return redirect()->route('form.reserves.entry_info');
     }
 
     public function entryInfo()
+    {
+        $reserve = $this->getReserveForm();
+
+        return view('form.reserves.entry_info', [
+            'reserve' => $reserve
+        ]);
+    }
+
+    public function postEntryInfo(EntryInfoRequest $request)
+    {
+        $reserve = $this->getReserveForm();
+        $reserve->fill($request->all());
+        session()->put('reserve', $reserve);
+        return redirect()->route('form.reserves.entry_car');
+    }
+
+    public function entryCar()
     {
         $reserve = $this->getReserveForm();
         $carMakers = CarMaker::select('name', 'id')->get();
@@ -77,30 +90,20 @@ class ReservesController extends Controller
             $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->get();
         }
         $carColors = CarColor::select('name', 'id')->get();
-        $goodCategories = GoodCategory::with('goods')->get();
-        $goods = Good::all();
-        $goodsMap = getKeyMapCollection($goods);
-        $carCautions = CarCaution::where('office_id', $reserve->office_id)->get();
         $airlines = Airline::select('name', 'id')->get();
 
-
-        return view('manage.reserves.entry_info', [
+        return view('form.reserves.entry_car', [
             'reserve' => $reserve,
             'carMakers' => $carMakers,
             'cars' => $cars,
             'carColors' => $carColors,
-            'goodCategories' => $goodCategories,
-            'goodsMap' => $goodsMap,
-            'carCautions' => $carCautions,
             'airlines' => $airlines,
         ]);
     }
 
-
-    public function postEntryInfo(EntryInfoRequest $request)
+    public function postEntryCar(EntryCarRequest $request)
     {
         $reserve = $this->getReserveForm();
-        $reserve->setMember($this->getMember($request));
         if($request->flight_no && $request->arrive_date) {
             $arrivalFlight = DB::table('arrival_flights')
                 ->where('flight_no', $request->flight_no)
@@ -108,17 +111,43 @@ class ReservesController extends Controller
                 ->first();
             $reserve->arr_flight_id = $arrivalFlight->id;
         }
+
         $reserve->fill($request->all());
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
         $reserve->visit_date_plan = $reserve->unload_date_plan;
-        $reserve->setCarCautions();
 
-        session()->put('manage_reserve', $reserve);
-        return redirect()->route('manage.reserves.confirm');
+        session()->put('reserve', $reserve);
+        return redirect()->route('form.reserves.option_select');
     }
 
+    public function optionSelect()
+    {
+        $reserve = $this->getReserveForm();
 
+        $goodCategories = GoodCategory::with('goods')->get();
+        $goods = Good::all();
+        $goodsMap = getKeyMapCollection($goods);
+        $coupons = Coupon::whereDate('start_date','<=', $reserve->load_date->toDateString())
+            ->whereDate('end_date','>', $reserve->load_date->toDateString())
+            ->get();
+        $couponsMap = getKeyMapCollection($coupons);
+
+        return view('form.reserves.option_select', [
+            'reserve' => $reserve,
+            'goodCategories' => $goodCategories,
+            'goodsMap' => $goodsMap,
+            'couponsMap' => $couponsMap,
+        ]);
+    }
+
+    public function postOptionSelect(OptionSelectRequest $request)
+    {
+        $reserve = $this->getReserveForm();
+        $reserve->fill($request->all());
+        session()->put('reserve', $reserve);
+        return redirect()->route('form.reserves.confirm');
+    }
 
     public function confirm()
     {
@@ -133,7 +162,7 @@ class ReservesController extends Controller
         $carColor = CarColor::where('id', $reserve->car_color_id)->first();
         $agency = Agency::find($reserve->agency_id);
 
-        return view('manage.reserves.confirm', [
+        return view('form.reserves.confirm', [
             'reserve' => $reserve,
             'arrivalFlight' => $arrivalFlight,
             'carMaker' => $carMaker,
@@ -143,10 +172,26 @@ class ReservesController extends Controller
         ]);
     }
 
+
+    private function getReserveForm():ReserveForm
+    {
+        $reserve = session()->get('reserve');
+        if(!$reserve) {
+            $reserve = new ReserveForm();
+            $member = Auth::guard('members')->user();
+            $reserve->setMember($member);
+        } elseif (!$reserve->member && Auth::guard('members')->check()) {
+            $member = Auth::guard('members')->user();
+            $reserve->setMember($member);
+        }
+        return $reserve;
+    }
+
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store()
     {
         $reserve = $this->getReserveForm();
         $service = new ReserveService($reserve);
@@ -159,32 +204,17 @@ class ReservesController extends Controller
             return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
         }
         //
-        session()->forget('manage_reserve');
+        session()->forget('reserve');
 
-        if($request->has('to_register')) {
-            return redirect(route('manage.registers.index', ['deal_id' => $service->deal->id]));
-        }
-
-        return redirect(route('manage.deals.index'));
+        return redirect(route('form.reserves.complete', ['code' => (string) $service->deal->reserve_code]));
     }
 
 
-    private function getReserveForm():ManageReserveForm
+    public function complete(Request $request)
     {
-        $reserve = session()->get('manage_reserve');
-        if(!$reserve) {
-            $reserve = new ManageReserveForm();
-        }
-        return $reserve;
-    }
-
-
-    private function getMember(Request $request)
-    {
-        $kana = $request->input('kana');
-        $tel = $request->input('tel');
-
-        return Member::where('kana', $kana)->where('tel', $tel)->first();
+        return view('form.reserves.complete', [
+            'reserveCode' => $request->query('code')
+        ]);
     }
 
     /**

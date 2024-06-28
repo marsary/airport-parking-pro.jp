@@ -28,6 +28,23 @@ Route::prefix('manage')->name('manage.')->group(function () {
 
 });
 
+// 予約フォーム用のルーティング
+Route::prefix('form')->name('form.')->group(function () {
+    Route::get('reserves/entry_date', [\App\Http\Controllers\Form\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
+    Route::get('reserves/entry_info', [\App\Http\Controllers\Form\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
+    Route::get('reserves/entry_car', [\App\Http\Controllers\Form\ReservesController::class, 'entryCar'])->name('reserves.entry_car');
+    Route::get('reserves/option_select', [\App\Http\Controllers\Form\ReservesController::class, 'optionSelect'])->name('reserves.option_select');
+    Route::post('reserves/entry_date', [\App\Http\Controllers\Form\ReservesController::class, 'postEntryDate'])->name('reserves.post_entry_date');
+    Route::post('reserves/entry_info', [\App\Http\Controllers\Form\ReservesController::class, 'postEntryInfo'])->name('reserves.post_entry_info');
+    Route::post('reserves/entry_car', [\App\Http\Controllers\Form\ReservesController::class, 'postEntryCar'])->name('reserves.post_entry_car');
+    Route::post('reserves/option_select', [\App\Http\Controllers\Form\ReservesController::class, 'postOptionSelect'])->name('reserves.post_option_select');
+    Route::get('reserves/confirm', [\App\Http\Controllers\Form\ReservesController::class, 'confirm'])->name('reserves.confirm');
+    Route::get('reserves/complete', [\App\Http\Controllers\Form\ReservesController::class, 'complete'])->name('reserves.complete');
+    Route::resource('reserves', \App\Http\Controllers\Form\ReservesController::class);
+    
+});
+
+
 Route::get('reserves/entry_date', [\App\Http\Controllers\Member\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
 Route::get('reserves/entry_info', [\App\Http\Controllers\Member\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
 Route::get('reserves/entry_car', [\App\Http\Controllers\Member\ReservesController::class, 'entryCar'])->name('reserves.entry_car');
@@ -52,3 +69,4 @@ Route::get('calendar/load_hours', [\App\Http\Controllers\CalendarController::cla
 
 require __DIR__.'/manage_auth.php';
 require __DIR__.'/member_auth.php';
+require __DIR__.'/form_auth.php';

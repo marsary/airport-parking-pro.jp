@@ -1,5 +1,5 @@
 <!-- B-1-1 受付入力 -->
-@extends('layouts.member.authenticated')
+@extends('layouts.form.authenticated')
 
 @section('content')
 @include('include.reserve.header_information')
@@ -7,7 +7,7 @@
 @include('include.messages.errors')
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->
-  <form action="{{route('reserves.entry_car')}}" method="POST">
+  <form action="{{route('form.reserves.entry_car')}}" method="POST">
     @csrf
     <!-- 詳細情報入力 -->
     <div class="p-user-input-auto-output__wrap l-flex--item-end">
@@ -117,7 +117,7 @@
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-      <button type="button" id="returnButton" onclick="location.href='{{route('reserves.entry_info')}}';" class="c-button__pagination--return">前のページに戻る</button>
+      <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.entry_info')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>

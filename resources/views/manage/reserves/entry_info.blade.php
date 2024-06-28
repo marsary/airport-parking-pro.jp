@@ -177,8 +177,22 @@
             <input type="number" id="num_members" name="num_members" value="{{old('num_members', $reserve->num_members)}}"  class="c-form-input--w100">
           </div>
           <div>
+          <label for="car_color_id">到着便航空会社</label>
+          <div class="c-form-select-color">
+            <select id="airline_id" name="airline_id">
+              <option value="選択してください" disabled>選択してください</option>
+              @foreach ($airlines as $airline)
+                <option value="{{ $airline->id }}"
+                  {{old('airline_id')==$airline->id ? 'selected':''}}>
+                  {{$airline->name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+          <div>
             <!-- 到着便 -->
-            <label for="flight_no">到着便</label>
+            <label for="flight_no">到着便名</label>
             <input type="text" id="flight_no" name="flight_no" class="c-form-input--w100" value="{{old('flight_no', $reserve->flight_no)}}">
           </div>
           <div>
