@@ -42,8 +42,9 @@ class PriceTable
             $unloadDate = Carbon::parse($unloadDate);
         }
         $table->loadDate = $loadDate;
-        $table->unloadDate = $unloadDate->addDay();
-        $table->numDays = (int) ceil($unloadDate->diffInDays($loadDate, true));
+        $unloadDateCloned = clone $unloadDate;
+        $table->unloadDate = $unloadDateCloned->addDay();
+        $table->numDays = (int) ceil($table->unloadDate->diffInDays($loadDate, true));
 
         if(isset($agencyId) && !empty($agencyId)) {
             $price = AgencyPrice::where('agency_id', $agencyId)
