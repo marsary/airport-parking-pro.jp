@@ -10,7 +10,9 @@ class ArrivalFlightsController extends Controller
     public function getInfo(Request $request)
     {
         $arrivalFlight = ArrivalFlight::where('flight_no', $request->flight_no)
-            ->where('arrive_date', $request->arrive_date)->first();
+            ->where('arrive_date', $request->arrive_date)
+            ->where('airline_id', $request->airline_id)
+            ->first();
 
         return response()->json([
             'success' => true,
