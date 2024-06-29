@@ -75,7 +75,7 @@
               <option value="選択してください" disabled>選択してください</option>
               @foreach ($airlines as $airline)
                 <option value="{{ $airline->id }}"
-                  {{old('airline_id')==$airline->id ? 'selected':''}}>
+                  {{old('airline_id', $reserve->airline_id)==$airline->id ? 'selected':''}}>
                   {{$airline->name }}
                 </option>
               @endforeach
