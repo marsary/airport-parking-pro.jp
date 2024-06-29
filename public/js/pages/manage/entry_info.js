@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const BASE_PATH = document.getElementById('base_path').value;
   const flightNoElem = document.getElementById('flight_no');
   const arriveDateElem = document.getElementById('arrive_date');
+  const airlineInputElem = document.getElementById('airline_id');
   const airlineNameElem = document.getElementById('airline_name');
   const depAirportNameElem = document.getElementById('dep_airport_name');
   const arrAirportNameElem = document.getElementById('arr_airport_name');
@@ -81,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
     if(json.success){
       console.log(json.data);
-      if(json.data.member == '') {
+      if(json.data.member == null) {
         if(!init) {
           alert('入力された顧客情報が存在しません。')
         }
@@ -137,14 +138,15 @@ document.addEventListener('DOMContentLoaded', function () {
   async function dispArrivalFlight() {
     const flightNo = flightNoElem.value;
     const arriveDate = arriveDateElem.value;
+    const airlineId = airlineInputElem.value;
 
-    if(flightNo == '' || arriveDate == '') {
-      return;
-    }
+    if(flightNo == '' || arriveDate == '' || airlineId == '') {
+        return;
+      }
 
     // 到着便・到着日をAPIに送信
     const json = await apiRequest.get(BASE_PATH + "/arrival_flights/get_info",
-      {flight_no:flightNo, arrive_date:arriveDate}
+      {flight_no:flightNo, arrive_date:arriveDate, airline_id:airlineId}
     )
 
     console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
