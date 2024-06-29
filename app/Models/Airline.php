@@ -21,4 +21,9 @@ class Airline extends Model
         'kana',
         'memo',
     ];
+
+    public function arrivalFlight()
+    {
+        return $this->hasMany(ArrivalFlight::class);
+    }
 }
