@@ -7,6 +7,7 @@ use App\Http\Controllers\Manage\Forms\ManageReserveForm;
 use App\Http\Requests\Manage\EntryDateRequest;
 use App\Http\Requests\Manage\EntryInfoRequest;
 use App\Models\Agency;
+use App\Models\Airline;
 use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarCaution;
@@ -103,6 +104,7 @@ class ReservesController extends Controller
         $reserve->setMember($this->getMember($request));
         if($request->flight_no && $request->arrive_date) {
             $arrivalFlight = DB::table('arrival_flights')
+                ->where('airline_id', $request->airline_id)
                 ->where('flight_no', $request->flight_no)
                 ->where('arrive_date', $request->arrive_date)
                 ->first();

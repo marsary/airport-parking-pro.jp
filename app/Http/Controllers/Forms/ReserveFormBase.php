@@ -76,6 +76,7 @@ class ReserveFormBase extends StdObject
     /** @var Coupon */
     public $coupons = [];
 
+    public $airline_id;
     public $flight_no;
     public $arrive_date;
 
