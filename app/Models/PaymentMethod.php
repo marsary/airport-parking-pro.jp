@@ -39,6 +39,7 @@ class PaymentMethod extends Model
 
     public static function getByName(string $name)
     {
-        return self::where('name', $name)->first();
+        return self::where('office_id', config('const.commons.office_id'))
+            ->where('name', $name)->first();
     }
 }
