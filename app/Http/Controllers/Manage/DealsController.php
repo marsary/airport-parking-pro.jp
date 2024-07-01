@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Manage;
 use App\Enums\DealStatus;
 use App\Exports\DealSearchExport;
 use App\Http\Controllers\Manage\Controller;
+use App\Http\Controllers\Manage\Forms\DealEditForm;
 use App\Http\Requests\Manage\DealSearchRequest;
 use App\Http\Requests\Manage\DealUpdateGoodsRequest;
 use App\Http\Requests\Manage\DealUpdateMemoRequest;
+use App\Http\Requests\Manage\EntryDateRequest;
 use App\Models\Agency;
 use App\Models\Airline;
 use App\Models\Airport;
-use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarCaution;
 use App\Models\CarColor;
@@ -20,6 +21,7 @@ use App\Models\Deal;
 use App\Models\DealGood;
 use App\Services\Deal\ExtraPaymentManager;
 use App\Services\LabelTagManager;
+use App\Services\PriceTable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -309,21 +311,45 @@ class DealsController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function entryDate($id)
     {
-        //
+        $reserve = $this->getEditForm($id);
+
+        return view('manage.reserves.entry_date', [
+            'reserve' => $reserve,
+            'action' => route('manage.deals.entry_date', [$id]),
+            'method' => 'PUT',
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function putEntryDate(EntryDateRequest $request, $id)
     {
-        //
+        $reserve = $this->getEditForm($id);
+        $reserve->fill($request->all());
+
+        $table = PriceTable::getPriceTable($reserve->load_date, $reserve->unload_date_plan, $reserve->coupon_ids, $reserve->agency_id);
+        $reserve->fill([
+            'price' => $table->subTotal,
+            'tax' => $table->tax,
+            'num_days' => $table->numDays,
+            'total_tax' => $table->tax,
+            'total_price' => $table->subTotal,
+        ]);
+        session()->put('manage_edit_deal', $reserve);
+        return redirect()->route('manage.deals.edit', [$id]);
     }
+
+
+    private function getEditForm($id):DealEditForm
+    {
+        $reserve = session()->get('manage_edit_deal');
+        if(!$reserve) {
+            $reserve = new DealEditForm(Deal::findOrFail($id));
+        }
+        return $reserve;
+    }
+
 
     /**
      * Display the specified resource.
@@ -342,21 +368,6 @@ class DealsController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        return view('manage.deals.edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
