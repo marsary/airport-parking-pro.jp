@@ -49,6 +49,8 @@ class ReservesController extends Controller
 
         return view('manage.reserves.entry_date', [
             'reserve' => $reserve,
+            'action' => route('manage.reserves.entry_date'),
+            'method' => 'POST',
         ]);
     }
 
