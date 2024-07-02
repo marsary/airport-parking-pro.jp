@@ -13,6 +13,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Manage\TopController::class, 'index'])->name('home');
         Route::get('/deals/search', [\App\Http\Controllers\Manage\DealsController::class, 'search'])->name('deals.search');
         Route::get('/deals/search_export', [\App\Http\Controllers\Manage\DealsController::class, 'searchExport'])->name('deals.search_export');
+
+        Route::get('deals/{deal}/entry_date', [\App\Http\Controllers\Manage\DealsController::class, 'entryDate'])->name('deals.entry_date');
+        Route::put('deals/{deal}/entry_date', [\App\Http\Controllers\Manage\DealsController::class, 'putEntryDate'])->name('deals.put_entry_date');
+
         Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
         Route::put('deals/{deal}/update_goods', [\App\Http\Controllers\Manage\DealsController::class, 'updateGoods'])->name('deals.update_goods');
         Route::put('deals/{deal}/update_memo', [\App\Http\Controllers\Manage\DealsController::class, 'updateMemo'])->name('deals.update_memo');
@@ -41,7 +45,7 @@ Route::prefix('form')->name('form.')->group(function () {
     Route::get('reserves/confirm', [\App\Http\Controllers\Form\ReservesController::class, 'confirm'])->name('reserves.confirm');
     Route::get('reserves/complete', [\App\Http\Controllers\Form\ReservesController::class, 'complete'])->name('reserves.complete');
     Route::resource('reserves', \App\Http\Controllers\Form\ReservesController::class);
-    
+
 });
 
 
