@@ -13,7 +13,8 @@
 
     <div class="l-container__inner">
 
-      <form action="{{route('manage.reserves.entry_date')}}" method="POST">
+      <form action="{{$action}}" method="POST">
+        @method($method)
         @csrf
         <div class="l-grid--col2-auto l-grid--gap2 u-mb4">
           <div>
