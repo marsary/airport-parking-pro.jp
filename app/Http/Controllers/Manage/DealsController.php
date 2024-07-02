@@ -10,6 +10,7 @@ use App\Http\Requests\Manage\DealSearchRequest;
 use App\Http\Requests\Manage\DealUpdateGoodsRequest;
 use App\Http\Requests\Manage\DealUpdateMemoRequest;
 use App\Http\Requests\Manage\EntryDateRequest;
+use App\Http\Requests\Manage\UpdateDealRequest;
 use App\Models\Agency;
 use App\Models\Airline;
 use App\Models\Airport;
@@ -19,6 +20,9 @@ use App\Models\CarColor;
 use App\Models\CarMaker;
 use App\Models\Deal;
 use App\Models\DealGood;
+use App\Models\Good;
+use App\Models\GoodCategory;
+use App\Services\Deal\DealService;
 use App\Services\Deal\ExtraPaymentManager;
 use App\Services\LabelTagManager;
 use App\Services\PriceTable;
@@ -338,6 +342,47 @@ class DealsController extends Controller
         ]);
         session()->put('manage_edit_deal', $reserve);
         return redirect()->route('manage.deals.edit', [$id]);
+    }
+
+
+    public function edit($id)
+    {
+        $reserve = $this->getEditForm($id);
+        $carMakers = CarMaker::select('name', 'id')->get();
+        $cars = [];
+        if(null != old('car_maker_id', $reserve->car_maker_id)) {
+            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->get();
+        }
+        $carColors = CarColor::select('name', 'id')->get();
+        $goodCategories = GoodCategory::with('goods')->get();
+        $goods = Good::all();
+        $goodsMap = getKeyMapCollection($goods);
+        $carCautions = CarCaution::where('office_id', $reserve->office_id)->get();
+
+
+        return view('manage.deals.edit', [
+            'reserve' => $reserve,
+            'carMakers' => $carMakers,
+            'cars' => $cars,
+            'carColors' => $carColors,
+            'goodCategories' => $goodCategories,
+            'goodsMap' => $goodsMap,
+            'carCautions' => $carCautions,
+        ]);
+    }
+
+
+    public function update(UpdateDealRequest $request, $id)
+    {
+        if($request->has('cancel_btn')) {
+            session()->forget('manage_edit_deal');
+            return redirect()->route('manage.deals.show', [$id]);
+        }
+
+        //
+        session()->forget('manage_edit_deal');
+
+        return redirect()->route('manage.deals.show', [$id]);
     }
 
 
