@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class ReserveService
 {
     /** @var ReserveFormBase */
-    private $reserve;
+    protected $reserve;
 
     /** @var Deal */
     public $deal;
@@ -30,7 +30,7 @@ class ReserveService
     }
 
 
-    private function updateMember()
+    protected function updateMember()
     {
         if(!$this->reserve->member) {
             return;
@@ -47,7 +47,7 @@ class ReserveService
         ])->save();
     }
 
-    private function saveMemberCar()
+    protected function saveMemberCar()
     {
         $memberCar = null;
         if($this->reserve->member_car_id) {
@@ -127,7 +127,7 @@ class ReserveService
     }
 
 
-    private function createDealGoods()
+    protected function createDealGoods()
     {
         foreach ($this->reserve->dealGoodData as $newDealGood) {
             $newDealGood['deal_id'] = $this->deal->id;
