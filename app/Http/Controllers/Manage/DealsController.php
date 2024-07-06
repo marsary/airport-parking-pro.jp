@@ -379,6 +379,30 @@ class DealsController extends Controller
             return redirect()->route('manage.deals.show', [$id]);
         }
 
+        $reserve = $this->getEditForm($id);
+        if($request->flight_no && $request->arrive_date) {
+            $arrivalFlight = DB::table('arrival_flights')
+                ->where('flight_no', $request->flight_no)
+                ->where('arrive_date', $request->arrive_date)
+                ->first();
+            $reserve->arr_flight_id = $arrivalFlight->id;
+        }
+        $reserve->fill($request->all());
+        // 到着便の到着日と出庫日が異なる場合にチェック
+        $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
+        $reserve->visit_date_plan = $reserve->unload_date_plan;
+        // $reserve->setCarCautions();
+        $reserve->handleGoodsAndTotals();
+
+        $service = new DealService($reserve);
+        try {
+            DB::transaction(function () use($service){
+                $service->update();
+            });
+        } catch (\Throwable $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', '予約更新に失敗しました。更新処理をやり直してください。');
+        }
         //
         session()->forget('manage_edit_deal');
 
