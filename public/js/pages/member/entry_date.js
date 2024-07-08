@@ -150,8 +150,8 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     eventDidMount: function(e) {
       const startDate = luxon.DateTime.fromJSDate(e.event.start);
+      let el = e.el;
       if(startDate.hasSame(initLoadDate, 'day')) {
-        let el = e.el;
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
         dispLoadHourTable()
@@ -245,8 +245,8 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     eventDidMount: function(e) {
       const startDate = luxon.DateTime.fromJSDate(e.event.start);
+      let el = e.el;
       if(startDate.hasSame(initUnloadDate, 'day')) {
-        let el = e.el;
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
       }
