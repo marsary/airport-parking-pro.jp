@@ -382,6 +382,7 @@ class DealsController extends Controller
         $reserve = $this->getEditForm($id);
         if($request->flight_no && $request->arrive_date) {
             $arrivalFlight = DB::table('arrival_flights')
+                ->where('airline_id', $request->airline_id)
                 ->where('flight_no', $request->flight_no)
                 ->where('arrive_date', $request->arrive_date)
                 ->first();
