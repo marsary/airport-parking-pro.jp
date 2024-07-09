@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const carMakersElem = document.getElementById('car_maker_id');
   const carsElem = document.getElementById('car_id');
+  const flightNoNotFoundElem = document.getElementById('flight_no_not_found');
   const arrivalFlgElems = Array.from(document.getElementsByClassName('arrival_flg'));
 
   flightNoElem.addEventListener('change', function() {
@@ -75,6 +76,18 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         arriveTimeElem.textContent = '';
       }
+      flightNoNotFoundElem.classList.add('hidden')
+    } else {
+        flightNoNotFoundElem.textContent = '指定の到着便名が見つかりません。'
+        flightNoNotFoundElem.classList.remove('hidden')
+        // ⑧	航空会社名 を表示
+        airlineNameElem.textContent = '';
+        // ⑨	出発空港 を表示
+        depAirportNameElem.textContent = '';
+        // ⑩	到着空港 を表示
+        arrAirportNameElem.textContent = '';
+        // ⑪	到着予定時間 を表示
+        arriveTimeElem.textContent = '';
     }
   }
 

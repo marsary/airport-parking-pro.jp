@@ -193,7 +193,8 @@
           <div>
             <!-- 到着便 -->
             <label for="flight_no">到着便名</label>
-            <input type="text" id="flight_no" name="flight_no" class="c-form-input--w100" value="{{old('flight_no', $reserve->flight_no)}}">
+            <input type="text" id="flight_no" name="flight_no" class="c-form-input--w100 u-mb025" value="{{old('flight_no', $reserve->flight_no)}}">
+            <p id="flight_no_not_found" class="text-center hidden"></p>
           </div>
           <div>
             <!-- 到着日 -->
@@ -219,7 +220,7 @@
           <div>到着空港: </div>
           <div class="text-right" id="arr_airport_name"></div>
           <div>到着予定時間: </div>
-          <div class="text-right" id="arrive_time_flg">あり</div>
+          <div class="text-right" id="arrive_time_flg"></div>
         </div>
       </div><!-- /.l-reception-input__box -->
 
