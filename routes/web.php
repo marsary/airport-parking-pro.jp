@@ -28,6 +28,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::post('reserves/entry_info', [\App\Http\Controllers\Manage\ReservesController::class, 'postEntryInfo'])->name('reserves.post_entry_info');
         Route::get('reserves/confirm', [\App\Http\Controllers\Manage\ReservesController::class, 'confirm'])->name('reserves.confirm');
         Route::resource('reserves', \App\Http\Controllers\Manage\ReservesController::class);
+
+        Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
+        Route::get('marketing/graph/reservation', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'reservation'])->name('marketing.graph.reservation');
+
     });
 
 });
