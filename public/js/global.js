@@ -1,4 +1,5 @@
 luxon.Settings.defaultLocale = 'ja';
+luxon.Settings.defaultWeekSettings = { firstDay: 7, minimalDays: 1, weekend: [6, 7] }
 
 function formatCurrency(number, prefix, suffix) {
     if(isNaN(number)) {
