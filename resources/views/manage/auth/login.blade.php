@@ -8,14 +8,14 @@
   <form action="{{route('manage.login')}}" method="POST" class="c-form__admin">
     @csrf
     <div>
-      <label for="name">ユーザーID</label>
-      <input type="text" name="name" class="c-input__admin" />
+      <label for="email">ユーザーID</label>
+      <input type="text" name="email" class="c-input__admin" />
     </div>
     <div class="u-mb2">
       <label for="password">パスワード</label>
       <input type="password" name="password" class="c-input__admin" />
     </div>
-    @error('name')
+    @error('email')
       <p style="color:red">{{ $message }}</p>
     @enderror
     <input type="submit" value="ログイン" class="c-button__submit u-horizontal-auto" />
