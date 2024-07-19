@@ -275,8 +275,6 @@
       <div class="l-flex--center l-grid--gap2">
         <button type="button" id="returnButton" onclick="location.href='{{route('manage.reserves.entry_date')}}';" class="c-button__pagination--return">前のページに戻る</button>
         <button type="submit" class="c-button__pagination--next">予約内容確認</button>
-        <button type="button" class="c-button__pagination--next">事前決済に進む</button>
-        <img src="{{ asset('images/card_5brand.png') }}" height="16">
       </div>
 
     </form>
