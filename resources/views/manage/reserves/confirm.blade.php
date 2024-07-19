@@ -156,6 +156,7 @@
         <button type="button" id="returnButton" onclick="location.href='{{route('manage.reserves.entry_info')}}';" class="c-button__submit--dark-gray u-h50">修正する</button>
         <button type="submit" value="1" id="confirmButton" class="c-button__submit--green u-h50">予約を完了する</button>
         <button type="submit" name="to_register" value="0" class="c-button__pagination--next">お会計へ</button>
+        <img src="{{ asset('images/card_5brand.png') }}" height="16" style="margin-left: 20px;">
       </div>
     </form>
   </div><!-- /.l-container__inner -->
