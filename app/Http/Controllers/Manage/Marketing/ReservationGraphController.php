@@ -34,6 +34,16 @@ class ReservationGraphController extends Controller
         }
 
         $data = [];
+        // 取引　※電話予約（自）
+        $data[ReservationRoute::SELF_PHONE->label()] = $this->countByHour($startDate, $intervals, ReservationRoute::SELF_PHONE);
+        // 取引　※電話予約（代）
+        $data[ReservationRoute::STAFF_PHONE->label()] = $this->countByHour($startDate, $intervals, ReservationRoute::STAFF_PHONE);
+        // 取引　※当日受付予約
+        $data[ReservationRoute::COUNTER->label()] = $this->countByHour($startDate, $intervals, ReservationRoute::COUNTER);
+        // 取引　※ネット予約（自）
+        $data[ReservationRoute::SELF_WEB->label()] = $this->countByHour($startDate, $intervals, ReservationRoute::SELF_WEB);
+        // 取引　※ネット予約（代）
+        $data[ReservationRoute::STAFF_WEB->label()] = $this->countByHour($startDate, $intervals, ReservationRoute::STAFF_WEB);
 
         return response()->json([
             'success' => true,
@@ -45,6 +55,29 @@ class ReservationGraphController extends Controller
          ]);
     }
 
+
+    private function countByHour($startDate, $intervals, ReservationRoute $route)
+    {
+        foreach($intervals as $interval){
+            $range[$interval->format("H")] = 0;
+        }
+
+        $countsByHour = Deal::select([
+            DB::raw('HOUR(reserve_date) as hour'),
+            DB::raw('COUNT(id) AS count'),
+        ])
+            ->where('office_id', config('const.commons.office_id'))
+            ->whereDate("reserve_date", $startDate)
+            ->where('reservation_route', $route->value)
+            ->groupBy('hour')
+            ->orderBy('hour', 'ASC')
+            ->get();
+
+        foreach($countsByHour as $countRow){
+            $range[$countRow->hour] = $countRow->count;
+        }
+        return $range;
+    }
 
     public function chartByDay(Request $request)
     {
