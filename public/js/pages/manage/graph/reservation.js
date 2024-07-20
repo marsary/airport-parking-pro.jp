@@ -21,7 +21,73 @@ monthlyChartBtn.addEventListener('click', async (e)=> {
 
   handleChartData(json)
 })
+weeklyChartBtn.addEventListener('click', async (e)=> {
+  currentView = "weekly"
+  currentStartDate = luxon.DateTime.fromJSDate(new Date()).startOf('week', {useLocaleWeeks: true});
+  json = await loadChartData()
 
+  handleChartData(json)
+})
+dailyChartBtn.addEventListener('click', async (e)=> {
+  currentView = "daily"
+  currentStartDate = luxon.DateTime.fromJSDate(new Date()).startOf('day');
+  json = await loadChartData()
+
+  handleDailyChartData(json)
+})
+manualChartBtn.addEventListener('click', async (e)=> {
+  if(startDateInput.value == '' || endDateInput.value == '') return;
+  currentView = "manual"
+  currentStartDate = startDateInput.value;
+  json = await loadChartData()
+
+  handleChartData(json)
+})
+
+nextBtn.addEventListener('click', async (e)=> {
+  if(currentView == null) return;
+
+  json = await loadChartData('next')
+
+  switch (currentView) {
+    case 'daily':
+      handleDailyChartData(json)
+      break;
+    default:
+      handleChartData(json)
+      break;
+  }
+})
+prevBtn.addEventListener('click', async (e)=> {
+  if(currentView == null) return;
+
+  json = await loadChartData('prev')
+  switch (currentView) {
+    case 'daily':
+      handleDailyChartData(json)
+      break;
+    default:
+      handleChartData(json)
+      break;
+  }
+})
+
+function renderTitle() {
+  switch (currentView) {
+    case 'monthly':
+      chartTitle.textContent = currentStartDate.toFormat('yyyy/M')
+      break;
+    case 'weekly':
+    case 'manual':
+      chartTitle.textContent = currentStartDate.toFormat('yyyy/M/dd') + '～' + currentEndDate.toFormat('yyyy/M/dd')
+      break;
+    case 'daily':
+      chartTitle.textContent = currentStartDate.toFormat('yyyy/M/dd')
+      break;
+    default:
+      break;
+  }
+}
 
 function setCurrentPeriod(labels = []) {
   if(typeof labels[0] !== 'undefined') {
@@ -40,8 +106,16 @@ function handleChartData(json) {
     renderChart(json.data)
   }
 }
+function handleDailyChartData(json) {
+  if(json.success){
+    currentStartDate = luxon.DateTime.fromISO(json.data.currentDate);
+    currentEndDate = currentStartDate.set();
+    console.log(json.data)
+    renderChart(json.data, false)
+  }
+}
 
-function renderChart(data) {
+function renderChart(data, useTickDate = true) {
   chartDataset = []
   Object.keys(data.datasets).forEach(label => {
     const dataset = data.datasets[label];
@@ -82,6 +156,18 @@ function renderChart(data) {
           grid: {
             display: false
           },
+          ticks: {                      // 目盛り
+            callback: function(value, index, ticks) {
+              if(useTickDate) {
+                const tickDate = new Date(data.labels[index]);
+                //   console.log(tickDate.getDate().toString())
+                return tickDate.getDate().toString();
+              }
+            //   console.log(data.labels);
+            //   return data.labels[index];
+              return Number(data.labels[index]);
+            }
+          },
         },
         y: {
             min: 0,                        // 最小値
@@ -111,6 +197,22 @@ function renderChart(data) {
               title: function(tooltipData) {
                 return tooltipData[0].dataset.label;
               },
+              label: function (tooltipData) {
+                  const value = tooltipData.dataset.data[tooltipData.dataIndex];
+                  let categoryTotal = 0;
+                  Object.keys(data.datasets).forEach(label => {
+                    const dataset = data.datasets[label];
+                    const datasetValues = []
+                    data.labels.forEach(dataKey => {
+                      datasetValues.push(dataset[dataKey])
+                    })
+                    categoryTotal += datasetValues[tooltipData.dataIndex];
+                  });
+                  if(categoryTotal === 0) {
+                    return String(value) + '台'
+                  }
+                  return String(value) + '台/' + Math.round(value * 100 / categoryTotal) + '%'
+              },
             },
             backgroundColor: "#ffefd6",
             titleColor: "#7a7670",
@@ -126,6 +228,17 @@ function renderChart(data) {
     }
   });
 
+  switch (currentView) {
+    case 'manual':
+      prevBtn.classList.add('hidden')
+      nextBtn.classList.add('hidden')
+      break;
+    default:
+      prevBtn.classList.remove('hidden')
+      nextBtn.classList.remove('hidden')
+      break;
+  }
+  renderTitle()
 }
 
 async function loadChartData(nextPrev = null) {
