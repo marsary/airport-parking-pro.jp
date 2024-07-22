@@ -6,6 +6,8 @@ use App\Http\Controllers\Manage\Controller;
 use App\Http\Controllers\Manage\Forms\ManageReserveForm;
 use App\Http\Requests\Manage\EntryDateRequest;
 use App\Http\Requests\Manage\EntryInfoRequest;
+use App\Mail\DealCreatedAdminMail;
+use App\Mail\DealCreatedThankyouMail;
 use App\Models\Agency;
 use App\Models\Airline;
 use App\Models\ArrivalFlight;
@@ -24,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ReservesController extends Controller
 {
@@ -165,6 +168,12 @@ class ReservesController extends Controller
         //
         session()->forget('manage_reserve');
 
+        // 「予約を完了する」ボタン押下時
+        if($request->has('confirm_btn')) {
+            // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
+            Mail::to(myOffice()->email)->send(new DealCreatedAdminMail($service->deal));
+            Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
+        }
         if($request->has('to_register')) {
             return redirect(route('manage.registers.index', ['deal_id' => $service->deal->id]));
         }
