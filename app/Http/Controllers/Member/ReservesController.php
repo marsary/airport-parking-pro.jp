@@ -8,6 +8,8 @@ use App\Http\Requests\Member\EntryCarRequest;
 use App\Http\Requests\Member\EntryDateRequest;
 use App\Http\Requests\Member\EntryInfoRequest;
 use App\Http\Requests\Member\OptionSelectRequest;
+use App\Mail\DealCreatedAdminMail;
+use App\Mail\DealCreatedThankyouMail;
 use App\Models\Agency;
 use App\Models\Airline;
 use App\Models\ArrivalFlight;
@@ -26,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ReservesController extends Controller
 {
@@ -212,6 +215,10 @@ class ReservesController extends Controller
         //
         session()->forget('reserve');
 
+        // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
+        Mail::to(myOffice()->email)->send(new DealCreatedAdminMail($service->deal));
+        Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
+
         return redirect(route('reserves.complete', ['code' => (string) $service->deal->reserve_code]));
     }
 
@@ -219,7 +226,8 @@ class ReservesController extends Controller
     public function complete(Request $request)
     {
         return view('member.reserves.complete', [
-            'reserveCode' => $request->query('code')
+            'reserveCode' => $request->query('code'),
+            'deal' => Deal::where('reserve_code', $request->query('code'))->first(),
         ]);
     }
 
