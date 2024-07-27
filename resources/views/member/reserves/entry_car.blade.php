@@ -127,11 +127,15 @@
 
 @endsection
 @push("scripts")
+<script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ asset('js/select2.min.js') }}"></script>
+<script src="{{ asset('js/ja.js') }}"></script>
 <script src="{{ asset('js/pages/member/entry_car.js') }}"></script>
 <script>
 </script>
 @endpush
 @push('css')
+<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 <style>
 </style>
 @endpush
