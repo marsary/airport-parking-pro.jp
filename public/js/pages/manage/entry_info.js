@@ -29,9 +29,15 @@ document.addEventListener('DOMContentLoaded', function () {
   const arrivalFlgElems = Array.from(document.getElementsByClassName('arrival_flg'));
 
   $(carCautionSelect).select2();
+  $(carMakersElem).select2();
+  $(carsElem).select2();
+  $(airlineInputElem).select2();
 
   searchBtn.addEventListener('click', function() {
     loadMember()
+  });
+  $('#airline_id').on('change', function(e) {
+    dispArrivalFlight()
   });
   flightNoElem.addEventListener('change', function() {
     dispArrivalFlight()
@@ -40,13 +46,20 @@ document.addEventListener('DOMContentLoaded', function () {
     dispArrivalFlight()
     dispArrivalFlg()
   });
-  carMakersElem.addEventListener('change', async function() {
+  $('#car_maker_id').on('change', async function(e) {
     await loadCars()
     setCarSize()
   });
-  carsElem.addEventListener('change', function() {
+//   carMakersElem.addEventListener('change', async function() {
+//     await loadCars()
+//     setCarSize()
+//   });
+$('#car_id').on('change', function(e) {
     setCarSize()
   });
+//   carsElem.addEventListener('change', function() {
+//     setCarSize()
+//   });
 
   function dispArrivalFlg() {
     const arriveDate = luxon.DateTime.fromSQL(arriveDateElem.value);
@@ -204,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             carsElem.appendChild(option)
         });
+        $('car_id').trigger('change');
     }
   }
 
