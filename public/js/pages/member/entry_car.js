@@ -14,17 +14,21 @@ document.addEventListener('DOMContentLoaded', function () {
   const flightNoNotFoundElem = document.getElementById('flight_no_not_found');
   const arrivalFlgElems = Array.from(document.getElementsByClassName('arrival_flg'));
 
+  $(carMakersElem).select2();
+  $(carsElem).select2();
+  $(airlineInputElem).select2();
+
   flightNoElem.addEventListener('change', function() {
     dispArrivalFlight()
   });
-  airlineInputElem.addEventListener('change', function() {
+  $('#airline_id').on('change', function(e) {
     dispArrivalFlight()
   });
   arriveDateElem.addEventListener('change', function() {
     dispArrivalFlight()
     dispArrivalFlg()
   });
-  carMakersElem.addEventListener('change', function() {
+  $('#car_maker_id').on('change', function(e) {
     loadCars()
   });
 
@@ -109,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             carsElem.appendChild(option)
         });
+        $('car_id').trigger('change');
     }
   }
 
