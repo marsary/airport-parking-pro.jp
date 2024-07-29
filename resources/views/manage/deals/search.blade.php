@@ -373,6 +373,10 @@
 
 @endsection
 @push("scripts")
+<script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ asset('js/select2.min.js') }}"></script>
+<script src="{{ asset('js/ja.js') }}"></script>
+<script src="{{ asset('js/pages/manage/search.js') }}"></script>
 <script>
 </script>
 @endpush
