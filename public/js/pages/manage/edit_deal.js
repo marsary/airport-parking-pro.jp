@@ -8,9 +8,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const unloadDatePlanInput = document.getElementById('unload_date_plan')
   const dealId = document.getElementById('deal_id').value
 
+  $(carMakersElem).select2();
+  $(carsElem).select2();
   $(carCautionSelect).select2();
 
-  carMakersElem.addEventListener('change', function() {
+  $('#car_maker_id').on('change', function(e) {
     loadCars()
   });
 
@@ -43,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             carsElem.appendChild(option)
         });
+        $('car_id').trigger('change')
     }
   }
 
