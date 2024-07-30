@@ -381,6 +381,25 @@
 </script>
 @endpush
 @push('css')
+<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 <style>
+  .select2-selection__arrow {
+    display: none;
+  }
+  .select2-container--default .select2-selection--single {
+    border: none;
+  }
+  .select2-container--default, .select2-container--default .select2-selection--single, .select2-selection__rendered {
+    height: 40px;
+    line-height: 40px !important;
+  }
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 18px !important;
+  }
+  .select2-container--default .select2-selection--single {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
 </style>
 @endpush
