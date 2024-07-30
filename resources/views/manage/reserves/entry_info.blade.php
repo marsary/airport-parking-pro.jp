@@ -422,6 +422,7 @@
 @endpush
 @push('css')
 <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/custom-select2.css') }}">
 <style>
 </style>
 @endpush
