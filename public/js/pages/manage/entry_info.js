@@ -28,10 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const flightNoNotFoundElem = document.getElementById('flight_no_not_found');
   const arrivalFlgElems = Array.from(document.getElementsByClassName('arrival_flg'));
 
-  $(carCautionSelect).select2();
-  $(carMakersElem).select2();
-  $(carsElem).select2();
-  $(airlineInputElem).select2();
+  $(carCautionSelect).select2({width:"calc(100% - 39px)"});
+  $(carMakersElem).select2({width:"calc(100% - 39px)"});
+  $(carsElem).select2({width:"calc(100% - 39px)"});
+  $(airlineInputElem).select2({width:"calc(100% - 39px)"});
 
   searchBtn.addEventListener('click', function() {
     loadMember()

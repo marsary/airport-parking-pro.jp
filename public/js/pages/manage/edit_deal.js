@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const unloadDatePlanInput = document.getElementById('unload_date_plan')
   const dealId = document.getElementById('deal_id').value
 
-  $(carMakersElem).select2();
-  $(carsElem).select2();
+  $(carMakersElem).select2({width:"calc(100% - 39px)"});
+  $(carsElem).select2({width:"calc(100% - 39px)"});
   $(carCautionSelect).select2();
 
   $('#car_maker_id').on('change', function(e) {
