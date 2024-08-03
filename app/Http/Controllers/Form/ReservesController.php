@@ -106,6 +106,7 @@ class ReservesController extends Controller
         $reserve = $this->getReserveForm();
         if($request->flight_no && $request->arrive_date) {
             $arrivalFlight = DB::table('arrival_flights')
+                ->where('airline_id', $request->airline_id)
                 ->where('flight_no', $request->flight_no)
                 ->where('arrive_date', $request->arrive_date)
                 ->first();
@@ -155,8 +156,13 @@ class ReservesController extends Controller
         $reserve->handleGoodsAndTotals();
 
         LabelTagManager::attachTagDataToMember($reserve->member);
-        $arrivalFlight = ArrivalFlight::with('airline','depAirport','arrAirport')->where('flight_no', $reserve->flight_no)
-            ->where('arrive_date', $reserve->arrive_date)->first();
+        $arrivalFlight = null;
+        if($reserve->flight_no && $reserve->arrive_date) {
+            $arrivalFlight = ArrivalFlight::with('airline','depAirport','arrAirport')
+                ->where('airline_id', $reserve->airline_id)
+                ->where('flight_no', $reserve->flight_no)
+                ->where('arrive_date', $reserve->arrive_date)->first();
+        }
         $carMaker = CarMaker::where('id', $reserve->car_maker_id)->first();
         $car = Car::where('id', $reserve->car_id)->first();
         $carColor = CarColor::where('id', $reserve->car_color_id)->first();
