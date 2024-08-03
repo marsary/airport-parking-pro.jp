@@ -31,6 +31,11 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#car_maker_id').on('change', function(e) {
     loadCars()
   });
+  $('.c-form-select-color').on('click', function(e) {
+    if($(this).has('span.select2-container').length) {
+      $(this).find(".select2-container").siblings('select:enabled').select2('open');
+    }
+  })
 
   function dispArrivalFlg() {
     const arriveDate = luxon.DateTime.fromSQL(arriveDateElem.value);
