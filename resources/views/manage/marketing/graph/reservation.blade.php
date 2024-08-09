@@ -39,16 +39,44 @@
 
       <!-- グラフ -->
       <div class="relative c-graph__wrap">
-        <div class="c-button__prev absolute-VerticalCenter">
-          <button type="button" id="prevBtn">◀</button>
+        <div class="c-graph__header">
+            <div class="l-flex--sb c-graph__header-top">
+                <div class="u-font--bold c-graph__selected-month">2024.01</div>
+                    <!-- checkedで選択・未選択の切替　デフォルトで選択した状態にしたければ"checked"つける -->
+                <ul class="l-flex u-font--12 palt c-graph__select-button --performance">
+                    <li>
+                            比較期間を表示<label class="c-button-toggle">
+                            <input class="c-button-toggle__input" type="checkbox" role="switch">
+                            <span class="c-button-toggle__slider"></span>
+                        </label>
+                    </li>
+                    <li>入庫<label class="c-button-toggle">
+                            <input class="c-button-toggle__input" type="checkbox" checked role="switch">
+                            <span class="c-button-toggle__slider"></span>
+                        </label></li>
+                    <li>出庫<label class="c-button-toggle">
+                            <input class="c-button-toggle__input" type="checkbox" checked role="switch">
+                            <span class="c-button-toggle__slider"></span>
+                        </label></li>
+                    <li>MAX在庫<label class="c-button-toggle">
+                            <input class="c-button-toggle__input" type="checkbox" checked role="switch">
+                            <span class="c-button-toggle__slider"></span>
+                        </label></li>
+                    <li>おわり在庫<label class="c-button-toggle">
+                            <input class="c-button-toggle__input" type="checkbox" checked role="switch">
+                            <span class="c-button-toggle__slider"></span>
+                        </label></li>
+                </ul>
+            </div>
         </div>
         <div id="chart_title">タイトル</div>
         <div id="chartReport">
           <canvas id="myChart"></canvas>
+          <img src="../images/dummy/gulp_rsv.png" width="100%" height="auto" alt="">
         </div>
-        <div class="c-button__next absolute-VerticalCenter--right">
-          <button type="button" id="nextBtn">▶</button>
-        </div>
+        <div id="prevBtn" class="c-button__prev absolute-VerticalCenter"></div>
+        <div id="nextBtn" class="c-button__next absolute-VerticalCenter--right"></div>
+
       </div>
       <!-- グラフ -->
 

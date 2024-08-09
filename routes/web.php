@@ -29,6 +29,8 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('reserves/confirm', [\App\Http\Controllers\Manage\ReservesController::class, 'confirm'])->name('reserves.confirm');
         Route::resource('reserves', \App\Http\Controllers\Manage\ReservesController::class);
 
+        Route::get('ledger/inventories', [\App\Http\Controllers\Manage\LedgerController::class, 'inventories'])->name('ledger.inventories');
+
         Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
         // Route::get('marketing/graph/reservation', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'reservation'])->name('marketing.graph.reservation');
         Route::get('marketing/reservation_graph', [\App\Http\Controllers\Manage\Marketing\ReservationGraphController::class, 'index'])->name('marketing.reservation_graph.index');

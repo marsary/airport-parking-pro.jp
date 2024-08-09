@@ -83,7 +83,7 @@
       background: $light-gray2;
       cursor: not-allowed;
     }
-  
+
     &.--enable {
       background: $yellow;
       cursor: pointer;
@@ -114,7 +114,7 @@
       @extend .c-button__apply;
       background: $light-green;
     }
-    
+
     &--wide {
       @extend .c-button__apply;
       width: 160px;
@@ -258,7 +258,7 @@
       &:visited {
         color: white;
       }
-    
+
       // 右に三角形を表示
       &::after {
         content: "";
@@ -283,7 +283,7 @@
       height: 50px;
       cursor: pointer;
       position: relative;
-    
+
       // 右に三角形を表示
       &::after {
         content: "";
@@ -310,6 +310,48 @@
     }
   }
 
+  // グラフの「次のページ」「前のページ」系ボタン
+  &__prev {
+    background: $text-color;
+    color: white;
+    text-align: center;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 38px;
+    cursor: pointer;
+    border-radius: 6px;
+    // 右に三角形を表示
+    &::after {
+      content: "";
+      display: block;
+      // 高さ50pxの三角形を作成
+      border-top: 7px solid transparent;
+      border-right: 7px solid white;
+      border-bottom: 7px solid transparent;
+    }
+    &.absolute-VerticalCenter {
+      left: -25px;
+    }
+  }
+
+  &__next {
+    @extend .c-button__prev;
+
+    // 左に三角形を表示
+    &::after {
+      content: "";
+      display: block;
+      // 高さ50pxの三角形を作成
+      border-top: 7px solid transparent;
+      border-left: 7px solid white;
+      border-right: 0px solid transparent;
+      border-bottom: 7px solid transparent;
+    }
+    &.absolute-VerticalCenter--right {
+      right: -25px;
+    }
+  }
   // 「計算する」ボタン
   &__calculate {
     background: $blue;
@@ -323,9 +365,9 @@
   }
 }
 
-// 
+//
 // ここから個別指定
-// 
+//
 
 // 表示非表示ボタン
 // 三角形のアイコンを表示
@@ -335,7 +377,7 @@
     font-size: 0.875rem;
     font-weight: 300;
     padding-right: 1rem;
-  
+
     &::after {
       position: absolute;
       top: 6px;
@@ -377,6 +419,8 @@
   padding-right: 35px;
   font-size: 0.75rem;
   line-height: 30px;
+  width: 30px;
+  height: 30px;
 
   &::after {
     content: "+";
@@ -481,20 +525,21 @@
   display: inline-block;
   width: 30px;
   height: 16px;
+  margin-bottom: 0;
 
   &__input {
     opacity: 0;
     width: 0;
     height: 0;
-  
+
     &:checked+.c-button-toggle__slider {
       background: $green;
-  
+
       &:before {
         transform: translateX(10px);
       }
     }
-  
+
     &:focus-visible+.c-button-toggle__slider {
       outline: 2px solid;
     }
@@ -510,7 +555,7 @@
     background-color: #ccc;
     transition: 0.4s;
     border-radius: 64px;
-  
+
     &::before {
       border-radius: 50%;
       position: absolute;
@@ -529,7 +574,7 @@
 // ソートボタン
 // 入出庫リストのソートボタン
 .c-button-sort {
-  line-height: 1.25;
+  // line-height: 1.25;
   display: flex;
   flex-direction: column;
   // gap: 0.15rem;
