@@ -75,6 +75,7 @@
         <div class="u-font--20 u-font--medium u-font--green">到着予定</div>
 
         <div>
+          <input type="hidden" name="airline_id" value="{{old('airline_id', $reserve->airline_id)}}">
           <div>
             <label for="arrive_date">到着予定日</label>
             <input type="date" id="arrive_date" name="arrive_date" value="{{old('arrive_date', $reserve->arrive_date?->format('Y-m-d'))}}" class="c-form-input--w100 u-mb05">

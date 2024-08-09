@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Office;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -43,4 +44,14 @@ function getKeyMapCollection(Collection $collect, $key = "id")
 function zeroPadding($number, $digit):string
 {
     return str_pad($number, $digit, '0', STR_PAD_LEFT);
+}
+
+/**
+ * 所属事務所を返す
+ *
+ * @return Office
+ */
+function myOffice():Office
+{
+    return Office::findOrFail(config('const.commons.office_id'));
 }

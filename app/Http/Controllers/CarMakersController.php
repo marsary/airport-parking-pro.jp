@@ -9,7 +9,12 @@ class CarMakersController extends Controller
 {
     public function cars(Request $request, $carMakerId)
     {
-        $cars = Car::where('car_maker_id', $carMakerId)->get();
+        if($carMakerId == 'all' && $request->query('default_all', false)) {
+            $cars = Car::all();
+        } else {
+            $cars = Car::where('car_maker_id', $carMakerId)->get();
+        }
+
 
         return response()->json([
             'success' => true,

@@ -22,6 +22,7 @@ class Office extends Model
         'receipt_issuer',
         'receipt_address',
         'receipt_tel',
+        'email',
         'max_car_num',
         'start_time',
         'end_time',

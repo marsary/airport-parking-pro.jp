@@ -43,6 +43,7 @@ class FlightNoDateRule implements ValidationRule, DataAwareRule
         $exists = DB::table('arrival_flights')
             ->where('flight_no', $value)
             ->where('arrive_date', $this->data['arrive_date'])
+            ->where('airline_id', $this->data['airline_id'])
             ->exists();
 
         if (!$exists) {

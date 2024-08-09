@@ -15,7 +15,7 @@ class ArrivalFlightsController extends Controller
             ->first();
 
         return response()->json([
-            'success' => true,
+            'success' => isset($arrivalFlight),
             'data' => ['arrivalFlight' => [
                 'airlineName' => $arrivalFlight?->airline?->name,
                 'depAirportName' => $arrivalFlight?->depAirport?->name,

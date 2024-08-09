@@ -6,4 +6,120 @@
     border: 0.75px solid $gray;
     padding: 1rem;
   }
+
+  &__header {
+    font-size: 0.75rem;
+    line-height: 16px;
+    margin-bottom: 2rem;
+  }
+
+  &__selected-month {
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+  &__select-button {
+    gap: 1rem;
+    li {
+      display: grid;
+      grid-template-columns: repeat(3,auto);
+      align-items: center;
+      gap: 0.15rem;
+    }
+
+    &.--inventory {
+      li {
+        &::before {
+          display: inline-block;
+          content: "";
+          width: 16px;
+          height: 12px;
+          margin-right: 0.1rem;
+        }
+        &:first-child {
+          &::before {
+            background-color: #4471C2;
+          }
+        }
+        &:nth-child(2) {
+          &::before {
+            background-color: #5B9CD6;
+          }
+        }
+        &:nth-child(3) {
+          &::before {
+            background-color: #6EAF4B;
+          }
+        }
+        &:nth-child(4) {
+          &::before {
+            background-color: #E97F31;
+          }
+        }
+        &:nth-child(5) {
+          &::before {
+            background-color: #FFC001;
+          }
+        }
+      }
+    }
+
+    &.--performance {
+      li:not(:first-child) {
+        position: relative;
+        &::before {
+          content: "●";
+          display: inline-block;
+          text-align: center;
+          width: 2rem;
+          height: 16px;
+          margin-right: 0.1rem;
+          padding-left: 0.15rem;
+        }
+        &:nth-child(2) {
+          &::before {
+            color: #F7931E;
+          }
+          &::after {
+            background: #F7931E;
+          }
+        }
+        &:nth-child(3) {
+          &::before {
+            color: #E50012;
+          }
+          &::after {
+            background: #E50012;
+          }
+        }
+        &:nth-child(4) {
+          &::before {
+            color: #0071BC;
+          }
+          &::after {
+            background: #0071BC;
+          }
+        }
+        &:nth-child(5) {
+          &::before {
+            color: #3C3C3C;
+          }
+          &::after {
+            background: #3C3C3C;
+          }
+        }
+        &::after {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          transform: translateY(-50%);
+          content: "";
+          display: block;
+          width: 2rem;
+          height: 1px;
+          background: $blue;
+        }
+      }
+    }
+  }
 }

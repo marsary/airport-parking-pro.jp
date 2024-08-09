@@ -84,7 +84,8 @@
         </div>
         <div>
           <label for="flight_no">到着便名（例：200,300）</label>
-          <input type="text" id="flight_no" name="flight_no" class="u-w-full-wide" value="{{old('flight_no', $reserve->flight_no)}}">
+          <input type="text" id="flight_no" name="flight_no" class="u-w-full-wide u-mb025" value="{{old('flight_no', $reserve->flight_no)}}">
+          <p id="flight_no_not_found" class="text-center hidden"></p>
         </div>
         <div>
           <label for="arrive_date">到着日</label>
@@ -126,11 +127,15 @@
 
 @endsection
 @push("scripts")
+<script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ asset('js/select2.min.js') }}"></script>
+<script src="{{ asset('js/ja.js') }}"></script>
 <script src="{{ asset('js/pages/member/entry_car.js') }}"></script>
 <script>
 </script>
 @endpush
 @push('css')
+<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 <style>
 </style>
 @endpush
