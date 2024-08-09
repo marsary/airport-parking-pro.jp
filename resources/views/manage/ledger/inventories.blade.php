@@ -241,7 +241,7 @@
 @endsection
 @push("scripts")
   <!-- // 入庫と出庫の表示を切り替えるJS -->
-  <script src="./js/toggle_display.js"></script>
+  <script src="/js/toggle_display.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const trs = document.querySelectorAll('tr[data-href]');
