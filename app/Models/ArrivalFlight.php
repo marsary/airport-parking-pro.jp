@@ -53,4 +53,9 @@ class ArrivalFlight extends Model
     {
         return $this->belongsTo(Airline::class);
     }
+
+    public function airportTerminal()
+    {
+        return $this->belongsTo(AirportTerminal::class, 'terminal_id');
+    }
 }

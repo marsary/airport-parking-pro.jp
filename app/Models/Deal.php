@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\TimeCast;
+use App\Enums\DealStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -71,11 +72,22 @@ class Deal extends Model
             'reserve_date' => 'datetime',
             'load_date' => 'date',
             'load_time' => TimeCast::class,
+            'visit_time_plan' => TimeCast::class,
+            'unload_time_plan' => TimeCast::class,
             'visit_date_plan' => 'date',
             'unload_date_plan' => 'date',
             'unload_date' => 'date',
             'password' => 'hashed',
         ];
+    }
+
+    public function statusLabel(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                return DealStatus::tryFrom($attributes['status'])?->label();
+            }
+        );
     }
 
 
