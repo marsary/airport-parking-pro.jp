@@ -5,7 +5,7 @@
       <a href="{{route('manage.home')}}" class="c-nav__link --reserve {{Request::routeIs('manage.home') ? '--current' : '' }}">予約管理</a>
     </li>
     <li class="c-nav__item c-nav__item--current">
-      <a href="" class="c-nav__link --list">入出庫一覧</a>
+      <a href="{{route('manage.ledger.inventories')}}" class="c-nav__link --list {{Request::routeIs('manage.ledger.inventories') ? '--current' : '' }}">入出庫一覧</a>
     </li>
     <li class="c-nav__item">
       <a href="{{route('manage.registers.index')}}" class="c-nav__link --en {{Request::routeIs('manage.registers.index') ? '--current' : '' }}">レジ</a>
