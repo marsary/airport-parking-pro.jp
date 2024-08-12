@@ -14,8 +14,13 @@
       <div class="p-inventoryTransactions-toggle">
         入出庫済を表示
         <label class="c-button-toggle">
-          <input class="c-button-toggle__input" type="checkbox" checked role="switch">
-          <span class="c-button-toggle__slider"></span>
+          <form id="toggle_form" action="#" method="GET">
+            <input name="disp_loaded_unloaded" class="c-button-toggle__input" type="checkbox"
+             {{old('disp_loaded_unloaded', request('disp_loaded_unloaded')) ? 'checked ':''}} role="switch" value="1"
+             onchange="document.getElementById('toggle_form').submit();"
+            />
+            <span class="c-button-toggle__slider"></span>
+          </form>
         </label>
       </div>
       <ul class="l-table-list--scroll__tab">
@@ -52,31 +57,39 @@
             <th>利用</th>
             <th>予約引継</th>
           </tr>
-          <tr data-href="/hoge/">
-            <td><span class="c-label__deep-gray">清算済</span></td>
-            <td>入庫済</td>
-            <td>011545127</td>
-            <td>1580217</td>
-            <td>b9581c2</td>
-            <td>2023-02-24</td>
-            <td>00:00</td>
-            <td></td>
-            <td>02-26</td>
-            <td>3</td>
-            <td>-</td>
-            <td>00:00</td>
-            <td></td>
-            <td>ジムニー</td>
-            <td>3572</td>
-            <td></td>
-            <td>新規</td>
-            <td>100</td>
-            <td></td>
-            <td></td>
-            <td>1</td>
-            <td>akippa</td>
-          </tr>
-          <tr data-href="/hoge/">
+          @foreach ($loadDeals as $loadDeal)
+            <tr data-href="{{route('manage.deals.show', [$loadDeal->id])}}">
+                <td>
+                  @if ($loadDeal->payment()->exists())
+                    <span class="c-label__blue">清算済み</span>
+                  @else
+                    <span class="c-label__deep-gray">未清算</span>
+                  @endif
+                </td>
+                <td>{{$loadDeal->statusLabel}}</td>
+                <td>{{$loadDeal->reserve_code}}</td>
+                <td>{{$loadDeal->member_id}}</td>
+                <td>{{$loadDeal->name}}</td>
+                <td>{{$loadDeal->visit_date_plan?->format('Y-m-d')}}</td>
+                <td>{{formatDate($loadDeal->visit_time_plan, 'H:i')}}</td>
+                <td>{{$loadDeal->load_date?->format('m-d')}}</td>
+                <td>{{$loadDeal->unload_date?->format('m-d')}}</td>
+                <td>{{$loadDeal->num_days}}</td>
+                <td>{{$loadDeal->arrivalFlight?->flight_no ?? '-'}}</td>
+                <td>{{formatDate($loadDeal->arrivalFlight?->arrive_time, 'H:i')}}</td>
+                <td>{{$loadDeal->arrivalFlight?->depAirport?->name}}</td>
+                <td>{{$loadDeal->memberCar?->car->name}}</td>
+                <td>{{$loadDeal->memberCar?->number}}</td>
+                <td>{{$loadDeal->memberCar?->carColor->name}}</td>
+                <td>{{$loadDeal->member->memberType?->name}}</td>
+                <td>{{$loadDeal->dsc_rate}}</td>
+                <td></td>
+                <td></td>
+                <td>{{$loadDeal->member->used_num}}</td>
+                <td>{{$loadDeal->reserve_memo}}</td>
+            </tr>
+          @endforeach
+          {{--  <tr data-href="/hoge/">
             <td><span class="c-label__green">未清算</span></td>
             <td>入庫処理</td>
             <td>011545110</td>
@@ -123,7 +136,7 @@
             <td></td>
             <td>1</td>
             <td></td>
-          </tr>
+          </tr>  --}}
         </table>
 
         <!-- 出庫一覧リスト -->
@@ -241,18 +254,18 @@
 @endsection
 @push("scripts")
   <!-- // 入庫と出庫の表示を切り替えるJS -->
-  <script src="/js/toggle_display.js"></script>
+  <script src="{{ asset('js/toggle_display.js') }}" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const trs = document.querySelectorAll('tr[data-href]');
       trs.forEach((tr, index) => {
-        if (index >= 1) { // 2つ目以降の<tr>要素に対して処理を行う
+        //if (index >= 1) { // 2つ目以降の<tr>要素に対して処理を行う
           tr.addEventListener('click', function(e) {
             if (!e.target.closest('a')) {
               window.location = tr.getAttribute('data-href');
             }
           });
-        }
+        //}
       });
     });
   </script>
