@@ -89,54 +89,6 @@
                 <td>{{$loadDeal->reserve_memo}}</td>
             </tr>
           @endforeach
-          {{--  <tr data-href="/hoge/">
-            <td><span class="c-label__green">未清算</span></td>
-            <td>入庫処理</td>
-            <td>011545110</td>
-            <td>1580204</td>
-            <td>島田 光明</td>
-            <td>2023-02-24</td>
-            <td>00:00</td>
-            <td></td>
-            <td>02-26</td>
-            <td>13</td>
-            <td>GK-102</td>
-            <td>11:30</td>
-            <td>CTD</td>
-            <td>ムーヴキャンパス</td>
-            <td>1016</td>
-            <td>青</td>
-            <td>メンバー</td>
-            <td>1000/td>
-            <td></td>
-            <td></td>
-            <td>8</td>
-            <td></td>
-          </tr>
-          <tr data-href="/">
-            <td><span class="c-label__deep-gray">清算済</span></td>
-            <td>出庫済み</td>
-            <td>011545147</td>
-            <td>1580217</td>
-            <td>吉井 博</td>
-            <td>2023-02-22</td>
-            <td>05:30</td>
-            <td> </td>
-            <td>02-27</td>
-            <td>12</td>
-            <td>GL-742</td>
-            <td>20:14</td>
-            <td>KIX</td>
-            <td>ボルボ</td>
-            <td>77</td>
-            <td>茶</td>
-            <td>新規</td>
-            <td>0</td>
-            <td></td>
-            <td></td>
-            <td>1</td>
-            <td></td>
-          </tr>  --}}
         </table>
 
         <!-- 出庫一覧リスト -->
@@ -259,13 +211,11 @@
     document.addEventListener('DOMContentLoaded', () => {
       const trs = document.querySelectorAll('tr[data-href]');
       trs.forEach((tr, index) => {
-        //if (index >= 1) { // 2つ目以降の<tr>要素に対して処理を行う
           tr.addEventListener('click', function(e) {
             if (!e.target.closest('a')) {
               window.location = tr.getAttribute('data-href');
             }
           });
-        //}
       });
     });
   </script>

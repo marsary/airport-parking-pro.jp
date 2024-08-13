@@ -35,9 +35,30 @@ class InventoriesController extends Controller
             ->orderBy('load_time', 'asc')
             ->get()
             ;
+        // 本日出庫一覧
+        $query = Deal::query()->where(function($query) use($today){
+            $query->whereDate('unload_date_plan',$today)
+                ->whereIn('status', [
+                    DealStatus::LOADED->value,
+                    DealStatus::PENDING->value,
+                ]);
+        });
+        if($dispLoadedUnloaded) {
+            $query->orWhere(function($query) use($today){
+                $query->whereDate('unload_date',$today)
+                    ->whereIn('status', [
+                        DealStatus::UNLOADED->value,
+                    ]);
+            });
+        }
+        $unloadDeals = $query->with(['member', 'arrivalFlight', 'memberCar'])
+            ->orderByRaw("COALESCE(unload_time, unload_time_plan) DESC")
+            ->get()
+            ;
 
         return view('manage.ledger.inventories', [
             'loadDeals' => $loadDeals,
+            'unloadDeals' => $unloadDeals,
         ]);
     }
 }
