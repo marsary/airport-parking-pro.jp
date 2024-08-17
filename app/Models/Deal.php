@@ -90,6 +90,10 @@ class Deal extends Model
         );
     }
 
+    public function office()
+    {
+        return $this->belongsTo(Office::class);
+    }
 
     public function payment()
     {
@@ -105,6 +109,7 @@ class Deal extends Model
     {
         return $this->belongsTo(Member::class);
     }
+
 
     public function agency()
     {
@@ -146,14 +151,14 @@ class Deal extends Model
         return $totalPrice;
     }
 
-    public function carCautions():string
+    public function carCautions($separator = ', '):string
     {
         $carCautionList = [];
         foreach ($this->carCautionMemberCars as $carCautionMemberCar) {
             $carCautionList[] = $carCautionMemberCar->carCaution->name;
         }
 
-        return implode(', ', $carCautionList);
+        return implode($separator, $carCautionList);
     }
 
 }
