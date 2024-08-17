@@ -26,6 +26,7 @@ class ManageReserveForm extends ReserveFormBase
             $this->car_caution_ids = DB::table('car_cautions')
                 ->leftJoin('car_caution_member_cars', 'car_cautions.id', '=', 'car_caution_member_cars.car_caution_id')
                 ->where('car_caution_member_cars.member_car_id', $this->member_car_id)
+                ->whereNull('car_caution_member_cars.deleted_at')
                 ->pluck('car_cautions.id')->toArray();
         }
     }
@@ -34,7 +35,8 @@ class ManageReserveForm extends ReserveFormBase
     {
         // 車両取扱
         if($this->car_caution_ids) {
-            $this->carCautions = CarCaution::whereIn('id', $this->car_caution_ids)->pluck('name')->implode('name', ', ');
+            $carCautionNames = CarCaution::whereIn('id', $this->car_caution_ids)->pluck('name')->toArray();
+            $this->carCautions = implode(', ',  $carCautionNames);
         } else {
             $this->carCautions = '';
         }
