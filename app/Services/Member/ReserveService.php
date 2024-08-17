@@ -2,6 +2,8 @@
 namespace App\Services\Member;
 
 use App\Http\Controllers\Forms\ReserveFormBase;
+use App\Http\Controllers\Manage\Forms\ManageReserveForm;
+use App\Models\CarCautionMemberCar;
 use App\Models\Deal;
 use App\Models\DealGood;
 use App\Models\Member;
@@ -26,6 +28,7 @@ class ReserveService
     {
         $this->updateMember();
         $this->saveMemberCar();
+        $this->saveCarCautions();
         $this->createDeal();
     }
 
@@ -83,8 +86,24 @@ class ReserveService
 
             $this->reserve->member_car_id = $memberCar->id;
         }
+    }
 
+    protected function saveCarCautions()
+    {
+        if(!$this->reserve instanceof ManageReserveForm) {
+            return;
+        }
+        CarCautionMemberCar::where('member_car_id', $this->reserve->member_car_id)->delete();
 
+        foreach ($this->reserve->car_caution_ids as $idx => $carCautionId) {
+            CarCautionMemberCar::create([
+                'office_id' => config('const.commons.office_id'),
+                'member_id' => $this->reserve->member_id,
+                'member_car_id' => $this->reserve->member_car_id,
+                'car_caution_id' => $carCautionId,
+                'sort' => $idx
+            ]);
+        }
     }
 
     private function createDeal()

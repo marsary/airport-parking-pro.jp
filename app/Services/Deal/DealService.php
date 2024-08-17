@@ -21,6 +21,7 @@ class DealService extends ReserveService
     {
         $this->updateMember();
         $this->saveMemberCar();
+        $this->saveCarCautions();
         $this->updateDeal();
     }
 
