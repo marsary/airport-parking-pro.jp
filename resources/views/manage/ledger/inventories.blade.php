@@ -15,7 +15,7 @@
         入出庫済を表示
         <label class="c-button-toggle">
           <form id="toggle_form" action="#" method="GET">
-            <input name="disp_loaded_unloaded" class="c-button-toggle__input" type="checkbox"
+            <input id="disp_loaded_unloaded_check" name="disp_loaded_unloaded" class="c-button-toggle__input" type="checkbox"
              {{old('disp_loaded_unloaded', request('disp_loaded_unloaded')) ? 'checked ':''}} role="switch" value="1"
              onchange="document.getElementById('toggle_form').submit();"
             />
@@ -31,7 +31,7 @@
       <div class="l-table-list--scroll__wrapper">
         <!-- 入庫一覧リスト -->
         <!-- trにaタグは無理なので data-href でリンク -->
-        <table class="l-table-list--scroll --in contentOne is-active">
+        <table id="loadTable" class="l-table-list--scroll --in contentOne is-active">
           <tr>
             <th>清算状況</th>
             <th>ステータス</th>
@@ -66,7 +66,7 @@
                     <span class="c-label__deep-gray">未清算</span>
                   @endif
                 </td>
-                <td>{{$loadDeal->statusLabel}}</td>
+                <td class="text-center">{{$loadDeal->statusLabel}}</td>
                 <td>{{$loadDeal->reserve_code}}</td>
                 <td>{{$loadDeal->member_id}}</td>
                 <td>{{$loadDeal->name}}</td>
@@ -93,7 +93,7 @@
 
         <!-- 出庫一覧リスト -->
         <!-- 基本テキストは左揃え -->
-        <table class="l-table-list--scroll --out --blue contentTwo is-none">
+        <table id="unloadTable" class="l-table-list--scroll --out --blue contentTwo is-none">
           <tr>
             <th>清算状況</th>
             <th>ステータス</th>
@@ -120,85 +120,56 @@
             <th>pt</th>
             <th>受付ID</th>
           </tr>
-          <tr data-href="/hoge/">
-            <td><span class="c-label__blue">清算済み</span></td>
-            <td class="text-center">出庫済</td>
-            <td>成</td>
-            <td class="text-center">1</td>
-            <td>中島 栄一</td>
-            <td>15</td>
-            <td>8828</td>
-            <td>クラウン</td>
-            <td>黒</td>
-            <td>1</td>
-            <td>ZG-52</td>
-            <td>07:30</td>
-            <td></td>
-            <td>BKK</td>
-            <td class="text-center">1</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>01231100709</td>
-          </tr>
-          <tr data-href="/hoge/">
-            <td class="text-center"><span class="c-label__deep-gray">未清算</span></td>
-            <td class="text-center">未出庫</td>
-            <td>成</td>
-            <td class="text-center">2</td>
-            <td>竹林 篤史</td>
-            <td class="text-center">1</td>
-            <td>2125</td>
-            <td>レガシィツーリングワゴン</td>
-            <td>二</td>
-            <td>1</td>
-            <td>VZ-52</td>
-            <td>07:30</td>
-            <td></td>
-            <td>DAD</td>
-            <td class="text-center">10</td>
-            <td>◎洗車機シャンプー</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>01231100709</td>
-          </tr>
-          <tr data-href="/hoge/">
-            <td class="text-center"><span class="c-label__deep-gray">未清算</span></td>
-            <td class="text-center">未出庫</td>
-            <td>成</td>
-            <td class="text-center">2</td>
-            <td>ダニエル・マイケル・アレン</td>
-            <td class="text-center">1</td>
-            <td>2125</td>
-            <td>テリオスキッド</td>
-            <td>二</td>
-            <td>1</td>
-            <td>VZ-52</td>
-            <td>07:30</td>
-            <td></td>
-            <td>DAD</td>
-            <td class="text-center">10</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>01231100709</td>
-          </tr>
-
+          @foreach ($unloadDeals as $unloadDeal)
+            <tr data-href="{{route('manage.deals.show', [$unloadDeal->id])}}">
+              <td>
+                @if ($unloadDeal->payment()->exists())
+                  <span class="c-label__blue">清算済み</span>
+                @else
+                  <span class="c-label__deep-gray">未清算</span>
+                @endif
+              </td>
+              <td class="text-center">{{$unloadDeal->statusLabel}}</td>
+              <td>{{$unloadDeal->office->name}}</td>
+              <td class="text-center"></td>
+              <td>{{$unloadDeal->name}}</td>
+              <td>{{$unloadDeal->member->used_num}}</td>
+              <td>{{$unloadDeal->memberCar?->number}}</td>
+              <td>{{$unloadDeal->memberCar?->car->name}}</td>
+              <td>{{$unloadDeal->memberCar?->carColor->name}}</td>
+              <td>{{$unloadDeal->arrivalFlight?->airportTerminal->terminal_id}}</td>
+              <td>{{$unloadDeal->arrivalFlight?->name}}</td>
+              <td>{{formatDate($unloadDeal->arrivalFlight?->arrive_time, 'H:i')}}</td>
+              <td></td>
+              <td>{{$unloadDeal->arrivalFlight?->depAirport?->name}}</td>
+              <td class="text-center">{{$unloadDeal->num_members}}</td>
+              <td>
+                @php
+                  $isFirstDispItem = true;
+                @endphp
+                @foreach ($unloadDeal->dealGoods as $dealGood)
+                  {{--  good_category_idが1洗車のもの  --}}
+                  @if($dealGood->good->good_category_id == $senshaCategoryId)
+                    @if (!$isFirstDispItem)
+                      <br />
+                    @endif
+                    {{$dealGood->good->name}}
+                    @php
+                      $isFirstDispItem = false;
+                    @endphp
+                  @endif
+                @endforeach
+              </td>
+              <td></td>
+              <td></td>
+              <td>{{$unloadDeal->reserve_memo}}</td>
+              <td></td>
+              <td>{!! $unloadDeal->carCautions('<br />') !!}</td>
+              <td></td>
+              <td></td>
+              <td>{{$unloadDeal->receipt_code}}</td>
+            </tr>
+          @endforeach
         </table>
       </div><!-- /.l-table-list--scroll__wrapper -->
     </div>
