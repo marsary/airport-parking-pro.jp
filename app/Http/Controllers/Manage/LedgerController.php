@@ -21,7 +21,7 @@ class LedgerController extends Controller
 
         $today = Carbon::today();
         // 本日入庫一覧
-        $query = Deal::query()->whereDate('load_date',$today);
+        $query = Deal::query()->whereDate('load_date',$today)->withCount('payment');
         if($dispLoadedUnloaded) {
             $query->whereIn('status', [
                 DealStatus::NOT_LOADED->value,
@@ -32,13 +32,13 @@ class LedgerController extends Controller
                 DealStatus::NOT_LOADED->value,
             ]);
         }
-        $loadDeals = $query->with(['member', 'arrivalFlight', 'memberCar'])
+        $loadDeals = $query->with(['member.memberType', 'arrivalFlight.depAirport', 'memberCar.car', 'memberCar.carColor'])
             ->orderBy('load_time', 'asc')
             ->get()
             ;
 
         // 本日出庫一覧
-        $query = Deal::query()->where(function($query) use($today){
+        $query = Deal::query()->withCount('payment')->where(function($query) use($today){
             $query->whereDate('unload_date_plan',$today)
                 ->whereIn('status', [
                     DealStatus::LOADED->value,
@@ -53,16 +53,25 @@ class LedgerController extends Controller
                     ]);
             });
         }
-        $unloadDeals = $query->with(['member', 'arrivalFlight', 'memberCar', 'dealGoods', 'carCautionMemberCars'])
+        $unloadDeals = $query->with(['member', 'arrivalFlight.depAirport', 'arrivalFlight.airportTerminal', 'memberCar.car', 'memberCar.carColor', 'dealGoods.good', 'carCautionMemberCars.carCaution','office'])
             ->orderByRaw("COALESCE(unload_time, unload_time_plan) ASC")
             ->get()
             ;
 
 
-        return view('manage.ledger.inventories', [
-            'loadDeals' => $loadDeals,
-            'unloadDeals' => $unloadDeals,
-            'senshaCategoryId' => GoodCategory::where('name', '洗車')->first()?->id
-        ]);
+        if($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'loadDeals' => $loadDeals,
+                'unloadDeals' => $unloadDeals,
+                'senshaCategoryId' => GoodCategory::where('name', '洗車')->first()?->id
+            ]);
+        } else {
+            return view('manage.ledger.inventories', [
+                'loadDeals' => $loadDeals,
+                'unloadDeals' => $unloadDeals,
+                'senshaCategoryId' => GoodCategory::where('name', '洗車')->first()?->id
+            ]);
+        }
     }
 }

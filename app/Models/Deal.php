@@ -81,6 +81,13 @@ class Deal extends Model
         ];
     }
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['status_label'];
+
     public function statusLabel(): Attribute
     {
         return Attribute::make(
