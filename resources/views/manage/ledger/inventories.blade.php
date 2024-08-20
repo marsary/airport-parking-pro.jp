@@ -17,7 +17,6 @@
           <form id="toggle_form" action="#" method="GET">
             <input id="disp_loaded_unloaded_check" name="disp_loaded_unloaded" class="c-button-toggle__input" type="checkbox"
              {{old('disp_loaded_unloaded', request('disp_loaded_unloaded')) ? 'checked ':''}} role="switch" value="1"
-             onchange="document.getElementById('toggle_form').submit();"
             />
             <span class="c-button-toggle__slider"></span>
           </form>
@@ -178,6 +177,7 @@
 @push("scripts")
   <!-- // 入庫と出庫の表示を切り替えるJS -->
   <script src="{{ asset('js/toggle_display.js') }}" defer></script>
+  <script src="{{ asset('js/pages/manage/ledger/inventories.js') }}"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const trs = document.querySelectorAll('tr[data-href]');
