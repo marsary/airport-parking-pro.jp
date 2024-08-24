@@ -20,11 +20,17 @@ class PaymentDetail extends Model
         'payment_id',
         'payment_method_id',
         'total_price',
+        'coupon_id',
     ];
 
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class);
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
     }
 
     public function paymentMethodCategory()

@@ -33,6 +33,11 @@ class Good extends Model
         'updated_by',
     ];
 
+    public function dealGoods()
+    {
+        return $this->hasMany(DealGood::class);
+    }
+
     public function tax(): Attribute
     {
         return Attribute::make(
