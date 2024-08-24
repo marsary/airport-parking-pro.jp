@@ -46,20 +46,24 @@
 						<!-- checkedで選択・未選択の切替　デフォルトで選択した状態にしたければ"checked"つける -->
 						<ul class="l-flex u-font--12 palt c-graph__select-button --inventory">
 							<li>
-								入庫<label class="c-button-toggle">
+								電話予約（自）<label class="c-button-toggle">
 								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
 								<span class="c-button-toggle__slider"></span>
 								</label>
 							</li>
-							<li>出庫<label class="c-button-toggle">
+							<li>電話予約（代）<label class="c-button-toggle">
 								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
 								<span class="c-button-toggle__slider"></span>
 								</label></li>
-							<li>MAX在庫<label class="c-button-toggle">
+							<li>当日受付予約<label class="c-button-toggle">
 								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
 								<span class="c-button-toggle__slider"></span>
 								</label></li>
-							<li>おわり在庫<label class="c-button-toggle">
+							<li>ネット予約（自）<label class="c-button-toggle">
+								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
+								<span class="c-button-toggle__slider"></span>
+								</label></li>
+							<li>ネット予約（代）<label class="c-button-toggle">
 								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
 								<span class="c-button-toggle__slider"></span>
 								</label></li>
