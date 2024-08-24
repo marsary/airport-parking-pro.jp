@@ -77,8 +77,13 @@ class RegistersController extends Controller
         $deal = Deal::findOrFail($id);
         $service = new DealGoodsService($deal);
         $categoryPaymentDetailMap = [];
+        $appliedCoupons = [];
         if($deal->payment?->paymentDetails) {
             foreach ($deal->payment->paymentDetails as $paymentDetail) {
+                if($paymentDetail->coupon()->exists()) {
+                    $appliedCoupons[$paymentDetail->coupon->id] = $paymentDetail->total_price;
+                    continue;
+                }
                 if(!isset($categoryDetails[$paymentDetail->paymentMethodCategory()]) && $paymentDetail->paymentMethod->multiple) {
                     $categoryDetails[$paymentDetail->paymentMethodCategory()] = [];
                 }
@@ -98,6 +103,7 @@ class RegistersController extends Controller
                 'dealGoods' => getKeyMapCollection($deal->dealGoods, 'good_id'),
                 'totalPrices' => $service->sumTotals(),
                 'categoryPaymentDetailMap' => $categoryPaymentDetailMap,
+                'appliedCoupons' => !empty($appliedCoupons) ? $appliedCoupons:null,
             ],
          ]);
     }
