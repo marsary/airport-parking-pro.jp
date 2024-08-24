@@ -39,7 +39,7 @@ class DealGoodsService
                 $totalPrices->eightPercentAmountExcludingTax += $price;
                 $totalPrices->eightPercentTax += $tax;
                 break;
-            case TaxType::EIGHT_PERCENT->value:
+            case TaxType::TEN_PERCENT->value:
                 $totalPrices->tenPercentAmountExcludingTax += $price;
                 $totalPrices->tenPercentTax += $tax;
                 break;
