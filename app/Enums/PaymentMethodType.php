@@ -6,7 +6,7 @@ enum PaymentMethodType: int
 {
     // 支払方法マスタ区分
     // 1：現金、2：クレジット、３：電子マネー、４：QRコード、５：商品券、
-    // ６：旅行支援、７：バウチャー、８：その他、９：値引き、１０：調整
+    // ６：旅行支援、７：バウチャー、８：その他、９：値引き、１０：調整　１１：適用クーポン
 
     // 基本情報
     case CASH = 1;
@@ -19,6 +19,7 @@ enum PaymentMethodType: int
     case OTHER = 8;
     case DISCOUNT = 9;
     case ADJUSTMENT = 10;
+    case COUPON = 11;
 
     // 日本語を追加
     public function label(): string
@@ -35,6 +36,7 @@ enum PaymentMethodType: int
             PaymentMethodType::OTHER => 'その他',
             PaymentMethodType::DISCOUNT => '値引き',
             PaymentMethodType::ADJUSTMENT => '調整',
+            PaymentMethodType::COUPON => '適用クーポン',
         };
     }
 
@@ -52,6 +54,7 @@ enum PaymentMethodType: int
             PaymentMethodType::OTHER => 'others',
             PaymentMethodType::DISCOUNT => 'discount',
             PaymentMethodType::ADJUSTMENT => 'adjustment',
+            PaymentMethodType::COUPON => 'appliedCoupons',
         };
     }
 
@@ -69,6 +72,7 @@ enum PaymentMethodType: int
             'others' => PaymentMethodType::OTHER->value,
             'discount' => PaymentMethodType::DISCOUNT->value,
             'adjustment' => PaymentMethodType::ADJUSTMENT->value,
+            'appliedCoupons' => PaymentMethodType::COUPON->value,
         };
     }
 }
