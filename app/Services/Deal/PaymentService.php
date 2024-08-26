@@ -40,7 +40,6 @@ class PaymentService
         } else {
             $this->createPayment();
         }
-        // TODO 適用クーポン
     }
 
     private function createPayment()
@@ -100,16 +99,22 @@ class PaymentService
     private function createPaymentDetails()
     {
         foreach (PaymentMethodType::cases() as $paymentMethodType) {
-            if(isset($this->data[$paymentMethodType->symbol()])) {
-                $categoryData = $this->data[$paymentMethodType->symbol()];
+            $symbol = $paymentMethodType->symbol();
+            if(isset($this->data[$symbol])) {
+                $categoryData = $this->data[$symbol];
                 if(is_array($categoryData)) {
-                    foreach ($categoryData as $itemName => $itemValue) {
-                        $paymentMethod = PaymentMethod::getByName($itemName);
-                        $this->payment->paymentDetails()->create([
-                            'payment_id' => $this->payment->id,
-                            'payment_method_id' => $paymentMethod->id,
-                            'total_price' => (int) $itemValue,
-                        ]);
+                    if($symbol == PaymentMethodType::COUPON->symbol()) {
+                        // 適用クーポン
+                        $this->createCouponDetail($categoryData);
+                    } else {
+                        foreach ($categoryData as $itemName => $itemValue) {
+                            $paymentMethod = PaymentMethod::getByName($itemName);
+                            $this->payment->paymentDetails()->create([
+                                'payment_id' => $this->payment->id,
+                                'payment_method_id' => $paymentMethod->id,
+                                'total_price' => (int) $itemValue,
+                            ]);
+                        }
                     }
                 } else {
                     $paymentMethod = PaymentMethod::getByName($paymentMethodType->label());
@@ -120,6 +125,19 @@ class PaymentService
                     ]);
                 }
             }
+        }
+    }
+
+    private function createCouponDetail(array $appliedCoupons)
+    {
+        foreach ($appliedCoupons as $couponId => $price) {
+            $paymentMethod = PaymentMethod::getByName(PaymentMethodType::COUPON->label());
+            $this->payment->paymentDetails()->create([
+                'payment_id' => $this->payment->id,
+                'payment_method_id' => $paymentMethod->id,
+                'total_price' => (int) $price,
+                'coupon_id' => $couponId,
+            ]);
         }
     }
 
