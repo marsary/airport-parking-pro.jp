@@ -104,6 +104,7 @@
             <button type="button" id="modal_open" class="c-button__submit">決済画面へ</button>
           </div>
 
+          <input type="hidden" name="dealId" id="dealId" value="{{$dealId}}" />
           <!-- 8% -->
           <input type="hidden" name="reduced_subtotal" id="reducedSubTotalInput" value="0" />
           <input type="hidden" name="reduced_tax" id="reducedTaxInput" value="0" />
@@ -118,6 +119,7 @@
           <input type="hidden" id="originalTotalPay" value="0" />
           <input type="hidden" id="optionInfosSaved" value="0" />
           <input type="hidden" id="categoryPaymentDetailMap" value="">
+          <input type="hidden" id="appliedCoupons" value="">
         </form>
       </div>
     </div>
@@ -178,16 +180,16 @@
             <div class=" p-register__settlement--right">
 
               <!-- クーポンコード キャンペーン 伝票値引き option-->
-              <div class="l-grid--col3-auto l-grid--gap1 hidden">
+              <div class="l-grid--col3-auto l-grid--gap1">
                 <label for="coupon" class="c-button__apply--auto c-button__apply--green u-mb1">割引クーポン</label>
                 <div class="c-form-select-wrap">
                   <select id="coupon" name="coupon" class="">
                     <option value="0" selected>割引クーポンを選択して下さい</option>
-                    @foreach ($coupons as $coupon)
+                    {{--  @foreach ($coupons as $coupon)
                       <option value="{{ $coupon->id }}">
                         {{$coupon->name }}
                       </option>
-                    @endforeach
+                    @endforeach  --}}
                     {{--  <option value="1">クーポンコード1</option>
                     <option value="2">クーポンコード2</option>
                     <option value="3">クーポンコード3</option>  --}}
@@ -348,7 +350,9 @@
 
 @endsection
 @push("scripts")
+<script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ asset('js/commons/tax.js') }}"></script>
+<script src="{{ asset('js/commons/coupons.js') }}"></script>
 <!-- モーダル -->
 {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
 <!-- 決済画面をモーダルで表示するスクリプト-->
@@ -580,6 +584,7 @@
     const originalTotalChangeInput = document.getElementById('originalTotalChange');
     const originalTotalPayInput = document.getElementById('originalTotalPay');
     const categoryPaymentDetailMapInput = document.getElementById('categoryPaymentDetailMap');
+    const appliedCouponsInput = document.getElementById('appliedCoupons');
 
     const modalArea = document.getElementById('modalArea');
     const modalOpen = document.getElementById('modal_open');
@@ -602,6 +607,8 @@
       console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
       if(json.success){
         optionInfosSavedInput.value = 1;
+        $('#optionInfosSaved').trigger('change');
+        loadCouponOptions()
       } else {
         alert(json.message);
       }
@@ -610,6 +617,22 @@
     modalClose.addEventListener('click', function() {
       modalArea.classList.remove('is-active');
     });
+
+    async function loadCouponOptions() {
+      const json = await apiRequest.get(BASE_PATH + "/coupons/coupons_for_register/?deal_id=" + dealId)
+      console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
+      if(json.success){
+        while (couponSelect.options.length > 1) couponSelect.remove(1);
+        // coupon の select のオプションを更新する。
+        json.data.coupons.forEach((coupon) => {
+          const option = document.createElement('option')
+          option.value = coupon.id;
+          option.textContent = coupon.name;
+          couponSelect.appendChild(option)
+        });
+        $('#coupon').trigger('change');
+      }
+    }
 
     // オプション情報表示
     async function dispOptionTable() {
@@ -626,6 +649,9 @@
         originalTotalChangeInput.value = json.data.payment?.cash_change;
         originalTotalPayInput.value = json.data.payment?.total_pay;
         categoryPaymentDetailMapInput.value = JSON.stringify(json.data.categoryPaymentDetailMap);
+        if(json.data.appliedCoupons) {
+          appliedCouponsInput.value = JSON.stringify(json.data.appliedCoupons);
+        }
         console.log(json.data);
 
         deal = json.data.deal
