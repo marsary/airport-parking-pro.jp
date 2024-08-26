@@ -158,6 +158,15 @@ class PaymentMethodSeeder extends Seeder
                 'memo' => null,
                 'multiple' => false,
             ],
+            // 11：適用クーポン
+            [
+                'id' => 17,
+                'office_id' => 1,
+                'name' => '適用クーポン',
+                'type' => 11,
+                'memo' => null,
+                'multiple' => false,
+            ],
         ]);
     }
 }
