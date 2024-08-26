@@ -80,6 +80,9 @@ Route::get('calendar/load_dates', [\App\Http\Controllers\CalendarController::cla
 Route::get('calendar/unload_dates', [\App\Http\Controllers\CalendarController::class, 'unloadDates'])->name('calendar.unload_dates');
 Route::get('calendar/load_hours', [\App\Http\Controllers\CalendarController::class, 'loadHours'])->name('calendar.load_hours');
 
+Route::get('coupons/coupons_for_register', [\App\Http\Controllers\CouponsController::class, 'couponsForRegister'])->name('coupons.coupons_for_register');
+
+
 require __DIR__.'/manage_auth.php';
 require __DIR__.'/member_auth.php';
 require __DIR__.'/form_auth.php';
