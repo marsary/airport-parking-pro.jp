@@ -8,6 +8,7 @@ window.addEventListener('DOMContentLoaded', function() {
     const registerTotalAmountDisp = document.getElementById('register_total_amount');
     const registerTotalChangeDisp = document.getElementById('register_total_change');
     const couponApplyButton = document.querySelector('.apply_button');
+    const couponSelect = document.getElementById('coupon');
     const discountInput = document.getElementById('discount');
     const adjustmentInput = document.getElementById('adjustment');
     const paymentMethodCashInput = document.getElementById('paymentMethod_cash');
@@ -23,6 +24,9 @@ window.addEventListener('DOMContentLoaded', function() {
     const paymentSubmitForm = document.getElementById('payment_submit_form');
     const entryTypeInputList = document.querySelectorAll('.entryType');
 
+    /**
+     * @type  {PaymentData} paymentData
+     */
     let paymentData;
     document.querySelectorAll('input[name=symbol]').forEach(elem => {
         elem.addEventListener('click', () => {
@@ -49,6 +53,13 @@ window.addEventListener('DOMContentLoaded', function() {
     })
 
     document.getElementById('optionInfosSaved').addEventListener('change', () => {
+        togglePaymentSubmitButton();
+    })
+
+    couponApplyButton.addEventListener('click', async() => {
+        const couponId = couponSelect.value
+        paymentData.updateCouponItem(couponId)
+        renderPaymentTable();
         togglePaymentSubmitButton();
     })
 
@@ -184,6 +195,10 @@ window.addEventListener('DOMContentLoaded', function() {
 
     function initPaymentData() {
         const categoryPaymentDetailMap = JSON.parse(document.getElementById('categoryPaymentDetailMap').value);
+        let appliedCoupons = {}
+        if(document.getElementById('appliedCoupons').value != '') {
+            appliedCoupons = JSON.parse(document.getElementById('appliedCoupons').value);
+        }
         const reducedSubTotal = parseInt(document.getElementById('reducedSubTotalInput').value) || 0;
         const reducedTax = parseInt(document.getElementById('reducedTaxInput').value) || 0;
         const subTotal = parseInt(document.getElementById('subtotalInput').value) || 0;
@@ -211,7 +226,8 @@ window.addEventListener('DOMContentLoaded', function() {
             paymentMethodType,
             paymentMethodName,
             renderPaymentTable,
-            categoryPaymentDetailMap
+            categoryPaymentDetailMap,
+            appliedCoupons,
         );
     }
 
@@ -247,8 +263,9 @@ class PaymentData {
     isDirty = false;
     calculator
     BASE_PATH
-    // 割引クーポン
+    // 利用可能な割引クーポンデータ
     couponData = {}
+    // 適用クーポン couponId => 割引額
     appliedCoupons = {}
 
     //小計(税抜)
@@ -257,7 +274,9 @@ class PaymentData {
     discount
     // 調整
     adjustment
-    // 消費税
+    // 消費税 調整前
+    originalTax = 0
+    // 消費税 調整後
     tax = 0
 
     // お支払い合計（税込）
@@ -313,14 +332,17 @@ class PaymentData {
         selectedType,
         selectedItemName,
         renderPaymentTable,
-        categoryPaymentDetailMap = {}
+        categoryPaymentDetailMap = {},
+        appliedCoupons = {}
     ) {
         this.BASE_PATH = BASE_PATH
         this.subtotal = subtotal
+        this.originalTax = tax
         this.tax = tax
         this.totalChange = totalChange
         this.totalAmount = totalAmount
         this.couponData = couponData
+        this.appliedCoupons = appliedCoupons
         this.calculator = calculator
         this.selectedType = selectedType
         this.selectedItemName = selectedItemName
@@ -346,7 +368,22 @@ class PaymentData {
         this.isDirty = false
     }
 
+    adjustTax() {
+        // クーポンや値引きは常に10％消費税に対応する
+
+        let discount = (parseInt(this.discount) || 0) - (parseInt(this.adjustment) || 0);
+        Object.keys(this.appliedCoupons).forEach(couponId => {
+            const value = this.appliedCoupons[String(couponId)];
+            discount += (parseInt(value) || 0);
+        })
+
+        // 元の消費税額 - (クーポン・値引きの合計) * 10%
+        this.tax = parseInt(this.originalTax - (parseInt(discount * 0.1)));
+    }
+
     sumTotals() {
+        this.adjustTax();
+
         this.totalAmount = (parseInt(this.subtotal) || 0) + (parseInt(this.tax) || 0) - (parseInt(this.discount) || 0) + (parseInt(this.adjustment) || 0);
         this.totalPay = (parseInt(this.cash) || 0) + (parseInt(this.giftCertificates) || 0)
         for(const paymentType of this.listPaymentTypes) {
@@ -355,6 +392,10 @@ class PaymentData {
                 this.totalPay += (parseInt(value) || 0);
             })
         }
+        Object.keys(this.appliedCoupons).forEach(couponId => {
+            const value = this.appliedCoupons[String(couponId)];
+            this.totalAmount -= (parseInt(value) || 0);
+        })
         if(this.totalPay - this.totalAmount > 0) {
             this.totalChange = this.totalPay - this.totalAmount;
         } else {
@@ -386,14 +427,57 @@ class PaymentData {
         }
     }
 
+    updateCouponItem(couponId) {
+        const coupon = this.getCoupon(couponId);
+
+        // 併用可否フラグ のチェック
+        const invalidated = Object.keys(this.appliedCoupons).some(otherId => {
+            const otherCoupon = this.getCoupon(otherId);
+            // 併用可否フラグ 0：不可、1：可
+            if(otherCoupon.combination_flg == 0) {
+                return true;
+            }
+            if(otherId != couponId && coupon.combination_flg == 0) {
+                return true;
+            }
+
+        })
+        if(invalidated)  return;
+
+        const price = calcActualYen(coupon.discount_type, coupon.discount_amount, this.subtotal);
+        this.appliedCoupons[String(couponId)] = price;
+
+        this.sumTotals()
+    }
+
+    updatePercentCoupons() {
+        Object.keys(this.appliedCoupons).forEach(couponId => {
+            const coupon = this.getCoupon(couponId);
+            if(coupon.discount_type == DiscountTypes.PERCENT) {
+                const price = calcActualYen(coupon.discount_type, coupon.discount_amount, this.subtotal);
+                this.appliedCoupons[String(couponId)] = price;
+            }
+        })
+    }
+
     makeSubtotalItems() {
         const items = [];
         //小計(税抜)
         items.push(this.makeItemContainer('小計', this.subtotal))
         // 値引き
-        if(this.discount != null) {
+        if(this.discount != null && !isNaN(this.discount)) {
             items.push(this.makeItemContainerWithRemoveButton('discount', '値引き', this.discount))
         }
+        // クーポン
+        Object.keys(this.appliedCoupons).forEach(couponId => {
+            const coupon = this.getCoupon(couponId);
+            const price = this.appliedCoupons[String(couponId)];
+            let name = coupon.name
+            if(coupon.discount_type == DiscountTypes.PERCENT) {
+                name += ' (' + coupon.discount_amount + '%)'
+            }
+            items.push(this.makeItemContainerWithRemoveButton(coupon.name, name, price))
+        })
         // 調整
         if(this.adjustment != null) {
             items.push(this.makeItemContainerWithRemoveButton('adjustment', '調整', this.adjustment))
@@ -507,7 +591,23 @@ class PaymentData {
                 return;
             }
         }
+        Object.keys(this.appliedCoupons).forEach(couponId => {
+            const coupon = this.getCoupon(couponId);
+            if(coupon?.name == itemName) {
+                delete this.appliedCoupons[String(couponId)];
+                return
+            }
+        })
 
+    }
+
+    /**
+     *
+     * @param {number} couponId
+     * @returns {{string:any}}
+     */
+    getCoupon(couponId) {
+        return this.couponData[couponId]
     }
 
     toFormParams() {
@@ -592,6 +692,7 @@ class Calculator {
 
 const PaymentMethodTypes = Object.freeze({
     discount:'discount',
+    appliedCoupons:'appliedCoupons',
     adjustment:'adjustment',
     cash:'cash',
     credit:'credit',
@@ -607,6 +708,8 @@ function getPaymentMethodTypeFromId(id) {
     switch (id) {
         case 'discount':
             return PaymentMethodTypes.discount;
+        case 'appliedCoupons':
+            return PaymentMethodTypes.appliedCoupons;
         case 'adjustment':
             return PaymentMethodTypes.adjustment;
         case 'paymentMethod_cash':
