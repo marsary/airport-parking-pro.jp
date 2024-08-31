@@ -39,47 +39,48 @@
 
       <!-- グラフ -->
       <div class="relative c-graph__wrap">
-      <div class="c-graph__header">
-					<div class="l-flex--sb c-graph__header-top">
-						<!-- checkedで選択・未選択の切替　デフォルトで選択した状態にしたければ"checked"つける -->
-						<ul class="l-flex u-font--12 palt c-graph__select-button --inventory">
-							<li>
-								電話予約（自）<label class="c-button-toggle">
-								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
-								<span class="c-button-toggle__slider"></span>
-								</label>
-							</li>
-							<li>電話予約（代）<label class="c-button-toggle">
-								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
-								<span class="c-button-toggle__slider"></span>
-								</label></li>
-							<li>当日受付予約<label class="c-button-toggle">
-								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
-								<span class="c-button-toggle__slider"></span>
-								</label></li>
-							<li>ネット予約（自）<label class="c-button-toggle">
-								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
-								<span class="c-button-toggle__slider"></span>
-								</label></li>
-							<li>ネット予約（代）<label class="c-button-toggle">
-								<input class="c-button-toggle__input" type="checkbox" checked role="switch">
-								<span class="c-button-toggle__slider"></span>
-								</label></li>
-						</ul>
-					</div>
-					<div class="text-right">
-						前年同月を表示
-						<label class="c-button-toggle">
-							<input class="c-button-toggle__input" type="checkbox" role="switch">
-							<span class="c-button-toggle__slider"></span>
-						</label>
-					</div>
-				</div>
-
-        <div id="chart_title">タイトル</div>
+        <div id="chart_info">
+          <div id="chart_title">タイトル</div>
+          <div class="c-graph__header">
+            <div class="l-flex--sb c-graph__header-top">
+                <!-- checkedで選択・未選択の切替　デフォルトで選択した状態にしたければ"checked"つける -->
+                <ul class="l-flex u-font--12 palt c-graph__select-button --inventory">
+                    <li>
+                        電話予約（自）<label class="c-button-toggle">
+                        <input id="self_phone" class="c-button-toggle__input" type="checkbox" checked role="switch">
+                        <span class="c-button-toggle__slider"></span>
+                        </label>
+                    </li>
+                    <li>電話予約（代）<label class="c-button-toggle">
+                        <input id="staff_phone" class="c-button-toggle__input" type="checkbox" checked role="switch">
+                        <span class="c-button-toggle__slider"></span>
+                        </label></li>
+                    <li>当日受付予約<label class="c-button-toggle">
+                        <input id="counter" class="c-button-toggle__input" type="checkbox" checked role="switch">
+                        <span class="c-button-toggle__slider"></span>
+                        </label></li>
+                    <li>ネット予約（自）<label class="c-button-toggle">
+                        <input id="self_web" class="c-button-toggle__input" type="checkbox" checked role="switch">
+                        <span class="c-button-toggle__slider"></span>
+                        </label></li>
+                    <li>ネット予約（代）<label class="c-button-toggle">
+                        <input id="staff_web" class="c-button-toggle__input" type="checkbox" checked role="switch">
+                        <span class="c-button-toggle__slider"></span>
+                        </label></li>
+                </ul>
+            </div>
+            <div class="text-right">
+                前年同月を表示
+                <label class="c-button-toggle">
+                    <input class="c-button-toggle__input" type="checkbox" role="switch">
+                    <span class="c-button-toggle__slider"></span>
+                </label>
+            </div>
+          </div>
+        </div>
         <div id="chartReport">
           <canvas id="myChart"></canvas>
-          <img src="../images/dummy/gulp_rsv.png" width="100%" height="auto" alt="">
+          {{--  <img src="../images/dummy/gulp_rsv.png" width="100%" height="auto" alt="">  --}}
         </div>
         <div id="prevBtn" class="c-button__prev absolute-VerticalCenter"></div>
         <div id="nextBtn" class="c-button__next absolute-VerticalCenter--right"></div>
@@ -92,6 +93,7 @@
 @endsection
 @push("scripts")
 <script src="{{asset('js/chartjs/chart.umd.js')}}" defer></script>
+<script src="{{asset('js/pages/manage/graph/graph_common.js')}}" defer></script>
 <script src="{{asset('js/pages/manage/graph/reservation.js')}}" defer></script>
 <script>
 </script>
@@ -100,16 +102,27 @@
 <style>
   .c-graph__wrap {
     display: flex;
+    flex-direction: column;
     align-items: center;
   }
   .relative {
     position: relative;
   }
+  #chart_info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px auto;
+    padding: 0 5px;
+  }
   #chart_title {
-    position: absolute;
+    {{--  position: absolute;
     top: 14px;
-    left: 23px;
+    left: 23px;  --}}
     font-size: 25px;
+  }
+  .text-right {
+    margin-top: 10px;
   }
   .absolute-VerticalCenter {
     position: absolute;
