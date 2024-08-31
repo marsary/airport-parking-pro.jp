@@ -8,11 +8,13 @@ const manualChartBtn = document.getElementById('manualChartBtn');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const chartTitle = document.getElementById('chart_title');
+const selfPhoneSwitch = document.getElementById('self_phone');
+const staffPhoneSwitch = document.getElementById('staff_phone');
+const counterSwitch = document.getElementById('counter');
+const selfWebSwitch = document.getElementById('self_web');
+const staffWebSwitch = document.getElementById('staff_web');
 
-let currentStartDate;
-let currentEndDate;
 let chartDataset = [];
-let currentView;
 
 monthlyChartBtn.addEventListener('click', async (e)=> {
   currentView = "monthly"
@@ -72,48 +74,21 @@ prevBtn.addEventListener('click', async (e)=> {
   }
 })
 
-function renderTitle() {
-  switch (currentView) {
-    case 'monthly':
-      chartTitle.textContent = currentStartDate.toFormat('yyyy/M')
-      break;
-    case 'weekly':
-    case 'manual':
-      chartTitle.textContent = currentStartDate.toFormat('yyyy/M/dd') + '～' + currentEndDate.toFormat('yyyy/M/dd')
-      break;
-    case 'daily':
-      chartTitle.textContent = currentStartDate.toFormat('yyyy/M/dd')
-      break;
-    default:
-      break;
-  }
-}
-
-function setCurrentPeriod(labels = []) {
-  if(typeof labels[0] !== 'undefined') {
-    currentStartDate = luxon.DateTime.fromSQL(labels[0]);
-  }
-  if(labels.length > 0 && typeof labels[labels.length - 1] != null) {
-    currentEndDate = luxon.DateTime.fromSQL(labels[labels.length - 1]);
-  }
-
-}
-
-function handleChartData(json) {
-  if(json.success){
-    setCurrentPeriod(json.data.labels)
-    console.log(json.data)
-    renderChart(json.data)
-  }
-}
-function handleDailyChartData(json) {
-  if(json.success){
-    currentStartDate = luxon.DateTime.fromISO(json.data.currentDate);
-    currentEndDate = currentStartDate.set();
-    console.log(json.data)
-    renderChart(json.data, false)
-  }
-}
+selfPhoneSwitch.addEventListener('change', () => {
+  toggleSwitch(selfPhoneSwitch, SELF_PHONE);
+})
+staffPhoneSwitch.addEventListener('change', () => {
+  toggleSwitch(staffPhoneSwitch, STAFF_PHONE);
+})
+counterSwitch.addEventListener('change', () => {
+  toggleSwitch(counterSwitch, COUNTER);
+})
+selfWebSwitch.addEventListener('change', () => {
+  toggleSwitch(selfWebSwitch, SELF_WEB);
+})
+staffWebSwitch.addEventListener('change', () => {
+  toggleSwitch(staffWebSwitch, STAFF_WEB);
+})
 
 function renderChart(data, useTickDate = true) {
   chartDataset = []
@@ -135,7 +110,7 @@ function renderChart(data, useTickDate = true) {
   }
   document.querySelector("#chartReport").innerHTML = '<canvas id="myChart"></canvas>';
   const ctx = document.getElementById('myChart');
-  new Chart(ctx, {
+  chart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: data.labels,
@@ -188,7 +163,7 @@ function renderChart(data, useTickDate = true) {
           display: false,
         },
         legend: {
-          display: true,
+          display: false,
           align: 'end',
         },
         tooltip: {
@@ -228,6 +203,9 @@ function renderChart(data, useTickDate = true) {
     }
   });
 
+  legendItems = chart.options.plugins.legend.labels.generateLabels(chart);
+  console.log(legendItems);
+
   switch (currentView) {
     case 'manual':
       prevBtn.classList.add('hidden')
@@ -239,6 +217,7 @@ function renderChart(data, useTickDate = true) {
       break;
   }
   renderTitle()
+  filterDatasets()
 }
 
 async function loadChartData(nextPrev = null) {
