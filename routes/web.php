@@ -32,6 +32,8 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('ledger/inventories', [\App\Http\Controllers\Manage\LedgerController::class, 'inventories'])->name('ledger.inventories');
 
         Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
+        Route::get('marketing/graph/inventory/chart_by_day', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByDay'])->name('marketing.graph.inventory.chart_by_day');
+        Route::get('marketing/graph/inventory/chart_by_hour', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByHour'])->name('marketing.graph.inventory.chart_by_hour');
         // Route::get('marketing/graph/reservation', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'reservation'])->name('marketing.graph.reservation');
         Route::get('marketing/reservation_graph', [\App\Http\Controllers\Manage\Marketing\ReservationGraphController::class, 'index'])->name('marketing.reservation_graph.index');
         Route::get('marketing/reservation_graph/chart_by_day', [\App\Http\Controllers\Manage\Marketing\ReservationGraphController::class, 'chartByDay'])->name('marketing.reservation_graph.chart_by_day');
