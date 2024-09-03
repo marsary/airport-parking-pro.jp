@@ -8,6 +8,12 @@ const manualChartBtn = document.getElementById('manualChartBtn');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const chartTitle = document.getElementById('chart_title');
+// const comparedPeriodSwitch = document.getElementById('compared_period');
+const loadSwitch = document.getElementById('load');
+const unloadSwitch = document.getElementById('unload');
+// const maxStockSwitch = document.getElementById('max_stock');
+// const endingStockSwitch = document.getElementById('ending_stock');
+
 let chartDataset = [];
 
 monthlyChartBtn.addEventListener('click', async (e)=> {
@@ -17,7 +23,72 @@ monthlyChartBtn.addEventListener('click', async (e)=> {
 
   handleChartData(json)
 })
+weeklyChartBtn.addEventListener('click', async (e)=> {
+  currentView = "weekly"
+  currentStartDate = luxon.DateTime.fromJSDate(new Date()).startOf('week', {useLocaleWeeks: true});
+  json = await loadChartData()
 
+  handleChartData(json)
+})
+dailyChartBtn.addEventListener('click', async (e)=> {
+  currentView = "daily"
+  currentStartDate = luxon.DateTime.fromJSDate(new Date()).startOf('day');
+  json = await loadChartData()
+
+  handleDailyChartData(json)
+})
+manualChartBtn.addEventListener('click', async (e)=> {
+  if(startDateInput.value == '' || endDateInput.value == '') return;
+  currentView = "manual"
+  currentStartDate = startDateInput.value;
+  json = await loadChartData()
+
+  handleChartData(json)
+})
+
+nextBtn.addEventListener('click', async (e)=> {
+  if(currentView == null) return;
+
+  json = await loadChartData('next')
+
+  switch (currentView) {
+    case 'daily':
+      handleDailyChartData(json)
+      break;
+    default:
+      handleChartData(json)
+      break;
+  }
+})
+prevBtn.addEventListener('click', async (e)=> {
+  if(currentView == null) return;
+
+  json = await loadChartData('prev')
+  switch (currentView) {
+    case 'daily':
+      handleDailyChartData(json)
+      break;
+    default:
+      handleChartData(json)
+      break;
+  }
+})
+
+// comparedPeriodSwitch.addEventListener('change', () => {
+//   toggleSwitch(comparedPeriodSwitch, COMPARED_PERIOD);
+// })
+loadSwitch.addEventListener('change', () => {
+  toggleSwitch(loadSwitch, LOAD);
+})
+unloadSwitch.addEventListener('change', () => {
+  toggleSwitch(unloadSwitch, UNLOAD);
+})
+// maxStockSwitch.addEventListener('change', () => {
+//   toggleSwitch(maxStockSwitch, MAX_STOCK);
+// })
+// endingStockSwitch.addEventListener('change', () => {
+//   toggleSwitch(endingStockSwitch, ENDING_STOCK);
+// })
 
 function renderChart(data, useTickDate = true) {
   chartDataset = []
@@ -116,6 +187,8 @@ function renderChart(data, useTickDate = true) {
     }
   });
 
+  legendItems = chart.options.plugins.legend.labels.generateLabels(chart);
+  console.log(legendItems);
 
   switch (currentView) {
     case 'manual':
@@ -128,6 +201,7 @@ function renderChart(data, useTickDate = true) {
       break;
   }
   renderTitle()
+  filterDatasets()
 }
 
 async function loadChartData(nextPrev = null) {
@@ -155,3 +229,17 @@ async function loadChartData(nextPrev = null) {
   return json
 }
 
+
+// const COMPARED_PERIOD = '比較期間を表示';
+const LOAD = '入庫';
+const UNLOAD = '出庫';
+const MAX_STOCK = 'MAX在庫';
+const ENDING_STOCK = 'おわり在庫';
+
+const lineColors = new Map([
+//   [COMPARED_PERIOD, "gray"],
+  [LOAD, "#df7a42"],
+  [UNLOAD, "red"],
+  [MAX_STOCK, "#4372b8"],
+  [ENDING_STOCK, "black"],
+]);
