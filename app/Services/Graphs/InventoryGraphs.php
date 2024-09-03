@@ -13,7 +13,35 @@ class InventoryGraphs
 {
     public function loadDataByHour(Request $request)
     {
+        $startDate = Carbon::parse($request->currentStartDate);
+        $intervals = CarbonPeriod::since("00:00")->hours(1)->until("23:00", true)->toArray();
+        $labels = array_map(function($interval){
+            return $interval->format("H");
+        }, $intervals);
 
+        if($request->has('nextPrev')) {
+            if($request->nextPrev == 'next') {
+                $startDate->addDay();
+            } elseif($request->nextPrev == 'prev') {
+                $startDate->subDay();
+            }
+        }
+
+        $data = [];
+        // 入庫
+        $data[InventoryType::LOAD_COLUMN->label()] = $this->countByHour($startDate, $intervals, InventoryType::LOAD_COLUMN->value, InventoryType::LOADTIME_COLUMN->value);
+        // 出庫
+        $data[InventoryType::UNLOAD_COLUMN->label()] = $this->countByHour($startDate, $intervals, InventoryType::UNLOAD_COLUMN->value, InventoryType::UNLOADTIME_COLUMN->value);
+        // MAX在庫
+        // $data[self::MAX_STOCK] = $this->countByHour($startDate, $intervals, self::MAX_STOCK);
+        // おわり在庫
+        // $data[self::ENDING_STOCK] = $this->countByHour($startDate, $intervals, self::ENDING_STOCK);
+
+        return [
+            'datasets' => $data,
+            'labels' => $labels,
+            'currentDate' => $startDate,
+        ];
     }
 
 
@@ -43,6 +71,28 @@ class InventoryGraphs
         ];
     }
 
+    private function countByHour($startDate, $intervals, string $targetColumn, string $timeColumn)
+    {
+        foreach($intervals as $interval){
+            $range[$interval->format("H")] = 0;
+        }
+
+        $countsByHour = Deal::select([
+            DB::raw("LPAD(HOUR($timeColumn),2,0) as hour"),
+            DB::raw('COUNT(id) AS count'),
+        ])
+            ->where('office_id', config('const.commons.office_id'))
+            ->whereDate($targetColumn, $startDate)
+            ->whereNot('status', DealStatus::CANCEL->value)
+            ->groupBy('hour')
+            ->orderBy('hour', 'ASC')
+            ->get();
+
+        foreach($countsByHour as $countRow){
+            $range[$countRow->hour] = $countRow->count;
+        }
+        return $range;
+    }
 
     private function countByDay($startDate, $endDate, $period, string $targetColumn)
     {
@@ -57,6 +107,8 @@ class InventoryGraphs
             ->where('office_id', config('const.commons.office_id'))
             ->whereDate($targetColumn,'>=', $startDate->toDateString())
             ->whereDate($targetColumn,'<=', $endDate->toDateString())
+            ->whereNot('status', DealStatus::CANCEL->value)
+            ->groupBy($targetColumn)
             ->orderBy($targetColumn, 'ASC')
             ->get();
 
