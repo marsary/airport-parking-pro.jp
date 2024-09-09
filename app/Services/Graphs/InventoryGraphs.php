@@ -5,12 +5,21 @@ use App\Enums\DealStatus;
 use App\Enums\Graphs\InventoryType;
 use App\Models\Deal;
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InventoryGraphs
 {
+    use GraphCommon;
+
+    /**
+     * 時間ごとの在庫データを取得
+     *
+     * @param Request $request
+     * @return array<string,mixed> 取得したデータセット、ラベル、および現在の日付
+     */
     public function loadDataByHour(Request $request)
     {
         $startDate = Carbon::parse($request->currentStartDate);
@@ -45,7 +54,12 @@ class InventoryGraphs
     }
 
 
-
+    /**
+     * 日ごとの在庫データを取得
+     *
+     * @param Request $request
+     * @return array<string,mixed> 取得したデータセットおよびラベル
+     */
     public function loadDataByDay(Request $request)
     {
         [$startDate, $endDate] = $this->getStartEndDateFromView($request);
@@ -71,6 +85,15 @@ class InventoryGraphs
         ];
     }
 
+    /**
+     * 時間ごとの在庫データを集計
+     *
+     * @param Carbon $startDate 集計対象の日付
+     * @param CarbonInterface[] $intervals 集計対象の時間間隔
+     * @param string $targetColumn 集計対象の日付カラム
+     * @param string $timeColumn 集計対象の時間カラム
+     * @return array 時間ごとの在庫データ
+     */
     private function countByHour($startDate, $intervals, string $targetColumn, string $timeColumn)
     {
         foreach($intervals as $interval){
@@ -94,6 +117,15 @@ class InventoryGraphs
         return $range;
     }
 
+    /**
+     * 日ごとの在庫データを集計します。
+     *
+     * @param Carbon $startDate 集計の開始日
+     * @param Carbon $endDate 集計の終了日
+     * @param CarbonPeriod $period 集計対象の日付の期間
+     * @param string $targetColumn 集計対象のカラム
+     * @return array 日ごとの在庫データ
+     */
     private function countByDay($startDate, $endDate, $period, string $targetColumn)
     {
         foreach($period as $date){
@@ -116,38 +148,6 @@ class InventoryGraphs
             $range[$countRow->{$targetColumn}->format("Y-m-d")] = $countRow->count;
         }
         return $range;
-    }
-
-    private function getStartEndDateFromView(Request $request)
-    {
-        switch ($request->view) {
-            case 'monthly':
-                $startDate = Carbon::parse($request->currentStartDate);
-                if($request->has('nextPrev')) {
-                    if($request->nextPrev == 'next') {
-                        $startDate->addMonth();
-                    } elseif($request->nextPrev == 'prev') {
-                        $startDate->subMonth();
-                    }
-                }
-                $endDate = (clone $startDate)->endOfMonth();
-                break;
-            case 'weekly':
-                $startDate = Carbon::parse($request->currentStartDate);
-                if($request->nextPrev == 'next') {
-                    $startDate->addWeek();
-                } elseif($request->nextPrev == 'prev') {
-                    $startDate->subWeek();
-                }
-                $endDate = (clone $startDate)->endOfWeek();
-                break;
-            case 'manual':
-                $startDate = Carbon::parse($request->startDate);
-                $endDate = Carbon::parse($request->endDate);
-                break;
-        }
-
-        return [$startDate, $endDate];
     }
 
 }

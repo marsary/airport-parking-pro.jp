@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class ReservationGraphs
 {
+    use GraphCommon;
+
+    /**
+     * 時間ごとの予約データを取得
+     *
+     * @param Request $request
+     * @return array<string,mixed> 取得したデータセット、ラベル、および現在の日付
+     */
     public function loadDataByHour(Request $request)
     {
         $startDate = Carbon::parse($request->currentStartDate);
@@ -46,7 +54,12 @@ class ReservationGraphs
     }
 
 
-
+    /**
+     * 日ごとの予約データを取得
+     *
+     * @param Request $request
+     * @return array<string,mixed> 取得したデータセットおよびラベル
+     */
     public function loadDataByDay(Request $request)
     {
         [$startDate, $endDate] = $this->getStartEndDateFromView($request);
@@ -74,6 +87,14 @@ class ReservationGraphs
         ];
     }
 
+    /**
+     * 時間ごとの予約件数を集計
+     *
+     * @param Carbon $startDate 集計対象の日付
+     * @param array $intervals 集計対象の時間間隔
+     * @param ReservationRoute $route 予約ルート
+     * @return array 時間ごとの予約件数
+     */
     private function countByHour($startDate, $intervals, ReservationRoute $route)
     {
         foreach($intervals as $interval){
@@ -97,6 +118,15 @@ class ReservationGraphs
         return $range;
     }
 
+    /**
+     * 日ごとの予約件数を集計
+     *
+     * @param Carbon $startDate 集計の開始日
+     * @param Carbon $endDate 集計の終了日
+     * @param CarbonPeriod $period 集計対象の日付の期間
+     * @param ReservationRoute $route 予約ルート
+     * @return array 日ごとの予約件数
+     */
     private function countByDay($startDate, $endDate, $period, ReservationRoute $route)
     {
         foreach($period as $date){
@@ -119,37 +149,6 @@ class ReservationGraphs
             $range[$countRow->reserve_date->format("Y-m-d")] = $countRow->count;
         }
         return $range;
-    }
-    private function getStartEndDateFromView(Request $request)
-    {
-        switch ($request->view) {
-            case 'monthly':
-                $startDate = Carbon::parse($request->currentStartDate);
-                if($request->has('nextPrev')) {
-                    if($request->nextPrev == 'next') {
-                        $startDate->addMonth();
-                    } elseif($request->nextPrev == 'prev') {
-                        $startDate->subMonth();
-                    }
-                }
-                $endDate = (clone $startDate)->endOfMonth();
-                break;
-            case 'weekly':
-                $startDate = Carbon::parse($request->currentStartDate);
-                if($request->nextPrev == 'next') {
-                    $startDate->addWeek();
-                } elseif($request->nextPrev == 'prev') {
-                    $startDate->subWeek();
-                }
-                $endDate = (clone $startDate)->endOfWeek();
-                break;
-            case 'manual':
-                $startDate = Carbon::parse($request->startDate);
-                $endDate = Carbon::parse($request->endDate);
-                break;
-        }
-
-        return [$startDate, $endDate];
     }
 
 }
