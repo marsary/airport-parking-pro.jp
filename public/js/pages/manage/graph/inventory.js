@@ -123,7 +123,6 @@ function renderChart(data, useTickDate = true) {
       scales: {
         x: {
           beginAtZero: true,
-        //   stacked: true,
           grid: {
             display: false
           },
@@ -131,11 +130,8 @@ function renderChart(data, useTickDate = true) {
             callback: function(value, index, ticks) {
               if(useTickDate) {
                 const tickDate = new Date(data.labels[index]);
-                //   console.log(tickDate.getDate().toString())
                 return tickDate.getDate().toString();
               }
-            //   console.log(data.labels);
-            //   return data.labels[index];
               return Number(data.labels[index]);
             }
           },
@@ -144,12 +140,10 @@ function renderChart(data, useTickDate = true) {
             min: 0,                        // 最小値
             max: 15,                       // 最大値
             beginAtZero: true,
-            // stacked: true,
             ticks: {                       // 目盛り
               count:5,
               autoSkip: false,
               stepSize: 3,                   // 軸間隔
-            //   fontColor: "blue",             // 目盛りの色
               fontSize: 14                   // フォントサイズ
           },
         }
@@ -176,10 +170,7 @@ function renderChart(data, useTickDate = true) {
             backgroundColor: "#ffefd6",
             titleColor: "#7a7670",
             bodyColor: "#7a7670",
-            // titleFont: { weight: 'bold' },
             padding: 10,
-            // cornerRadius: 10,
-            // borderColor: "#042a0b",
             borderWidth: "0",
             xAlign: "left"
         },

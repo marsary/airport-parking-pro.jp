@@ -4,6 +4,13 @@ let currentView;
 let chart;
 let legendItems;
 
+/**
+ * スイッチの状態に基づいて、グラフのデータセットの表示を切り替え
+ *
+ * @param {HTMLElement} switchElem - スイッチの要素
+ * @param {string} switchLabel - スイッチに関連付けられたラベルテキスト
+ * @return {void}
+ */
 function toggleSwitch(switchElem, switchLabel) {
     if(!chart) return;
 
@@ -18,6 +25,11 @@ function toggleSwitch(switchElem, switchLabel) {
     chart.update();
   }
 
+  /**
+   * 現在のビューに応じて、グラフのタイトルを設定
+   *
+   * @return {void}
+   */
   function renderTitle() {
     switch (currentView) {
       case 'monthly':
@@ -35,6 +47,12 @@ function toggleSwitch(switchElem, switchLabel) {
     }
   }
 
+  /**
+   * ラベルに基づいて、現在の期間を設定
+   *
+   * @param {Array<string>} labels - 期間のラベル（開始日と終了日を含む配列）
+   * @return {void}
+   */
   function setCurrentPeriod(labels = []) {
     if(typeof labels[0] !== 'undefined') {
       currentStartDate = luxon.DateTime.fromSQL(labels[0]);
@@ -45,6 +63,12 @@ function toggleSwitch(switchElem, switchLabel) {
 
   }
 
+  /**
+   * 取得したJSONデータを元にグラフを更新
+   *
+   * @param {Object} json - 取得したJSONデータ
+   * @return {void}
+   */
   function handleChartData(json) {
     if(json.success){
       setCurrentPeriod(json.data.labels)
@@ -52,6 +76,14 @@ function toggleSwitch(switchElem, switchLabel) {
       renderChart(json.data)
     }
   }
+
+
+  /**
+   * 日次データを処理してグラフを更新
+   *
+   * @param {Object} json - 日次データを含むJSON
+   * @return {void}
+   */
   function handleDailyChartData(json) {
     if(json.success){
       currentStartDate = luxon.DateTime.fromISO(json.data.currentDate);
@@ -61,7 +93,11 @@ function toggleSwitch(switchElem, switchLabel) {
     }
   }
 
-
+/**
+ * チェックボックスの状態に基づいて、データセットをフィルタリング
+ *
+ * @return {void}
+ */
 function filterDatasets() {
     const checkboxes = Array.from(document.querySelectorAll('input.c-button-toggle__input[type="checkbox"]'));
     checkboxes.map((checkbox) => {
@@ -71,7 +107,8 @@ function filterDatasets() {
       const legendItem = legendItems.find(legendItem => legendItem.text == liElem.textContent.trim())
 
       if(!legendItem) {
-        throw new Error(liElem.textContent.trim() + 'に対応するチャートのlegend項目が取得できません。');
+        return;
+        // throw new Error(liElem.textContent.trim() + 'に対応するチャートのlegend項目が取得できません。');
       }
 
       if(checkbox.checked) {
