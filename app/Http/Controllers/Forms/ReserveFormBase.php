@@ -71,6 +71,8 @@ class ReserveFormBase extends StdObject
 
     public $good_ids = [];
     public $modal_good_ids = [];
+    public $good_nums = [];
+    public $modal_good_nums = [];
     public $coupon_ids = [];
     public $coupon_code;
     /** @var Coupon */
@@ -175,6 +177,12 @@ class ReserveFormBase extends StdObject
             $this->goodsMap = getKeyMapCollection(Good::whereIn('id', $this->good_ids)->get());
             foreach ($this->good_ids as $goodId) {
                 $good = $this->goodsMap[$goodId];
+                $numOfEachGood = isset($this->good_nums[$goodId]) ? $this->good_nums[$goodId]: 0;
+
+                if($numOfEachGood == 0) {
+                    continue;
+                }
+
                 $goodTotalPrice = $good->price * $numOfEachGood;
                 $goodTotalTax = roundTax(TaxType::tryFrom($good->tax_type)?->rate() * $goodTotalPrice);
                 $this->dealGoodData[] = [
