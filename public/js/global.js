@@ -103,3 +103,13 @@ function parseDateInput(inputValue) {
     }
     return dateObj;
 }
+
+function asObject(value = []) {
+    if(isObject(value)) {
+        return value;
+    }
+    if(Array.isArray(value)) {
+        return { ...value }
+    }
+    return {};
+}
