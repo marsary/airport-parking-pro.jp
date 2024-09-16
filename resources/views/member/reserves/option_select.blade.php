@@ -142,6 +142,7 @@
     })
 
     goodIdsElem.value = goodIds.join(',');
+    goodNumsElem.value = JSON.stringify(goodNums);
   }
 
   function updateCouponList() {
@@ -187,8 +188,10 @@
       const goodId = checkbox.value;
       if(checkbox.checked) {
         addingIds.push(goodId);
+        addGoodNums(goodId)
       } else {
         removingIds.push(goodId);
+        removeGoodNums(goodId)
       }
     });
 
@@ -196,6 +199,10 @@
     updateOptionList()
   }
 
+  function updateOptionQuantity(goodId) {
+    addGoodNums(goodId)
+    updateOptionList()
+  }
 
   function addGoodNums(goodId) {
     const modalGoodNumElem = document.getElementById('modal_good_nums_' + goodId);
@@ -224,6 +231,7 @@
   function removeOption(btnElem) {
     const removingId = btnElem.value
     goodIds = addRemoveList(goodIds, [], [removingId]);
+    removeGoodNums(removingId)
     updateOptionList()
 
     const parent = btnElem.closest('.item-container');
@@ -231,6 +239,9 @@
       parent.remove();
     }
     document.getElementById('modal_good_ids_' + removingId).checked = false;
+    const modalGoodNumElem = document.getElementById('modal_good_nums_' + removingId);
+    modalGoodNumElem.value = 0;
+    updateTotalAmount(modalGoodNumElem)
   }
 
   function removeCoupon(btnElem) {
