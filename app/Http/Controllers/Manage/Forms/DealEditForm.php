@@ -50,6 +50,7 @@ class DealEditForm extends ManageReserveForm
         $this->remarks = $deal->remarks;
 
         $this->good_ids = $deal->dealGoods()->pluck('good_id')->toArray();
+        $this->good_nums = $deal->dealGoods()->pluck('num', 'good_id')->toArray();
         $this->airline_id = $deal->arrivalFlight?->airline_id;
         $this->flight_no = $deal->arrivalFlight?->flight_no;
         $this->arrive_date = $deal->arrivalFlight?->arrive_date;
