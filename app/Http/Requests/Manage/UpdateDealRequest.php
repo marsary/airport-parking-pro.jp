@@ -46,6 +46,10 @@ class UpdateDealRequest extends FormRequest
             'good_ids.*' => 'int',
             'modal_good_ids' => 'nullable|array',
             'modal_good_ids.*' => 'int',
+            'good_nums' => 'nullable|array',
+            'good_nums.*' => 'int',
+            'modal_good_nums' => 'nullable|array',
+            'modal_good_nums.*' => 'int',
             'car_caution_ids' => 'nullable|array',
             'car_caution_ids.*' => 'int',
             'cancel_btn' => 'nullable',
@@ -60,6 +64,13 @@ class UpdateDealRequest extends FormRequest
         }
         $this->merge([
             'good_ids' => $good_ids,
+        ]);
+        $good_nums = [];
+        if(!empty($this->good_nums)) {
+            $good_nums = json_decode($this->good_nums, true);
+        }
+        $this->merge([
+            'good_nums' => $good_nums,
         ]);
     }
 
@@ -84,6 +95,7 @@ class UpdateDealRequest extends FormRequest
             'arrive_time' => '到着予定時間',
             'num_members' => 'ご利用人数',
             'good_ids' => 'オプション選択',
+            'good_nums' => 'オプション数量',
             'car_caution_ids' => '取扱注意メモ',
         ];
     }
