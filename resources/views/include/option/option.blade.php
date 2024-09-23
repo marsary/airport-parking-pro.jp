@@ -39,26 +39,6 @@
               </div>
             </div>
           @endforeach
-          {{--  <div class="c-button-optionSelect">
-            <input type="checkbox" id="wax" name="wax" value="WAX">
-            <label for="wax" class="text-center u-pt2 u-pb2">WAX<br>2，500円</label>
-          </div>
-          <div class="c-button-optionSelect">
-            <input type="checkbox" id="dummy1" name="dummy1" value="">
-            <label for="dummy1" class="text-center u-pt2 u-pb2">dummy1<br>2，500円</label>
-          </div>
-          <div class="c-button-optionSelect">
-            <input type="checkbox" id="dummy2" name="dummy2" value="">
-            <label for="dummy2" class="text-center u-pt2 u-pb2">dummy2<br>2，500円</label>
-          </div>
-          <div class="c-button-optionSelect">
-            <input type="checkbox" id="dummy3" name="dummy3" value="">
-            <label for="dummy3" class="text-center u-pt2 u-pb2">dummy3<br>2，500円</label>
-          </div>
-          <div class="c-button-optionSelect">
-            <input type="checkbox" id="dummy4" name="dummy4" value="">
-            <label for="dummy4" class="text-center u-pt2 u-pb2">dummy4<br>2，500円</label>
-          </div>  --}}
         </div>
         <div class="l-flex--center l-grid--gap1 u-mt3">
           <button type="button" class="c-button__submit--gray modal_optionClose" onclick="closeOptionModal({{$modalId}})">閉じる</button>
@@ -69,6 +49,7 @@
   </div>
 
 <script>
+// オプションの選択時処理
 function handleOptionChange(goodId) {
   const checkboxElem = document.getElementById('modal_good_ids_' + goodId);
   const modalGoodNumElem = document.getElementById('modal_good_nums_' + goodId);
@@ -102,20 +83,5 @@ function changeQuantity(inputId, change) {
 
   updateTotalAmount(input);
 }
-
-{{--  // 合計金額を更新
-function updateTotalAmount(input) {
-  const modalAreaOption = input.closest('.modal-option');
-  const inputs = modalAreaOption.querySelectorAll('.c-buttonQuantity__input');
-  let totalAmount = 0;
-
-  inputs.forEach(input => {
-    const quantity = parseInt(input.value, 10);
-    const price = parseInt(input.getAttribute('data-price'), 10);
-    totalAmount += quantity * price;
-  });
-
-  modalAreaOption.querySelector('.total-amount').textContent = totalAmount;
-}  --}}
 
 </script>
