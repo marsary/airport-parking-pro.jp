@@ -9,7 +9,6 @@ use App\Models\Coupon;
 use App\Models\Deal;
 use App\Models\Good;
 use App\Models\GoodCategory;
-use App\Models\PaymentDetail;
 use App\Models\PaymentMethod;
 use App\Services\Deal\DealGoodsService;
 use App\Services\Deal\PaymentService;
@@ -27,7 +26,6 @@ class RegistersController extends Controller
     {
         $goodCategories = GoodCategory::with('goods')->get();
         $goods = Good::all();
-        // $deals = Deal::whereNot('status', DealStatus::CANCEL->value)->get();
         $today = Carbon::today();
         $coupons = Coupon::whereDate('start_date','<=', $today->toDateString())
             ->whereDate('end_date','>', $today->toDateString())
@@ -37,7 +35,6 @@ class RegistersController extends Controller
         return view('manage.registers.index', [
             'goodCategories' => $goodCategories,
             'goodsMap' => $goodsMap,
-            // 'deals' => $deals,
             'coupons' => $coupons,
             'paymentMethodCategoryMap' => PaymentMethod::getIdNameMapGroupedByCategory(),
             'dealId' => $request->input('deal_id'),
