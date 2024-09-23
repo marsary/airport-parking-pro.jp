@@ -353,6 +353,7 @@
 <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ asset('js/commons/tax.js') }}"></script>
 <script src="{{ asset('js/commons/coupons.js') }}"></script>
+<script src="{{ asset('js/pages/member/option_select.js') }}"></script>
 <!-- モーダル -->
 {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
 <!-- 決済画面をモーダルで表示するスクリプト-->
@@ -363,6 +364,7 @@
 <script>
   const goodsMap = @js($goodsMap);
   const dealId = @js($dealId);
+  let goodNums = {};
   let goodIds = [];
   let deal = null;
   let dealGoods = {};
@@ -408,20 +410,23 @@
       const goodId = parseInt(checkbox.value);
       if(checkbox.checked) {
         addingIds.push(goodId);
+        addGoodNums(goodId)
       } else {
         removingIds.push(goodId);
+        removeGoodNums(goodId)
       }
     });
 
     goodIds = addRemoveList(goodIds, addingIds, removingIds);
     goodIds.forEach(goodId => {
       if(dealGoods[goodId] == undefined) {
-        const good = goodsMap[goodId]
+        const good = goodsMap[goodId];
+        const goodNum = goodNums[goodId] ?? 0;
         dealGoods[goodId] = {
           good_id:goodId,
-          num:1,
-          total_price:good.price,
-          total_tax: calcTax(good.tax_type, good.price)
+          num:goodNum,
+          total_price:good.price * goodNum,
+          total_tax: calcTax(good.tax_type, good.price * goodNum)
         }
       }
     })
@@ -466,6 +471,15 @@
     })
   }
 
+
+  function addGoodNums(goodId) {
+    const modalGoodNumElem = document.getElementById('modal_good_nums_' + goodId);
+    goodNums[goodId] = (modalGoodNumElem.value != '') ? modalGoodNumElem.value:0;
+  }
+  function removeGoodNums(goodId) {
+    delete goodNums[goodId];
+  }
+
   function makeOptionRow(name, count, price, goodId) {
     const el = document.createElement('div');
     el.classList.add("p-register__optionItem")
@@ -496,7 +510,7 @@
     }
     switch(mode) {
       case '+':
-      dealGood.num += 1
+      dealGood.num = Number(dealGood.num) + 1
       break;
       case '-':
       dealGood.num -= 1
@@ -658,7 +672,10 @@
         if(isObject(json.data.dealGoods)) {
           dealGoods = json.data.dealGoods
         }
-        goodIds = Object.keys(dealGoods).map(goodId => parseInt(goodId))
+        Object.keys(dealGoods).map(goodId => {
+          goodIds.push(parseInt(goodId));
+          goodNums[goodId] = Number(dealGoods[goodId].num);
+        })
 
         toDealsShowLink.href = BASE_PATH + "/manage/deals/" + deal.id
         toMembersShowLink.href = BASE_PATH + "/manage/members/" + deal.member_id
