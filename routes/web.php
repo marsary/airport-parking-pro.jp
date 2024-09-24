@@ -11,6 +11,7 @@ Route::get('/', function () {
 Route::prefix('manage')->name('manage.')->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/', [\App\Http\Controllers\Manage\TopController::class, 'index'])->name('home');
+        Route::get('/marketing', [\App\Http\Controllers\Manage\TopController::class, 'marketing'])->name('marketing');
         Route::get('/deals/search', [\App\Http\Controllers\Manage\DealsController::class, 'search'])->name('deals.search');
         Route::get('/deals/search_export', [\App\Http\Controllers\Manage\DealsController::class, 'searchExport'])->name('deals.search_export');
 
@@ -30,6 +31,8 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::resource('reserves', \App\Http\Controllers\Manage\ReservesController::class);
 
         Route::get('ledger/inventories', [\App\Http\Controllers\Manage\LedgerController::class, 'inventories'])->name('ledger.inventories');
+        Route::get('ledger/bunch_issues', [\App\Http\Controllers\Manage\LedgerController::class, 'bunch_issues'])->name('ledger.bunch_issues');
+
 
         Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
         Route::get('marketing/graph/inventory/chart_by_day', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByDay'])->name('marketing.graph.inventory.chart_by_day');

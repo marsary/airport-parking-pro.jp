@@ -74,4 +74,10 @@ class LedgerController extends Controller
             ]);
         }
     }
+
+    public function bunch_issues(Request $request)
+    {
+        return view('manage.ledger.bunch_issues');
+    }
+
 }
