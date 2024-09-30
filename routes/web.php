@@ -18,10 +18,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('deals/{deal}/entry_date', [\App\Http\Controllers\Manage\DealsController::class, 'entryDate'])->name('deals.entry_date');
         Route::put('deals/{deal}/entry_date', [\App\Http\Controllers\Manage\DealsController::class, 'putEntryDate'])->name('deals.put_entry_date');
 
-        Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
         Route::put('deals/{deal}/update_goods', [\App\Http\Controllers\Manage\DealsController::class, 'updateGoods'])->name('deals.update_goods');
         Route::put('deals/{deal}/update_memo', [\App\Http\Controllers\Manage\DealsController::class, 'updateMemo'])->name('deals.update_memo');
         Route::put('deals/{deal}/unload', [\App\Http\Controllers\Manage\DealsController::class, 'unload'])->name('deals.unload');
+        Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
         Route::resource('registers', \App\Http\Controllers\Manage\RegistersController::class);
         Route::get('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
         Route::get('reserves/entry_info', [\App\Http\Controllers\Manage\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
@@ -32,7 +32,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
 
         Route::get('ledger/inventories', [\App\Http\Controllers\Manage\LedgerController::class, 'inventories'])->name('ledger.inventories');
         Route::get('ledger/bunch_issues', [\App\Http\Controllers\Manage\LedgerController::class, 'bunch_issues'])->name('ledger.bunch_issues');
-
+        Route::put('ledger/unload_all', [\App\Http\Controllers\Manage\LedgerController::class, 'unloadAll'])->name('ledger.unload_all');
 
         Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
         Route::get('marketing/graph/inventory/chart_by_day', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByDay'])->name('marketing.graph.inventory.chart_by_day');
