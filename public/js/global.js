@@ -37,7 +37,7 @@ function getToUrl(url = null, params = {}, withQueryStrings = true) {
  *
  * @param {HTMLTableElement} tableElem
  * @param {string} checkboxName
- * @returns
+ * @returns {Array}
  */
 function getTableCheckedRowValues(tableElem, checkboxName) {
     let valueArray = [];
@@ -88,6 +88,7 @@ function appendDataToFormElem(form, data) {
         }
     });
 }
+
 
 function isObject(obj)
 {
