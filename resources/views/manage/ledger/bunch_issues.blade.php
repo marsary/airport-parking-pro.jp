@@ -10,12 +10,24 @@
   <li class="l-breadcrumb__list">一括出庫処理</li>
 </ul>
 
+@include('include.messages.errors')
+
 <div class="l-container__inner" style="position: relative;">
+  <div id="pagination-section">
+    <div class="date_period">
+      <input type="date" name="start" id="start_date" value="{{request('start_date')}}" class="u-w210">
+      <span>～</span>
+      <input type="date" name="end" id="end_date" value="{{request('end_date')}}" class="u-w210">
+      <button id="filterBtn">絞込</button>
+    </div>
+    {{$deals->links('vendor/pagination/manage-list')}}
+  </div>
+
   <!-- 出庫一覧リスト -->
   <!-- 基本テキストは左揃え -->
   <form action="" class="contentTwo">
     <div class="l-table-list--scroll__wrapper u-mb3">
-      <table class="l-table-list--scroll --out --blue --sticky-second">
+      <table id="dealTable" class="l-table-list--scroll --out --blue --sticky-second">
         <thead>
           <tr>
             <th>
@@ -49,7 +61,59 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          @foreach ($deals as $deal)
+            <tr>
+              <td class="text-center"><input type="checkbox" id="sel_row_{{$deal->id}}" name="sel_row" class="u-mb0 process" value="{{$deal->id}}" /></td>
+              <td>
+                @if ($deal->payment()->exists())
+                  <span class="c-label__blue">清算済み</span>
+                @else
+                  <span class="c-label__deep-gray">未清算</span>
+                @endif
+              </td>
+              <td class="text-center">{{$deal->statusLabel}}</td>
+              <td class="u-font--white"><a href="#" data-deal_id="{{$deal->id}}" onclick="event.preventDefault();" class="c-label__green unloadBtn">処理</a></td>
+              <td>{{$deal->office->name}}</td>
+              <td class="text-center">{{$deal->id}}:{{$deal->unload_date_plan?->format('Y/m/d')}}:{{$deal->unload_date?->format('Y/m/d')}}</td> {{-- debug --}}
+              <td>{{$deal->name}}</td>
+              <td>{{$deal->member?->used_num}}</td>
+              <td>{{$deal->memberCar?->number}}</td>
+              <td>{{$deal->memberCar?->car->name}}</td>
+              <td>{{$deal->memberCar?->carColor->name}}</td>
+              <td>{{$deal->arrivalFlight?->airportTerminal->terminal_id}}</td>
+              <td>{{$deal->arrivalFlight?->name}}</td>
+              <td>{{formatDate($deal->arrivalFlight?->arrive_time, 'H:i')}}</td>
+              <td></td>
+              <td>{{$deal->arrivalFlight?->depAirport?->name}}</td>
+              <td class="text-center">{{$deal->num_members}}</td>
+              <td>
+                @php
+                  $isFirstDispItem = true;
+                @endphp
+                @foreach ($deal->dealGoods as $dealGood)
+                  {{--  good_category_idが1洗車のもの  --}}
+                  @if($dealGood->good->good_category_id == $senshaCategoryId)
+                    @if (!$isFirstDispItem)
+                      <br />
+                    @endif
+                    {{$dealGood->good->name}}
+                    @php
+                      $isFirstDispItem = false;
+                    @endphp
+                  @endif
+                @endforeach
+              </td>
+              <td></td>
+              <td></td>
+              <td>{{$deal->reserve_memo}}</td>
+              <td></td>
+              <td>{!! $deal->carCautions('<br />') !!}</td>
+              <td></td>
+              <td></td>
+              <td>{{$deal->receipt_code}}</td>
+            </tr>
+          @endforeach
+          {{--  <tr>
             <td class="text-center"><input type="checkbox" id="" name="" class="u-mb0 process" /></td>
             <td><span class="c-label__blue">清算済み</span></td>
             <td class="text-center">出庫済</td>
@@ -76,8 +140,8 @@
             <td></td>
             <td></td>
             <td>01231100709</td>
-          </tr>
-          <tr>
+          </tr>  --}}
+          {{--  <tr>
             <td class="text-center"><input type="checkbox" id="" name="" class="u-mb0 process" /></td>
             <td class="text-center"><span class="c-label__deep-gray">未清算</span></td>
             <td class="text-center">未出庫</td>
@@ -132,11 +196,16 @@
             <td></td>
             <td></td>
             <td>01231100709</td>
-          </tr>
+          </tr>  --}}
         </tbody>
       </table>
     </div><!-- /.l-table-list--scroll__wrapper -->
-    <button class="c-button__submit u-horizontal-auto">一括出庫処理</button>
+    <button id="unloadAllBtn" type="button" class="c-button__submit u-horizontal-auto">一括出庫処理</button>
+  </form>
+  <form id="updateStatusForm" action="{{route('manage.ledger.unload_all')}}" method="POST">
+    @csrf
+    @method('PUT')
+    <input id="deal_ids" type="hidden" name="deal_ids" value="">
   </form>
 </div><!-- ./l-container__inner -->
 </main>
@@ -147,11 +216,18 @@
 	<script src="//unpkg.com/@popperjs/core@2" defer></script>
 	<script src="//unpkg.com/tippy.js@6" defer></script>
 	<script src="//cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js" defer></script>
-	<script src="./js/calendar_inventory.js" defer></script>
+	{{--  <script src="./js/calendar_inventory.js" defer></script>  --}}
 
   <!-- // 出庫処理のすべてをチェックする処理 -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      const currentUrl = location.pathname;
+      const filterBtn = document.getElementById('filterBtn');
+      const unloadAllBtn = document.getElementById('unloadAllBtn');
+      const unloadBtns = Array.from(document.getElementsByClassName('unloadBtn'));
+      const dealTable = document.getElementById('dealTable');
+      const updateStatusForm = document.getElementById('updateStatusForm');
+      const dealIdsInput = document.getElementById('deal_ids');
         // 「一括処理」チェックボックスを取得
         const allCheckbox = document.querySelector('input[name="all"]');
         // テーブル内のすべてのチェックボックスを取得
@@ -163,6 +239,18 @@
                 checkbox.checked = allCheckbox.checked;
             });
         });
+
+
+        filterBtn.addEventListener('click', function() {
+          const startDate = document.getElementById('start_date').value;
+          const endDate = document.getElementById('end_date').value;
+          getToUrl(currentUrl, {
+            'start_date' : startDate,
+            'end_date' : endDate,
+          });
+        });
+
     });
   </script>
 @endpush
+
