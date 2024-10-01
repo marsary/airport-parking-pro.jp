@@ -52,7 +52,7 @@
     const pageNumberInput = document.getElementById('page_number');
     limitSelect.addEventListener('change', function() {
       const limitVal = limitSelect.value;
-      getToUrl(currentUrl, {'limit' : limitVal});
+      getToUrl(currentUrl, {'limit' : limitVal, 'page' : 1});
     })
 
     if(pageNumberInput) {
