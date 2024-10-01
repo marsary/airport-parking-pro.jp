@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Manage;
 
 use App\Enums\DealStatus;
 use App\Http\Controllers\Manage\Controller;
+use App\Http\Requests\Manage\BunchIssuesRequest;
+use App\Http\Requests\Manage\UnloadAllRequest;
 use App\Models\Deal;
 use App\Models\GoodCategory;
 use Carbon\Carbon;
@@ -75,9 +77,65 @@ class LedgerController extends Controller
         }
     }
 
-    public function bunch_issues(Request $request)
+    public function bunch_issues(BunchIssuesRequest $request)
     {
-        return view('manage.ledger.bunch_issues');
+        // dd($request->all());
+
+        $today = Carbon::today();
+
+        // 出庫一覧データ
+        $query = Deal::query()->withCount('payment')
+        ->whereIn('status', [
+            DealStatus::LOADED->value,
+            // DealStatus::UNLOADED->value,
+        ])
+        ->where(function ($q) use ($today) {
+            $q->where(function ($subQ) use ($today) {
+                $subQ->whereNotNull('unload_date')
+                ->where('unload_date', '<=', $today);
+            })
+            ->orWhere(function ($subQ) use ($today) {
+                $subQ->whereNull('unload_date')
+                    ->whereNotNull('unload_date_plan')
+                    ->where('unload_date_plan', '<=', $today);
+            });
+        });
+
+        if ($request->filled('start_date')) {
+            $start_date = Carbon::parse($request->start_date)->toDateString();
+            $query->where(function ($q) use ($start_date) {
+                $q->where('unload_date', '>=', $start_date)
+                  ->orWhere(function ($subQ) use ($start_date) {
+                      $subQ->whereNull('unload_date')
+                        ->whereNotNull('unload_date_plan')
+                        ->where('unload_date_plan', '>=', $start_date);
+                  });
+            });
+        }
+
+        if ($request->filled('end_date')) {
+            $end_date = Carbon::parse($request->end_date)->toDateString();
+            $query->where(function ($q) use ($end_date) {
+                $q->where('unload_date', '<=', $end_date)
+                  ->orWhere(function ($subQ) use ($end_date) {
+                      $subQ->whereNull('unload_date')
+                        ->whereNotNull('unload_date_plan')
+                        ->where('unload_date_plan', '<=', $end_date);
+                  });
+            });
+        }
+
+        $deals = $query->with(['member', 'arrivalFlight.depAirport', 'arrivalFlight.airportTerminal', 'memberCar.car', 'memberCar.carColor', 'dealGoods.good', 'carCautionMemberCars.carCaution','office'])
+            ->orderByRaw("COALESCE(unload_date, unload_date_plan) ASC")
+            ->paginate($request->input('limit') ?? 25)
+            ->withQueryString()
+            ;
+
+
+        return view('manage.ledger.bunch_issues', [
+            'deals' => $deals,
+            'senshaCategoryId' => GoodCategory::where('name', '洗車')->first()?->id
+        ]);
     }
 
 }
