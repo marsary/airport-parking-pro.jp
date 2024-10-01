@@ -9,7 +9,7 @@
 @if (count($errors) > 0)
   <div class="alert">
     <span class="closebtn">&times;</span>
-    <strong>バリデーションエラー!</strong>
+    <strong>入力エラー!</strong>
     <ul class="alert" role="alert">
       @foreach ($errors->all() as $error)
           <li>{{ $error }}</li>
