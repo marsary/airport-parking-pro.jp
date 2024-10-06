@@ -1,15 +1,7 @@
 <!-- G-15 割引クーポン設定 -->
-<!DOCTYPE html>
-<html lang="ja">
+@extends('layouts.manage.authenticated')
 
-<?php include_once '../include/head.php'; ?>
-
-<body>
-  <div class="l-wrap">
-    <?php include_once '../include/header.php'; ?>
-
-    <?php include_once '../include/nav.php'; ?>
-
+@section('content')
     <main class="l-wrap__main">
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb">
@@ -339,15 +331,14 @@
     </div><!-- ./l-modal inner -->
     <!-- 閉じる・追加ボタン -->
   </div>
+@endsection
+@push("scripts")
   <!-- button_openを押したらbutton_closeにis-blockを付与 -->
-  <script src="../js/memo_open.js"></script>
+  <script src="{{ asset('js/memo_open.js') }}"></script>
 
   <!-- モーダル -->
-  <script src="../js/modalOption.js"></script>
+  <script src="{{ asset('js/modalOption.js') }}"></script>
 
   <!-- テーブルのヘッダ部分ソートスクリプト -->
-  <script src="../js/tableHeaderSort.js"></script>
-
-</body>
-
-</html>
+  <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
+@endpush

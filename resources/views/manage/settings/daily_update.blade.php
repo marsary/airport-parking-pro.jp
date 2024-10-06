@@ -1,14 +1,7 @@
 <!-- J-1 日次更新  -->
-<!DOCTYPE html>
-<html lang="ja">
+@extends('layouts.manage.authenticated')
 
-<?php include_once 'include/head.php'; ?>
-
-<body>
-  <div class="l-wrap">
-    <?php include_once 'include/header.php'; ?>
-    <?php include_once 'include/nav.php'; ?>
-
+@section('content')
     <main class="l-wrap__main">
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb">
@@ -53,6 +46,4 @@
       </div>
     </main>
   </div>
-</body>
-
-</html>
+@endsection

@@ -1,14 +1,7 @@
 <!-- G-8 商品設定 -->
-<!DOCTYPE html>
-<html lang="ja">
-<?php include_once '../include/head.php'; ?>
+@extends('layouts.manage.authenticated')
 
-<body>
-  <div class="l-wrap">
-    <?php include_once '../include/header.php'; ?>
-
-    <?php include_once '../include/nav.php'; ?>
-
+@section('content')
     <main class="l-wrap__main">
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb">
@@ -256,11 +249,13 @@
     </div><!-- ./l-modal inner -->
     <!-- 閉じる・追加ボタン -->
   </div>
+@endsection
+@push("scripts")
   <!-- モーダル -->
-  <script src="../js/modalOption.js"></script>
+  <script src="{{ asset('js/modalOption.js') }}"></script>
 
   <!-- 閉じるボタン -->
-  <script src="../js/close_button_toggle.js"></script>
+  <script src="{{ asset('js/close_button_toggle.js') }}"></script>
   <!-- メモボタン/button_openを押したらbutton_closeにis-blockを付与 -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -285,7 +280,5 @@
   </script>
 
   <!-- テーブルヘッダー用ソートのスクリプト -->
-  <script src="../js/tableHeaderSort.js"></script>
-</body>
-
-</html>
+  <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
+@endpush

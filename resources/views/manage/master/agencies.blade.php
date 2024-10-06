@@ -1,15 +1,9 @@
 <!-- 代理店設定 -->
 <!-- agency-setting.php -->
 <!-- G-3 -->
-<!DOCTYPE html>
-<html lang="ja">
-<?php include_once '../include/head.php'; ?>
-<body>
-  <div class="l-wrap">
-    <?php include_once '../include/header.php'; ?>
+@extends('layouts.manage.authenticated')
 
-    <?php include_once '../include/nav.php'; ?>
-
+@section('content')
     <main class="l-wrap__main">
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb">
@@ -266,7 +260,8 @@
     </div><!-- ./l-modal inner -->
     <!-- 閉じる・追加ボタン -->
   </div>
-
+@endsection
+@push("scripts")
   <!-- ファイルアップロードの時、ファイル名/画像表示スクリプト -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -358,11 +353,9 @@
     }
   </script>
   <!-- モーダル -->
-  <script src="../js/modalOption.js"></script>
+  <script src="{{ asset('js/modalOption.js') }}"></script>
   <!-- ソートスクリプト -->
-  <script src="../js/tableHeaderSort.js"></script>
+  <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
   <!-- 閉じるボタン -->
-  <script src="../js/close_button_toggle.js"></script>
-
-</body>
-</html>
+  <script src="{{ asset('js/close_button_toggle.js') }}"></script>
+@endpush

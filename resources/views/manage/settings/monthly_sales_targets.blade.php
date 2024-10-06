@@ -1,14 +1,7 @@
 <!-- L-3 売上目標設定と実績​ -->
-<!DOCTYPE html>
-<html lang="ja">
-<?php include_once '../include/head.php'; ?>
+@extends('layouts.manage.authenticated')
 
-<body>
-  <div class="l-wrap">
-    <?php include_once '../include/header.php'; ?>
-
-    <?php include_once '../include/nav.php'; ?>
-
+@section('content')
     <main class="l-wrap__main">
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb">
@@ -606,12 +599,13 @@
     </div><!-- ./l-modal inner -->
     <!-- 閉じる・追加ボタン -->
   </div>
-
+@endsection
+@push("scripts")
   <!-- モーダルスクリプト -->
-  <script src="../js/modalOption.js"></script>
+  <script src="{{ asset('js/modalOption.js') }}"></script>
 
   <!-- カレンダー（year選択） -->
-  <script src="../js/yearList.js"></script>
+  <script src="{{ asset('js/yearList.js') }}"></script>
 
   <!-- ファイルアップロードの時スクリプト -->
   <script>
@@ -707,6 +701,4 @@
   });
 });
   </script>
-</body>
-
-</html>
+@endpush

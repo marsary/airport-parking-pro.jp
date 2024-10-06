@@ -1,15 +1,7 @@
 <!-- マスタ登録 -->
-<!-- register.php -->
-<!-- G-0 -->
-<!DOCTYPE html>
-<html lang="ja">
-<?php include_once '../include/head.php'; ?>
-<body>
-  <div class="l-wrap">
-  <?php include_once '../include/header.php'; ?>
+@extends('layouts.manage.authenticated')
 
-  <?php include_once '../include/nav.php'; ?>
-
+@section('content')
   <main class="l-wrap__main">
     <!-- パンくず -->
     <ul class="l-wrap__breadcrumb l-breadcrumb">
@@ -60,9 +52,9 @@
 
     </div>
   </main>
-
-  </div>
-
+</div>
+@endsection
+@push("scripts")
   <!-- ファイルアップロードの時、ファイル名表示スクリプト -->
    <script>
     let uploadedFiles = 0;
@@ -112,5 +104,4 @@
     setupForm('.p-master-register__item:nth-child(2)', 'airportFileInput', 'airportFileNameDisplay');
     setupForm('.p-master-register__item:nth-child(3)', 'flightFileInput', 'flightFileNameDisplay');
   </script>
-</body>
-</html>
+@endpush
