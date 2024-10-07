@@ -138,4 +138,25 @@ class LedgerController extends Controller
         ]);
     }
 
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function unloadAll(UnloadAllRequest $request)
+    {
+        $now = Carbon::now();
+        try {
+            Deal::whereIn('id', $request->deal_id)->update([
+                'status' => DealStatus::UNLOADED->value,
+                'unload_date' => $now->toDateString(),
+                'unload_time' => $now->toTimeString(),
+            ]);
+
+        } catch (\Throwable $th) {
+            return back()->with('failure', 'ステータスを出庫済みへ変更する際にエラーが発生しました。');
+        }
+
+        return redirect()->route('manage.ledger.bunch_issues');
+    }
+
 }
