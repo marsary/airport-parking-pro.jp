@@ -738,11 +738,11 @@
   })
 
   // 数量変更ボタンのイベントリスナーを設定
-  {{--  document.querySelectorAll('.c-button-quantity').forEach(function(button) {
+  document.querySelectorAll('.c-button-quantity').forEach(function(button) {
     button.addEventListener('click', function() {
       handleClickQuantityButton(button)
     });
-  });  --}}
+  });
 
   function handleClickQuantityButton(button) {
       // オプションアイテムの要素を取得

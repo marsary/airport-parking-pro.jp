@@ -39,6 +39,7 @@
     <script src="{{ asset('js/request.js') }}" defer></script>
     <script src="{{ asset('js/luxon.min.js') }}" defer></script>
     <script src="{{ asset('js/global.js') }}" defer></script>
+    <script src="{{ asset('js/qrStickyHandler.js') }}" defer></script>
   </head>
   <body>
     <div class="l-wrap">
