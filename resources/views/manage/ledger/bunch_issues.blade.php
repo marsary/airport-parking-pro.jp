@@ -249,8 +249,48 @@
             'end_date' : endDate,
           });
         });
+        unloadAllBtn.addEventListener('click', function() {
+          const dealIds = getTableCheckedRowValues(dealTable, "sel_row");
+
+          if (dealIds.length > 0) {
+            dealIdsInput.value = dealIds;
+            updateStatusForm.submit();
+          }
+        });
+        unloadBtns.forEach(unloadBtn => unloadBtn.addEventListener('click', function(e) {
+          dealId = e.currentTarget.dataset.deal_id
+          dealIdsInput.value = dealId;
+          updateStatusForm.submit();
+        }));
 
     });
   </script>
+@endpush
+@push('css')
+<style>
+  #pagination-section {
+  display: flex;
+  justify-content: end;
+  gap: 3%;
+}
+.date_period {
+  display: flex;
+  gap:2%;
+}
+#filterBtn {
+  width: 72px;
+  background-color: black;
+  color: white;
+  border-radius: .5rem;
+  height: 38px;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 500;
+}
+#filterBtn:hover {
+  opacity: .8;
+}
+</style>
 @endpush
 
