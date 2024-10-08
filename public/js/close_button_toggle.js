@@ -14,13 +14,13 @@ closeButtons.forEach((closeButton, index) => {
 });
 
 // シンプルな表示非表示の切り替え
-const openButton    = document.getElementById('open_button'); 
+const openButton    = document.getElementById('open_button');
 const closeButton   = document.getElementById('close_button');
 const toggleElement = document.getElementById('toggle_element');
 
-openButton.addEventListener('click', () => {
+openButton?.addEventListener('click', () => {
   toggleElement.classList.remove('is-none');
 });
-closeButton.addEventListener('click', () => {
+closeButton?.addEventListener('click', () => {
   toggleElement.classList.add('is-none');
 });
