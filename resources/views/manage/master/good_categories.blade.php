@@ -9,6 +9,8 @@
         </li>
       </ul>
 
+      @include('include.messages.errors')
+
       <div class="l-container__inner">
         <h2 class="c-title__lv2 l-flex--sb u-w-full-wide">新規登録 および 検索<span class="close_button c-button__close">閉じる</span></h2>
         <form method="GET" action="{{route('manage.master.good_categories.index')}}" class="u-mb4 u-font--md is-active">
@@ -101,8 +103,26 @@
     </main>
 
   </div>
+  @include('manage.master.components.good_category_modal', [
+    'mode' => 'new',
+    'label' => '新規登録',
+    'method' => 'POST',
+    'action' => route('manage.master.good_categories.store'),
+    'goodCategory' => null,
+    ]
+  )
 
   <!-- 「編集」をクリックしたら出てくるmodal -->
+  @foreach ($goodCategories as $goodCategory)
+    @include('manage.master.components.good_category_modal', [
+      'mode' => 'edit',
+      'label' => '編集',
+      'method' => 'PUT',
+      'action' => route('manage.master.good_categories.update', [$goodCategory->id]),
+      'goodCategory' => $goodCategory,
+      ]
+    )
+  @endforeach
   {{--  <div id="modalAreaOption" class="l-modal isd-active">
     <!-- モーダルのinnerを記述   -->
     <div class="l-modal__inner l-modal--trash">
@@ -160,4 +180,33 @@
   <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
   <!-- 閉じるボタン -->
   <script src="{{ asset('js/close_button_toggle.js') }}"></script>
+  <script>
+    let createModal;
+    let modalAreaOptions;
+    let modalCloseOption;
+    //const modalButtons = document.querySelectorAll('.button_select');
+
+    function openCreateModal() {
+      createModal.classList.add('is-active');
+    }
+    function openEditModal(goodCategoryId) {
+      document.getElementById(`modalAreaOption_edit_${goodCategoryId}`).classList.add('is-active');
+    }
+    function closeCreateModal() {
+      createModal.classList.remove('is-active');
+    }
+    function closeEditModal(goodCategoryId) {
+      document.getElementById(`modalAreaOption_edit_${goodCategoryId}`).classList.remove('is-active');
+    }
+    function deleteGoodCategory(goodCategoryId) {
+      document.getElementById(`delete_${goodCategoryId}_form`).submit();
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      createModal = document.getElementById('modalAreaOption_new_');
+      modalAreaOptions = document.querySelectorAll('.modal_area');
+      modalCloseOption = document.querySelectorAll('.modal_optionClose');
+    })
+
+  </script>
 @endpush
