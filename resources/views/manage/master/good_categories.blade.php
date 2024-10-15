@@ -208,5 +208,6 @@
       modalCloseOption = document.querySelectorAll('.modal_optionClose');
     })
 
+    document.querySelectorAll('.l-table-list th .sort-enable').forEach(th => th.onclick = (e) => sortRows(e, '.l-table-list'));
   </script>
 @endpush
