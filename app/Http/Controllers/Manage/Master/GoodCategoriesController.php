@@ -34,7 +34,7 @@ class GoodCategoriesController extends Controller
             'office_id' => config('const.commons.office_id'),
             'name' => $request->name,
             'type' => $request->type,
-            'regi_display_flag' => RegiDisplayFlag::REGI->value, // TODO デフォルトはどれか？
+            'regi_display_flag' => RegiDisplayFlag::RESERVE_ONLY->value,
             'memo' => $request->memo,
         ]);
 
