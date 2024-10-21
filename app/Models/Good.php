@@ -18,6 +18,7 @@ class Good extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'office_id',
         'good_category_id',
         'status',
         'name',
@@ -28,6 +29,7 @@ class Good extends Model
         'start_date',
         'end_date',
         'sort',
+        'regi_display_flag',
         'memo',
         'created_by',
         'updated_by',
@@ -50,5 +52,10 @@ class Good extends Model
     public function goodCategory()
     {
         return $this->belongsTo(GoodCategory::class);
+    }
+
+    public function totalPrice()
+    {
+        return $this->price + $this->tax;
     }
 }
