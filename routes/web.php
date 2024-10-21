@@ -49,9 +49,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('/master/departure_flights', [\App\Http\Controllers\Manage\Master\DepartureFlightsController::class, 'index'])->name('departure_flights');
         Route::prefix('master')->name('master.')->group(function () {
             Route::resource('/good_categories', \App\Http\Controllers\Manage\Master\GoodCategoriesController::class);
+            Route::resource('/goods', \App\Http\Controllers\Manage\Master\GoodsController::class);
         });
         // Route::get('/master/good_categories', [\App\Http\Controllers\Manage\Master\GoodCategoriesController::class, 'index'])->name('good_categories');
-        Route::get('/master/goods', [\App\Http\Controllers\Manage\Master\GoodsController::class, 'index'])->name('goods');
+        // Route::get('/master/goods', [\App\Http\Controllers\Manage\Master\GoodsController::class, 'index'])->name('goods');
 
         Route::get('/settings/daily_update', [\App\Http\Controllers\Manage\Settings\DailyUpdateController::class, 'index'])->name('daily_update');
         Route::get('/settings/monthly_sales_targets', [\App\Http\Controllers\Manage\Settings\MonthlySalesTargetsController::class, 'index'])->name('monthly_sales_targets');
