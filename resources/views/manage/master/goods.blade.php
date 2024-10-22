@@ -8,25 +8,30 @@
         <li class="l-breadcrumb__list">商品設定</li>
       </ul>
 
+      @include('include.messages.errors')
+
       <div class="l-container__inner">
         <h2 class="c-title__lv2 l-flex--sb u-w-full-wide">新規登録 および 検索<span class="close_button c-button__close">閉じる</span></h2>
-        <form method="POST" action="" class="u-mb3 is-active">         
+        <form method="GET" action="{{route('manage.master.goods.index')}}" class="u-mb3 is-active">
             <div class="l-grid--col2-1fr_auto l-grid--end l-grid--gap1 u-mb2">
               <div class="l-grid--col2 l-grid--gap1">
                 <div>
                   <!-- 商品名 -->
-                  <label for="product_name" class="u-font--md">商品名</label>
-                  <input type="text" name="product_name" id="product_name" class="u-w-full-wide u-mb0">
+                  <label for="name" class="u-font--md">商品名</label>
+                  <input type="text" name="name" id="name" value="{{request('name')}}" class="u-w-full-wide u-mb0">
                 </div>
                 <div>
                   <!-- カテゴリーselect -->
                   <label for="category" class="u-font--md">カテゴリー</label>
                   <div class="c-form-select-color u-mb0">
-                    <select name="category" id="category">
-                      <option value="" disabled selected>選択してください</option>
-                      <option value="category1">カテゴリ1</option>
-                      <option value="category2">カテゴリ2</option>
-                      <option value="category3">カテゴリ3</option>
+                    <select name="good_category_id" id="good_category_id">
+                      <option value="" selected>選択してください</option>
+                      @foreach ($goodCategories as $goodCategory)
+                        <option value="{{ $goodCategory->id }}"
+                          {{request('good_category_id')==$goodCategory->id ? 'selected':''}}>
+                          {{$goodCategory->name }}
+                        </option>
+                      @endforeach
                     </select>
                   </div>
                 </div>
@@ -35,7 +40,7 @@
           </div>
 
           <div class="l-flex l-flex--center l-grid--gap1">
-            <button type="button" class="c-button__register button_select">新規登録</button>
+            <button type="button" class="c-button__register button_select" onclick="openCreateModal()">新規登録</button>
           </div>
         </form>
 
@@ -44,7 +49,7 @@
         <table class="l-table-list">
           <thead class="l-table-list__head l-table-list__head--sort l-table-list--scroll-vertical__head">
             <tr>
-              <th><div class="c-button-sort --asc">商品名</div></th>
+              <th><div class="c-button-sort sort-enable --asc">商品名</div></th>
               <th><div class="c-button-sort">略称</div></th>
               <th><div class="c-button-sort">商品カテゴリ</div></th>
               <th><div class="c-button-sort">税区分</div></th>
@@ -55,210 +60,101 @@
           </thead>
 
           <tbody class="l-table-list__body">
-            <tr>
-              <td>洗車</td>
-              <td>S洗</td>
-              <td>洗車</td>
-              <td class="text-right">10%</td>
-              <td class="text-right">20,000円</td>
-              <td class="c-balloon-memo">
-                <button type="button" class="button_open c-button__memo">メモ</button>
-                <!-- 吹き出し -->
-                <div class="c-balloon-memo__box">
-                  <div class="c-balloon-memo__text">メモ内容が入ります。メモ内容が入ります。
-                    <div class="button_close c-balloon-memo__close">閉じる</div>
+            @foreach ($goods as $good)
+              <tr>
+                <td>{{$good->name}}</td>
+                <td>{{$good->abbreviation}}</td>
+                <td>{{$good->goodCategory->name}}</td>
+                <td class="text-right">{{\App\Enums\TaxType::tryFrom($good->tax_type)?->label()}}</td>
+                <td class="text-right">{{$good->price}}円</td>
+                <td class="c-balloon-memo">
+                  <button type="button" class="button_open c-button__memo">メモ</button>
+                  <!-- 吹き出し -->
+                  <div class="c-balloon-memo__box">
+                    <div class="c-balloon-memo__text">{{$good->memo}}
+                      <div class="button_close c-balloon-memo__close">閉じる</div>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>S洗</td>
-              <td>洗車</td>
-              <td class="text-right">10%</td>
-              <td class="text-right">00,000円</td>
-              <td class="c-balloon-memo">
-                <button type="button" class="button_open c-button__memo">メモ</button>
-                <!-- 吹き出し -->
-                <div class="c-balloon-memo__box">
-                  <div class="c-balloon-memo__text">メモ内容が入ります。メモ内容が入ります。
-                    <div class="button_close c-balloon-memo__close">閉じる</div>
-                  </div>
-                </div>
-              </td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>S洗</td>
-              <td>洗車</td>
-              <td class="text-right">10%</td>
-              <td class="text-right">00,000円</td>
-              <td class="c-balloon-memo text-center">
-                <button type="button" class="button_open c-button__memo">メモ</button>
-                <!-- 吹き出し -->
-                <div class="c-balloon-memo__box">
-                  <div class="c-balloon-memo__text">メモ内容が入ります。メモ内容が入ります。
-                    <div class="button_close c-balloon-memo__close">閉じる</div>
-                  </div>
-                </div>
-              </td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>S洗</td>
-              <td>洗車</td>
-              <td class="text-right">10%</td>
-              <td class="text-right">00,000円</td>
-              <td class="c-balloon-memo text-center">
-                <button type="button" class="button_open c-button__memo">メモ</button>
-                <!-- 吹き出し -->
-                <div class="c-balloon-memo__box">
-                  <div class="c-balloon-memo__text">メモ内容が入ります。メモ内容が入ります。
-                    <div class="button_close c-balloon-memo__close">閉じる</div>
-                  </div>
-                </div>
-              </td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>S洗</td>
-              <td>洗車</td>
-              <td class="text-right">10%</td>
-              <td class="text-right">00,000円</td>
-              <td class="c-balloon-memo text-center">
-                <button type="button" class="button_open c-button__memo">メモ</button>
-                <!-- 吹き出し -->
-                <div class="c-balloon-memo__box">
-                  <div class="c-balloon-memo__text">メモ内容が入ります。メモ内容が入ります。
-                    <div class="button_close c-balloon-memo__close">閉じる</div>
-                  </div>
-                </div>
-              </td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>S洗</td>
-              <td>洗車</td>
-              <td class="text-right">10%</td>
-              <td class="text-right">00,000円</td>
-              <td class="c-balloon-memo text-center">
-                <button type="button" class="button_open c-button__memo">メモ</button>
-                <!-- 吹き出し -->
-                <div class="c-balloon-memo__box c-balloon-memo--master__box">
-                  <div class="c-balloon-memo--master__text">メモ内容が入ります。メモ内容が入ります。
-                    <div class="button_close c-balloon-memo__close">閉じる</div>
-                  </div>
-                </div>
-              </td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
+                </td>
+                <td><button class="c-button__edit button_select" onclick="openEditModal({{$good->id}})">編集</button></td>
+              </tr>
+            @endforeach
           </tbody>
         </table>
       </div><!-- ./l-container__inner -->
     </main><!-- /.l-container__main -->
   </div><!-- /.l-container__wrap -->
+  @include('manage.master.components.good_modal', [
+    'mode' => 'new',
+    'label' => '新規登録',
+    'method' => 'POST',
+    'action' => route('manage.master.goods.store'),
+    'good' => null,
+    ]
+  )
 
   <!-- 「編集」をクリックしたら出てくるmodal -->
-  <div id="modalAreaOption" class="l-modal">
-    <!-- モーダルのinnerを記述   -->
-    <div class="l-modal__inner l-modal--trash">
-      <div class="l-modal__head">編集</div>
-      <!-- close button -->
-      <div class="l-modal__close modal_optionClose">×</div>
-      <div class="l-modal__content">
-        <form class="l-flex--column l-flex--column l-flex--sb u-w-full">
-          <div class="u-w-full-wide">
-            <div class="c-title__modal--lv3">商品カテゴリー編集</div>
-            <div class="l-modal--product-edit">
-              <!-- 1列目 -->
-              <dl>
-                <dt>商品名</dt>
-                <dd>
-                  <input type="text" class="u-w-full-wide">
-                </dd>          
-              </dl>
-              <div class="l-grid--col2 l-grid--gap1">
-                <dl>
-                  <dt>
-                    カテゴリー
-                  </dt>
-                  <dd class="c-form-select-color u-mb0">
-                    <select name="" id="">
-                      <option value="">洗車</option>
-                      <option value="">オプション</option>
-                    </select>
-                  </dd>
-                </dl>
-                <dl>
-                  <dt>
-                    税区分
-                  </dt>
-                  <dd class="c-form-select-color u-mb0">
-                    <select name="" id="tax_division">
-                      <option value="1.1">10%</option>
-                      <option value="1.08">8%</option>
-                    </select>
-                  </dd>
-                </dl>
-              </div>
-  
-              <!-- 2列目 -->
-              <dl>
-                <dt>略称</dt>
-                <dd>
-                  <input type="text" class="u-w-full-wide">
-                </dd>          
-              </dl>
-              <dl>
-                <dt>金額（税抜）</dt>
-                <dd>
-                  <input type="text" id="price" class="u-w-full-wide">
-                </dd>
-              </dl>
-  
-              <!-- 3列目 -->
-              <dl>
-                <dt>説明</dt>
-                <dd>
-                  <input type="text" class="u-w-full-wide">
-                </dd>          
-              </dl>
+  @foreach ($goods as $good)
+    @include('manage.master.components.good_modal', [
+      'mode' => 'edit',
+      'label' => '編集',
+      'method' => 'PUT',
+      'action' => route('manage.master.goods.update', [$good->id]),
+      'good' => $good,
+      ]
+    )
+  @endforeach
 
-              <div class="l-flex l-flex--space-between u-border--bottom u-pb05">
-                <label for="total">税込価格</label>
-                <span id="total" class="u-font--24 text-right">0円</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="l-flex--center l-grid--gap1 u-mt4 u-mb2">
-            <button type="submit" id="modal_add" class="c-button__submit">保存</button>
-          </div>
-        </form>
-      </div><!-- ./l-modal__content -->
-
-      <!-- データ削除ボタン -->
-      <div class="l-modal__trashButton">
-        <img src="../images/svg/trash.svg" alt="ゴミ箱" width="100%" class="l-modal--trashButton">
-      </div>
-    </div><!-- ./l-modal inner -->
-    <!-- 閉じる・追加ボタン -->
-  </div>
 @endsection
 @push("scripts")
+  <script src="{{ asset('js/commons/tax.js') }}"></script>
   <!-- モーダル -->
-  <script src="{{ asset('js/modalOption.js') }}"></script>
-
+  {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
+  <!-- テーブルヘッダー用ソートのスクリプト -->
+  <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
   <!-- 閉じるボタン -->
   <script src="{{ asset('js/close_button_toggle.js') }}"></script>
   <!-- メモボタン/button_openを押したらbutton_closeにis-blockを付与 -->
   <script>
+    let createModal;
+    let modalAreaOptions;
+    let modalCloseOption;
+
+    function openCreateModal() {
+      createModal.classList.add('is-active');
+    }
+    function openEditModal(goodId) {
+      document.getElementById(`modalAreaOption_edit_${goodId}`).classList.add('is-active');
+    }
+    function closeCreateModal() {
+      createModal.classList.remove('is-active');
+    }
+    function closeEditModal(goodId) {
+      document.getElementById(`modalAreaOption_edit_${goodId}`).classList.remove('is-active');
+    }
+    function deleteGood(goodId) {
+      document.getElementById(`delete_${goodId}_form`).submit();
+    }
+
+    // 税区分と金額（税込）が設定された場合に、税込金額を表示します。
+    function dispTotal(goodId = null) {
+      goodId = goodId ?? '';
+      const totalElem = document.getElementById(`total_${goodId}`);
+      const priceElem = document.getElementById(`price_${goodId}`);
+      const taxTypeElem = document.getElementById(`tax_type_${goodId}`);
+
+      if(priceElem.value != '' && taxTypeElem.value != '') {
+        const price = Number(priceElem.value);
+        totalElem.textContent = formatCurrency(price + calcTax(taxTypeElem.value, price), '', '円');
+      }
+    }
+
+
     document.addEventListener('DOMContentLoaded', function() {
+      createModal = document.getElementById('modalAreaOption_new_');
+      modalAreaOptions = document.querySelectorAll('.modal_area');
+      modalCloseOption = document.querySelectorAll('.modal_optionClose');
+
       const buttonOpenList = document.querySelectorAll('.button_open');
       const buttonCloseList = document.querySelectorAll('.button_close');
       const balloonBoxList = document.querySelectorAll('.c-balloon-memo__box');
@@ -277,8 +173,8 @@
         });
       });
     });
+
+    document.querySelectorAll('.l-table-list th .sort-enable').forEach(th => th.onclick = (e) => sortRows(e, '.l-table-list'));
   </script>
 
-  <!-- テーブルヘッダー用ソートのスクリプト -->
-  <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
 @endpush
