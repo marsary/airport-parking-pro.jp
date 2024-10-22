@@ -18,12 +18,14 @@ class GoodFactory extends Factory
     {
         $price = fake()->randomNumber(4);
         return [
+            'office_id' => \App\Models\Office::first(),
             'good_category_id' => \App\Models\GoodCategory::inRandomOrder()->first(),
             'name' => '商品',
             'price' => $price,
             'tax_type' => fake()->randomElement([1,2]) , //1：8％、2：10％、3：対象外
             'start_date' => '2024-01-01',
             'end_date' => '2026-01-01',
+            'regi_display_flag' => 1,
         ];
     }
 }
