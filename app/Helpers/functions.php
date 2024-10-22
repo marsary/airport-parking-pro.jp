@@ -32,6 +32,16 @@ function formatDate($date, $format = 'Y-m-d')
     return $date ? $date->format($format): '';
 }
 
+/**
+ * DBの日時最大値を返す
+ *
+ * @return Carbon
+ */
+function maxDateTime()
+{
+    return Carbon::create(9999, 12, 31, 23, 59, 59);
+}
+
 function getKeyMapCollection(Collection $collect, $key = "id")
 {
     return  $collect->mapWithKeys(function ($item) use($key) {
