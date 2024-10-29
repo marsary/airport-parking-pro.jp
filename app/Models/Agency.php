@@ -54,4 +54,38 @@ class Agency extends Model
             }
         );
     }
+
+    /**
+     * パスからURLを生成
+     *
+     * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function logoUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                if($attributes['logo_image']) {
+                    return Storage::disk('uploads')->url($attributes['logo_image']);
+                }
+                return null;
+            }
+        );
+    }
+
+    /**
+     * パスからURLを生成
+     *
+     * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function campaignImageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value, $attributes) {
+                if($attributes['campaign_image']) {
+                    return Storage::disk('uploads')->url($attributes['campaign_image']);
+                }
+                return null;
+            }
+        );
+    }
 }
