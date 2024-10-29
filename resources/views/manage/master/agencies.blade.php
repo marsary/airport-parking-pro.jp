@@ -10,48 +10,56 @@
         <li class="l-breadcrumb__list">代理店設定</li>
       </ul>
 
+      @include('include.messages.errors')
+
       <div class="l-container__inner">
       <h2 class="c-title__lv2 l-flex--sb u-w-full-wide">料金設定登録<span class="close_button c-button__close">閉じる</span></h2>
 
-      <form action="" method="post" enctype="multipart/form-data" class="l-grid__right-submitButton l-grid__agency u-mb3-half is-active">
+      <form action="{{route('manage.master.agencies.index')}}" method="get" class="l-grid__right-submitButton l-grid__agency u-mb3-half is-active">
         <div>
           <div class="l-grid__agency--up">
             <div class="l-grid--col3 l-grid--cgap2-half">
               <div>
-                <label for="agency_code">代理店コード</label>
-                <input type="text" id="agency_code" name="agency_code">
+                <label for="code">代理店コード</label>
+                <input type="text" id="code" name="code" value="{{request('code')}}">
               </div>
               <div>
-                <label for="company_name">社名</label>
-                <input type="text" id="company_name" name="company_name">
+                <label for="name">社名</label>
+                <input type="text" id="name" name="name" value="{{request('name')}}">
               </div>
             </div>
-            
+
             <div style="width: 33%;padding-right:1.25rem;">
               <label for="tel">電話番号</label>
-              <input type="text" id="tel" name="tel">
+              <input type="text" id="tel" name="tel" value="{{request('tel')}}">
             </div>
-            
+
             <!-- LAST -->
             <div>
-              <label for="search_keywords">検索用キーワード</label>
-              <input type="text" id="search_keywords" name="search_keywords" class="u-mb0">
+              <label for="keyword">検索用キーワード</label>
+              <input type="text" id="keyword" name="keyword" value="{{request('keyword')}}" class="u-mb0">
             </div>
           </div>
         </div><!-- ./left -->
         <!-- 登録ボタン -->
         <div class="l-grid__right-submitButton--button c-button__csv--upload">
           <button type="submit" class="c-button__register">検索</button>
-          <button type="button" class="c-button__register  --gray button_select">新規登録</button>
+          <button type="button" class="c-button__register  --gray button_select" onclick="openCreateModal()">新規登録</button>
           <!-- <a href="" download="" class="c-button__load" style="text-decoration: none;">CSVダウンロード</a> -->
           <button type="button" class="c-button__load upload">CSVアップロード</button>
-          <input type="file" id="csvFileInput" />
           <div>
             <div id="csvFileNameDisplay" class="u-pt-1 u-w160 l-position__upload u-mb025"></div>
-            <input type="submit" value="登録" class="c-button__register fileUpload u-mb0" disabled>
+            <input type="submit" value="登録" class="c-button__register fileUpload u-mb0" form="csv-upload-form" disabled>
           </div>
         </div>
 
+      </form>
+      <form id="csv-upload-form" action="{{route('manage.master.agencies.upload')}}" method="POST" enctype="multipart/form-data">
+        @method('POST')
+        @csrf
+        <div class="c-button__csv--upload">
+          <input type="file" name="csvFileInput" id="csvFileInput" />
+        </div>
       </form>
 
       <h2 class="c-title__lv2 l-flex--sb u-w-full-wide">登録済み 代理店設定一覧</h2>
@@ -61,7 +69,7 @@
         <table class="l-table-list l-table-list--agency_setting__table">
           <thead>
             <tr class="l-table-list__head l-table-list--agency_setting__head u-font-nowrap">
-              <th><div class="c-button-sort --desc">社名</div></th>
+              <th><div class="c-button-sort sort-enable --desc">社名</div></th>
               <th><div class="c-button-sort">支店名</div></th>
               <th><div class="c-button-sort">住所</div></th>
               <th><div class="c-button-sort">電話番号</div></th>
@@ -73,7 +81,22 @@
             </tr>
           </thead>
           <tbody class="l-table-list__body">
-            <tr>
+            @foreach ($agencies as $agency)
+              <tr>
+                <td>{{$agency->name}}</td>
+                <td>{{$agency->branch}}</td>
+                <td>{{$agency->address}}</td>
+                <td>{{$agency->tel}}</td>
+                <td>{{$agency->department}}</td>
+                <td>{{$agency->position}}</td>
+                <td>{{$agency->person}}</td>
+                <td>{{$agency->email}}</td>
+                <td>
+                  <button class="c-button__edit button_select" onclick="openEditModal({{$agency->id}})">編集</button>
+                </td>
+              </tr>
+            @endforeach
+            {{--  <tr>
               <td>代理店1</td>
               <td>札幌支店</td>
               <td>広島県広島市西区観音町13-9マンション名1001</td>
@@ -83,16 +106,33 @@
               <td></td>
               <td>example@gmail.com</td>
               <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
+            </tr>  --}}
           </tbody>
         </table>
       </div>
       </div><!-- ./l-container__inner -->
     </main>
   </div><!-- ./l-wrap -->
-
+  @include('manage.master.components.agency_modal', [
+    'mode' => 'new',
+    'label' => '新規登録',
+    'method' => 'POST',
+    'action' => route('manage.master.agencies.store'),
+    'agency' => null,
+    ]
+  )
   <!-- 「編集」をクリックしたら出てくるmodal -->
-  <div id="modalAreaOption" class="l-modal">
+  @foreach ($agencies as $agency)
+    @include('manage.master.components.agency_modal', [
+      'mode' => 'edit',
+      'label' => '編集',
+      'method' => 'PUT',
+      'action' => route('manage.master.agencies.update', [$agency->id]),
+      'agency' => $agency,
+      ]
+    )
+  @endforeach
+  {{--  <div id="modalAreaOption" class="l-modal">
     <!-- モーダルのinnerを記述   -->
     <div class="l-modal__inner l-modal--trash">
       <div class="l-modal__head">編集</div>
@@ -120,7 +160,7 @@
                 <input type="text" id="branch_name" name="branch_name">
               </div>
             </div>
-            
+
             <!-- 2段目 -->
             <div class="l-grid--col3 l-grid--cgap2-half">
               <div>
@@ -136,13 +176,13 @@
                 <input type="text" id="address2" name="address2">
               </div>
             </div>
-            
+
             <!-- 3段目 -->
             <div style="width: 33%;padding-right:1.25rem;">
               <label for="tel" class="u-font--md">電話番号</label>
               <input type="text" id="tel" name="tel">
             </div>
-            
+
             <!-- 4段目 -->
             <div class="l-grid--col3 l-grid--cgap2-half">
               <div>
@@ -158,7 +198,7 @@
                 <input type="text" id="contact_name" name="contact_name">
               </div>
             </div>
-            
+
             <!-- 5段目 -->
             <div class="l-grid--col3 l-grid--cgap2-half">
               <div>
@@ -174,20 +214,20 @@
                 <input type="text" id="bank_info" name="bank_info">
               </div>
             </div>
-            
+
             <!-- 6段目 -->
             <div>
               <label for="memo" class="u-font--md">社内共有メモ</label>
               <input type="text" id="memo" name="memo" class="c-form-input--w100">
             </div>
-            
+
             <!-- LAST -->
             <div>
               <label for="search_keywords" class="u-font--md">検索用キーワード</label>
               <input type="text" id="search_keywords" name="search_keywords">
             </div>
           </div>
-          
+
           <!-- 下段 -->
           <div class="l-grid__agency--center l-grid--gap1 u-mb2-half">
               <span class="u-font--md">月額固定費用</span>
@@ -219,7 +259,7 @@
 
           <div class="l-grid__agency--bottom">
             <div>
-              <label for="" class="u-font--md">バナーコメントの設定</label>         
+              <label for="" class="u-font--md">バナーコメントの設定</label>
               <input type="text" name="" id="">
               <label for="" class="u-font--md">タイトルの設定</label>
               <input type="text" name="" id="" class="u-mb0">
@@ -242,7 +282,7 @@
             </div>
           </div>
         </div><!-- ./left -->
-      
+
         <!-- 登録ボタン -->
         <div class="l-flex--center l-grid--gap1 u-mt2 u-mb2 c-button__csv--upload">
           <!-- <button type="submit" class="c-button__submit--dark-gray">新規保存</button> -->
@@ -259,15 +299,21 @@
       </div>
     </div><!-- ./l-modal inner -->
     <!-- 閉じる・追加ボタン -->
-  </div>
+  </div>  --}}
 @endsection
 @push("scripts")
+
   <!-- ファイルアップロードの時、ファイル名/画像表示スクリプト -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-        setupImageUpload('logoFileInput', 'logoImageDisplay', 'logoUploadButton');
-        setupImageUpload('campaignFileInput', 'campaignImageDisplay', 'campaignUploadButton');
-        setupCsvUpload('csvFileInput', 'csvFileNameDisplay');
+      createModal = document.getElementById('modalAreaOption_new_');
+      modalAreaOptions = document.querySelectorAll('.modal_area');
+      modalCloseOption = document.querySelectorAll('.modal_optionClose');
+
+      setupImageUpload('logoFileInput', 'logoImageDisplay', 'logoUploadButton');
+      setupImageUpload('campaignFileInput', 'campaignImageDisplay', 'campaignUploadButton');
+
+      setupCsvUpload('csvFileInput', 'csvFileNameDisplay');
     });
 
     function setupImageUpload(inputId, imageDisplayId, buttonId) {
@@ -320,40 +366,41 @@
     }
 
     function addDeleteButton(container, fileInput, imageDisplay = null) {
-    // 既存の削除ボタンを削除
-    const existingDeleteButton = container.querySelector('.delete-button');
-    if (existingDeleteButton) {
-        existingDeleteButton.remove();
+      // 既存の削除ボタンを削除
+      const existingDeleteButton = container.querySelector('.delete-button');
+      if (existingDeleteButton) {
+          existingDeleteButton.remove();
+      }
+
+      const deleteButton = document.createElement('img');
+      deleteButton.src = '../images/icon/closeButton.svg';
+      deleteButton.alt = '削除';
+      deleteButton.className = 'delete-button';
+      deleteButton.style.cursor = 'pointer';
+      deleteButton.style.marginLeft = '10px';
+
+      deleteButton.addEventListener('click', function() {
+          fileInput.value = '';
+          if (imageDisplay) {
+              imageDisplay.style.display = 'none';
+          } else {
+              container.textContent = '';
+          }
+          deleteButton.remove();
+
+          // CSVファイルが削除された場合、登録ボタンを無効化
+          if (fileInput.id === 'csvFileInput') {
+              const registerButton = document.querySelector('.fileUpload');
+              registerButton.setAttribute('disabled', '');
+          }
+      });
+
+      container.appendChild(deleteButton);
     }
 
-    const deleteButton = document.createElement('img');
-    deleteButton.src = '../images/icon/closeButton.svg';
-    deleteButton.alt = '削除';
-    deleteButton.className = 'delete-button';
-    deleteButton.style.cursor = 'pointer';
-    deleteButton.style.marginLeft = '10px';
-
-    deleteButton.addEventListener('click', function() {
-        fileInput.value = '';
-        if (imageDisplay) {
-            imageDisplay.style.display = 'none';
-        } else {
-            container.textContent = '';
-        }
-        deleteButton.remove();
-
-        // CSVファイルが削除された場合、登録ボタンを無効化
-        if (fileInput.id === 'csvFileInput') {
-            const registerButton = document.querySelector('.fileUpload');
-            registerButton.setAttribute('disabled', '');
-        }
-    });
-
-    container.appendChild(deleteButton);
-    }
   </script>
   <!-- モーダル -->
-  <script src="{{ asset('js/modalOption.js') }}"></script>
+  {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
   <!-- ソートスクリプト -->
   <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
   <!-- 閉じるボタン -->
