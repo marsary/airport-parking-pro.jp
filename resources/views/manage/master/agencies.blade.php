@@ -305,6 +305,27 @@
 
   <!-- ファイルアップロードの時、ファイル名/画像表示スクリプト -->
   <script>
+    let createModal;
+    let modalAreaOptions;
+    let modalCloseOption;
+    const agencyIds = @js($agencies->pluck('id')->toArray())
+
+    function openCreateModal() {
+      createModal.classList.add('is-active');
+    }
+    function openEditModal(agencyId) {
+      document.getElementById(`modalAreaOption_edit_${agencyId}`).classList.add('is-active');
+    }
+    function closeCreateModal() {
+      createModal.classList.remove('is-active');
+    }
+    function closeEditModal(agencyId) {
+      document.getElementById(`modalAreaOption_edit_${agencyId}`).classList.remove('is-active');
+    }
+    function deleteAgency(agencyId) {
+      document.getElementById(`delete_${agencyId}_form`).submit();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       createModal = document.getElementById('modalAreaOption_new_');
       modalAreaOptions = document.querySelectorAll('.modal_area');
@@ -313,6 +334,11 @@
       setupImageUpload('logoFileInput', 'logoImageDisplay', 'logoUploadButton');
       setupImageUpload('campaignFileInput', 'campaignImageDisplay', 'campaignUploadButton');
 
+      agencyIds.forEach(agencyId => {
+        initDeleteButton(agencyId);
+        setupImageUpload('logoFileInput' + agencyId, 'logoImageDisplay' + agencyId, 'logoUploadButton' + agencyId);
+        setupImageUpload('campaignFileInput' + agencyId, 'campaignImageDisplay' + agencyId, 'campaignUploadButton' + agencyId);
+      })
       setupCsvUpload('csvFileInput', 'csvFileNameDisplay');
     });
 
@@ -398,6 +424,23 @@
       container.appendChild(deleteButton);
     }
 
+    function initDeleteButton(agencyId) {
+      const logoImageDisplay = document.getElementById('logoImageDisplay' + agencyId);
+      const campaignImageDisplay = document.getElementById('campaignImageDisplay' + agencyId);
+
+      if(logoImageDisplay.getAttribute('src') != '')  {
+        const logoFileInput = document.getElementById('logoFileInput' + agencyId);
+        const container = logoImageDisplay.parentElement;
+        addDeleteButton(container, logoFileInput, logoImageDisplay);
+      }
+      if(campaignImageDisplay.getAttribute('src') != '')  {
+        const campaignFileInput = document.getElementById('campaignFileInput' + agencyId);
+        const container = campaignImageDisplay.parentElement;
+        addDeleteButton(container, campaignFileInput, campaignImageDisplay);
+      }
+    }
+
+    document.querySelectorAll('.l-table-list th .sort-enable').forEach(th => th.onclick = (e) => sortRows(e, '.l-table-list'));
   </script>
   <!-- モーダル -->
   {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
