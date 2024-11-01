@@ -295,7 +295,7 @@
 
       <!-- データ削除ボタン -->
       <div class="l-modal__trashButton">
-        <img src="../images/svg/trash.svg" alt="ゴミ箱" width="100%" class="l-modal--trashButton">
+        <img src="{{asset('images/svg/trash.svg')}}" alt="ゴミ箱" width="100%" class="l-modal--trashButton">
       </div>
     </div><!-- ./l-modal inner -->
     <!-- 閉じる・追加ボタン -->
