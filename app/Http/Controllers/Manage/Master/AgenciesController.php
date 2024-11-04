@@ -40,6 +40,23 @@ class AgenciesController extends Controller
         ]);
     }
 
+    public function download($id)
+    {
+        /** @var AgencyExport $export */
+        $export = new AgencyExport([$id]);
+
+        $fileName = Carbon::today()->format('Ymd') . '_search_agencies.csv';
+        return $export->download($fileName, \Maatwebsite\Excel\Excel::CSV);
+    }
+
+    public function upload(AgencyUploadRequest $request)
+    {
+        // dd($request->all());
+        (new AgencyImport)->import($request->file('csvFileInput'), null, \Maatwebsite\Excel\Excel::CSV);
+
+        return redirect()->back();
+    }
+
 
     public function store(AgencyRequest $request)
     {
