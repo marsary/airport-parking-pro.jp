@@ -45,7 +45,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('/master', [\App\Http\Controllers\Manage\MasterController::class, 'index'])->name('master');
         // Route::get('/master/agencies', [\App\Http\Controllers\Manage\Master\AgenciesController::class, 'index'])->name('agencies');
         Route::get('/master/arrival_flights', [\App\Http\Controllers\Manage\Master\ArrivalFlightsController::class, 'index'])->name('arrival_flights');
-        Route::get('/master/coupons', [\App\Http\Controllers\Manage\Master\CouponsController::class, 'index'])->name('coupons');
+        // Route::get('/master/coupons', [\App\Http\Controllers\Manage\Master\CouponsController::class, 'index'])->name('coupons');
         Route::get('/master/departure_flights', [\App\Http\Controllers\Manage\Master\DepartureFlightsController::class, 'index'])->name('departure_flights');
         Route::prefix('master')->name('master.')->group(function () {
             Route::post('/agencies/upload', [\App\Http\Controllers\Manage\Master\AgenciesController::class, 'upload'])->name('agencies.upload');
@@ -53,6 +53,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::resource('/agencies', \App\Http\Controllers\Manage\Master\AgenciesController::class);
             Route::resource('/good_categories', \App\Http\Controllers\Manage\Master\GoodCategoriesController::class);
             Route::resource('/goods', \App\Http\Controllers\Manage\Master\GoodsController::class);
+            Route::resource('/coupons', \App\Http\Controllers\Manage\Master\CouponsController::class);
         });
 
         Route::get('/settings/daily_update', [\App\Http\Controllers\Manage\Settings\DailyUpdateController::class, 'index'])->name('daily_update');
