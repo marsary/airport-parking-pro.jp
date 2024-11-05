@@ -42,6 +42,16 @@ function maxDateTime()
     return Carbon::create(9999, 12, 31, 23, 59, 59);
 }
 
+function mergeDateAndTime(string $dateStr, string $timeStr)
+{
+    // start_time が H:i の場合は秒を追加し H:i:s に変換
+    if (preg_match('/^\d{2}:\d{2}$/', $timeStr)) {
+        $timeStr .= ':00';
+    }
+
+    return $dateStr . ' ' . $timeStr;
+}
+
 function getKeyMapCollection(Collection $collect, $key = "id")
 {
     return  $collect->mapWithKeys(function ($item) use($key) {
