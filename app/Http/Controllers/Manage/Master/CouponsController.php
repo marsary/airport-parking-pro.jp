@@ -52,4 +52,43 @@ class CouponsController extends Controller
         ]);
     }
 
+
+    public function store(CouponRequest $request)
+    {
+        $coupon = Coupon::create([
+            'office_id' => config('const.commons.office_id'),
+            'name' => $request->name,
+            'code' => $request->code,
+            'discount_amount' => $request->discount_amount,
+            'discount_type' => $request->discount_type,
+            'good_category_id' => $request->good_category_id,
+            'limit_flg' => $request->limit_flg,
+            'combination_flg' => $request->combination_flg,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'memo' => $request->memo,
+        ]);
+
+        return redirect()->back();
+    }
+
+
+    public function update(CouponRequest $request, $id)
+    {
+        $coupon = Coupon::findOrFail($id);
+        $coupon->fill([
+            'name' => $request->name,
+            'code' => $request->code,
+            'discount_amount' => $request->discount_amount,
+            'discount_type' => $request->discount_type,
+            'good_category_id' => $request->good_category_id,
+            'limit_flg' => $request->limit_flg,
+            'combination_flg' => $request->combination_flg,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'memo' => $request->memo,
+        ])->save();
+
+        return redirect()->back();
+    }
 }
