@@ -129,6 +129,16 @@
       </form>
     </div><!-- ./l-modal__content -->
 
+    <!-- データ削除ボタン -->
+    @if ($mode == 'edit')
+      <form id="delete_{{$coupon->id}}_form" action="{{route('manage.master.coupons.destroy', [$coupon->id])}}" method="post">
+        @csrf
+        @method('DELETE')
+      </form>
+      <div class="l-modal__trashButton" onclick="deleteCoupon({{$coupon->id}})">
+        <img src="{{asset('images/svg/trash.svg')}}" alt="ゴミ箱" width="100%" class="l-modal--trashButton">
+      </div>
+    @endif
   </div><!-- ./l-modal inner -->
   <!-- 閉じる・追加ボタン -->
 </div>

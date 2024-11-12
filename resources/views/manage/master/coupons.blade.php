@@ -391,6 +391,9 @@
     function closeEditModal(couponId) {
       document.getElementById(`modalAreaOption_edit_${couponId}`).classList.remove('is-active');
     }
+    function deleteCoupon(couponId) {
+      document.getElementById(`delete_${couponId}_form`).submit();
+    }
 
     window.addEventListener('DOMContentLoaded', function() {
       createModal = document.getElementById('modalAreaOption_new_');
@@ -398,5 +401,6 @@
       modalCloseOption = document.querySelectorAll('.modal_optionClose');
     })
 
+    document.querySelectorAll('.l-table-list th .sort-enable').forEach(th => th.onclick = (e) => sortRows(e, '.l-table-list'));
   </script>
 @endpush

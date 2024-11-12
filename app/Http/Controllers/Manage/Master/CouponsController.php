@@ -91,4 +91,13 @@ class CouponsController extends Controller
 
         return redirect()->back();
     }
+
+
+    public function destroy(Request $request, $id)
+    {
+        $coupon = Coupon::findOrFail($id);
+        $coupon->delete();
+
+        return redirect()->back();
+    }
 }
