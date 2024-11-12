@@ -54,6 +54,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::resource('/good_categories', \App\Http\Controllers\Manage\Master\GoodCategoriesController::class);
             Route::resource('/goods', \App\Http\Controllers\Manage\Master\GoodsController::class);
             Route::resource('/coupons', \App\Http\Controllers\Manage\Master\CouponsController::class);
+            Route::resource('/agency_prices', \App\Http\Controllers\Manage\Master\AgencyPricesController::class);
         });
 
         Route::get('/settings/daily_update', [\App\Http\Controllers\Manage\Settings\DailyUpdateController::class, 'index'])->name('daily_update');
