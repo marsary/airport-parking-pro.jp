@@ -45,6 +45,11 @@ class Agency extends Model
         'campaign_image',
     ];
 
+    public function agencyPrices()
+    {
+        return $this->hasMany(AgencyPrice::class);
+    }
+
     public function address(): Attribute
     {
         return Attribute::make(
