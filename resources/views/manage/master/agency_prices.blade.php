@@ -10,29 +10,31 @@
         </li>
       </ul>
 
+      @include('include.messages.errors')
+
       <div class="l-container__inner">
         <h2 class="c-title__lv2 l-flex--sb">代理店検索<span class="close_button c-button__close">閉じる</span></h2>
 
         <div class="is-active">
-          <form action="" class="u-mb1">
+          <form action="{{route('manage.master.agency_prices.index')}}" class="u-mb1">
             <div>
               <div class="l-grid--col3 l-grid--cgap1">
                 <div>
                   <label for="agency_code" class="u-font--md">代理店コード</label>
-                  <input type="text" id="agency_code" name="agency_code" class="u-w-full-wide">
+                  <input type="text" id="agency_code" name="agency_code" value="{{request('agency_code')}}" class="u-w-full-wide">
                 </div>
                 <div>
                   <label for="company_name" class="u-font--md">社名</label>
-                  <input type="text" id="company_name" name="company_name" class="u-w-full-wide">
+                  <input type="text" id="company_name" name="company_name" value="{{request('company_name')}}" class="u-w-full-wide">
                 </div>
                 <div>
                   <label for="tel" class="u-font--md">電話番号</label>
-                  <input type="text" id="tel" name="tel" class="u-w-full-wide">
+                  <input type="text" id="tel" name="tel" value="{{request('tel')}}" class="u-w-full-wide">
                 </div>
               </div>
               <div>
                 <label for="search_keywords" class="u-font--md">検索用キーワード</label>
-                <input type="text" id="search_keywords" name="search_keywords" class="u-w-full-wide u-mb0">
+                <input type="text" id="search_keywords" name="search_keywords" value="{{request('search_keywords')}}" class="u-w-full-wide u-mb0">
               </div>
               <button type="submit" class="c-button__register w-160 u-mt2 u-horizontal-auto">検索</button>
             </div>
@@ -41,7 +43,10 @@
 
           <h2>検索結果</h2>
           <ul class="l-flex l-flex--wrap l-grid--cgap2 l-grid--rgap1">
-            <li class="pointer link-text">HIS なんば支店</li>
+            @foreach ($agencies as $agency)
+            <li class="pointer link-text">{{$agency->name}}</li>
+            @endforeach
+            {{--  <li class="pointer link-text">HIS なんば支店</li>
             <li class="pointer link-text">HIS 梅田支店</li>
             <li class="pointer link-text">HIS 千里中央支店</li>
             <li class="pointer link-text">JTB 甲東支店</li>
@@ -49,7 +54,7 @@
             <li class="pointer link-text">JTB 神崎支店</li>
             <li class="pointer link-text">JTB 住之江支店</li>
             <li class="pointer link-text">近畿ツーリスト 広島支店</li>
-            <li class="pointer link-text">近畿ツーリスト 広島支店</li>
+            <li class="pointer link-text">近畿ツーリスト 広島支店</li>  --}}
           </ul>
           <!-- 装飾 -->
           <div class="u-border--bottom u-pt2 u-mb2"></div>
@@ -64,13 +69,26 @@
               <thead>
                 <tr class="l-table-list__head l-table-list--scroll__head">
                   <th><div class="c-button-sort">代理店名</div></th>
-                  <th class="u-w240"><div class="c-button-sort --desc">適用期間</div></th>
+                  <th class="u-w240"><div class="c-button-sort --desc sort-enable">適用期間</div></th>
                   <th>メモ</th>
                   <th>操作</th>
                 </tr>
               </thead>
               <tbody class="l-table-list__body">
-                <tr>
+                @foreach ($agencyPrices as $agencyPrice)
+                  <tr>
+                    <td>{{$agencyPrice->agency->name}}</td>
+                    <td>
+                      {{$agencyPrice->start_date->format("Y/m/d")}} ～<br />{{$agencyPrice->end_date->format("Y/m/d")}}
+                      {{--  2021/01/01～2021/12/31  --}}
+                    </td>
+                    <td>{{$agencyPrice->memo}}</td>
+                    <td>
+                      <button type="button" class="c-button__edit button_select" onclick="openEditModal({{$agencyPrice->id}})">編集</button>
+                    </td>
+                  </tr>
+                @endforeach
+                {{--  <tr>
                   <td>HIS なんば支店</td>
                   <td>2021/01/01～2021/12/31</td>
                   <td>メモメモメモ</td>
@@ -93,10 +111,10 @@
                   <td>
                     <button type="button" class="c-button__edit button_select">編集</button>
                   </td>
-                </tr>
+                </tr>  --}}
               </tbody>
             </table>
-            <button type="" class="button_select c-button__register u-mb4 u-horizontal-auto">新規登録</button>
+            <button type="button" class="button_select c-button__register u-mb4 u-horizontal-auto" onclick="openCreateModal()">新規登録</button>
           </div>
         </div>
       </div>
@@ -104,14 +122,19 @@
     </main><!-- /.l-container__main -->
   </div><!-- /.l-wrap -->
 
-  <!-- ▼閉じるボタン -->
-  <script src="{{ asset('js/close_button_toggle.js') }}"></script>
+  @include('manage.master.components.agency_price_modal', [
+    'mode' => 'new',
+    'label' => '新規登録',
+    'method' => 'POST',
+    'action' => route('manage.master.agency_prices.store'),
+    'agencyPrice' => null,
+    'agencies' => $agencies,
+    ]
+  )
 
-  <!-- ソート -->
-  <script src="../js/tableHeaderSort.js"></script>
 
   <!-- modal i-1と同じコード -->
-  <div id="modalAreaOption" class="l-modal">
+  {{--  <div id="modalAreaOption" class="l-modal">
     <!-- モーダルのinnerを記述   -->
     <div class="l-modal__inner l-modal--trash">
       <div class="l-modal__head">編集</div>
@@ -241,8 +264,44 @@
         <img src="{{asset('images/svg/trash.svg')}}" alt="ゴミ箱" width="100%" class="l-modal--trashButton">
       </div>
     </div><!-- ./l-modal inner -->
-  </div>
+  </div>  --}}
 
-  <!-- モーダル -->
-  <script src="{{ asset('js/modalOption.js') }}"></script>
 @endsection
+@push("scripts")
+<!-- ▼閉じるボタン -->
+  {{--  <script src="{{ asset('js/close_button_toggle.js') }}"></script>  --}}
+  <!-- モーダル -->
+  {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
+
+  <!-- テーブルのヘッダ部分ソートスクリプト -->
+  <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
+
+  <script>
+    let createModal;
+    let modalAreaOptions;
+    let modalCloseOption;
+    //const modalButtons = document.querySelectorAll('.button_select');
+
+    function openCreateModal() {
+      createModal.classList.add('is-active');
+    }
+    function openEditModal(agencyPriceId) {
+      document.getElementById(`modalAreaOption_edit_${agencyPriceId}`).classList.add('is-active');
+    }
+    function closeCreateModal() {
+      createModal.classList.remove('is-active');
+    }
+    function closeEditModal(agencyPriceId) {
+      document.getElementById(`modalAreaOption_edit_${agencyPriceId}`).classList.remove('is-active');
+    }
+    function deleteagencyPrice(agencyPriceId) {
+      document.getElementById(`delete_${agencyPriceId}_form`).submit();
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      createModal = document.getElementById('modalAreaOption_new_');
+      modalAreaOptions = document.querySelectorAll('.modal_area');
+      modalCloseOption = document.querySelectorAll('.modal_optionClose');
+    })
+  </script>
+@endpush
