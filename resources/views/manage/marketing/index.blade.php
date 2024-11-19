@@ -10,13 +10,12 @@
         <li class="l-breadcrumb__list">営業支援</li>
       </ul>
 
-      <div class="l-container__inner" style="position: relative;">
-        <ul class="l-flex--start">
-          <li class="u-border--right u-pr1 u-mr1"><a href="{{ route('manage.marketing.graph.inventory') }}" class="p-index__link">入出庫グラフ</a></li>
-          <li><a href="{{ route('manage.marketing.reservation_graph.index') }}" class="p-index__link">予約実績グラフ</a></li>
-        </ul>
-      
-      </div><!-- /.l-container__inner -->
+      <div class="l-container__inner">
+        <div class="l-grid--col5 l-grid--rgap2">
+          <a href="{{ route('manage.marketing.graph.inventory') }}"  class="c-button__submit c-button--yellow c-link-no-border">入出庫グラフ</a>
+          <a href="{{ route('manage.marketing.reservation_graph.index') }}"  class="c-button__submit c-button--yellow c-link-no-border">予約実績グラフ</a>
+        </div>
+      </div><!-- ./l-container__inner -->
 
     </main><!-- /.l-wrap__main -->
 @endsection
