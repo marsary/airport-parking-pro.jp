@@ -132,144 +132,25 @@
     ]
   )
 
+  <!-- 「編集」をクリックしたら出てくるmodal -->
+  @foreach ($agencyPrices as $agencyPrice)
+    @include('manage.master.components.agency_price_modal', [
+      'mode' => 'edit',
+      'label' => '編集',
+      'method' => 'PUT',
+      'action' => route('manage.master.agency_prices.update', [$agencyPrice->id]),
+      'agencyPrice' => $agencyPrice,
+      'agencies' => null,
+      ]
+    )
+  @endforeach
 
-  <!-- modal i-1と同じコード -->
-  {{--  <div id="modalAreaOption" class="l-modal">
-    <!-- モーダルのinnerを記述   -->
-    <div class="l-modal__inner l-modal--trash">
-      <div class="l-modal__head">編集</div>
-      <!-- close button -->
-      <div class="l-modal__close modal_optionClose">×</div>
-      <div class="l-modal__content">
-        <form action="" method="POST" class="l-flex--column l-flex--sb u-w-full">
-          <!-- 入力フォーム -->
-          <div class="u-w-full-wide">
-            <div class="c-title__modal--lv3">代理店料金設定編集</div>
-            <div class="">
-              <div class="l-grid--col2 l-grid--gap2">
-                <div>
-                  <label for="price_list" class="u-font--md">料金表選択</label>
-                  <div class="c-form-select-wrap">
-                    <select name="price_list" id="price_list">
-                      <option value="" disabled selected>選択してください</option>
-                      <option value="price_list_New">新規登録</option>
-                      <option value="price_list1">2024年1月1日～2024年3月31日</option>
-                      <option value="price_list2">2024年4月28日～2024年5月8日</option>
-                    </select>
-                  </div>
-                </div>
 
-                <!-- 料金の適用期間 -->
-                <div>
-                  <p class="u-mb025 u-font--md">料金の適用期間</p>
-                  <div class="l-flex l-grid--gap05">
-                    <input type="date" id="start_date" name="start_date" class="u-w-full-wide">
-                    <p class="u-mb1">～</p>
-                    <input type="date" id="end_date" name="end_date" class="u-w-full-wide">
-                  </div>
-                </div>
-              </div>
-
-              <!-- MEMO -->
-              <label for="memo" class="u-font--md">メモ</label>
-              <textarea name="memo" id="memo" rows="1" class="u-w-full-wide"></textarea>
-
-              <!-- 1日目～15日まで料金を入力するinput -->
-              <div class="l-grid--pricing l-grid--input">
-                <div>
-                  <label for="day1">1日目</label>
-                  <input type="text" id="day1" name="day1">
-                </div>
-                <div>
-                  <label for="day2">2日目</label>
-                  <input type="text" id="day2" name="day2">
-                </div>
-                <div>
-                  <label for="day3">3日目</label>
-                  <input type="text" id="day3" name="day3">
-                </div>
-                <div>
-                  <label for="day4">4日目</label>
-                  <input type="text" id="day4" name="day4">
-                </div>
-                <div>
-                  <label for="day5">5日目</label>
-                  <input type="text" id="day5" name="day5">
-                </div>
-                <div>
-                  <label for="day6">6日目</label>
-                  <input type="text" id="day6" name="day6">
-                </div>
-                <div>
-                  <label for="day7">7日目</label>
-                  <input type="text" id="day7" name="day7">
-                </div>
-                <div>
-                  <label for="day8">8日目</label>
-                  <input type="text" id="day8" name="day8">
-                </div>
-                <div>
-                  <label for="day9">9日目</label>
-                  <input type="text" id="day9" name="day9">
-                </div>
-                <div>
-                  <label for="day10">10日目</label>
-                  <input type="text" id="day10" name="day10">
-                </div>
-                <div>
-                  <label for="day11">11日目</label>
-                  <input type="text" id="day11" name="day11">
-                </div>
-                <div>
-                  <label for="day12">12日目</label>
-                  <input type="text" id="day12" name="day12">
-                </div>
-                <div>
-                  <label for="day13">13日目</label>
-                  <input type="text" id="day13" name="day13">
-                </div>
-                <div>
-                  <label for="day14">14日目</label>
-                  <input type="text" id="day14" name="day14">
-                </div>
-                <div>
-                  <label for="day15">15日目</label>
-                  <input type="text" id="day15" name="day15">
-                </div>
-                <div>
-                  <label for="day16">16日目以降</label>
-                  <input type="text" id="day16" name="day16">
-                </div>
-                <div>
-                  <label for="extensionFee">延長料</label>
-                  <input type="text" id="extensionFee" name="extensionFee">
-                </div>
-                <div class="--last">
-                  <label for="basicFee">基本料金</label>
-                  <input type="text" id="basicFee" name="basicFee">
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- 閉じる・追加ボタン -->
-          <div class="l-flex--center l-grid--gap1 u-mt2 u-mb4">
-            <button type="submit" class="c-button__submit--dark-gray modal_optionClose">閉じる</button>
-            <button type="submit" class="c-button__submit">登録</button>
-          </div>
-        </form>
-      </div><!-- ./l-modal__content -->
-
-      <!-- 編集の場合のデータ削除ボタン -->
-      <div class="l-modal__trashButton">
-        <img src="{{asset('images/svg/trash.svg')}}" alt="ゴミ箱" width="100%" class="l-modal--trashButton">
-      </div>
-    </div><!-- ./l-modal inner -->
-  </div>  --}}
 
 @endsection
 @push("scripts")
 <!-- ▼閉じるボタン -->
-  {{--  <script src="{{ asset('js/close_button_toggle.js') }}"></script>  --}}
+  <script src="{{ asset('js/close_button_toggle.js') }}"></script>
   <!-- モーダル -->
   {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
 
@@ -280,7 +161,6 @@
     let createModal;
     let modalAreaOptions;
     let modalCloseOption;
-    //const modalButtons = document.querySelectorAll('.button_select');
 
     function openCreateModal() {
       createModal.classList.add('is-active');
@@ -303,5 +183,7 @@
       modalAreaOptions = document.querySelectorAll('.modal_area');
       modalCloseOption = document.querySelectorAll('.modal_optionClose');
     })
+
+    document.querySelectorAll('.l-table-list th .sort-enable').forEach(th => th.onclick = (e) => sortRows(e, '.l-table-list'));
   </script>
 @endpush
