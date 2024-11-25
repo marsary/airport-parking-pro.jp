@@ -36,9 +36,36 @@ class Price extends Model
         'd14',
         'd15',
         'price_per_day',
+        'late_fee',
         'lsize_rate',
         'no_discount_flg',
+        'memo',
     ];
+
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ];
+    }
+
+    /**
+    * 配列/JSONシリアル化の日付を準備
+    *
+    * @param  \DateTimeInterface  $date
+    * @return string
+    */
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
+    }
 
     public function getPriceAt(int $dayNum)
     {
