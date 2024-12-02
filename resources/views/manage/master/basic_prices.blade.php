@@ -73,8 +73,16 @@
             <div class="l-grid__basicPricing--bottom">
               <h2 class="c-title__lv2 l-flex--sb u-mb05">車両サイズによる割引・割増設定<span class="close_button c-button__close">閉じる</span></h2>
               <p class="note text-right u-mb1 u-font--sm">※ダイナミックプライシング料金・代理店料金にも適用されます。</p>
-              <div class="l-grid--col2 is-active l-grid__basicPricing--bottom__item">
-                <div>
+              <div class="l-grid--col2 is-active l-grid__basicPricing--bottom__item carsize-price-rate-inputs">
+                @foreach ($carSizes as $carSize)
+                  <label class="l-flex--end l-grid--center l-grid--gap1 u-mb2">{{$carSize->name}}
+                    <div class="l-flex--end l-grid--gap05">
+                      ×<input type="text" name="carsize_price_rates[{{$carSize->name}}]" class="u-mb0" value="{{old('carsize_price_rates.' . $carSize->name, $carSize->carSizePriceRate?->rate )}}">倍
+                    </div>
+                  </label>
+                @endforeach
+
+                {{--  <div>
                   <!-- 二輪 -->
                   <label class="l-flex--start l-grid--center l-grid--gap1 u-mb2">二輪
                     <div class="l-flex--start l-grid--gap05">
@@ -100,7 +108,7 @@
                       ×<input type="text" id="camping_car" name="camping_car" class="u-mb0" value="{{old('camping_car', \Illuminate\Support\Arr::get($carSizeMap, 'camping_car') )}}">倍
                     </div>
                   </label>
-                </div>
+                </div>  --}}
               </div>
             </div>
           </div>
