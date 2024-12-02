@@ -105,4 +105,25 @@ class PricesController extends Controller
     }
 
 
+    public function storeCarSizeRate(CarSizeRateRequest $request)
+    {
+        foreach (Arr::get($request->validated(), 'carsize_price_rates', [])  as $carSizeName => $value) {
+            $carSize = CarSize::where('office_id', config('const.commons.office_id'))
+                ->where('name', $carSizeName )->first();
+
+            if(!$carSize) {
+                continue;
+            }
+            if($carSize->carSizePriceRate()->exists()) {
+                $carSize->carSizePriceRate->fill(['rate' => $value])->save();
+            } else {
+                $carSize->carSizePriceRate()->create([
+                    'office_id' => config('const.commons.office_id'),
+                    'rate' => $value,
+                ]);
+            }
+        }
+
+        return redirect()->back();
+    }
 }
