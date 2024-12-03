@@ -57,6 +57,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::resource('/agency_prices', \App\Http\Controllers\Manage\Master\AgencyPricesController::class);
             Route::post('/prices/carsize_rate', [\App\Http\Controllers\Manage\Master\PricesController::class, 'storeCarSizeRate'])->name('prices.carsize_rate');
             Route::resource('/prices', \App\Http\Controllers\Manage\Master\PricesController::class);
+            Route::resource('/dynamic_pricings', \App\Http\Controllers\Manage\Master\DynamicPricingsController::class);
         });
 
         Route::get('/settings/daily_update', [\App\Http\Controllers\Manage\Settings\DailyUpdateController::class, 'index'])->name('daily_update');
