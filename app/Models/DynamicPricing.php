@@ -17,6 +17,7 @@ class DynamicPricing extends Model
      */
     protected $fillable = [
         'office_id',
+        'sort',
         'name',
         'p10',
         'p20',
