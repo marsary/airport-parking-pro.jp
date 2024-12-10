@@ -17,7 +17,7 @@
             <div class="c-title__modal--lv3">基本料金設定{{$label}}</div>
             <div class="">
               <div class="l-grid--col2 l-grid--gap2">
-                <div>
+                {{--  <div>
                   <label for="price_list" class="u-font--md">料金表選択</label>
                   <div class="c-form-select-wrap">
                     <select name="price_list" id="price_list">
@@ -27,96 +27,96 @@
                       <option value="price_list2">2024年4月28日～2024年5月8日</option>
                     </select>
                   </div>
-                </div>
+                </div>  --}}
 
                 <!-- 料金の適用期間 -->
                 <div>
                   <p class="u-mb025 u-font--md">料金の適用期間</p>
                   <div class="l-flex l-grid--gap05">
-                    <input type="date" id="start_date{{$price?->id ?? 0}}" name="start_date" value="{{old('start_date', $price?->start_date->format('Y-m-d'))}}" class="u-w-full-wide">
+                    <input type="date" id="start_date{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[start_date]" value="{{old('record_' . ($price?->id ?? 0) . '.start_date', $price?->start_date->format('Y-m-d'))}}" class="u-w-full-wide">
                     <p class="u-mb1">～</p>
-                    <input type="date" name="end_date" id="end_date{{$price?->id ?? 0}}" value="{{old('end_date', $price?->end_date->format('Y-m-d'))}}" class="u-w-full-wide">
+                    <input type="date" name="record_{{ $price?->id ?? 0 }}[end_date]" id="end_date{{$price?->id ?? 0}}" value="{{old('record_' . ($price?->id ?? 0) . '.end_date', $price?->end_date->format('Y-m-d'))}}" class="u-w-full-wide">
                   </div>
                 </div>
               </div>
 
               <!-- MEMO -->
               <label for="memo" class="u-font--md">メモ</label>
-              <textarea name="memo" id="memo{{$price?->id ?? 0}}" rows="1" class="u-w-full-wide"> {{old('memo', $price?->memo)}}</textarea>
+              <textarea name="record_{{ $price?->id ?? 0 }}[memo]" id="memo{{$price?->id ?? 0}}" rows="1" class="u-w-full-wide"> {{old('record_' . ($price?->id ?? 0) . '.memo', $price?->memo)}}</textarea>
 
               <!-- 1日目～15日まで料金を入力するinput -->
               <div class="l-grid--pricing l-grid--input">
                 <div>
                   <label for="d1">1日目</label>
-                  <input type="text" id="d1_{{$price?->id ?? 0}}" name="d1" value="{{old('d1', $price?->d1)}}">
+                  <input type="text" id="d1_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d1]" value="{{old('record_' . ($price?->id ?? 0) . '.d1', $price?->d1)}}">
                 </div>
                 <div>
                   <label for="d2_{{$price?->id ?? 0}}">2日目</label>
-                  <input type="text" id="d2_{{$price?->id ?? 0}}" name="d2" value="{{old('d2', $price?->d2)}}">
+                  <input type="text" id="d2_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d2]" value="{{old('record_' . ($price?->id ?? 0) . '.d2', $price?->d2)}}">
                 </div>
                 <div>
                   <label for="d3_{{$price?->id ?? 0}}">3日目</label>
-                  <input type="text" id="d3_{{$price?->id ?? 0}}" name="d3" value="{{old('d3', $price?->d3)}}">
+                  <input type="text" id="d3_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d3]" value="{{old('record_' . ($price?->id ?? 0) . '.d3', $price?->d3)}}">
                 </div>
                 <div>
                   <label for="d4_{{$price?->id ?? 0}}">4日目</label>
-                  <input type="text" id="d4_{{$price?->id ?? 0}}" name="d4" value="{{old('d4', $price?->d4)}}">
+                  <input type="text" id="d4_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d4]" value="{{old('record_' . ($price?->id ?? 0) . '.d4', $price?->d4)}}">
                 </div>
                 <div>
                   <label for="d5_{{$price?->id ?? 0}}">5日目</label>
-                  <input type="text" id="d5_{{$price?->id ?? 0}}" name="d5" value="{{old('d5', $price?->d5)}}">
+                  <input type="text" id="d5_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d5]" value="{{old('record_' . ($price?->id ?? 0) . '.d5', $price?->d5)}}">
                 </div>
                 <div>
                   <label for="d6_{{$price?->id ?? 0}}">6日目</label>
-                  <input type="text" id="d6_{{$price?->id ?? 0}}" name="d6" value="{{old('d6', $price?->d6)}}">
+                  <input type="text" id="d6_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d6]" value="{{old('record_' . ($price?->id ?? 0) . '.d6', $price?->d6)}}">
                 </div>
                 <div>
                   <label for="d7_{{$price?->id ?? 0}}">7日目</label>
-                  <input type="text" id="d7_{{$price?->id ?? 0}}" name="d7" value="{{old('d7', $price?->d7)}}">
+                  <input type="text" id="d7_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d7]" value="{{old('record_' . ($price?->id ?? 0) . '.d7', $price?->d7)}}">
                 </div>
                 <div>
                   <label for="d8_{{$price?->id ?? 0}}">8日目</label>
-                  <input type="text" id="d8_{{$price?->id ?? 0}}" name="d8" value="{{old('d8', $price?->d8)}}">
+                  <input type="text" id="d8_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d8]" value="{{old('record_' . ($price?->id ?? 0) . '.d8', $price?->d8)}}">
                 </div>
                 <div>
                   <label for="d9_{{$price?->id ?? 0}}">9日目</label>
-                  <input type="text" id="d9_{{$price?->id ?? 0}}" name="d9" value="{{old('d9', $price?->d9)}}">
+                  <input type="text" id="d9_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d9]" value="{{old('record_' . ($price?->id ?? 0) . '.d9', $price?->d9)}}">
                 </div>
                 <div>
                   <label for="d10_{{$price?->id ?? 0}}">10日目</label>
-                  <input type="text" id="d10_{{$price?->id ?? 0}}" name="d10" value="{{old('d10', $price?->d10)}}">
+                  <input type="text" id="d10_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d10]" value="{{old('record_' . ($price?->id ?? 0) . '.d10', $price?->d10)}}">
                 </div>
                 <div>
                   <label for="d11_{{$price?->id ?? 0}}">11日目</label>
-                  <input type="text" id="d11_{{$price?->id ?? 0}}" name="d11" value="{{old('d11', $price?->d11)}}">
+                  <input type="text" id="d11_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d11]" value="{{old('record_' . ($price?->id ?? 0) . '.d11', $price?->d11)}}">
                 </div>
                 <div>
                   <label for="d12_{{$price?->id ?? 0}}">12日目</label>
-                  <input type="text" id="d12_{{$price?->id ?? 0}}" name="d12" value="{{old('d12', $price?->d12)}}">
+                  <input type="text" id="d12_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d12]" value="{{old('record_' . ($price?->id ?? 0) . '.d12', $price?->d12)}}">
                 </div>
                 <div>
                   <label for="d13_{{$price?->id ?? 0}}">13日目</label>
-                  <input type="text" id="d13_{{$price?->id ?? 0}}" name="d13" value="{{old('d13', $price?->d13)}}">
+                  <input type="text" id="d13_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d13]" value="{{old('record_' . ($price?->id ?? 0) . '.d13', $price?->d13)}}">
                 </div>
                 <div>
                   <label for="d14_{{$price?->id ?? 0}}">14日目</label>
-                  <input type="text" id="d14_{{$price?->id ?? 0}}" name="d14" value="{{old('d14', $price?->d14)}}">
+                  <input type="text" id="d14_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d14]" value="{{old('record_' . ($price?->id ?? 0) . '.d14', $price?->d14)}}">
                 </div>
                 <div>
                   <label for="d15_{{$price?->id ?? 0}}">15日目</label>
-                  <input type="text" id="d15_{{$price?->id ?? 0}}" name="d15" value="{{old('d15', $price?->d15)}}">
+                  <input type="text" id="d15_{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[d15]" value="{{old('record_' . ($price?->id ?? 0) . '.d15', $price?->d15)}}">
                 </div>
                 <div>
                   <label for="price_per_day{{$price?->id ?? 0}}">16日目以降</label>
-                  <input type="text" id="price_per_day{{$price?->id ?? 0}}" name="price_per_day" value="{{old('price_per_day', $price?->price_per_day)}}">
+                  <input type="text" id="price_per_day{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[price_per_day]" value="{{old('record_' . ($price?->id ?? 0) . '.price_per_day', $price?->price_per_day)}}">
                 </div>
                 <div>
                   <label for="late_fee{{$price?->id ?? 0}}">延長料</label>
-                  <input type="text" id="late_fee{{$price?->id ?? 0}}" name="late_fee" value="{{old('late_fee', $price?->late_fee)}}">
+                  <input type="text" id="late_fee{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[late_fee]" value="{{old('record_' . ($price?->id ?? 0) . '.late_fee', $price?->late_fee)}}">
                 </div>
                 <div class="--last">
                   <label for="base_price{{$price?->id ?? 0}}">基本料金</label>
-                  <input type="text" id="base_price{{$price?->id ?? 0}}" name="base_price" value="{{old('base_price', $price?->base_price)}}">
+                  <input type="text" id="base_price{{$price?->id ?? 0}}" name="record_{{ $price?->id ?? 0 }}[base_price]" value="{{old('record_' . ($price?->id ?? 0) . '.base_price', $price?->base_price)}}">
                 </div>
               </div>
             </div>
