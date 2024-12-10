@@ -42,30 +42,32 @@ class AgencyPricesController extends Controller
 
     public function store(AgencyPricesRequest $request)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_0";
         $agencyPrice = AgencyPrice::create([
             'office_id' => config('const.commons.office_id'),
-            'agency_id' => $request->agency_id,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'base_price' => $request->base_price,
-            'd1' => $request->d1,
-            'd2' => $request->d2,
-            'd3' => $request->d3,
-            'd4' => $request->d4,
-            'd5' => $request->d5,
-            'd6' => $request->d6,
-            'd7' => $request->d7,
-            'd8' => $request->d8,
-            'd9' => $request->d9,
-            'd10' => $request->d10,
-            'd11' => $request->d11,
-            'd12' => $request->d12,
-            'd13' => $request->d13,
-            'd14' => $request->d14,
-            'd15' => $request->d15,
-            'price_per_day' => $request->price_per_day,
-            'late_fee' => $request->late_fee,
-            'memo' => $request->memo,
+            'agency_id' => $request->{$recordKey}['agency_id'],
+            'start_date' => $request->{$recordKey}['start_date'],
+            'end_date' => $request->{$recordKey}['end_date'],
+            'base_price' => $request->{$recordKey}['base_price'],
+            'd1' => $request->{$recordKey}['d1'],
+            'd2' => $request->{$recordKey}['d2'],
+            'd3' => $request->{$recordKey}['d3'],
+            'd4' => $request->{$recordKey}['d4'],
+            'd5' => $request->{$recordKey}['d5'],
+            'd6' => $request->{$recordKey}['d6'],
+            'd7' => $request->{$recordKey}['d7'],
+            'd8' => $request->{$recordKey}['d8'],
+            'd9' => $request->{$recordKey}['d9'],
+            'd10' => $request->{$recordKey}['d10'],
+            'd11' => $request->{$recordKey}['d11'],
+            'd12' => $request->{$recordKey}['d12'],
+            'd13' => $request->{$recordKey}['d13'],
+            'd14' => $request->{$recordKey}['d14'],
+            'd15' => $request->{$recordKey}['d15'],
+            'price_per_day' => $request->{$recordKey}['price_per_day'],
+            'late_fee' => $request->{$recordKey}['late_fee'],
+            'memo' => $request->{$recordKey}['memo'],
         ]);
 
         return redirect()->back();
@@ -74,29 +76,31 @@ class AgencyPricesController extends Controller
 
     public function update(AgencyPricesRequest $request, $id)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_" . $request->route()->parameter('agency_price', 0);
         $agencyPrice = AgencyPrice::findOrFail($id);
         $agencyPrice->fill([
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'base_price' => $request->base_price,
-            'd1' => $request->d1,
-            'd2' => $request->d2,
-            'd3' => $request->d3,
-            'd4' => $request->d4,
-            'd5' => $request->d5,
-            'd6' => $request->d6,
-            'd7' => $request->d7,
-            'd8' => $request->d8,
-            'd9' => $request->d9,
-            'd10' => $request->d10,
-            'd11' => $request->d11,
-            'd12' => $request->d12,
-            'd13' => $request->d13,
-            'd14' => $request->d14,
-            'd15' => $request->d15,
-            'price_per_day' => $request->price_per_day,
-            'late_fee' => $request->late_fee,
-            'memo' => $request->memo,
+            'start_date' => $request->{$recordKey}['start_date'],
+            'end_date' => $request->{$recordKey}['end_date'],
+            'base_price' => $request->{$recordKey}['base_price'],
+            'd1' => $request->{$recordKey}['d1'],
+            'd2' => $request->{$recordKey}['d2'],
+            'd3' => $request->{$recordKey}['d3'],
+            'd4' => $request->{$recordKey}['d4'],
+            'd5' => $request->{$recordKey}['d5'],
+            'd6' => $request->{$recordKey}['d6'],
+            'd7' => $request->{$recordKey}['d7'],
+            'd8' => $request->{$recordKey}['d8'],
+            'd9' => $request->{$recordKey}['d9'],
+            'd10' => $request->{$recordKey}['d10'],
+            'd11' => $request->{$recordKey}['d11'],
+            'd12' => $request->{$recordKey}['d12'],
+            'd13' => $request->{$recordKey}['d13'],
+            'd14' => $request->{$recordKey}['d14'],
+            'd15' => $request->{$recordKey}['d15'],
+            'price_per_day' => $request->{$recordKey}['price_per_day'],
+            'late_fee' => $request->{$recordKey}['late_fee'],
+            'memo' => $request->{$recordKey}['memo'],
         ])->save();
 
         return redirect()->back();
