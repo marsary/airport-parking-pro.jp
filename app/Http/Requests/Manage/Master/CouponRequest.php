@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CouponRequest extends FormRequest
 {
+    private $recordKey;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,36 +23,38 @@ class CouponRequest extends FormRequest
      */
     public function rules(): array
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $this->recordKey = "record_" . $this->route()->parameter('coupon', 0);
         return [
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|max:255',
-            'discount_amount' => 'required|int',
-            'discount_type' => 'required|int',
-            'good_category_id' => 'nullable|int',
-            'limit_flg' => 'required|boolean',
-            'combination_flg' => ['required','boolean', new CombinationFlagRule],
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'memo' => 'nullable|string',
+            "{$this->recordKey}.name" => 'required|string|max:255',
+            "{$this->recordKey}.code" => 'nullable|string|max:255',
+            "{$this->recordKey}.discount_amount" => 'required|int',
+            "{$this->recordKey}.discount_type" => 'required|int',
+            "{$this->recordKey}.good_category_id" => 'nullable|int',
+            "{$this->recordKey}.limit_flg" => 'required|boolean',
+            "{$this->recordKey}.combination_flg" => ['required','boolean', new CombinationFlagRule],
+            "{$this->recordKey}.start_date" => 'required|date',
+            "{$this->recordKey}.end_date" => 'required|date|after:start_date',
+            "{$this->recordKey}.memo" => 'nullable|string',
         ];
     }
 
     protected function prepareForValidation()
     {
-        if ($this->filled('start_date') && $this->filled('start_time')) {
-            $startDate = $this->input('start_date');
-            $startTime = $this->input('start_time');
+        if ($this->filled("{$this->recordKey}.start_date") && $this->filled("{$this->recordKey}.start_time")) {
+            $startDate = $this->input("{$this->recordKey}.start_date");
+            $startTime = $this->input("{$this->recordKey}.start_time");
 
             $this->merge([
-                'start_date' => mergeDateAndTime($startDate, $startTime),
+                "{$this->recordKey}.start_date" => mergeDateAndTime($startDate, $startTime),
             ]);
         }
         if ($this->filled('end_date') && $this->filled('end_time')) {
-            $endDate = $this->input('end_date');
-            $endTime = $this->input('end_time');
+            $endDate = $this->input("{$this->recordKey}.end_date");
+            $endTime = $this->input("{$this->recordKey}.end_time");
 
             $this->merge([
-                'end_date' => mergeDateAndTime($endDate, $endTime),
+                "{$this->recordKey}.end_date" => mergeDateAndTime($endDate, $endTime),
             ]);
         }
     }
@@ -60,16 +63,16 @@ class CouponRequest extends FormRequest
     public function attributes()
     {
         return [
-            'name' => '名前',
-            'code' => 'コード',
-            'discount_amount' => '割引値',
-            'discount_type' => '割引種別',
-            'good_category_id' => '対象カテゴリー',
-            'limit_flg' => '利用回数制限',
-            'combination_flg' => '併用可否',
-            'start_date' => '割引対象となる入庫日',
-            'end_date' => '終了日',
-            'memo' => 'メモ',
+            "{$this->recordKey}.name" => '名前',
+            "{$this->recordKey}.code" => 'コード',
+            "{$this->recordKey}.discount_amount" => '割引値',
+            "{$this->recordKey}.discount_type" => '割引種別',
+            "{$this->recordKey}.good_category_id" => '対象カテゴリー',
+            "{$this->recordKey}.limit_flg" => '利用回数制限',
+            "{$this->recordKey}.combination_flg" => '併用可否',
+            "{$this->recordKey}.start_date" => '割引対象となる入庫日',
+            "{$this->recordKey}.end_date" => '終了日',
+            "{$this->recordKey}.memo" => 'メモ',
         ];
     }
 }

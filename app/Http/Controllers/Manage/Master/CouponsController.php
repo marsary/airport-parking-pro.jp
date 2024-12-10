@@ -55,18 +55,20 @@ class CouponsController extends Controller
 
     public function store(CouponRequest $request)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_0";
         $coupon = Coupon::create([
             'office_id' => config('const.commons.office_id'),
-            'name' => $request->name,
-            'code' => $request->code,
-            'discount_amount' => $request->discount_amount,
-            'discount_type' => $request->discount_type,
-            'good_category_id' => $request->good_category_id,
-            'limit_flg' => $request->limit_flg,
-            'combination_flg' => $request->combination_flg,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'memo' => $request->memo,
+            'name' => $request->{$recordKey}['name'],
+            'code' => $request->{$recordKey}['code'],
+            'discount_amount' => $request->{$recordKey}['discount_amount'],
+            'discount_type' => $request->{$recordKey}['discount_type'],
+            'good_category_id' => $request->{$recordKey}['good_category_id'],
+            'limit_flg' => $request->{$recordKey}['limit_flg'],
+            'combination_flg' => $request->{$recordKey}['combination_flg'],
+            'start_date' => $request->{$recordKey}['start_date'],
+            'end_date' => $request->{$recordKey}['end_date'],
+            'memo' => $request->{$recordKey}['memo'],
         ]);
 
         return redirect()->back();
@@ -75,18 +77,20 @@ class CouponsController extends Controller
 
     public function update(CouponRequest $request, $id)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_" . $request->route()->parameter('coupon', 0);
         $coupon = Coupon::findOrFail($id);
         $coupon->fill([
-            'name' => $request->name,
-            'code' => $request->code,
-            'discount_amount' => $request->discount_amount,
-            'discount_type' => $request->discount_type,
-            'good_category_id' => $request->good_category_id,
-            'limit_flg' => $request->limit_flg,
-            'combination_flg' => $request->combination_flg,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'memo' => $request->memo,
+            'name' => $request->{$recordKey}['name'],
+            'code' => $request->{$recordKey}['code'],
+            'discount_amount' => $request->{$recordKey}['discount_amount'],
+            'discount_type' => $request->{$recordKey}['discount_type'],
+            'good_category_id' => $request->{$recordKey}['good_category_id'],
+            'limit_flg' => $request->{$recordKey}['limit_flg'],
+            'combination_flg' => $request->{$recordKey}['combination_flg'],
+            'start_date' => $request->{$recordKey}['start_date'],
+            'end_date' => $request->{$recordKey}['end_date'],
+            'memo' => $request->{$recordKey}['memo'],
         ])->save();
 
         return redirect()->back();
