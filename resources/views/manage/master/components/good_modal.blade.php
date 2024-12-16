@@ -19,7 +19,7 @@
             <dl>
               <dt>商品名</dt>
               <dd>
-                <input type="text" name="name" value="{{old('name', $good?->name)}}" class="u-w-full-wide">
+                <input type="text" name="record_{{ $good?->id ?? 0 }}[name]" value="{{old('record_' . ($good?->id ?? 0) . '.name', $good?->name)}}" class="u-w-full-wide">
               </dd>
             </dl>
             <div class="l-grid--col2 l-grid--gap1">
@@ -28,10 +28,10 @@
                   カテゴリー
                 </dt>
                 <dd class="c-form-select-color u-mb0">
-                  <select name="good_category_id" id="form_good_category_id_{{$good?->id}}">
+                  <select name="record_{{ $good?->id ?? 0 }}[good_category_id]" id="form_good_category_id_{{$good?->id}}">
                     @foreach ($goodCategories as $goodCategory)
                       <option value="{{ $goodCategory->id }}"
-                        {{old('good_category_id', $good?->good_category_id)==$goodCategory->id ? 'selected':''}}>
+                        {{old('record_' . ($good?->id ?? 0) . '.good_category_id', $good?->good_category_id)==$goodCategory->id ? 'selected':''}}>
                         {{$goodCategory->name }}
                       </option>
                     @endforeach
@@ -45,9 +45,9 @@
                   税区分
                 </dt>
                 <dd class="c-form-select-color u-mb0">
-                  <select name="tax_type" id="tax_type_{{$good?->id}}" onchange="dispTotal({{$good?->id}});" >
+                  <select name="record_{{ $good?->id ?? 0 }}[tax_type]" id="tax_type_{{$good?->id}}" onchange="dispTotal({{$good?->id}});" >
                     @foreach(\App\Enums\TaxType::cases() as $type)
-                      <option value="{{$type->value}}" {{old('tax_type', $good?->tax_type)==$type->value ? 'selected':''}}>
+                      <option value="{{$type->value}}" {{old('record_' . ($good?->id ?? 0) . '.tax_type', $good?->tax_type)==$type->value ? 'selected':''}}>
                         {{$type->label()}}
                       </option>
                     @endforeach
@@ -62,13 +62,13 @@
             <dl>
               <dt>略称</dt>
               <dd>
-                <input type="text" name="abbreviation" value="{{old('abbreviation', $good?->abbreviation)}}" class="u-w-full-wide">
+                <input type="text" name="record_{{ $good?->id ?? 0 }}[abbreviation]" value="{{old('record_' . ($good?->id ?? 0) . '.abbreviation', $good?->abbreviation)}}" class="u-w-full-wide">
               </dd>
             </dl>
             <dl>
               <dt>金額（税抜）</dt>
               <dd>
-                <input type="text" name="price" value="{{old('price', $good?->price)}}" id="price_{{$good?->id}}"
+                <input type="text" name="record_{{ $good?->id ?? 0 }}[price]" value="{{old('record_' . ($good?->id ?? 0) . '.price', $good?->price)}}" id="price_{{$good?->id}}"
                  onchange="dispTotal({{$good?->id}});" class="u-w-full-wide">
               </dd>
             </dl>
@@ -77,7 +77,7 @@
             <dl>
               <dt>説明</dt>
               <dd>
-                <input type="text" name="memo" value="{{old('memo', $good?->memo)}}" class="u-w-full-wide">
+                <input type="text" name="record_{{ $good?->id ?? 0 }}[memo]" value="{{old('record_' . ($good?->id ?? 0) . '.memo', $good?->memo)}}" class="u-w-full-wide">
               </dd>
             </dl>
 

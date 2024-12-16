@@ -33,17 +33,19 @@ class GoodsController extends Controller
 
     public function store(GoodRequest $request)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_0";
         $good = Good::create([
             'office_id' => config('const.commons.office_id'),
-            'good_category_id' => $request->good_category_id,
-            'name' => $request->name,
-            'abbreviation' => $request->abbreviation,
-            'price' => $request->price,
-            'tax_type' => $request->tax_type,
+            'good_category_id' => $request->{$recordKey}['good_category_id'],
+            'name' => $request->{$recordKey}['name'],
+            'abbreviation' => $request->{$recordKey}['abbreviation'],
+            'price' => $request->{$recordKey}['price'],
+            'tax_type' => $request->{$recordKey}['tax_type'],
             'start_date' => Carbon::today(),
             'end_date' => maxDateTime(),
             'regi_display_flag' => RegiDisplayFlag::RESERVE_ONLY->value,
-            'memo' => $request->memo,
+            'memo' => $request->{$recordKey}['memo'],
         ]);
 
         return redirect()->back();
@@ -52,14 +54,16 @@ class GoodsController extends Controller
 
     public function update(GoodRequest $request, $id)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_" . $request->route()->parameter('good', 0);
         $good = Good::findOrFail($id);
         $good->fill([
-            'good_category_id' => $request->good_category_id,
-            'name' => $request->name,
-            'abbreviation' => $request->abbreviation,
-            'price' => $request->price,
-            'tax_type' => $request->tax_type,
-            'memo' => $request->memo,
+            'good_category_id' => $request->{$recordKey}['good_category_id'],
+            'name' => $request->{$recordKey}['name'],
+            'abbreviation' => $request->{$recordKey}['abbreviation'],
+            'price' => $request->{$recordKey}['price'],
+            'tax_type' => $request->{$recordKey}['tax_type'],
+            'memo' => $request->{$recordKey}['memo'],
         ])->save();
 
         return redirect()->back();

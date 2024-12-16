@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class GoodRequest extends FormRequest
 {
+    private $recordKey;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,27 +22,29 @@ class GoodRequest extends FormRequest
      */
     public function rules(): array
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $this->recordKey = "record_" . $this->route()->parameter('good', 0);
         return [
-            'good_category_id' => 'required|int',
-            'name' => 'required|string|max:255',
-            'abbreviation' => 'nullable|string|max:255',
-            'price' => 'required|int',
-            'tax_type' => 'required|int',
-            'memo' => 'nullable|string',
+            "{$this->recordKey}.good_category_id" => 'required|int',
+            "{$this->recordKey}.name" => 'required|string|max:255',
+            "{$this->recordKey}.abbreviation" => 'nullable|string|max:255',
+            "{$this->recordKey}.price" => 'required|int',
+            "{$this->recordKey}.tax_type" => 'required|int',
+            "{$this->recordKey}.memo" => 'nullable|string',
         ];
     }
 
     public function attributes()
     {
         return [
-            'good_category_id' => '商品カテゴリーマスタID',
-            'office_id' => '事業所ID',
-            'status' => 'ステータス',
-            'name' => '名称',
-            'abbreviation' => '略称',
-            'price' => '価格',
-            'tax_type' => '税種別',
-            'memo'             => 'メモ',
+            "{$this->recordKey}.good_category_id" => '商品カテゴリーマスタID',
+            "{$this->recordKey}.office_id" => '事業所ID',
+            "{$this->recordKey}.status" => 'ステータス',
+            "{$this->recordKey}.name" => '名称',
+            "{$this->recordKey}.abbreviation" => '略称',
+            "{$this->recordKey}.price" => '価格',
+            "{$this->recordKey}.tax_type" => '税種別',
+            "{$this->recordKey}.memo"             => 'メモ',
         ];
     }
 }
