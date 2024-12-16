@@ -19,7 +19,7 @@
             <dl>
               <dt>商品カテゴリー名</dt>
               <dd>
-                <input type="text" name="name" class="u-w-full-wide" value="{{old('name', $goodCategory?->name)}}">
+                <input type="text" name="record_{{ $goodCategory?->id ?? 0 }}[name]" class="u-w-full-wide" value="{{old('record_' . ($goodCategory?->id ?? 0) . '.name', $goodCategory?->name)}}">
               </dd>
             </dl>
             <dl>
@@ -27,9 +27,9 @@
                 区分
               </dt>
               <dd class="c-form-select-color u-mb0">
-                <select name="type">
+                <select name="record_{{ $goodCategory?->id ?? 0 }}[type]">
                   @foreach(\App\Enums\GoodCategoryType::cases() as $type)
-                    <option value="{{$type->value}}" {{old('type', $goodCategory?->type)==$type->value ? 'selected':''}}>
+                    <option value="{{$type->value}}" {{old('record_' . ($goodCategory?->id ?? 0) . '.type', $goodCategory?->type)==$type->value ? 'selected':''}}>
                       {{$type->label()}}
                     </option>
                   @endforeach
@@ -41,7 +41,7 @@
             <dl>
               <dt>メモ</dt>
               <dd>
-                <textarea class="u-w-full-wide" rows="5" name="memo">{{old('memo', $goodCategory?->memo)}}</textarea>
+                <textarea class="u-w-full-wide" rows="5" name="record_{{ $goodCategory?->id ?? 0 }}[memo]">{{old('record_' . ($goodCategory?->id ?? 0) . '.memo', $goodCategory?->memo)}}</textarea>
               </dd>
             </dl>
 

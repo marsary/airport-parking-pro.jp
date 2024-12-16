@@ -30,12 +30,14 @@ class GoodCategoriesController extends Controller
 
     public function store(GoodCategoryRequest $request)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_0";
         $goodCategory = GoodCategory::create([
             'office_id' => config('const.commons.office_id'),
-            'name' => $request->name,
-            'type' => $request->type,
+            'name' => $request->{$recordKey}['name'],
+            'type' => $request->{$recordKey}['type'],
             'regi_display_flag' => RegiDisplayFlag::RESERVE_ONLY->value,
-            'memo' => $request->memo,
+            'memo' => $request->{$recordKey}['memo'],
         ]);
 
         return redirect()->back();
@@ -44,11 +46,13 @@ class GoodCategoriesController extends Controller
 
     public function update(GoodCategoryRequest $request, $id)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_" . $request->route()->parameter('good_category', 0);
         $goodCategory = GoodCategory::findOrFail($id);
         $goodCategory->fill([
-            'name' => $request->name,
-            'type' => $request->type,
-            'memo' => $request->memo,
+            'name' => $request->{$recordKey}['name'],
+            'type' => $request->{$recordKey}['type'],
+            'memo' => $request->{$recordKey}['memo'],
         ])->save();
 
         return redirect()->back();

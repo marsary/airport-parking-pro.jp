@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class GoodCategoryRequest extends FormRequest
 {
+    private $recordKey;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,19 +22,21 @@ class GoodCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $this->recordKey = "record_" . $this->route()->parameter('good_category', 0);
         return [
-            'name' => 'string|max:100',
-            'type' => 'int',
-            'memo' => 'nullable|string',
+            "{$this->recordKey}.name" => 'string|max:100',
+            "{$this->recordKey}.type" => 'int',
+            "{$this->recordKey}.memo" => 'nullable|string',
         ];
     }
 
     public function attributes()
     {
         return [
-            'name' => '名前',
-            'type' => '区分',
-            'memo' => 'メモ',
+            "{$this->recordKey}.name" => '名前',
+            "{$this->recordKey}.type" => '区分',
+            "{$this->recordKey}.memo" => 'メモ',
         ];
     }
 }
