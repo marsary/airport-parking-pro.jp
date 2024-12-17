@@ -61,37 +61,39 @@ class AgenciesController extends Controller
     public function store(AgencyRequest $request)
     {
         DB::transaction(function () use($request) {
+            // 動的なレコードIDに基づいた入力データの取得
+            $recordKey = "record_0";
             $agency = Agency::create([
                 'office_id' => config('const.commons.office_id'),
-                'name' => $request->name,
-                'code' => $request->code,
-                'zip' => $request->zip,
-                'address1' => $request->address1,
-                'address2' => $request->address2,
-                'tel' => $request->tel,
-                'keyword' => $request->keyword,
-                'branch' => $request->branch,
-                'department' => $request->department,
-                'position' => $request->position,
-                'person' => $request->person,
-                'email' => $request->email,
-                'payment_site' => $request->payment_site,
-                'payment_destination' => $request->payment_destination,
-                'memo' => $request->memo,
-                'monthly_fixed_cost_flag' => $request->monthly_fixed_cost_flag,
-                'monthly_fixed_cost' => $request->monthly_fixed_cost,
-                'incentive_flag' => $request->incentive_flag,
-                'incentive' => $request->incentive,
-                'banner_comment_set' => $request->banner_comment_set,
-                'title_set' => $request->title_set,
+                'name' => $request->{$recordKey}['name'],
+                'code' => $request->{$recordKey}['code'],
+                'zip' => $request->{$recordKey}['zip'],
+                'address1' => $request->{$recordKey}['address1'],
+                'address2' => $request->{$recordKey}['address2'],
+                'tel' => $request->{$recordKey}['tel'],
+                'keyword' => $request->{$recordKey}['keyword'],
+                'branch' => $request->{$recordKey}['branch'],
+                'department' => $request->{$recordKey}['department'],
+                'position' => $request->{$recordKey}['position'],
+                'person' => $request->{$recordKey}['person'],
+                'email' => $request->{$recordKey}['email'],
+                'payment_site' => $request->{$recordKey}['payment_site'],
+                'payment_destination' => $request->{$recordKey}['payment_destination'],
+                'memo' => $request->{$recordKey}['memo'],
+                'monthly_fixed_cost_flag' => $request->{$recordKey}['monthly_fixed_cost_flag'],
+                'monthly_fixed_cost' => $request->{$recordKey}['monthly_fixed_cost'],
+                'incentive_flag' => $request->{$recordKey}['incentive_flag'],
+                'incentive' => $request->{$recordKey}['incentive'],
+                'banner_comment_set' => $request->{$recordKey}['banner_comment_set'],
+                'title_set' => $request->{$recordKey}['title_set'],
             ]);
 
-            if($request->has('logo_image')) {
-                $logoPath = UploadService::saveFile($request->file('logo_image'), '/agencies/' . $agency->id);
+            if($request->has("{$recordKey}.logo_image")) {
+                $logoPath = UploadService::saveFile($request->file("{$recordKey}.logo_image"), '/agencies/' . $agency->id);
                 $agency->logo_image = $logoPath;
             }
-            if($request->has('campaign_image')) {
-                $campaignPath = UploadService::saveFile($request->file('campaign_image'), '/agencies/' . $agency->id);
+            if($request->has("{$recordKey}.campaign_image")) {
+                $campaignPath = UploadService::saveFile($request->file("{$recordKey}.campaign_image"), '/agencies/' . $agency->id);
                 $agency->campaign_image = $campaignPath;
             }
             $agency->save();
@@ -104,45 +106,48 @@ class AgenciesController extends Controller
 
     public function update(AgencyRequest $request, $id)
     {
+        // 動的なレコードIDに基づいた入力データの取得
+        $recordKey = "record_" . $request->route()->parameter('agency', 0);
+
         $agency = Agency::findOrFail($id);
 
-        if($request->has('logo_image')) {
+        if($request->has("{$recordKey}.logo_image")) {
             if($agency->logo_image && Storage::disk('uploads')->exists($agency->logo_image)){
                 Storage::disk('uploads')->delete($agency->logo_image);
             }
-            $logoPath = UploadService::saveFile($request->file('logo_image'), '/agencies/' . $agency->id);
+            $logoPath = UploadService::saveFile($request->file("{$recordKey}.logo_image"), '/agencies/' . $agency->id);
             $agency->logo_image = $logoPath;
         }
-        if($request->has('campaign_image')) {
+        if($request->has("{$recordKey}.campaign_image")) {
             if($agency->campaign_image && Storage::disk('uploads')->exists($agency->campaign_image)){
                 Storage::disk('uploads')->delete($agency->campaign_image);
             }
-            $campaignPath = UploadService::saveFile($request->file('campaign_image'), '/agencies/' . $agency->id);
+            $campaignPath = UploadService::saveFile($request->file("{$recordKey}.campaign_image"), '/agencies/' . $agency->id);
             $agency->campaign_image = $campaignPath;
         }
 
         $agency->fill([
-            'name' => $request->name,
-            'code' => $request->code,
-            'zip' => $request->zip,
-            'address1' => $request->address1,
-            'address2' => $request->address2,
-            'tel' => $request->tel,
-            'keyword' => $request->keyword,
-            'branch' => $request->branch,
-            'department' => $request->department,
-            'position' => $request->position,
-            'person' => $request->person,
-            'email' => $request->email,
-            'payment_site' => $request->payment_site,
-            'payment_destination' => $request->payment_destination,
-            'memo' => $request->memo,
-            'monthly_fixed_cost_flag' => $request->monthly_fixed_cost_flag,
-            'monthly_fixed_cost' => $request->monthly_fixed_cost,
-            'incentive_flag' => $request->incentive_flag,
-            'incentive' => $request->incentive,
-            'banner_comment_set' => $request->banner_comment_set,
-            'title_set' => $request->title_set,
+            'name' => $request->{$recordKey}['name'],
+            'code' => $request->{$recordKey}['code'],
+            'zip' => $request->{$recordKey}['zip'],
+            'address1' => $request->{$recordKey}['address1'],
+            'address2' => $request->{$recordKey}['address2'],
+            'tel' => $request->{$recordKey}['tel'],
+            'keyword' => $request->{$recordKey}['keyword'],
+            'branch' => $request->{$recordKey}['branch'],
+            'department' => $request->{$recordKey}['department'],
+            'position' => $request->{$recordKey}['position'],
+            'person' => $request->{$recordKey}['person'],
+            'email' => $request->{$recordKey}['email'],
+            'payment_site' => $request->{$recordKey}['payment_site'],
+            'payment_destination' => $request->{$recordKey}['payment_destination'],
+            'memo' => $request->{$recordKey}['memo'],
+            'monthly_fixed_cost_flag' => $request->{$recordKey}['monthly_fixed_cost_flag'],
+            'monthly_fixed_cost' => $request->{$recordKey}['monthly_fixed_cost'],
+            'incentive_flag' => $request->{$recordKey}['incentive_flag'],
+            'incentive' => $request->{$recordKey}['incentive'],
+            'banner_comment_set' => $request->{$recordKey}['banner_comment_set'],
+            'title_set' => $request->{$recordKey}['title_set'],
         ])->save();
 
         return redirect()->back();
