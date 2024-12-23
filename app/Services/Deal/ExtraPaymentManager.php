@@ -40,6 +40,7 @@ class ExtraPaymentManager
                 $this->deal->load_date,
                 $this->deal->unload_date_plan,
                 $this->pendingDays,
+                $today,
                 $this->deal->agency_id
             );
         }
