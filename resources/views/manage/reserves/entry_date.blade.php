@@ -354,6 +354,7 @@
   .fc-daygrid-day {
     background-color: #eee;
     text-align: center;
+    height: 90px !important;
   }
   .fc-day.fc-day-today.fc-daygrid-day:not(.day_full), .fc-day.fc-day-future.fc-daygrid-day:not(.day_full) {
     cursor: pointer;
@@ -374,12 +375,16 @@
   a.fc-col-header-cell-cushion {
     padding: 10px !important;
   }
+  .fc-daygrid-day-events::after, .fc-daygrid-day-events::before,
+  .fc-daygrid-event-harness::after, .fc-daygrid-event-harness::before {
+    content: none;
+  }
   a.fc-daygrid-day-number {
     display: block;
     width:100%;
   }
   .fc .fc-daygrid-day-top {
-    margin-top: 5px;
+    margin-top: 3px;
   }
   .hour_label_cell, .quarter_hour_label_cell {
     cursor: pointer;
