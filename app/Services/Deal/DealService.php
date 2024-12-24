@@ -28,6 +28,9 @@ class DealService extends ReserveService
 
     protected function updateMember()
     {
+        if(!$this->reserve->member) {
+            return;
+        }
         $member = Member::findOrFail($this->reserve->member->id);
 
         return $member->fill([
