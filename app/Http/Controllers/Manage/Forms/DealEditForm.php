@@ -19,7 +19,6 @@ class DealEditForm extends ManageReserveForm
         if($deal->member) {
             $this->member_id = $deal->member->id;
             $this->member = $deal->member;
-            // $this->fill($deal->member);
         }
         $this->setMemberAndCarFromDeal($deal);
 

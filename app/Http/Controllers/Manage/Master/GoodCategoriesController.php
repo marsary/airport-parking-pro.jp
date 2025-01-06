@@ -59,7 +59,7 @@ class GoodCategoriesController extends Controller
     }
 
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $goodCategory = GoodCategory::findOrFail($id);
         $goodCategory->delete();

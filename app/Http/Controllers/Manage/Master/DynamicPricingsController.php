@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Manage\Master;
 
 use App\Http\Controllers\Manage\Controller;
-use App\Http\Requests\Manage\Master\DynamicPricingRequest;
 use App\Http\Requests\Manage\Master\DynamicPricingsRequest;
 use App\Models\DynamicPricing;
-use Illuminate\Http\Request;
 
 class DynamicPricingsController extends Controller
 {

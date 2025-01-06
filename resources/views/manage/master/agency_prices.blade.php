@@ -47,13 +47,6 @@
             <li class="pointer link-text">{{$agency->name}}</li>
             @endforeach
             {{--  <li class="pointer link-text">HIS なんば支店</li>
-            <li class="pointer link-text">HIS 梅田支店</li>
-            <li class="pointer link-text">HIS 千里中央支店</li>
-            <li class="pointer link-text">JTB 甲東支店</li>
-            <li class="pointer link-text">JTB 尼崎支店</li>
-            <li class="pointer link-text">JTB 神崎支店</li>
-            <li class="pointer link-text">JTB 住之江支店</li>
-            <li class="pointer link-text">近畿ツーリスト 広島支店</li>
             <li class="pointer link-text">近畿ツーリスト 広島支店</li>  --}}
           </ul>
           <!-- 装飾 -->
@@ -88,23 +81,7 @@
                     </td>
                   </tr>
                 @endforeach
-                {{--  <tr>
-                  <td>HIS なんば支店</td>
-                  <td>2021/01/01～2021/12/31</td>
-                  <td>メモメモメモ</td>
-                  <td>
-                    <button type="button" class="c-button__edit button_select">編集</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>HIS なんば支店</td>
-                  <td>2021/01/01～2021/12/31</td>
-                  <td>メモメモメモ</td>
-                  <td>
-                    <button type="button" class="c-button__edit button_select">編集</button>
-                  </td>
-                </tr>
-                <tr>
+                {{-- <tr>
                   <td>HIS なんば支店</td>
                   <td>2021/01/01～2021/12/31</td>
                   <td>メモメモメモ</td>
@@ -145,14 +122,10 @@
     )
   @endforeach
 
-
-
 @endsection
 @push("scripts")
 <!-- ▼閉じるボタン -->
   <script src="{{ asset('js/close_button_toggle.js') }}"></script>
-  <!-- モーダル -->
-  {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
 
   <!-- テーブルのヘッダ部分ソートスクリプト -->
   <script src="{{ asset('js/tableHeaderSort.js') }}"></script>

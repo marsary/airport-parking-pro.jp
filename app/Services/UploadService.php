@@ -7,6 +7,14 @@ use Illuminate\Support\Facades\Storage;
 class UploadService
 {
 
+    /**
+     * アップロードファイルを public/uploads フォルダの指定のパスに保存する
+     *
+     * @param UploadedFile $uploadedFile
+     * @param string $uploadPath
+     * @return string $path
+     * @throws HttpException
+     */
     public static function saveFile(UploadedFile $uploadedFile, $uploadPath = '/')
     {
         // アップロードされたファイル名を取得

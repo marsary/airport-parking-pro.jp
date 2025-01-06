@@ -43,20 +43,6 @@
                   <td>
                     <button type="button" class="c-button__edit button_select">編集</button>
                   </td>
-                </tr>
-                <tr>
-                  <td>2021/01/01～2021/12/31</td>
-                  <td>メモメモメモ</td>
-                  <td>
-                    <button type="button" class="c-button__edit button_select">編集</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2021/01/01～2021/12/31</td>
-                  <td>メモメモメモ</td>
-                  <td>
-                    <button type="button" class="c-button__edit button_select">編集</button>
-                  </td>
                 </tr>  --}}
               </tbody>
             </table>
@@ -156,8 +142,6 @@
 @push("scripts")
   <!-- 閉じる・開く切替 -->
   <script src="{{ asset('js/close_button_toggle.js') }}"></script>
-  <!-- モーダル -->
-  {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
 
   <script>
     let createModal;
