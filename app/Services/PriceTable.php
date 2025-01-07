@@ -3,7 +3,6 @@ namespace App\Services;
 
 use App\Enums\TaxType;
 use App\Models\AgencyPrice;
-use App\Models\Coupon;
 use App\Models\Price;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -129,7 +128,7 @@ class PriceData
                     $query->where('start_date', '<=', $unloadDate)
                           ->where('end_date', '>=', $loadDate);
                 })
-                ->orderBy('id')
+                ->orderBy('updated_at', 'desc')
                 ->get();
         } else {
             $this->pricesTable = Price::where('office_id', config('const.commons.office_id'))
@@ -137,7 +136,7 @@ class PriceData
                 $query->whereDate('start_date', '<=', $unloadDate)
                       ->whereDate('end_date', '>=', $loadDate);
             })
-            ->orderBy('id')
+            ->orderBy('updated_at', 'desc')
             ->get();
         }
     }
@@ -161,7 +160,7 @@ class PriceData
     {
         // 最新のベース料金を取得
         return $this->pricesTable
-            ->sortByDesc('id') // id で降順に並べ替え
+            ->sortByDesc('updated_at') // id で降順に並べ替え
             ->first()?->base_price;    // 最初のレコードの base_price を取得
     }
 }

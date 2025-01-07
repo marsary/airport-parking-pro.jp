@@ -58,6 +58,12 @@ class RegistersController extends Controller
             DB::transaction(function () use($request) {
                 $service = new PaymentService($request->input('deal_id'), $request->all());
                 $service->save();
+
+                // ステータス更新 入庫済み
+                if($service->deal->status != DealStatus::UNLOADED->value) {
+                    $service->deal->status = DealStatus::LOADED->value;
+                    $service->deal->save();
+                }
             });
         } catch (\Throwable $th) {
             Log::error('エラー内容：' . $th->getMessage());
