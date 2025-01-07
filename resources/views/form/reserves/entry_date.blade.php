@@ -227,7 +227,7 @@
 
         <div class="is-none p-input-user-total-parking-charges__detail" id="toggle_element">
           <div class="p-input-user-total-parking-charges__detail-title">
-            <div>駐車料金明細（税込）</div>
+            <div>駐車料金明細（税抜）</div>
             <div type="button" class="p-input-user-total-parking-charges__detail-close-button" id="close_button"><img src="{{ asset('images/icon/closeButton.svg') }}" width="15" height="15" /></div>
           </div>
           <div id="price_rows" class="p-input-user-total-parking-charges__detail-list">
