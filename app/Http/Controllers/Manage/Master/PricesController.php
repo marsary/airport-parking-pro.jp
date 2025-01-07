@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Manage\Master;
 
-use App\Enums\CarSize as EnumsCarSize;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\Master\CarSizeRateRequest;
 use App\Http\Requests\Manage\Master\PricesRequest;
 use App\Models\CarSize;
 use App\Models\Price;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class PricesController extends Controller

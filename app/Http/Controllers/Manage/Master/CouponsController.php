@@ -13,7 +13,6 @@ class CouponsController extends Controller
     //
     public function index(Request $request)
     {
-        // dd($request->all());
         $query = Coupon::where('office_id', config('const.commons.office_id'))
             ->when($request->input('name'), function($query, $search){
                 $query->where('name', 'LIKE', '%' . $search . '%');
@@ -97,7 +96,7 @@ class CouponsController extends Controller
     }
 
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $coupon = Coupon::findOrFail($id);
         $coupon->delete();

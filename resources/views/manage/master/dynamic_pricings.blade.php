@@ -24,10 +24,6 @@
                 <th><button type="button" class="c-button__edit l-table-dynamic-pricing-list__button button_select" onclick="openEditModal({{$dynamicPricing->sort}})">編集</button></th>
               @endforeach
               {{--  <th><button type="" class="c-button__edit l-table-dynamic-pricing-list__button button_select">編集</button></th>
-              <th><button type="" class="c-button__edit l-table-dynamic-pricing-list__button button_select">編集</button></th>
-              <th><button type="" class="c-button__edit l-table-dynamic-pricing-list__button button_select">編集</button></th>
-              <th><button type="" class="c-button__edit l-table-dynamic-pricing-list__button button_select">編集</button></th>
-              <th><button type="" class="c-button__edit l-table-dynamic-pricing-list__button button_select">編集</button></th>
               <th><button type="" class="c-button__edit l-table-dynamic-pricing-list__button button_select">編集</button></th>  --}}
             </tr>
           </thead>
@@ -49,168 +45,84 @@
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p10 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>11%-20%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p20 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>21%-30%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p30 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>31%-40%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p40 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>41%-50%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p50 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>51%-60%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p60 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>61%-70%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p70 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>71%-80%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p80 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>81%-90%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p90 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>91%-100%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p100 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>101%-110%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p110 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>111%-120%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p120 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>121%-130%</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p130 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
             <tr>
               <th>131%～</th>
               @foreach ($dynamicPricings as $dynamicPricing)
                 <td>{{ $dynamicPricing->p131 }}</td>
               @endforeach
-              {{--  <td>100</td>
-              <td>500</td>
-              <td>2000</td>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>  --}}
             </tr>
           </tbody>
         </table>
@@ -245,8 +157,6 @@
 
 @endsection
 @push("scripts")
-<!-- モーダル -->
-{{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
 <script>
   let modalCloseOption;
   let sortInput;

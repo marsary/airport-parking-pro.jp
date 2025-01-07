@@ -20,7 +20,7 @@
             <div id="airlineFileNameDisplay" class="l-position__upload"></div>
             <a href="" download="" class="c-button__csv--download">csvダウンロード</a>
           </div>
-  
+
           <div class="p-master-register__item">
             <div class="p-master-register__title p-master-register__title--bordered">空港マスタ</div>
             <div class="c-button__csv--upload">
@@ -30,7 +30,7 @@
             <div id="airportFileNameDisplay" class="l-position__upload"></div>
             <a href="" download="" class="c-button__csv--download">csvダウンロード</a>
           </div>
-  
+
           <div class="p-master-register__item">
             <div class="p-master-register__title">フライトマスタ</div>
             <div class="c-button__csv--upload">

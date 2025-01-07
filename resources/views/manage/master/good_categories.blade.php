@@ -67,36 +67,6 @@
               <td>MEMOメモめも</td>
               <td><button class="c-button__edit button_select">編集</button></td>
             </tr>  --}}
-            {{--  <tr>
-              <td>洗車</td>
-              <td>出庫までに作業が必要</td>
-              <td>MEMOメモめも</td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>出庫までに作業が必要</td>
-              <td>MEMOメモめも</td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>出庫までに作業が必要</td>
-              <td>MEMOメモめも</td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>出庫までに作業が必要</td>
-              <td>MEMOメモめも</td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>
-            <tr>
-              <td>洗車</td>
-              <td>出庫までに作業が必要</td>
-              <td>MEMOメモめも</td>
-              <td><button class="c-button__edit button_select">編集</button></td>
-            </tr>  --}}
           </tbody>
         </table>
       </div>
@@ -123,60 +93,9 @@
       ]
     )
   @endforeach
-  {{--  <div id="modalAreaOption" class="l-modal isd-active">
-    <!-- モーダルのinnerを記述   -->
-    <div class="l-modal__inner l-modal--trash">
-      <div class="l-modal__head">編集</div>
-      <!-- close button -->
-      <div class="l-modal__close modal_optionClose">×</div>
-      <div class="l-modal__content">
-        <form class="l-flex--column l-flex--column l-flex--sb u-w-full">
-          <div class="l-modal--productCategory-edit">
-            <div class="c-title__modal--lv3">商品カテゴリー編集</div>
 
-              <!-- 1列目 -->
-              <dl>
-                <dt>商品カテゴリー名</dt>
-                <dd>
-                  <input type="text" class="u-w-full-wide">
-                </dd>
-              </dl>
-              <dl>
-                <dt>
-                  区分
-                </dt>
-                <dd class="c-form-select-color u-mb0">
-                  <select name="" id="">
-                    <option value="">出庫までに作業が必要</option>
-                    <option value="">出庫までに作業が不要</option>
-                  </select>
-                </dd>
-              </dl>
-              <dl>
-                <dt>メモ</dt>
-                <dd>
-                  <textarea class="u-w-full-wide" rows="5"></textarea>
-                </dd>
-              </dl>
-
-          </div>
-
-          <div class="l-flex--center l-grid--gap1 u-mt2 u-mb2">
-            <button type="button" id="modal_add" class="c-button__submit">保存</button>
-          </div>
-        </form>
-      </div><!-- ./l-modal__content -->
-
-      <!-- データ削除ボタン -->
-      <div class="l-modal__trashButton">
-        <img src="../images/svg/trash.svg" alt="ゴミ箱" width="100%" class="l-modal--trashButton">
-      </div>
-    </div><!-- ./l-modal inner -->
-    <!-- 閉じる・追加ボタン -->
-  </div>  --}}
 @endsection
 @push("scripts")
-  {{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
   <script src="{{ asset('js/tableHeaderSort.js') }}"></script>
   <!-- 閉じるボタン -->
   <script src="{{ asset('js/close_button_toggle.js') }}"></script>
@@ -184,7 +103,6 @@
     let createModal;
     let modalAreaOptions;
     let modalCloseOption;
-    //const modalButtons = document.querySelectorAll('.button_select');
 
     function openCreateModal() {
       createModal.classList.add('is-active');

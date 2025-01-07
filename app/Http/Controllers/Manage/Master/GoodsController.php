@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Manage\Master;
 
 use App\Enums\RegiDisplayFlag;
-use App\Enums\TaxType;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\Master\GoodRequest;
 use App\Models\Good;
@@ -70,7 +69,7 @@ class GoodsController extends Controller
     }
 
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         $good = Good::findOrFail($id);
         $good->delete();

@@ -51,7 +51,6 @@ class AgenciesController extends Controller
 
     public function upload(AgencyUploadRequest $request)
     {
-        // dd($request->all());
         (new AgencyImport)->import($request->file('csvFileInput'), null, \Maatwebsite\Excel\Excel::CSV);
 
         return redirect()->back();
