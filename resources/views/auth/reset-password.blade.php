@@ -4,6 +4,7 @@
 
         <!-- Password Reset Token -->
         <input type="hidden" name="token" value="{{ $request->route('token') }}">
+        <input type="hidden" name="redirect_route" value="{{ $request->input('redirectRoute') }}">
 
         <!-- Email Address -->
         <div>
@@ -32,7 +33,11 @@
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button>
-                {{ __('Reset Password') }}
+                @if ($request->mode == 'new')
+                    {{ __('New Password') }}
+                @else
+                    {{ __('Reset Password') }}
+                @endif
             </x-primary-button>
         </div>
     </form>
