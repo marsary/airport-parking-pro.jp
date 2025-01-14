@@ -33,6 +33,7 @@ class Member extends Authenticatable
         'line_email',
         'image_url',
         'password',
+        'remember_token',
         'used_num',
         'memo',
         'created_by',
