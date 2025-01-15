@@ -29,7 +29,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('reserves/confirm', [\App\Http\Controllers\Manage\ReservesController::class, 'confirm'])->name('reserves.confirm');
         Route::resource('reserves', \App\Http\Controllers\Manage\ReservesController::class);
 
+        Route::get('ledger', [\App\Http\Controllers\Manage\LedgerController::class, 'index'])->name('ledger.index');
         Route::get('ledger/inventories', [\App\Http\Controllers\Manage\LedgerController::class, 'inventories'])->name('ledger.inventories');
+        Route::get('ledger/agency_sales_lists', [\App\Http\Controllers\Manage\LedgerController::class, 'agencySalesLists'])->name('ledger.agency_sales_lists');
+        Route::get('ledger/agency_result', [\App\Http\Controllers\Manage\LedgerController::class, 'agencyResult'])->name('ledger.agency_result');
 
         Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
         Route::get('marketing/graph/inventory/chart_by_day', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByDay'])->name('marketing.graph.inventory.chart_by_day');

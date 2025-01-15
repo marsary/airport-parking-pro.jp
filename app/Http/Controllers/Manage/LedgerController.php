@@ -14,6 +14,14 @@ class LedgerController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function index()
+    {
+        return view('manage.ledger.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
     public function inventories(Request $request)
     {
         // dd($request->all());
@@ -73,5 +81,15 @@ class LedgerController extends Controller
                 'senshaCategoryId' => GoodCategory::where('name', '洗車')->first()?->id
             ]);
         }
+    }
+
+    public function agencySalesLists(Request $request)
+    {
+        return view('manage.ledger.agency_sales_lists');
+    }
+
+    public function agencyResult(Request $request)
+    {
+        return view('manage.ledger.agency_result');
     }
 }
