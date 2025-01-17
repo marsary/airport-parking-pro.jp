@@ -37,7 +37,7 @@ function getToUrl(url = null, params = {}, withQueryStrings = true) {
  *
  * @param {HTMLTableElement} tableElem
  * @param {string} checkboxName
- * @returns
+ * @returns {Array}
  */
 function getTableCheckedRowValues(tableElem, checkboxName) {
     let valueArray = [];
@@ -89,6 +89,7 @@ function appendDataToFormElem(form, data) {
     });
 }
 
+
 function isObject(obj)
 {
     return obj != null && obj.constructor.name === "Object"
@@ -102,4 +103,14 @@ function parseDateInput(inputValue) {
         dateObj = luxon.DateTime.fromFormat(inputValue, 'yyyy-MM-dd HH:mm:ss')
     }
     return dateObj;
+}
+
+function asObject(value = []) {
+    if(isObject(value)) {
+        return value;
+    }
+    if(Array.isArray(value)) {
+        return { ...value }
+    }
+    return {};
 }

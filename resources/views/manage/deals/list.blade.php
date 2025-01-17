@@ -42,7 +42,7 @@
     </div>
   </div>  --}}
 
-  <div class="l-table-list__wrapper u-mb3">
+  <div class="l-table-l-table-list--scroll__wrappe u-mb3">
     <table id="search_result_table" class="l-table-list--scroll --blue">
       <tr>
         <th>

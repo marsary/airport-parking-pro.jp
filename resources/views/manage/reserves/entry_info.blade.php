@@ -252,10 +252,11 @@
               @foreach ($reserve->good_ids as $good_id)
                 @php
                   $good = $goodsMap[$good_id];
+                  $goodNum = $reserve->good_nums[$good_id] ?? 1;
                 @endphp
                 <div class="c-button__remove item-container remove_good">
                   <img src="{{ asset('images/icon/removeButton.svg') }}" value="{{$good->id}}" width="16" height="16" class="button_remove">
-                  {{$good->name}} ¥{{number_format($good->price)}}
+                  {{$good->name}} ¥{{number_format($good->price * $goodNum)}}
                 </div>
               @endforeach
             @endif
@@ -263,6 +264,7 @@
             <div class="c-button__remove item-container"><img src="{{ asset('images/icon/removeButton.svg') }}" width="16" height="16" class="button_remove">iPhone充電ケーブル ¥1,200</div>  --}}
           </div>
           <input type="hidden" id="good_ids" name="good_ids" value="{{old('good_ids', implode(',', $reserve->good_ids))}}">
+          <input type="hidden" id="good_nums" name="good_nums" value="{{old('good_nums', json_encode($reserve->good_nums))}}">
         </div>
       </div><!-- /.l-reception-input__box -->
 
@@ -291,14 +293,18 @@
 <script src="{{ asset('js/select2.min.js') }}"></script>
 <script src="{{ asset('js/ja.js') }}"></script>
 <script src="{{ asset('js/commons/cars.js') }}"></script>
+<script src="{{ asset('js/pages/member/option_select.js') }}"></script>
 <script src="{{ asset('js/pages/manage/entry_info.js') }}"></script>
 {{--  <script src="{{ asset('js/modalOption.js') }}"></script>
 <script src="{{ asset('js/removeButton.js') }}"></script>  --}}
 <script>
   const goodsMap = @js($goodsMap);
   let goodIds = @js($reserve->good_ids);
+  let goodNums = asObject(@js($reserve->good_nums));
   let checkedOptionList = null;
   let goodIdsElem = null;
+  let goodNumsElem = null;
+
   function openOptionModal(modalId) {
     const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
     modalAreaOption.classList.add('is-active');
@@ -318,6 +324,7 @@
     removeAllChildNodes(checkedOptionList)
     goodIds.forEach((goodId) => {
       const good = goodsMap[goodId];
+      const goodNum = goodNums[goodId] ?? 0;
       const div = document.createElement('div')
       const img = document.createElement('img')
       const span = document.createElement('span')
@@ -332,7 +339,7 @@
         removeOption(img);
       });
 
-      span.textContent = good?.name + formatCurrency(good?.price, ' ¥');
+      span.textContent = good?.name + formatCurrency(good?.price * goodNum, ' ¥');
       div.appendChild(img)
       div.appendChild(span)
       checkedOptionList.appendChild(div)
@@ -345,6 +352,7 @@
     removeAllChildNodes(checkedOptionList)
     goodIds.forEach((goodId) => {
       const good = goodsMap[goodId];
+      const goodNum = goodNums[goodId] ?? 0;
       const div = document.createElement('div')
       const img = document.createElement('img')
       const span = document.createElement('span')
@@ -359,13 +367,14 @@
         removeOption(img);
       });
 
-      span.textContent = good?.name + formatCurrency(good?.price, ' ¥');
+      span.textContent = good?.name + formatCurrency(good?.price * goodNum, ' ¥');
       div.appendChild(img)
       div.appendChild(span)
       checkedOptionList.appendChild(div)
     })
 
     goodIdsElem.value = goodIds.join(',')
+    goodNumsElem.value = JSON.stringify(goodNums);
   }
 
   function addRemoveList(list, addingList, removingList = [])
@@ -385,8 +394,10 @@
       const goodId = checkbox.value;
       if(checkbox.checked) {
         addingIds.push(goodId);
+        addGoodNums(goodId)
       } else {
         removingIds.push(goodId);
+        removeGoodNums(goodId)
       }
     });
 
@@ -394,9 +405,24 @@
     updateOptionList()
   }
 
+
+  function updateOptionQuantity(goodId) {
+    addGoodNums(goodId)
+    updateOptionList()
+  }
+
+  function addGoodNums(goodId) {
+    const modalGoodNumElem = document.getElementById('modal_good_nums_' + goodId);
+    goodNums[goodId] = (modalGoodNumElem.value != '') ? modalGoodNumElem.value:0;
+  }
+  function removeGoodNums(goodId) {
+    delete goodNums[goodId];
+  }
+
   function removeOption(btnElem) {
     const removingId = btnElem.value
     goodIds = addRemoveList(goodIds, [], [removingId]);
+    removeGoodNums(removingId)
     updateOptionList()
 
     const parent = btnElem.closest('.item-container');
@@ -404,11 +430,15 @@
       parent.remove();
     }
     document.getElementById('modal_good_ids_' + removingId).checked = false;
+    const modalGoodNumElem = document.getElementById('modal_good_nums_' + removingId);
+    modalGoodNumElem.value = 0;
+    updateTotalAmount(modalGoodNumElem)
   }
 
   window.addEventListener('DOMContentLoaded', function() {
     checkedOptionList = document.getElementById('checked-option-list');
     goodIdsElem = document.getElementById('good_ids');
+    goodNumsElem = document.getElementById('good_nums');
     const removeGoodBtnElems = Array.from(document.getElementsByClassName('button_remove'));
 
     removeGoodBtnElems.forEach((btnElem) => btnElem.addEventListener('click', function() {

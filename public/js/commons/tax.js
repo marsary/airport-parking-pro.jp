@@ -5,7 +5,7 @@ const TaxTypes = Object.freeze({
 });
 
 function calcTax(taxType, price = null) {
-    switch (taxType) {
+    switch (Number(taxType)) {
         case TaxTypes.EIGHT_PERCENT:
             return parseInt(price * 0.08);
             break;

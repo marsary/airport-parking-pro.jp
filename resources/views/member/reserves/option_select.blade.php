@@ -35,10 +35,11 @@
           @foreach ($reserve->good_ids as $good_id)
             @php
               $good = $goodsMap[$good_id];
+              $goodNum = $reserve->good_nums[$good_id] ?? 1;
             @endphp
             <div class="c-button__remove item-container remove_good">
               <img src="{{ asset('images/icon/removeButton.svg') }}" value="{{$good->id}}" width="16" height="16" class="button_remove">
-              {{$good->name}} ¥{{number_format($good->price)}}
+              {{$good->name}} ¥{{number_format($good->price * $goodNum)}}
             </div>
           @endforeach
         @endif
@@ -46,6 +47,7 @@
         <div class="c-button__remove item-container"><img src="{{ asset('images/icon/removeButton.svg') }}" width="16" height="16" class="button_remove">iPhone充電ケーブル ¥1,200</div>  --}}
       </div>
       <input type="hidden" id="good_ids" name="good_ids" value="{{old('good_ids', implode(',', $reserve->good_ids))}}">
+      <input type="hidden" id="good_nums" name="good_nums" value="{{old('good_nums', json_encode($reserve->good_nums))}}">
     </div>
 
     <div class="p-user-input-auto-output__wrap u-mb4">
@@ -86,18 +88,23 @@
 
 @endsection
 @push("scripts")
+<script src="{{ asset('js/pages/member/option_select.js') }}"></script>
 {{--  <script src="../js/modalOption.js"></script>  --}}
 {{--  <script src="{{ asset('js/removeButton.js') }}"></script>  --}}
 <script>
   const goodsMap = @js($goodsMap);
   let goodIds = @js($reserve->good_ids);
+  let goodNums = asObject(@js($reserve->good_nums));
   let couponIds = @js($reserve->coupon_ids);
   const couponsMap = @js($couponsMap);
   let checkedOptionList = null;
   let couponInfoElem = null;
   let goodIdsElem = null;
+  let goodNumsElem = null;
   let couponIdsElem = null;
   let couponCodeElem = null;
+
+
   function openOptionModal(modalId) {
     const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
     modalAreaOption.classList.add('is-active');
@@ -113,6 +120,7 @@
     removeAllChildNodes(checkedOptionList)
     goodIds.forEach((goodId) => {
       const good = goodsMap[goodId];
+      const goodNum = goodNums[goodId] ?? 0;
       const div = document.createElement('div')
       const img = document.createElement('img')
       const span = document.createElement('span')
@@ -127,13 +135,14 @@
         removeOption(img);
       });
 
-      span.textContent = good?.name + formatCurrency(good?.price, ' ¥');
+      span.textContent = good?.name + formatCurrency(good?.price * goodNum, ' ¥');
       div.appendChild(img)
       div.appendChild(span)
       checkedOptionList.appendChild(div)
     })
 
-    goodIdsElem.value = goodIds.join(',')
+    goodIdsElem.value = goodIds.join(',');
+    goodNumsElem.value = JSON.stringify(goodNums);
   }
 
   function updateCouponList() {
@@ -179,13 +188,28 @@
       const goodId = checkbox.value;
       if(checkbox.checked) {
         addingIds.push(goodId);
+        addGoodNums(goodId)
       } else {
         removingIds.push(goodId);
+        removeGoodNums(goodId)
       }
     });
 
     goodIds = addRemoveList(goodIds, addingIds, removingIds);
     updateOptionList()
+  }
+
+  function updateOptionQuantity(goodId) {
+    addGoodNums(goodId)
+    updateOptionList()
+  }
+
+  function addGoodNums(goodId) {
+    const modalGoodNumElem = document.getElementById('modal_good_nums_' + goodId);
+    goodNums[goodId] = (modalGoodNumElem.value != '') ? modalGoodNumElem.value:0;
+  }
+  function removeGoodNums(goodId) {
+    delete goodNums[goodId];
   }
 
   function addCoupon() {
@@ -207,6 +231,7 @@
   function removeOption(btnElem) {
     const removingId = btnElem.value
     goodIds = addRemoveList(goodIds, [], [removingId]);
+    removeGoodNums(removingId)
     updateOptionList()
 
     const parent = btnElem.closest('.item-container');
@@ -214,6 +239,9 @@
       parent.remove();
     }
     document.getElementById('modal_good_ids_' + removingId).checked = false;
+    const modalGoodNumElem = document.getElementById('modal_good_nums_' + removingId);
+    modalGoodNumElem.value = 0;
+    updateTotalAmount(modalGoodNumElem)
   }
 
   function removeCoupon(btnElem) {
@@ -231,6 +259,7 @@
   window.addEventListener('DOMContentLoaded', function() {
     checkedOptionList = document.getElementById('checked-option-list');
     goodIdsElem = document.getElementById('good_ids');
+    goodNumsElem = document.getElementById('good_nums');
     couponIdsElem = document.getElementById('coupon_ids');
     couponCodeElem = document.getElementById('coupon_code');
     const couponCodeBtnElem = document.getElementById('coupon_code_btn');

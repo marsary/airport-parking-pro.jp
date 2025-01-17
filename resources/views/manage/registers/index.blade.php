@@ -35,12 +35,6 @@
             )
           @endforeach
 
-          {{--  <div class="c-button__select button_select">洗車</div>
-          <div class="c-button__select button_select">メンテナンス</div>
-          <div class="c-button__select button_select">保険</div>
-          <div class="c-button__select button_select">回数券</div>
-          <div class="c-button__select button_select">物販</div>
-          <div class="c-button__select button_select">その他</div>  --}}
         </div>
       </div>
 
@@ -124,9 +118,6 @@
       </div>
     </div>
   </div><!-- /.l-container__inner -->
-
-  <!-- オプションをクリックしたら出てくるmodal -->
-  {{--  @include('include.option.option')  --}}
 
 
   <!-- 決済画面 -->
@@ -353,16 +344,14 @@
 <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ asset('js/commons/tax.js') }}"></script>
 <script src="{{ asset('js/commons/coupons.js') }}"></script>
-<!-- モーダル -->
-{{--  <script src="{{ asset('js/modalOption.js') }}"></script>  --}}
-<!-- 決済画面をモーダルで表示するスクリプト-->
+<script src="{{ asset('js/pages/member/option_select.js') }}"></script>
 <script src="{{ asset('js/removeButton.js') }}"></script>
-{{--  <script src="{{ asset('js/modal.js') }}"></script>  --}}
 <script src="{{ asset('js/pages/manage/register.js') }}"></script>
 
 <script>
   const goodsMap = @js($goodsMap);
   const dealId = @js($dealId);
+  let goodNums = {};
   let goodIds = [];
   let deal = null;
   let dealGoods = {};
@@ -408,20 +397,23 @@
       const goodId = parseInt(checkbox.value);
       if(checkbox.checked) {
         addingIds.push(goodId);
+        addGoodNums(goodId)
       } else {
         removingIds.push(goodId);
+        removeGoodNums(goodId)
       }
     });
 
     goodIds = addRemoveList(goodIds, addingIds, removingIds);
     goodIds.forEach(goodId => {
       if(dealGoods[goodId] == undefined) {
-        const good = goodsMap[goodId]
+        const good = goodsMap[goodId];
+        const goodNum = goodNums[goodId] ?? 0;
         dealGoods[goodId] = {
           good_id:goodId,
-          num:1,
-          total_price:good.price,
-          total_tax: calcTax(good.tax_type, good.price)
+          num:goodNum,
+          total_price:good.price * goodNum,
+          total_tax: calcTax(good.tax_type, good.price * goodNum)
         }
       }
     })
@@ -437,11 +429,19 @@
 
   function updateModalOptions() {
     document.querySelectorAll('input[name*=modal_good_ids]').forEach(elem => {
+      const modalGoodNumElem = document.getElementById('modal_good_nums_' + elem.value);
+      modalGoodNumElem.value
+
       if(goodIds.includes(parseInt(elem.value))) {
         elem.checked = true;
+        modalGoodNumElem.value = goodNums[elem.value]
       } else {
         elem.checked = false;
+        modalGoodNumElem.value = 0;
       }
+    })
+    document.querySelectorAll('[id*=modalAreaOption]').forEach(elem => {
+      updateTotalAmount(elem.querySelector('.l-modal__content'))
     })
   }
 
@@ -466,6 +466,29 @@
     })
   }
 
+
+  function updateOptionQuantity(goodId) {
+
+    addGoodNums(goodId)
+
+    const good = goodsMap[goodId];
+    const goodNum = goodNums[goodId];
+    dealGoods[goodId].num = goodNum;
+    dealGoods[goodId].total_price = good.price * goodNum;
+    dealGoods[goodId].total_tax = calcTax(good.tax_type, good.price * goodNum);
+
+    setTotalPrices()
+    updateOptionList()
+  }
+
+  function addGoodNums(goodId) {
+    const modalGoodNumElem = document.getElementById('modal_good_nums_' + goodId);
+    goodNums[goodId] = (modalGoodNumElem.value != '') ? modalGoodNumElem.value:0;
+  }
+  function removeGoodNums(goodId) {
+    delete goodNums[goodId];
+  }
+
   function makeOptionRow(name, count, price, goodId) {
     const el = document.createElement('div');
     el.classList.add("p-register__optionItem")
@@ -488,6 +511,7 @@
     return el;
   }
 
+
   function updateQuantity(button, goodId, mode) {
     const dealGood = dealGoods[goodId]
     const good = goodsMap[goodId]
@@ -496,7 +520,7 @@
     }
     switch(mode) {
       case '+':
-      dealGood.num += 1
+      dealGood.num = Number(dealGood.num) + 1
       break;
       case '-':
       dealGood.num -= 1
@@ -510,6 +534,10 @@
       delete dealGoods[goodId]
       updateOptionList()
     }
+
+    const modalGoodNumElem = document.getElementById('modal_good_nums_' + goodId);
+    modalGoodNumElem.value = dealGood.num;
+    updateTotalAmount(modalGoodNumElem)
   }
 
 
@@ -596,42 +624,53 @@
         return;
       }
 
-      optionInfosSavedInput.value = 0;
-      // オプションデータをAPIに送信
-      const json = await apiRequest.put(BASE_PATH + "/manage/deals/" + dealId + "/update_goods", {
-        'dealGoods': dealGoods,
-        'total_price': parseInt(totalInput.value),
-        'total_tax': parseInt(reducedTaxInput.value) + parseInt(taxInput.value),
-      });
+      try {
+        optionInfosSavedInput.value = 0;
+        // オプションデータをAPIに送信
+        const json = await apiRequest.put(BASE_PATH + "/manage/deals/" + dealId + "/update_goods", {
+          'dealGoods': dealGoods,
+          'total_price': parseInt(totalInput.value),
+          'total_tax': parseInt(reducedTaxInput.value) + parseInt(taxInput.value),
+        });
 
-      console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
-      if(json.success){
-        optionInfosSavedInput.value = 1;
-        $('#optionInfosSaved').trigger('change');
-        loadCouponOptions()
-      } else {
-        alert(json.message);
+        console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
+        if(json.success){
+          optionInfosSavedInput.value = 1;
+          $('#optionInfosSaved').trigger('change');
+          loadCouponOptions()
+        } else {
+          alert(json.message);
+        }
+      } catch (error) {
+        console.error('API呼び出しに失敗しました', error);
+        alert('データの送信に失敗しました。もう一度試してください。');
       }
-
     });
     modalClose.addEventListener('click', function() {
       modalArea.classList.remove('is-active');
     });
 
     async function loadCouponOptions() {
-      const json = await apiRequest.get(BASE_PATH + "/coupons/coupons_for_register/?deal_id=" + dealId)
-      console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
-      if(json.success){
-        while (couponSelect.options.length > 1) couponSelect.remove(1);
-        // coupon の select のオプションを更新する。
-        json.data.coupons.forEach((coupon) => {
-          const option = document.createElement('option')
-          option.value = coupon.id;
-          option.textContent = coupon.name;
-          couponSelect.appendChild(option)
-        });
-        $('#coupon').trigger('change');
+      try {
+        const json = await apiRequest.get(BASE_PATH + "/coupons/coupons_for_register/?deal_id=" + dealId)
+        console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
+        if(json.success){
+          while (couponSelect.options.length > 1) couponSelect.remove(1);
+          // coupon の select のオプションを更新する。
+          json.data.coupons.forEach((coupon) => {
+            const option = document.createElement('option')
+            option.value = coupon.id;
+            option.textContent = coupon.name;
+            couponSelect.appendChild(option)
+          });
+          $('#coupon').trigger('change');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('クーポン情報の取得に失敗しました');
       }
+
+
     }
 
     // オプション情報表示
@@ -658,7 +697,10 @@
         if(isObject(json.data.dealGoods)) {
           dealGoods = json.data.dealGoods
         }
-        goodIds = Object.keys(dealGoods).map(goodId => parseInt(goodId))
+        Object.keys(dealGoods).map(goodId => {
+          goodIds.push(parseInt(goodId));
+          goodNums[goodId] = Number(dealGoods[goodId].num);
+        })
 
         toDealsShowLink.href = BASE_PATH + "/manage/deals/" + deal.id
         toMembersShowLink.href = BASE_PATH + "/manage/members/" + deal.member_id
@@ -696,11 +738,11 @@
   })
 
   // 数量変更ボタンのイベントリスナーを設定
-  {{--  document.querySelectorAll('.c-button-quantity').forEach(function(button) {
+  document.querySelectorAll('.c-button-quantity').forEach(function(button) {
     button.addEventListener('click', function() {
       handleClickQuantityButton(button)
     });
-  });  --}}
+  });
 
   function handleClickQuantityButton(button) {
       // オプションアイテムの要素を取得

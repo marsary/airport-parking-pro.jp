@@ -262,7 +262,7 @@
 
             <div class="is-none p-input-user-total-parking-charges__detail" id="toggle_element">
               <div class="p-input-user-total-parking-charges__detail-title">
-                <div>駐車料金明細（税込）</div>
+                <div>駐車料金明細（税抜）</div>
                 <div type="button" class="p-input-user-total-parking-charges__detail-close-button" id="close_button"><img src="{{ asset('images/icon/closeButton.svg') }}" width="15" height="15" /></div>
               </div>
               <div id="price_rows" class="p-input-user-total-parking-charges__detail-list">
@@ -354,6 +354,7 @@
   .fc-daygrid-day {
     background-color: #eee;
     text-align: center;
+    height: 90px !important;
   }
   .fc-day.fc-day-today.fc-daygrid-day:not(.day_full), .fc-day.fc-day-future.fc-daygrid-day:not(.day_full) {
     cursor: pointer;
@@ -374,12 +375,16 @@
   a.fc-col-header-cell-cushion {
     padding: 10px !important;
   }
+  .fc-daygrid-day-events::after, .fc-daygrid-day-events::before,
+  .fc-daygrid-event-harness::after, .fc-daygrid-event-harness::before {
+    content: none;
+  }
   a.fc-daygrid-day-number {
     display: block;
     width:100%;
   }
   .fc .fc-daygrid-day-top {
-    margin-top: 5px;
+    margin-top: 3px;
   }
   .hour_label_cell, .quarter_hour_label_cell {
     cursor: pointer;

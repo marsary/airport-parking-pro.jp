@@ -27,6 +27,10 @@ class OptionSelectRequest extends FormRequest
             'good_ids.*' => 'int',
             'modal_good_ids' => 'nullable|array',
             'modal_good_ids.*' => 'int',
+            'good_nums' => 'nullable|array',
+            'good_nums.*' => 'int',
+            'modal_good_nums' => 'nullable|array',
+            'modal_good_nums.*' => 'int',
             'coupon_ids' => 'nullable|array',
             'coupon_ids.*' => 'int',
             // 'coupon_code' => 'nullable|max:255'
@@ -42,6 +46,13 @@ class OptionSelectRequest extends FormRequest
         $this->merge([
             'good_ids' => $good_ids,
         ]);
+        $good_nums = [];
+        if(!empty($this->good_nums)) {
+            $good_nums = json_decode($this->good_nums, true);
+        }
+        $this->merge([
+            'good_nums' => $good_nums,
+        ]);
         $coupon_ids = [];
         if(!empty($this->coupon_ids)) {
             $coupon_ids = explode(',', $this->coupon_ids);
@@ -55,6 +66,7 @@ class OptionSelectRequest extends FormRequest
     {
         return [
             'good_ids' => 'オプション選択',
+            'good_nums' => 'オプション数量',
             'coupon_ids' => 'クーポン選択',
             // 'coupon_code' => 'クーポンコード',
         ];

@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
         return;
       }
-      alert(info.date);
+      // alert(info.date);
       loadDateInput.value = luxon.DateTime.fromJSDate(info.date).toISODate();
       loadDateInput.dispatchEvent(new Event('change'));
       dispLoadHourTable()
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
         return;
       }
-      alert(info.date);
+      // alert(info.date);
       unloadDateInput.value = luxon.DateTime.fromJSDate(info.date).toISODate();
       unloadDateInput.dispatchEvent(new Event('change'));
       calcNumDays()

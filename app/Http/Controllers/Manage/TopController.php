@@ -62,4 +62,9 @@ class TopController extends Controller
     {
         //
     }
+
+    public function marketing()
+    {
+        return view('manage.marketing.index');
+    }
 }

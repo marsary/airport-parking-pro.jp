@@ -11,7 +11,10 @@
       <a href="{{route('manage.registers.index')}}" class="c-nav__link --en {{Request::routeIs('manage.registers.index') ? '--current' : '' }}">レジ</a>
     </li>
     <li class="c-nav__item">
-      <a href="" class="c-nav__link --setting">設定</a>
+      <a href="{{route('manage.marketing')}}" class="c-nav__link --marketing">営業支援</a>
+    </li>
+    <li class="c-nav__item">
+      <a href="{{route('manage.master')}}" class="c-nav__link --setting">設定</a>
     </li>
   </ul>
 

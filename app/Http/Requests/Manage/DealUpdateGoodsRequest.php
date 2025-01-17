@@ -28,15 +28,6 @@ class DealUpdateGoodsRequest extends FormRequest
         ];
     }
 
-    protected function prepareForValidation()
-    {
-        // if(empty($this->label_tag)) {
-        //     return;
-        // }
-        // $this->merge([
-        //     'label_tag' => array_filter($this->label_tag),
-        // ]);
-    }
 
     public function attributes()
     {

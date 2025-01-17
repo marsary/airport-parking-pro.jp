@@ -46,13 +46,15 @@
 
 @push("scripts")
 <script>
-  const currentUrl = location.pathname;
+  if(!window.currentUrl) {
+    window.currentUrl = location.pathname;
+  }
   window.addEventListener('DOMContentLoaded', function() {
     const limitSelect = document.getElementById('limit');
     const pageNumberInput = document.getElementById('page_number');
     limitSelect.addEventListener('change', function() {
       const limitVal = limitSelect.value;
-      getToUrl(currentUrl, {'limit' : limitVal});
+      getToUrl(window.currentUrl, {'limit' : limitVal, 'page' : 1});
     })
 
     if(pageNumberInput) {
@@ -60,7 +62,7 @@
         if(event.key === 'Enter'){
           //console.log('Press your Enter key.')
           const pageNumber = pageNumberInput.value;
-          getToUrl(currentUrl, {'page' : pageNumber});
+          getToUrl(window.currentUrl, {'page' : pageNumber});
         }
       });
     }
