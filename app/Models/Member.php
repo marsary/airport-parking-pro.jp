@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Notifications\CustomPasswordResetNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class Member extends Authenticatable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -73,5 +75,16 @@ class Member extends Authenticatable
     public function getRedirectRoute()
     {
         return 'reserves.entry_date';
+    }
+
+    /**
+     * パスワードリセット通知をユーザーに送信
+     *
+     * @param  string  $token
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new CustomPasswordResetNotification($token, $this->redirectRoute, $this->isFormAuth ?? false));
+
     }
 }
