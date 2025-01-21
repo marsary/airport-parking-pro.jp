@@ -20,6 +20,7 @@ use App\Models\Coupon;
 use App\Models\Deal;
 use App\Models\Good;
 use App\Models\GoodCategory;
+use App\Models\Member;
 use App\Models\MemberCar;
 use App\Services\LabelTagManager;
 use App\Services\Member\ReserveService;
@@ -39,9 +40,17 @@ class ReservesController extends Controller
     {
     }
 
-    public function entryDate()
+    public function entryDate(Request $request)
     {
+        session()->forget('reserve');
+        // Auth::guard('members')->logout();
+        // dd($request->input('register_user'));
         $reserve = $this->getReserveForm();
+        if($request->has('register_user')) {
+            $reserve->registerMember = true;
+            session()->put('reserve', $reserve);
+        }
+
         return view('member.reserves.entry_date', [
             'reserve' => $reserve
         ]);
@@ -49,7 +58,6 @@ class ReservesController extends Controller
 
     public function postEntryDate(EntryDateRequest $request)
     {
-        session()->forget('reserve');
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
 
@@ -67,9 +75,14 @@ class ReservesController extends Controller
         return redirect()->route('reserves.entry_info');
     }
 
-    public function entryInfo()
+    public function entryInfo(Request $request)
     {
+        // dd($request->input('register_user'));
         $reserve = $this->getReserveForm();
+        if($request->has('register_user')) {
+            $reserve->registerMember = true;
+            session()->put('reserve', $reserve);
+        }
 
         return view('member.reserves.entry_info', [
             'reserve' => $reserve
@@ -80,6 +93,18 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
+        // $member = $this->getMember($request);
+
+        if(!Auth::guard('members')->check() && Member::where('email', $request->email)->exists()) {
+            $validator = Validator::make($request->all(), []);
+            $validator->errors()->add('email', 'そのEmailアドレスはすでに登録済みです。');
+            return back()->withInput()->withErrors($validator);
+        }
+
+        if($reserve->registerMember) {
+            $reserve->fillMember();
+        }
+
         session()->put('reserve', $reserve);
         return redirect()->route('reserves.entry_car');
     }
