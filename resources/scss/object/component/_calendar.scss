@@ -40,3 +40,94 @@
   line-height: 50px;
   font-size: 1.25rem;
 }
+
+// 受付入力1カレンダー
+.c-calendar-reservation__wrap {
+  position: relative;
+}
+
+.fc {
+  .fc-multimonth {
+      border: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      overflow: visible;
+  }
+}
+.fc .fc-multimonth-multicol .fc-multimonth-month {
+  width: 100%;
+}
+.fc-daygrid-day {
+  background-color: #eaeaea;
+  text-align: center;
+}
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border: none;
+}
+.fc-col-header-cell.fc-day {
+  background-color: #3c3c3c;
+  color: #fff;
+}
+.fc-col-header-cell.fc-day.fc-day-sat {
+  background-color: #0068b6;
+}
+
+.fc-col-header-cell.fc-day.fc-day-sun {
+  background-color: #e50012;
+}
+
+a.fc-col-header-cell-cushion {
+  line-height: 40px;
+}
+
+.fc-multimonth-title {
+  display: none;
+}
+
+table.fc-multimonth-daygrid-table,
+table.fc-multimonth-header-table {
+  border-spacing: 4px;
+  border-collapse: separate;
+}
+
+table.fc-multimonth-header-table tr {
+  height: 25px;
+}
+
+.fc-day-disabled {
+  border: none !important;
+  background-color: #fff !important;
+}
+
+.fc-day.fc-day-today.fc-daygrid-day:not(.day_full),
+.fc-day.fc-day-future.fc-daygrid-day:not(.day_full) {
+  cursor: pointer;
+}
+
+.fc-daygrid-day-events {
+  margin: 5px;
+}
+
+a.fc-daygrid-day-number {
+  display: block;
+  width: 100%;
+  font-size: 1.5rem;
+}
+
+.fc .fc-daygrid-day-top {
+  margin-top: 5px;
+}
+
+.hour_label_cell,
+.quarter_hour_label_cell {
+  cursor: pointer;
+}
+
+.day_selected,
+.hour_selected,
+.quater_hour_selected {
+  border-color: rgb(167, 207, 249) !important;
+  background-color: rgb(167, 207, 249) !important;
+}

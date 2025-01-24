@@ -4,7 +4,7 @@
 }
 
 .c-link--update {
-  color: $red;
+  color:  var(--note-color);
   font-weight: 600;
   text-decoration: none;
   &:visited {

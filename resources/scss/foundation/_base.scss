@@ -20,6 +20,10 @@ li {
   list-style: none;
 }
 
+.is-block {
+  display: block;
+}
+
 // テキスト
 .text-center {
   text-align: center;
@@ -33,6 +37,9 @@ li {
 
 .note {
   color: var(--note-color);
+  &--blue {
+    color: #4696DC;
+  }
 }
 
 // リンク
@@ -41,6 +48,20 @@ a:link, a:visited, a:active {
 }
 a:hover {
   opacity: 0.8;
+}
+.link-white {
+  color: white!important;
+  text-decoration: none;
+}
+.link-text {
+  color: #1558d6;
+  border-bottom: #1558d6 solid 1px;
+}
+
+.pointer {
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 // フォーム
@@ -51,9 +72,9 @@ label {
 // input
 input {
   background-color: $light-gray;
-  padding: 0.5rem;
+  padding: 0.4375rem;
   border-radius: 0.5rem;
-  &:not([type="submit"],[type="checkbox"]), {
+  &:not([type="submit"],[type="checkbox"],[type="radio"]) {
     outline: #B4B4B4 1px solid;
     outline-offset: -1px;
   }
@@ -79,4 +100,29 @@ select {
   background-color: white;
   font-size: 1rem;
   color: $text-color;
+}
+
+// background color
+.bg-gray {
+  background-color: $gray;
+}
+
+// position
+.relative {
+  position: relative;
+}
+.position-absolute {
+  position: absolute;
+}
+.absolute-VerticalCenter {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  &--right {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+  }
 }
