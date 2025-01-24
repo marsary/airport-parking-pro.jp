@@ -16,6 +16,8 @@ use Illuminate\Support\Str;
 
 class ReserveFormBase extends StdObject
 {
+    public $registerMember;
+
     /** @var Member */
     public $member;
 
@@ -131,6 +133,22 @@ class ReserveFormBase extends StdObject
             $this->total_tax = $this->tax;
             $this->total_price = $this->price;
         }
+    }
+
+    public function fillMember()
+    {
+        if($this->registerMember || !$this->member) {
+            $this->member = new Member();
+            $this->member->member_code = Str::ulid();
+            $this->member->office_id = $this->office_id;
+        }
+        $this->member->fill([
+            'name' => $this->name,
+            'kana' => $this->kana,
+            'zip' => $this->zip,
+            'tel' => $this->tel,
+            'email' => $this->email,
+        ]);
     }
 
     public function setMember(Member $member = null)
