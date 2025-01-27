@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\CustomNewPasswordNotification;
 use App\Notifications\CustomPasswordResetNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -84,7 +85,10 @@ class Member extends Authenticatable
      */
     public function sendPasswordResetNotification($token): void
     {
-        $this->notify(new CustomPasswordResetNotification($token, $this->redirectRoute, $this->isFormAuth ?? false));
-
+        if(!$this->password) {
+            $this->notify(new CustomNewPasswordNotification($token, $this->redirectRoute, $this->isFormAuth ?? false));
+        } else {
+            $this->notify(new CustomPasswordResetNotification($token, $this->redirectRoute, $this->isFormAuth ?? false));
+        }
     }
 }
