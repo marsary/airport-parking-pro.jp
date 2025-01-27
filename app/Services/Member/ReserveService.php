@@ -9,11 +9,12 @@ use App\Models\DealGood;
 use App\Models\Member;
 use App\Models\MemberCar;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ReserveService
 {
     /** @var ReserveFormBase */
-    protected $reserve;
+    public $reserve;
 
     /** @var Deal */
     public $deal;
@@ -26,28 +27,41 @@ class ReserveService
 
     public function store()
     {
-        $this->updateMember();
+        $this->saveMember();
         $this->saveMemberCar();
         $this->saveCarCautions();
         $this->createDeal();
     }
 
 
-    protected function updateMember()
+    protected function saveMember()
     {
         if(!$this->reserve->member) {
             return;
         }
+        unset($this->reserve->member->tagMembers);
+        if(isset($this->reserve->member->id)) {
+            $member = Member::findOrFail($this->reserve->member->id);
 
-        $member = Member::findOrFail($this->reserve->member->id);
-
-        return $member->fill([
-            'name' => $this->reserve->name,
-            'kana' => $this->reserve->kana,
-            'zip' => $this->reserve->zip,
-            'tel' => $this->reserve->tel,
-            'email' => $this->reserve->email,
-        ])->save();
+            return $member->fill([
+                'name' => $this->reserve->name,
+                'kana' => $this->reserve->kana,
+                'zip' => $this->reserve->zip,
+                'tel' => $this->reserve->tel,
+                'email' => $this->reserve->email,
+            ])->save();
+        } else {
+            $this->reserve->member->save();
+            // return Member::create([
+            //     'office_id' => $this->reserve->office_id,
+            //     'member_code' => Str::ulid(),
+            //     'name' => $this->reserve->name,
+            //     'kana' => $this->reserve->kana,
+            //     'zip' => $this->reserve->zip,
+            //     'tel' => $this->reserve->tel,
+            //     'email' => $this->reserve->email,
+            // ]);
+        }
     }
 
     protected function saveMemberCar()
