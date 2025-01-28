@@ -250,7 +250,13 @@ class ReservesController extends Controller
                     Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
                 }
             });
-        } catch (\Throwable $th) {
+        } catch (ResetLinkSentException $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', 'パスワード設定するメールの送信に失敗しました。正しいメールを入力してください。');
+        } catch (TransportException $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', '予約完了メールの送信に失敗しました。正しいメールを入力してください。');
+        }  catch (\Throwable $th) {
             Log::error('エラー内容：' . $th->getMessage());
             return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
         }

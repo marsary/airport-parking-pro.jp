@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Manage;
 
+use App\Exceptions\ResetLinkSentException;
+use App\Http\Controllers\Auth\Traits\NewPassword;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Controllers\Manage\Forms\ManageReserveForm;
 use App\Http\Requests\Manage\EntryDateRequest;
@@ -15,7 +17,6 @@ use App\Models\Car;
 use App\Models\CarCaution;
 use App\Models\CarColor;
 use App\Models\CarMaker;
-use App\Models\Coupon;
 use App\Models\Good;
 use App\Models\GoodCategory;
 use App\Models\Member;
@@ -23,13 +24,17 @@ use App\Services\LabelTagManager;
 use App\Services\Member\ReserveService;
 use App\Services\PriceTable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Mailer\Exception\TransportException;
 
 class ReservesController extends Controller
 {
+    use NewPassword;
+
     /**
      * Display a listing of the resource.
      */
@@ -106,7 +111,14 @@ class ReservesController extends Controller
     public function postEntryInfo(EntryInfoRequest $request)
     {
         $reserve = $this->getReserveForm();
-        $reserve->setMember($this->getMember($request));
+        $reserve->setMember($this->getMember($request, $reserve));
+
+        if($reserve->registerMember && Member::where('email', $request->email)->exists()) {
+            $validator = Validator::make($request->all(), []);
+            $validator->errors()->add('email', 'そのEmailアドレスはすでに登録済みです。');
+            return back()->withInput()->withErrors($validator);
+        }
+
         if($request->flight_no && $request->arrive_date) {
             $arrivalFlight = DB::table('arrival_flights')
                 ->where('airline_id', $request->airline_id)
@@ -116,6 +128,7 @@ class ReservesController extends Controller
             $reserve->arr_flight_id = $arrivalFlight->id;
         }
         $reserve->fill($request->all());
+        $reserve->fillMember();
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
         $reserve->visit_date_plan = $reserve->unload_date_plan;
@@ -158,22 +171,37 @@ class ReservesController extends Controller
         $reserve = $this->getReserveForm();
         $service = new ReserveService($reserve);
         try {
-            DB::transaction(function () use($service){
+            DB::transaction(function () use($request, $reserve, $service){
                 $service->store();
+                if($service->reserve->registerMember) { // 登録後にパスワード設定するメールを送信
+                    $status = $this->sendPasswordResetLink($service->deal->email, 'members.complete');
+                    if($status != Password::RESET_LINK_SENT) {
+                        throw new ResetLinkSentException();
+                    }
+                }
+                // 「予約を完了する」ボタン押下時
+                if($request->has('confirm_btn')) {
+                    // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
+                    Mail::to(myOffice()->email)->send(new DealCreatedAdminMail($service->deal));
+                    if(!$reserve->registerMember) {
+                        Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
+                    }
+                }
+
             });
+        } catch (ResetLinkSentException $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', 'パスワード設定するメールの送信に失敗しました。正しいメールを入力してください。');
+        } catch (TransportException $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', '予約完了メールの送信に失敗しました。正しいメールを入力してください。');
         } catch (\Throwable $th) {
             Log::error('エラー内容：' . $th->getMessage());
             return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
         }
-        //
         session()->forget('manage_reserve');
 
-        // 「予約を完了する」ボタン押下時
-        if($request->has('confirm_btn')) {
-            // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
-            Mail::to(myOffice()->email)->send(new DealCreatedAdminMail($service->deal));
-            Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
-        }
+
         if($request->has('to_register')) {
             return redirect(route('manage.registers.index', ['deal_id' => $service->deal->id]));
         }
