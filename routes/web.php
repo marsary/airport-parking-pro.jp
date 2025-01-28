@@ -107,7 +107,9 @@ Route::get('calendar/load_hours', [\App\Http\Controllers\CalendarController::cla
 
 Route::get('coupons/coupons_for_register', [\App\Http\Controllers\CouponsController::class, 'couponsForRegister'])->name('coupons.coupons_for_register');
 
+Route::get('members/complete', [\App\Http\Controllers\MembersController::class, 'complete'])->name('members.complete');
 
+require __DIR__.'/auth.php';
 require __DIR__.'/manage_auth.php';
 require __DIR__.'/member_auth.php';
 require __DIR__.'/form_auth.php';

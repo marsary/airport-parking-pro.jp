@@ -35,4 +35,9 @@ class MembersController extends Controller
             'data' => ['member' => $member],
          ]);
     }
+
+    public function complete()
+    {
+        return view('member.members.complete');
+    }
 }
