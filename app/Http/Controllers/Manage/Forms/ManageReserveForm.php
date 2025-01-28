@@ -20,6 +20,7 @@ class ManageReserveForm extends ReserveFormBase
 
     public function setMember(Member $member = null)
     {
+        $this->member = $member;
         parent::setMember($member);
 
         if($this->member_car_id) {
