@@ -7,7 +7,7 @@
   }
   &--green{
     color: $green;
-  }
+  } 
   &--blue {
     color: $blue;
   }
@@ -15,14 +15,19 @@
 
 // フォントサイズ
 .u-font {
-  &--10 {
+  &--10,
+  &--xs {
     font-size: 0.625rem;
   }
-  &--12 {
+  &--12, &--sm {
     font-size: 0.75rem;
   }
-  &--14 {
+  &--14,
+  &--md {
     font-size: 0.875rem;
+  }
+  &--normal {
+    font-size: 1rem!important;
   }
   &--18 {
     font-size: 1.125rem;
@@ -46,6 +51,9 @@
 
 // フォントウェイト
 .u-font {
+  &--normal {
+    font-weight: normal;
+  }
   &--medium {
     font-weight: 500;
   }
@@ -59,6 +67,9 @@
   &--2 {
     line-height: 2;
   }
+  &--38px {
+    line-height: 38px;
+  }
 }
 
 .u-font-yen {
@@ -68,4 +79,8 @@
 // 文字詰め
 .palt {
   font-feature-settings: "palt";
+}
+
+.u-font-nowrap {
+  white-space: nowrap;
 }

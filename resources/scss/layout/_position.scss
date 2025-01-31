@@ -1,0 +1,13 @@
+.l-position {
+  &__upload {
+    position: relative;
+    overflow-wrap: break-word;
+    .delete-button {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 15px;
+      height: 15px;
+    }
+  }
+}

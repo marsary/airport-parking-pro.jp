@@ -2,12 +2,14 @@
   display: flex;
   align-items: center;
 }
+.l-flex--wrap {
+  flex-wrap: wrap;
+}
 
 .l-flex--column {
   @extend .l-flex;
   flex-direction: column;
 }
-
 .l-flex--center {
   @extend .l-flex;
   justify-content: center;
@@ -26,6 +28,12 @@
 }
 .l-flex--item-end {
   align-items: flex-end;
+}
+.l-flex--item-start {
+  align-items: flex-start;
+}
+.l-flex--space-between {
+  justify-content: space-between;
 }
 
 .l-flex--self-end {

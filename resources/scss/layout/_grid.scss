@@ -9,6 +9,14 @@
     display: grid;
     grid-template-columns: repeat(2, auto);
   }
+  &--col2-1fr_auto {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+  &--col2-1fr_120 {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+  }
   &--col3 {
     display: grid;
     align-items: center;
@@ -18,6 +26,21 @@
     display: grid;
     align-items: center;
     grid-template-columns: repeat(3, auto);
+  }
+  &--col3-1fr_auto_auto {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr auto auto;
+  }
+  &--col3-1fr_auto_1fr {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr auto 1fr;
+  }
+  &--col2-1fr_160 {
+    display: grid;
+    align-items: center;
+    grid-template-columns:1fr 160px;
   }
   &--col4 {
     display: grid;
@@ -31,11 +54,46 @@
     display: grid;
     grid-template-columns: repeat(5, auto);
   }
+  &--col5-1fr {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+  &__right-submitButton {
+    display: grid;
+    grid-template-columns: 1fr 160px;
+    gap: 3.5rem;
+    align-items: end;
+    &--button {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+// align-items
+.l-grid {
+  &--center {
+    align-items: center;
+  }
   &--start {
     align-items: start;
   }
   &--end {
     align-items: end;
+  }
+}
+
+.l-grid {
+  &--self-center {
+    align-self: center;
+  }
+  &--self-start {
+    align-self: start;
+  }
+  &--self-end {
+    align-self: end;
   }
 }
 
@@ -64,6 +122,9 @@
   }
   &--cgap2 {
     column-gap: 2rem;
+  }
+  &--cgap2-half {
+    column-gap: 2.5rem;
   }
   &--rgap1 {
     row-gap: 1rem;
@@ -106,6 +167,10 @@
   gap: 1rem;
   align-items: center;
   }
+}
+
+.l-grid--column {
+  grid-auto-flow: column;
 }
 
 .l-grid__radio {
@@ -161,20 +226,147 @@
 }
 
 // 個別レイアウト
+.l-grid {
+  // 代理店設定・代理店料金表設定
+  &__agency {
+    label {
+      font-size: 0.875rem;
+    }
+
+    &--up {
+      input {
+        width: 100%;
+      }
+    }
+
+    &--center {
+      display: grid;
+      grid-template-columns: 120px 120px 120px 1fr;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    &--bottom {
+      display: grid;
+      grid-template-columns: 1fr 160px 160px;
+      gap: 2rem;
+      input {
+        width: 100%;
+      }
+    }
+  }
+
+  // 基本料金設定(basic_pricing)
+  &__basicPricing {
+    &--bottom {
+      input {
+        width: 100px;
+      }
+
+      &__item {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+}
+
 // 日別の料金設定
 .l-grid--pricing {
+  width: 780px;
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(7, auto);
   grid-auto-flow: column;
   align-items: center;
+  row-gap: 1rem;
+  margin-left: auto;
+  margin-right: auto;
 
   label {
     white-space: nowrap;
     text-align: right;
+    font-size: 14px;
   }
 
   input {
     width: 155px;
+    margin-bottom: 0;
+  }
+  .--last {
+    grid-column: 3; /* 3列目に配置 */
+    grid-row: 7; /* 7行目に配置（21番目の位置） */
+  }
+}
+
+// 料金設定モーダル
+.l-grid--pricing-modal {
+  &__form {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    label {
+      font-size: 0.875rem;
+    }
+    input {
+      margin-bottom: 0;
+    }
+  }
+  &__inner {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(7, auto);
+    column-gap: 3rem;
+    row-gap: 0.75rem;
+  }
+  &__box {
+    display: grid;
+    grid-template-columns: 85px 1fr;
+    align-items: center;
+    column-gap: 0.75rem;
+    label {
+      text-align: right;
+    }
+    input {
+      width: 100%;
+    }
+  }
+}
+
+// ​売上目標設定 sales-target-setting
+.l-grid--sales-target-setting {
+  display: grid;
+  grid-template-columns: 200px 300px 1fr;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #000;
+  * {
+    margin-bottom: 0;
+    font-size: 14px;
+  }
+  input {
+    margin-bottom: 0;
+  }
+  &__category {
+    display: block;
+    font-size: 1rem;
+  }
+}
+
+// ダイナミックプライシングモーダル
+.l-grid--dynamic-pricing-modal {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: repeat(3, auto);
+  column-gap: 1rem;
+  align-items: center;
+  label {
+    &:first-child {
+      grid-column: 1/2;
+    }
+    &:last-child {
+      grid-column: 3/4;
+    }
   }
 }

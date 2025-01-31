@@ -1,0 +1,102 @@
+@use '../../foundation/variables' as *;
+
+.p-master-register {
+  margin-top: 10rem;
+  margin-bottom: 10rem;
+  
+  &__wrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 5rem;
+  }
+
+  &__item {
+    // padding: 0 3.75rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(4, auto);
+    grid-template-columns: 1fr;
+    justify-items: center;
+    // place-items: top;
+    gap: 0.625rem;
+    padding: 0 1rem;
+    &:nth-child(2) {
+      border-left: 1px solid #B4B4B4;
+      border-right: 1px solid #B4B4B4;
+    }
+
+  }
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.875rem;
+  }
+}
+
+.p-master-flight {
+  &__head {
+    width: 100%;
+    display: flex;
+    grid-template-columns: auto auto;;
+    gap: 1.5rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+     * {
+      margin-bottom: 0;
+    }
+    select,button {
+      height: 38px;
+    }
+    .c-form-select-color {
+      &::before {
+        height: 38px;
+        width: 38px;
+      }
+    }
+  }
+  &__head-left, &__head-right {
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  &__head-left {
+    input {
+      width: 60px;
+      background: white;
+      margin-bottom: 0;
+    }
+  }
+  &__head-right {
+    input {
+      width: 100px;
+      background: white;
+      margin-bottom: 0;
+    }
+  }
+  &__head-desc {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 0.5rem;
+  }
+  &__head-inputArea {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    // align-items: flex-end;
+  }
+
+  // テーブルレイアウト
+  &__table-container {
+    max-height: 546px;
+    overflow: auto;
+    text-align: center;
+    th:last-child,
+    td:last-child {
+      width: 100px;
+    }
+  }
+}
+
+.p-master-agency-setting__upload-image {
+  width: 160px;
+  height: 98px;
+}

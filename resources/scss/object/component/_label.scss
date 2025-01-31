@@ -67,6 +67,8 @@
   &__green {
     @extend .c-label;
     background-color: $green;
+    color: white;
+    text-decoration: none;
   }
 
   &__light-green {
