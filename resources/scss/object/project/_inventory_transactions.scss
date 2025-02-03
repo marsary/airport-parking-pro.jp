@@ -11,10 +11,96 @@
 
 .p-inventoryTransactions-toggle {
   position: absolute;
-  top: 1rem;
+  top: 0;
   right: 2rem;
   display: flex;
   align-items: center;
   gap: 0.25rem;
   font-size: 0.75rem;
+}
+
+.p-inventoryTransactions-bulk-date {
+  @extend .p-inventoryTransactions-toggle;
+  column-gap: 2rem;
+  // シンプルな日付選択
+  &__simple-select-date {
+    margin-left: 0.25rem;
+    padding: 0.5rem 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    input {
+      background: white;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.p-inventoryTransactions-date {
+  position: relative;
+  margin-left: 0.25rem;
+  padding: 0.5rem 0;
+  display: flex;
+  gap: 0.15rem;
+  align-items: center;
+  &__text {
+    background: #ec00ec;
+    padding: 0.15rem 0.25rem;
+    font-weight: bold;
+  }
+}
+
+// 日付をホバーしたらカレンダーが表示される
+// 不具合があれば、クリックで.active付与に変更
+// document.addEventListener('DOMContentLoaded', function() {
+//   const dateText = document.querySelector('.p-inventoryTransactions-date__text');
+//   const calendarWrap = document.querySelector('.p-inventoryTransactions-calendar__wrap');
+
+//   dateText.addEventListener('click', function() {
+//       calendarWrap.classList.toggle('active');
+//   });
+// });
+
+.p-inventoryTransactions-calendar {
+  &__wrap {
+    position: relative;
+
+    &:hover {
+      .p-inventoryTransactions-calendar {
+        visibility: visible;
+      }
+    }
+  }
+
+  position: absolute;
+  visibility: hidden;
+  top: 20px;
+  right: 0;
+  padding-top: .5rem;
+  z-index: 1000;
+  width: calc(400px - 2rem);
+  height: 450px;
+
+  &:hover {
+    visibility: visible;
+  }
+  .fc {
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    .fc-daygrid-day.fc-day-today {
+      background: #ec00ec;
+    }
+  }
+  a.fc-daygrid-day-number {
+    font-size: 1rem;
+  }
+  .fc-daygrid-day-events {
+    display: none!important;
+  }
+  .fc-daygrid-day-top {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 }

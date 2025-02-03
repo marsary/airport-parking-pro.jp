@@ -1,0 +1,8 @@
+.p-dynamic-pricing {
+  &__head {
+    display: grid;
+    grid-template-columns: auto auto 240px 160px;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+}

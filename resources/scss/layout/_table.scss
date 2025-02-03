@@ -1,7 +1,19 @@
-@use '../foundation/variables' as *;
+@use "../foundation/variables" as *;
+
+// テーブル共通
+.l-table {
+  &__checkbox {
+    text-align: center;
+    input {
+      margin-bottom: 0;
+    }
+  }
+}
 
 // 一覧系テーブル
-.l-table-list {
+// レジ点検表
+.l-table-list,
+.l-table-register {
   border-radius: 8px;
   letter-spacing: 0.05em;
   border-spacing: 0;
@@ -10,9 +22,16 @@
 
   &__head {
     color: white;
+    &--sort {
+      th {
+        padding-top: 0;
+        padding-bottom: 0;
+        height: 42px;
+      }
+    }
     th {
       font-size: 11px;
-      padding: 1rem;
+      padding: 0.5rem 1rem;
       font-weight: normal;
       background: $dark-gray;
       border-top: 1px solid $text-color;
@@ -40,10 +59,9 @@
           border-radius: 0 0 8px 0;
         }
       }
-
     }
     td {
-      padding: .5rem;
+      padding: 0.5rem;
       border-bottom: 1px solid $text-color;
       border-left: 1px solid $text-color;
 
@@ -57,9 +75,32 @@
       }
     }
   }
+
+  // 代理店設定
+  // headを固定してスクロール
+  &--scroll-vertical,
+  &--agency_setting,
+  &--category_setting {
+    &__container {
+      max-height: 278px;
+      overflow: auto;
+    }
+    &__head {
+      position: sticky;
+      top: 0;
+      height: 42px;
+      width: 100%;
+      z-index: 1;
+      th {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
 }
 
-.l-table-list--master {
+.l-table-list--master,
+.l-table-register {
   tr:nth-child(even) {
     background: $light-gray;
   }
@@ -77,8 +118,10 @@
   border-spacing: 0;
 
   &__wrapper {
-    width: 1040px;
+    width: calc(100vw - (160px + 5rem));
+    min-width: 1040px;
     overflow-x: auto;
+    overflow-y: hidden;
     position: relative;
   }
 
@@ -99,24 +142,25 @@
     background: $green;
   }
 
-  &.--in, &.--out {
-    tr[data-href]:nth-of-type(n+2):hover {
+  &.--in,
+  &.--out {
+    tr[data-href]:nth-of-type(n + 2):hover {
       // background-color: #f0f0f0;
       cursor: pointer;
     }
   }
   &.--in {
-    tr[data-href]:nth-of-type(n+2):hover {
-        >td {
-          background: rgba(210, 248, 245, 1);
-        }
+    tr[data-href]:nth-of-type(n + 2):hover {
+      > td {
+        background: rgba(210, 248, 245, 1);
       }
     }
+  }
   &.--out {
-    tr[data-href]:nth-of-type(n+2):hover {
-      >td {
-          background: rgba(230, 240, 255, 1);
-        }
+    tr[data-href]:nth-of-type(n + 2):hover {
+      > td {
+        background: rgba(230, 240, 255, 1);
+      }
     }
   }
   //   tr[data-href]:nth-of-type(2n) {
@@ -128,8 +172,8 @@
   //   /* 好みの色に変更 */
   // }
   tr {
-    &:nth-child(2n+1) {
-      >td {
+    &:nth-child(2n + 1) {
+      > td {
         background: $light-gray;
       }
     }
@@ -167,20 +211,41 @@
     }
   }
 
-
-  th:first-child,
-  th:last-child,
-  td:first-child,
-  td:last-child {
-    position: -webkit-sticky;
-    position: sticky;
-  }
-
   th:first-child,
   td:first-child {
+    position: -webkit-sticky;
+    position: sticky;
     left: 0;
     border-left: 0.9px solid $text-color;
-    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, .5));
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+  }
+
+  &.--sticky-second {
+    th:nth-child(-n + 2),
+    td:nth-child(-n + 2) {
+      position: -webkit-sticky;
+      position: sticky;
+    }
+    .process_all {
+      width: 43px;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      left: 0;
+      padding: 5px;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      left: 54px;
+      border-right: 0.9px solid $text-color;
+      filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+    }
+    th:nth-child(3),
+    td:nth-child(3) {
+      border-left: none;
+    }
   }
 
   th:last-child,
@@ -233,17 +298,17 @@
         background: $blue;
       }
     }
-
   }
 }
 
 // 日次更新テーブル
 .l-table-date {
   @extend .l-table-list;
-  border: 1px solid $text-color;
   &__head {
     @extend .l-table-list__head;
-    background: $green;
+    th {
+      background: $green;
+    }
   }
   &__body {
     @extend .l-table-list__body;
@@ -277,29 +342,31 @@
 // 入力テーブル　// 検索入力テーブル
 .l-table-confirm,
 .l-table-input {
-  border: 1px solid #B4B4B4;
+  border: 1px solid #b4b4b4;
   border-spacing: 0;
   border-collapse: separate;
   width: 100%;
   font-size: 0.875rem;
   margin-bottom: 2rem;
   tr:not(:last-child) {
-    th, td {
-      border-bottom: 1px solid #B4B4B4;
+    th,
+    td {
+      border-bottom: 1px solid #b4b4b4;
     }
   }
   th {
     background: $off-white;
     font-weight: normal;
-    border-right: 1px solid #B4B4B4;
+    border-right: 1px solid #b4b4b4;
     min-width: 100px;
   }
-  th,td {
-    padding: .5rem;
+  th,
+  td {
+    padding: 0.5rem;
   }
   td {
     &:not(:last-child) {
-      border-right: 1px solid #B4B4B4;
+      border-right: 1px solid #b4b4b4;
     }
   }
 }
@@ -330,7 +397,7 @@
     width: 100%;
   }
   input[type="checkbox"] {
-    margin: 0 .5rem;
+    margin: 0 0.5rem;
   }
   select {
     font-size: 0.875rem;
@@ -371,7 +438,7 @@
 
   // 金額合計
   &--second {
-    border-bottom:1px solid $gray;
+    border-bottom: 1px solid $gray;
     padding-bottom: 1rem;
     margin-bottom: 1rem;
     width: 100%;
@@ -388,14 +455,14 @@
 // テーブル上部のアイテム
 .l-table-top {
   &-list {
-      position: absolute;
-      top: -40px;
-      right: 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      gap: 1rem;
+    position: absolute;
+    top: -40px;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
   }
   &-item {
     border-top-right-radius: 0.5rem;
@@ -410,3 +477,88 @@
   }
 }
 
+// I-3 ダイナミックプライシング料金設定
+.l-table-dynamic-pricing-list {
+  &__button {
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: normal;
+    &.c-button__edit {
+      width: 90%;
+      border-radius: 4px;
+    }
+  }
+
+  margin-top: 3rem;
+  border-spacing: 0;
+  table-layout: fixed;
+
+  thead {
+    font-weight: normal;
+    th {
+      padding: 0 0 1rem 0;
+    }
+  }
+  tbody {
+    font-size: 0.875rem;
+    line-height: 44px;
+    tr {
+      &:first-child {
+        th {
+          border-top: 1px solid $text-color;
+          background: #888888 !important;
+          &:first-child {
+            border-radius: 8px 0 0 0;
+            border-left: 1px solid $text-color;
+          }
+          &:last-child {
+            border-radius: 0 8px 0 0;
+          }
+        }
+      }
+      &:not(:first-child) {
+        th {
+          border-left: 1px solid $text-color;
+        }
+      }
+      &:last-child {
+        th,
+        td {
+          border-bottom: 1px solid $text-color;
+        }
+        th {
+          border-radius: 0 0 0 8px;
+        }
+        td:last-child {
+          border-radius: 0 0 8px 0;
+        }
+      }
+      th {
+        background: #888888;
+        color: white;
+        font-weight: normal;
+        width: 180px;
+        border-right: 1px solid $text-color;
+      }
+      td {
+        width: 140px;
+        text-align: right;
+        padding: 0 0.5rem;
+        &:not(:last-child) {
+          border-right: 1px solid $gray;
+        }
+        &:last-child {
+          border-right: 1px solid $text-color;
+        }
+      }
+      &:nth-child(even) {
+        th {
+          background: #b4b4b4;
+        }
+        td {
+          background-color: #ececec;
+        }
+      }
+    }
+  }
+}

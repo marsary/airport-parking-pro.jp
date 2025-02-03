@@ -28,6 +28,12 @@
       color: $text-color;
     }
   }
+
+  // 予約管理TOP＞検索結果のページネーション
+  &__link {
+    display: flex;
+    align-items: center;
+  }
   
   &__input-pageNumber {
     width: 3rem;
@@ -43,4 +49,42 @@
     padding-left: 0.5rem;
     padding-right: 2rem;
   }
+}
+
+
+// YEARのページネーション
+.c-pager__pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0 auto;
+}
+.c-pager__year-list-wrapper {
+  overflow: hidden;
+  width: 100%;
+  background: #707070;
+  color: white;
+}
+.c-pager__year-list {
+  display: flex;
+  transition: transform 0.3s ease;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+.c-pager__year-item {
+  min-width: 14%;
+  text-align: center;
+  padding: 2px 0;
+  list-style: none;
+  border-left: 1px solid white;
+  cursor: pointer;
+}
+.c-pager__year-item.--selected {
+  background: #3C3C3C;
+}
+.c-pager__button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
