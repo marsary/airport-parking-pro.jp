@@ -60,7 +60,7 @@
 
         <div class="p-input-user-option__box--col3__right" id="member_infos">
           <div>顧客コード: </div>
-          <div class="text-right" id="disp_member_code"></div>
+          <div class="text-right word-break" id="disp_member_code"></div>
           <div>予約コード: </div>
           <div class="text-right" id="disp_reserve_code"></div>
           <div>利用回数: </div>
@@ -83,7 +83,7 @@
         <div>
           <div class="l-grid--col2 l-grid--gap1">
             <div>
-              <label for="maker">メーカー</label>
+              <label for="car_maker_id">メーカー</label>
               <div class="c-form-select-color c-form-input--w100">
                 <select name="car_maker_id" id="car_maker_id">
                   @foreach ($carMakers as $carMaker)
@@ -115,7 +115,8 @@
               </div>
             </div>
             <div>
-              <label for="color">色</label>
+
+              <label for="car_color_id">色</label>
               <div class="c-form-select-color c-form-input--w100">
                 <select id="car_color_id" name="car_color_id">
                   <option value="選択してください" disabled>選択してください</option>
@@ -152,7 +153,9 @@
             </div>
           </div>
         </div>
-
+        @php
+          //dd(old('car_color_id', $reserve->car_color_id), old('car_number', $reserve->car_number));
+        @endphp
         <div class="p-input-user-option__box--col3__right">
           <div>車両サイズ: </div>
           <div class="text-right" id="disp_car_size"></div>
@@ -286,7 +289,6 @@
 
 <!-- オプションをクリックしたら出てくるmodal -->
 {{--  @include('include.option.option')  --}}
-
 @endsection
 @push("scripts")
 <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>

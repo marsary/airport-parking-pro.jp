@@ -220,12 +220,16 @@ class ReservesController extends Controller
     }
 
 
-    private function getMember(Request $request)
+    private function getMember(Request $request, ManageReserveForm $reserve)
     {
         $kana = $request->input('kana');
         $tel = $request->input('tel');
 
-        return Member::where('kana', $kana)->where('tel', $tel)->first();
+        $member = Member::where('kana', $kana)->where('tel', $tel)->first();
+
+        $reserve->registerMember = (!$member) ? true : false;
+
+        return $member;
     }
 
     /**

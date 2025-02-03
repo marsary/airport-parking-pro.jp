@@ -99,6 +99,12 @@ $('#car_id').on('change', function(e) {
       if(json.data.member == null) {
         if(!init) {
           alert('入力された顧客情報が存在しません。')
+          dispMemberCodeElem.textContent = ""
+          dispUsedNumElem.textContent = ""
+          document.querySelectorAll('.disp_tag_member').forEach(e => e.remove());
+          dispCarSizeElem.textContent = ""
+          carColorSelect.value = ""
+          carNumberInput.value = ""
         }
         return;
       }
@@ -222,7 +228,7 @@ $('#car_id').on('change', function(e) {
   }
 
   function setCarSize() {
-    const sizeType = carsElem.options[carsElem.selectedIndex].getAttribute('data-size')
+    const sizeType = carsElem.options[carsElem.selectedIndex]?.getAttribute('data-size')
     dispCarSizeElem.textContent = carSizeLabel(sizeType) ?? ''
 
   }
