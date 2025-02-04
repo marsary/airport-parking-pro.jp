@@ -29,9 +29,9 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         if(Auth::guard('web')->check()) {
-            return redirect()->intended(route('form.reserves.entry_info'));
+            return redirect()->route('form.reserves.entry_info');
         }
-        return redirect()->intended(route('form.reserves.entry_date'));
+        return redirect()->route('form.reserves.entry_date');
     }
 
     /**
