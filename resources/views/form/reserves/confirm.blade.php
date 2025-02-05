@@ -44,20 +44,21 @@
         <th>利用回数</th>
         <td>
           @if (isset($reserve->member?->used_num))
-            {{$reserve->member?->used_num}}回
+          {{$reserve->member?->used_num}}回
           @endif
         </td>
       </tr>
       <tr>
         @for ($i = 0; $i < 4; $i++)
           @if (isset($reserve->member->tagMembers[$i]))
-            <th>{{$reserve->member->tagMembers[$i]->label->name}}</th>
-            <td>{{$reserve->member->tagMembers[$i]->tag->name}}</td>
+          <th>{{$reserve->member->tagMembers[$i]->label->name}}</th>
+          <td>{{$reserve->member->tagMembers[$i]->tag->name}}</td>
           @else
-            <th></th><td></td>
+          <th></th>
+          <td></td>
           @endif
-        @endfor
-        {{--  <th>会員ランク</th>
+          @endfor
+          {{-- <th>会員ランク</th>
         <td>シルバー</td>
         <th>ラベル2</th>
         <td>ダミーダミー</td>
@@ -101,7 +102,7 @@
         <td>{{$arrivalFlight?->terminal_id}}</td>
         <td colspan="3">
           @if ($reserve->arrival_flg)
-            <div class="c-label--lg">到着日とお迎え日が異なる</div>
+          <div class="c-label--lg">到着日とお迎え日が異なる</div>
           @endif
         </td>
       </tr>
@@ -155,15 +156,15 @@
           <td>({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
         </tr>
         @foreach ($reserve->dealGoodData as $dealGood)
-          <tr>
-            <th>{{$dealGood['name']}}</th>
-            <td>{{number_format($dealGood['price'])}}円</td>
-            <td>{{$dealGood['num']}}</td>
-            <td>{{number_format($dealGood['total_price'])}}円</td>
-            <td>({{ $dealGood['tax_type_label'] }})</td>
-          </tr>
+        <tr>
+          <th>{{$dealGood['name']}}</th>
+          <td>{{number_format($dealGood['price'])}}円</td>
+          <td>{{$dealGood['num']}}</td>
+          <td>{{number_format($dealGood['total_price'])}}円</td>
+          <td>({{ $dealGood['tax_type_label'] }})</td>
+        </tr>
         @endforeach
-        {{--  <tr>
+        {{-- <tr>
           <th>駐車料金</th>
           <td>1,000円</td>
           <td>1</td>
@@ -201,7 +202,7 @@
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-    <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.option_select')}}';" class="c-button__pagination--return">前のページに戻る</button>  
+      <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.option_select')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">お会計へ</button>
     </div>
   </form>
