@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Form;
 
+use App\Exceptions\ResetLinkSentException;
+use App\Http\Controllers\Auth\Traits\NewPassword;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Member\Forms\ReserveForm;
 use App\Http\Requests\Member\EntryCarRequest;
@@ -20,6 +22,7 @@ use App\Models\Coupon;
 use App\Models\Deal;
 use App\Models\Good;
 use App\Models\GoodCategory;
+use App\Models\Member;
 use App\Models\MemberCar;
 use App\Services\LabelTagManager;
 use App\Services\Member\ReserveService;
@@ -29,9 +32,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Mailer\Exception\TransportException;
 
 class ReservesController extends Controller
 {
+    use NewPassword;
+
     /**
      * Display a listing of the resource.
      */
@@ -39,9 +47,15 @@ class ReservesController extends Controller
     {
     }
 
-    public function entryDate()
+    public function entryDate(Request $request)
     {
+        session()->forget('reserve');
         $reserve = $this->getReserveForm();
+        if($request->has('register_user')) {
+            $reserve->registerMember = true;
+            session()->put('reserve', $reserve);
+        }
+
         return view('form.reserves.entry_date', [
             'reserve' => $reserve
         ]);
@@ -49,7 +63,6 @@ class ReservesController extends Controller
 
     public function postEntryDate(EntryDateRequest $request)
     {
-        session()->forget('reserve');
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
 
@@ -67,9 +80,13 @@ class ReservesController extends Controller
         return redirect()->route('form.reserves.entry_info');
     }
 
-    public function entryInfo()
+    public function entryInfo(Request $request)
     {
         $reserve = $this->getReserveForm();
+        if($request->has('register_user')) {
+            $reserve->registerMember = true;
+            session()->put('reserve', $reserve);
+        }
 
         return view('form.reserves.entry_info', [
             'reserve' => $reserve
@@ -80,6 +97,17 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
+
+        if(!Auth::guard('members')->check() && Member::where('email', $request->email)->exists()) {
+            $validator = Validator::make($request->all(), []);
+            $validator->errors()->add('email', 'そのEmailアドレスはすでに登録済みです。');
+            return back()->withInput()->withErrors($validator);
+        }
+
+        if($reserve->registerMember) {
+            $reserve->fillMember();
+        }
+
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.entry_car');
     }
@@ -204,10 +232,28 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
         $service = new ReserveService($reserve);
+        $status = null;
         try {
-            DB::transaction(function () use($service){
+            DB::transaction(function () use($reserve, $service, &$status){
                 $service->store();
+                if($service->reserve->registerMember) { // 登録後にパスワード設定するメールを送信
+                    $status = $this->sendPasswordResetLink($service->deal->email, 'members.complete', true);
+                    if($status != Password::RESET_LINK_SENT) {
+                        throw new ResetLinkSentException();
+                    }
+                }
+                // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
+                Mail::to(myOffice()->email)->send(new DealCreatedAdminMail($service->deal));
+                if(!$reserve->registerMember) {
+                    Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
+                }
             });
+        } catch (ResetLinkSentException $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', 'パスワード設定するメールの送信に失敗しました。正しいメールを入力してください。');
+        } catch (TransportException $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect()->back()->with('failure', '予約完了メールの送信に失敗しました。正しいメールを入力してください。');
         } catch (\Throwable $th) {
             Log::error('エラー内容：' . $th->getMessage());
             return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
@@ -215,16 +261,13 @@ class ReservesController extends Controller
         //
         session()->forget('reserve');
 
-        // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
-        Mail::to(myOffice()->email)->send(new DealCreatedAdminMail($service->deal));
-        Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
-
         return redirect(route('form.reserves.complete', ['code' => (string) $service->deal->reserve_code]));
     }
 
 
     public function complete(Request $request)
     {
+        Auth::guard('members')->logout();
         return view('form.reserves.complete', [
             'reserveCode' => $request->query('code'),
             'deal' => Deal::where('reserve_code', $request->query('code'))->first(),
