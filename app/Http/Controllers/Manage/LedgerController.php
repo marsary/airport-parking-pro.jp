@@ -16,6 +16,14 @@ class LedgerController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function index()
+    {
+        return view('manage.ledger.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
     public function inventories(Request $request)
     {
         // dd($request->all());
@@ -157,6 +165,16 @@ class LedgerController extends Controller
         }
 
         return redirect()->route('manage.ledger.bunch_issues');
+    }
+
+    public function agencySalesLists(Request $request)
+    {
+        return view('manage.ledger.agency_sales_lists');
+    }
+
+    public function agencyResult(Request $request)
+    {
+        return view('manage.ledger.agency_result');
     }
 
 }

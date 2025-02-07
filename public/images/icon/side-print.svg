@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <g id="グループ_7453" data-name="グループ 7453" transform="translate(-22 -528.822)">
+    <path id="パス_910" data-name="パス 910" d="M5833.286,2743a11,11,0,1,1,11-11A11,11,0,0,1,5833.286,2743Z" transform="translate(-5800.286 -2192.178)" fill="#3c3c3c"/>
+    <g id="プリンタのアイコン" transform="translate(-45.5 456.842)">
+      <path id="パス_1077" data-name="パス 1077" d="M74.854,116.245H72.5V110.02H84.871v6.225H82.552" transform="translate(0 -30.403)" fill="none" stroke="#fff" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <path id="パス_1078" data-name="パス 1078" d="M103.55,79.537V76.98h7.415v2.557" transform="translate(-28.572 0)" fill="none" stroke="#fff" stroke-linecap="square" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <rect id="長方形_3087" data-name="長方形 3087" width="7.423" height="5.108" transform="translate(74.974 83.528)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="線_919" data-name="線 919" x2="4.415" transform="translate(76.478 85.443)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="線_920" data-name="線 920" x2="4.415" transform="translate(76.478 86.897)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+    </g>
+  </g>
+</svg>
