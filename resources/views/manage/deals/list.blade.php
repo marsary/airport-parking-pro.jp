@@ -43,7 +43,7 @@
   </div>  --}}
 
   <div class="l-table-l-table-list--scroll__wrappe u-mb3">
-    <table id="search_result_table" class="l-table-list--scroll --blue">
+    <table id="search_result_table" class="l-table-list--scroll --blue" style="display: flex; width: 1120px; overflow-x: scroll;">
       <tr>
         <th>
           <div class="l-flex--center l-grid--cgap05">
