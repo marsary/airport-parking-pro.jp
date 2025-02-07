@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -39,15 +40,16 @@
     <script src="{{ asset('js/request.js') }}" defer></script>
     <script src="{{ asset('js/luxon.min.js') }}" defer></script>
     <script src="{{ asset('js/global.js') }}" defer></script>
-    <script src="{{ asset('js/qrStickyHandler.js') }}" defer></script>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="l-wrap">
-      @include('include.header')
-      @include('include.nav')
-      @yield('content')
+        @include('include.header')
+        @include('include.nav')
+        @yield('content')
     </div>
 
     @stack('scripts')
-  </body>
+</body>
+
 </html>
