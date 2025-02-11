@@ -80,11 +80,11 @@
                 <td>{{$loadDeal->memberCar?->car->name}}</td>
                 <td>{{$loadDeal->memberCar?->number}}</td>
                 <td>{{$loadDeal->memberCar?->carColor->name}}</td>
-                <td>{{$loadDeal->member->memberType?->name}}</td>
+                <td>{{$loadDeal->member?->memberType?->name}}</td>
                 <td>{{$loadDeal->dsc_rate}}</td>
                 <td></td>
                 <td></td>
-                <td>{{$loadDeal->member->used_num}}</td>
+                <td>{{$loadDeal->member?->used_num}}</td>
                 <td>{{$loadDeal->reserve_memo}}</td>
             </tr>
           @endforeach
@@ -132,7 +132,7 @@
               <td>{{$unloadDeal->office->name}}</td>
               <td class="text-center"></td>
               <td>{{$unloadDeal->name}}</td>
-              <td>{{$unloadDeal->member->used_num}}</td>
+              <td>{{$unloadDeal->member?->used_num}}</td>
               <td>{{$unloadDeal->memberCar?->number}}</td>
               <td>{{$unloadDeal->memberCar?->car->name}}</td>
               <td>{{$unloadDeal->memberCar?->carColor->name}}</td>
