@@ -8,7 +8,7 @@ use App\Services\Member\ReserveService;
 class DealService extends ReserveService
 {
     /** @var DealEditForm */
-    protected $reserve;
+    public $reserve;
 
 
     function __construct(DealEditForm $reserve)
