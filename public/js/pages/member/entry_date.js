@@ -159,6 +159,13 @@ document.addEventListener('DOMContentLoaded', function () {
         el.closest('.fc-daygrid-day').classList.add('day_selected');
         dispLoadHourTable()
       }
+      if(loadDateObj.isValid && startDate.hasSame(loadDateObj, 'day')) {
+        //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
+        el.closest('.fc-daygrid-day').classList.add('day_selected');
+        // if(!selectedDateTime) {
+          dispLoadHourTable()
+        // }
+      }
       if(e.event.toPlainObject().title == '×') {
         el.classList.add('event_full');
         el.closest('.fc-daygrid-day').classList.add('day_full');
@@ -252,6 +259,11 @@ document.addEventListener('DOMContentLoaded', function () {
       const startDate = luxon.DateTime.fromJSDate(e.event.start);
       let el = e.el;
       if(startDate.hasSame(initUnloadDate, 'day')) {
+        //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
+        el.closest('.fc-daygrid-day').classList.add('day_selected');
+      }
+      const unloadDateObj = parseDateInput(unloadDateInput.value);
+      if(unloadDateObj.isValid && startDate.hasSame(unloadDateObj, 'day')) {
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
       }
