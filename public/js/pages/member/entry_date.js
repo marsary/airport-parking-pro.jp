@@ -17,15 +17,15 @@ document.addEventListener('DOMContentLoaded', function () {
   const numDaysInput = document.querySelector('input[name=num_days]')
 
 
-  const initLoadDate = luxon.DateTime.fromISO(loadDateInput.value);
-  const initUnloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+  let initLoadDate = parseDateInput(loadDateInput.value);
+  let initUnloadDate = parseDateInput(unloadDateInput.value);
 
   const loadTimetableTitle = document.getElementById('load_timetable_title');
   const loadTimeSectionElem = document.getElementById('load_time_section');
   const leftCalendar1Title = document.getElementById('left_calendar1_title');
-  const rightCalendar1Title = document.getElementById('right_calendar1_title');
+//   const rightCalendar1Title = document.getElementById('right_calendar1_title');
   const leftCalendar2Title = document.getElementById('left_calendar2_title');
-  const rightCalendar2Title = document.getElementById('right_calendar2_title');
+//   const rightCalendar2Title = document.getElementById('right_calendar2_title');
 
   const dispNumDaysElem = document.getElementById('disp_num_days');
   const dispLoadDateElem = document.getElementById('disp_load_date');
@@ -101,13 +101,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var calendarEl1 = document.getElementById('calendar1');
   var calendar1 = new FullCalendar.Calendar(calendarEl1, {
-    initialView: 'multiMonthTwoMonth',
-    views: {
-      multiMonthTwoMonth: {
-        type: 'multiMonth',
-        duration: { months: 2 },
-      }
-    },
+    initialView: 'dayGridMonth',
+    // initialView: 'multiMonthTwoMonth',
+    // views: {
+    //   multiMonthTwoMonth: {
+    //     type: 'multiMonth',
+    //     duration: { months: 2 },
+    //   }
+    // },
     // multiMonthTitleFormat: {},//{ month: 'numeric', year: 'numeric' },
     firstDay:1,
     showNonCurrentDates:false,
@@ -124,9 +125,9 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     datesSet: function(dateInfo) {
       const startDate = luxon.DateTime.fromJSDate(dateInfo.start);
-      const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
+    //   const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
       leftCalendar1Title.textContent = startDate.toFormat('yyyy年M月')
-      rightCalendar1Title.textContent = endDate.toFormat('yyyy年M月')
+    //   rightCalendar1Title.textContent = endDate.toFormat('yyyy年M月')
     },
 
     eventColor: 'rgba(255, 255, 255, 0)',
@@ -151,10 +152,19 @@ document.addEventListener('DOMContentLoaded', function () {
     eventDidMount: function(e) {
       const startDate = luxon.DateTime.fromJSDate(e.event.start);
       let el = e.el;
+
+      const loadDateObj = parseDateInput(loadDateInput.value);
       if(startDate.hasSame(initLoadDate, 'day')) {
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
         dispLoadHourTable()
+      }
+      if(loadDateObj.isValid && startDate.hasSame(loadDateObj, 'day')) {
+        //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
+        el.closest('.fc-daygrid-day').classList.add('day_selected');
+        // if(!selectedDateTime) {
+          dispLoadHourTable()
+        // }
       }
       if(e.event.toPlainObject().title == '×') {
         el.classList.add('event_full');
@@ -197,13 +207,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var calendarEl2 = document.getElementById('calendar2');
   var calendar2 = new FullCalendar.Calendar(calendarEl2, {
-    initialView: 'multiMonthTwoMonth',
-    views: {
-      multiMonthTwoMonth: {
-        type: 'multiMonth',
-        duration: { months: 2 }
-      }
-    },
+    initialView: 'dayGridMonth',
+    // initialView: 'multiMonthTwoMonth',
+    // views: {
+    //   multiMonthTwoMonth: {
+    //     type: 'multiMonth',
+    //     duration: { months: 2 },
+    //   }
+    // },
+    // multiMonthTitleFormat: {},//{ month: 'numeric', year: 'numeric' },
     multiMonthTitleFormat: { month: 'numeric', year: 'numeric' },
     firstDay:1,
     showNonCurrentDates:false,
@@ -247,6 +259,11 @@ document.addEventListener('DOMContentLoaded', function () {
       const startDate = luxon.DateTime.fromJSDate(e.event.start);
       let el = e.el;
       if(startDate.hasSame(initUnloadDate, 'day')) {
+        //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
+        el.closest('.fc-daygrid-day').classList.add('day_selected');
+      }
+      const unloadDateObj = parseDateInput(unloadDateInput.value);
+      if(unloadDateObj.isValid && startDate.hasSame(unloadDateObj, 'day')) {
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
       }
@@ -317,8 +334,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function calcNumDays() {
-    const loadDate = luxon.DateTime.fromISO(loadDateInput.value);
-    const unloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+    const loadDate = parseDateInput(loadDateInput.value);
+    const unloadDate = parseDateInput(unloadDateInput.value);
     if(!loadDate.isValid || !unloadDate.isValid) {
       numDaysInput.value = ''
       return
@@ -348,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if(loadTimeInput.value == '') {
       selectedDateTime = null;
     }
-    let loadDate = luxon.DateTime.fromISO(loadDateInput.value);
+    let loadDate = parseDateInput(loadDateInput.value)
     if(!loadDate.isValid) {
       return
     }
@@ -360,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateDispLoadDate() {
-    const loadDate = luxon.DateTime.fromISO(loadDateInput.value);
+    const loadDate = parseDateInput(loadDateInput.value);
     if(!loadDate.isValid) {
         dispLoadDateElem.textContent = ''
         return
@@ -370,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateDispUnloadDate() {
-    const unloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+    const unloadDate = parseDateInput(unloadDateInput.value)
     if(!unloadDate.isValid) {
         dispUnloadDateElem.textContent = ''
         return
@@ -404,7 +421,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // 入庫時間空き情報の取得
       //   alert(json.data);
       hourlyData = json.data.hourlyData;
-      const loadDateObj = luxon.DateTime.fromISO(loadDateInput.value);
+      const loadDateObj = parseDateInput(loadDateInput.value);
       let isSelectedDay = false;
       if(selectedDateTime && loadDateObj.hasSame(selectedDateTime, 'day')) {
           isSelectedDay = true;
