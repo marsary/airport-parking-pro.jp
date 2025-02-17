@@ -76,7 +76,7 @@
             <div>小計 8%対象額（税抜）</div>
             <div id="reduced_subTotal" class="p-register__optionPrice text-right">0<span class="u-font-yen">円</span></div>
 
-            <div>軽減税率</div>
+            <div>消費税 8%</div>
             <div id="reduced_tax" class="p-register__optionPrice text-right">0<span class="u-font-yen">円</span></div>
 
             <div>小計 10%対象額（税抜）</div>
@@ -176,11 +176,11 @@
                 <div class="c-form-select-wrap">
                   <select id="coupon" name="coupon" class="">
                     <option value="0" selected>割引クーポンを選択して下さい</option>
-                    {{--  @foreach ($coupons as $coupon)
+                    @foreach ($coupons as $coupon)
                       <option value="{{ $coupon->id }}">
                         {{$coupon->name }}
                       </option>
-                    @endforeach  --}}
+                    @endforeach
                     {{--  <option value="1">クーポンコード1</option>
                     <option value="2">クーポンコード2</option>
                     <option value="3">クーポンコード3</option>  --}}
@@ -197,6 +197,39 @@
                   <input type="checkbox" id="adjustment" name="adjustment" value="調整" class="adjustItem entryType" /><label for="adjustment" class="">調整</label>
                 </div>
               </div>
+              <div class="p-register__adjustment c-button-optionSelect-light l-grid--col4 l-grid--gap05">
+                <div class="c-form-select-wrap">
+                  <!-- 値引き -->
+                  <select name="paymentMethod" id="paymentMethod_voucher" class="entryType">
+                    <option value="" selected="">値引き</option>
+                      <option value="1">
+                        8%値引き
+                      </option>
+                      <option value="2">
+                        10%値引き
+                      </option>
+                      <option value="3">
+                        非課税値引き
+                      </option>
+                                        
+                  </select>
+                </div>
+                <div class="c-form-select-wrap">
+                  <!-- 調整 -->
+                  <select name="paymentMethod" id="paymentMethod_voucher" class="entryType">
+                    <option value="" selected="">調整</option>
+                      <option value="1">
+                        8%調整
+                      </option>
+                      <option value="2">
+                        10%調整
+                      </option>
+                      <option value="3">
+                        非課税調整
+                      </option>
+                                        
+                  </select>
+                </div>              </div>
               <!-- 支払方法　チェックボックス -->
               <div class="p-register__paymentMethod">
                 <div class="c-button-optionSelect">
@@ -292,7 +325,27 @@
                       <div class="p-register-checkout__price">0,000<span class="u-font-yen">円</span></div>
                     </div>
                     <div class="p-register-checkout__item item-container">
-                      <div class="c-button__remove"><img src="{{ asset('images/icon/removeButton.svg') }}" width="16" height="16" class="button_remove">値引き</div>
+                      <div class="c-button__remove"><img src="http://local-airport-parking-pro.jp/images/icon/removeButton.svg" width="16" height="16" class="button_remove">8%値引き</div>
+                      <div class="p-register-checkout__price">-0,000<span class="u-font-yen">円</span></div>
+                    </div>
+                    <div class="p-register-checkout__item item-container">
+                      <div class="c-button__remove"><img src="http://local-airport-parking-pro.jp/images/icon/removeButton.svg" width="16" height="16" class="button_remove">10%値引き</div>
+                      <div class="p-register-checkout__price">-0,000<span class="u-font-yen">円</span></div>
+                    </div>
+                    <div class="p-register-checkout__item item-container">
+                      <div class="c-button__remove"><img src="http://local-airport-parking-pro.jp/images/icon/removeButton.svg" width="16" height="16" class="button_remove">非課税値引き</div>
+                      <div class="p-register-checkout__price">-0,000<span class="u-font-yen">円</span></div>
+                    </div>
+                    <div class="p-register-checkout__item item-container">
+                      <div class="c-button__remove"><img src="http://local-airport-parking-pro.jp/images/icon/removeButton.svg" width="16" height="16" class="button_remove">8%調整</div>
+                      <div class="p-register-checkout__price">-0,000<span class="u-font-yen">円</span></div>
+                    </div>
+                    <div class="p-register-checkout__item item-container">
+                      <div class="c-button__remove"><img src="http://local-airport-parking-pro.jp/images/icon/removeButton.svg" width="16" height="16" class="button_remove">10%調整</div>
+                      <div class="p-register-checkout__price">-0,000<span class="u-font-yen">円</span></div>
+                    </div>
+                    <div class="p-register-checkout__item item-container">
+                      <div class="c-button__remove"><img src="http://local-airport-parking-pro.jp/images/icon/removeButton.svg" width="16" height="16" class="button_remove">非課税調整</div>
                       <div class="p-register-checkout__price">-0,000<span class="u-font-yen">円</span></div>
                     </div>
                     <div class="p-register-checkout__item item-container">
