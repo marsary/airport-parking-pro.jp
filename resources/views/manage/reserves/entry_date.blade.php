@@ -272,7 +272,7 @@
 @push("scripts")
 <script src="{{ asset('js/close_button_toggle.js') }}"></script>
 <script src="{{ asset('js/index.global.min.js') }}"></script>
-<script src="{{ asset('js/pages/manage/entry_date.js') }}"></script>
+<script src="{{ asset('js/commons/entry_date.js') }}"></script>
 <script>
 </script>
 @endpush
