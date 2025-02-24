@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod\AdjustmentType;
+use App\Enums\PaymentMethod\DiscountType;
 use App\Enums\PaymentMethodType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +23,7 @@ class PaymentDetail extends Model
         'payment_method_id',
         'total_price',
         'coupon_id',
+        'discount_type',
     ];
 
     public function paymentMethod()
@@ -36,5 +39,27 @@ class PaymentDetail extends Model
     public function paymentMethodCategory()
     {
         return PaymentMethodType::tryFrom($this->paymentMethod->type)?->symbol();
+    }
+
+    public function paymentMethodDiscountType()
+    {
+        return DiscountType::tryFrom($this->discount_type);
+    }
+
+    public function paymentMethodAdjustmentType()
+    {
+        return AdjustmentType::tryFrom($this->discount_type);
+    }
+
+    public static function getDiscountTypeMap()
+    {
+        $map = [];
+        foreach (DiscountType::cases() as $discountType) {
+            $map['discount'][$discountType->label()] = $discountType->value;
+        }
+        foreach (AdjustmentType::cases() as $adjustmentType) {
+            $map['adjustment'][$adjustmentType->label()] = $adjustmentType->value;
+        }
+        return $map;
     }
 }
