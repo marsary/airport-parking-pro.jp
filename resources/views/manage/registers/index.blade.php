@@ -114,6 +114,8 @@
           <input type="hidden" id="optionInfosSaved" value="0" />
           <input type="hidden" id="categoryPaymentDetailMap" value="">
           <input type="hidden" id="appliedCoupons" value="">
+          <input type="hidden" id="appliedDiscounts" value="">
+          <input type="hidden" id="appliedAdjustments" value="">
         </form>
       </div>
     </div>
@@ -131,7 +133,7 @@
       <form id="payment_submit_form" action="{{route('manage.registers.store', ['deal_id' => $dealId])}}" method="POST">
         @csrf
         <div class="l-modal__content p-register">
-          <p class="text-center u-mb1">やまだたろう 様</p>
+          <p id="modal_deal_name" class="text-center u-mb1">やまだたろう 様</p>
           <div class="p-register__settlement">
 
             <!-- 電卓 left side-->
@@ -200,9 +202,14 @@
               <div class="p-register__adjustment c-button-optionSelect-light l-grid--col4 l-grid--gap05">
                 <div class="c-form-select-wrap">
                   <!-- 値引き -->
-                  <select name="paymentMethod" id="paymentMethod_voucher" class="entryType">
+                  <select name="paymentMethod" id="paymentMethod_discount" class="entryType">
                     <option value="" selected="">値引き</option>
-                      <option value="1">
+                      @foreach ($getDiscountTypeMap['discount'] as $label => $value)
+                        <option value="{{$value}}">
+                          {{$label}}
+                        </option>
+                      @endforeach
+                      {{--  <option value="1">
                         8%値引き
                       </option>
                       <option value="2">
@@ -210,15 +217,20 @@
                       </option>
                       <option value="3">
                         非課税値引き
-                      </option>
-                                        
+                      </option>  --}}
+
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
                   <!-- 調整 -->
-                  <select name="paymentMethod" id="paymentMethod_voucher" class="entryType">
+                  <select name="paymentMethod" id="paymentMethod_adjustment" class="entryType">
                     <option value="" selected="">調整</option>
-                      <option value="1">
+                    @foreach ($getDiscountTypeMap['adjustment'] as $label => $value)
+                      <option value="{{$value}}">
+                        {{$label}}
+                      </option>
+                    @endforeach
+                      {{--  <option value="1">
                         8%調整
                       </option>
                       <option value="2">
@@ -226,8 +238,8 @@
                       </option>
                       <option value="3">
                         非課税調整
-                      </option>
-                                        
+                      </option>  --}}
+
                   </select>
                 </div>              </div>
               <!-- 支払方法　チェックボックス -->
@@ -666,6 +678,9 @@
     const originalTotalPayInput = document.getElementById('originalTotalPay');
     const categoryPaymentDetailMapInput = document.getElementById('categoryPaymentDetailMap');
     const appliedCouponsInput = document.getElementById('appliedCoupons');
+    const appliedDiscountsInput = document.getElementById('appliedDiscounts');
+    const appliedAdjustmentsInput = document.getElementById('appliedAdjustments');
+    const modalDealName = document.getElementById('modal_deal_name');
 
     const modalArea = document.getElementById('modalArea');
     const modalOpen = document.getElementById('modal_open');
@@ -744,9 +759,17 @@
         if(json.data.appliedCoupons) {
           appliedCouponsInput.value = JSON.stringify(json.data.appliedCoupons);
         }
+        if(json.data.appliedDiscounts) {
+            appliedDiscountsInput.value = JSON.stringify(json.data.appliedDiscounts);
+        }
+        if(json.data.appliedAdjustments) {
+            appliedAdjustments.value = JSON.stringify(json.data.appliedAdjustments);
+        }
         console.log(json.data);
 
         deal = json.data.deal
+        modalDealName.textContent = deal.name + ' 様';
+
         if(isObject(json.data.dealGoods)) {
           dealGoods = json.data.dealGoods
         }
