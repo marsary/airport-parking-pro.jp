@@ -11,6 +11,8 @@ window.addEventListener('DOMContentLoaded', function() {
     const couponSelect = document.getElementById('coupon');
     const discountInput = document.getElementById('discount');
     const adjustmentInput = document.getElementById('adjustment');
+    const paymentMethodDiscountInput = document.getElementById('paymentMethod_discount');
+    const paymentMethodAdjustmentInput = document.getElementById('paymentMethod_adjustment');
     const paymentMethodCashInput = document.getElementById('paymentMethod_cash');
     const paymentMethodCreditInput = document.getElementById('paymentMethod_credit');
     const paymentMethodEmoneyInput = document.getElementById('paymentMethod_emoney');
@@ -98,12 +100,17 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    /**
+     *
+     * @param {PaymentData} paymentData
+     */
     function initpaymentMethodInputs(paymentData) {
         adjustmentInput.addEventListener('click', () => {
-            initpaymentMethodInput(adjustmentInput,paymentData, PaymentMethodTypes.adjustment,'adjustment')
+            initpaymentMethodInput(adjustmentInput,paymentData, null, null)
         })
-        discountInput.addEventListener('click', () => {
-            initpaymentMethodInput(discountInput,paymentData, PaymentMethodTypes.discount,'discount')
+        paymentMethodDiscountInput.addEventListener('change', () => {
+            discountInput.checked = true;
+            initpaymentMethodDiscountInput(discountInput, paymentMethodDiscountInput, paymentData, PaymentMethodTypes.discount, paymentMethodDiscountInput.options[paymentMethodDiscountInput.selectedIndex].text)
         })
         paymentMethodCashInput.addEventListener('click', () => {
             initpaymentMethodInput(paymentMethodCashInput,paymentData, PaymentMethodTypes.cash,'cash')
@@ -131,6 +138,13 @@ window.addEventListener('DOMContentLoaded', function() {
         })
     }
 
+    /**
+     *
+     * @param {HTMLElement} elem
+     * @param {PaymentData} paymentData
+     * @param {string|null} selectedType
+     * @param {string|null} selectedItemName
+     */
     function initpaymentMethodInput(elem, paymentData, selectedType,selectedItemName) {
         uncheckSelectedMethods (elem);
         if(paymentMethodTypeIsChecked(elem)) {
@@ -147,9 +161,31 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function uncheckSelectedMethods (elem) {
+    /**
+     *
+     * @param {HTMLElement} checkElem
+     * @param {HTMLElement} selectElem
+     * @param {PaymentData} paymentData
+     * @param {string|null} selectedType
+     * @param {string|null} selectedItemName
+     */
+    function initpaymentMethodDiscountInput(checkElem, selectElem, paymentData, selectedType,selectedItemName) {
+        uncheckSelectedMethods (checkElem, selectElem);
+        if(paymentMethodTypeIsChecked(checkElem) && paymentMethodTypeIsChecked(selectElem)) {
+            paymentData.setSelectedItem(selectedType, selectedItemName)
+            renderPaymentTable(true);
+        } else {
+            if(paymentData.selectedItemName == selectedItemName) {
+                paymentData.setSelectedItem(null, null);
+                paymentData.confirmInput();
+                renderPaymentTable();
+            }
+        }
+    }
+
+    function uncheckSelectedMethods (...elems) {
         entryTypeInputList.forEach(entryTypeInput => {
-            if(elem.id == entryTypeInput.id) {
+            if (elems.some(elem => elem.id == entryTypeInput.id)) {
             }else if(entryTypeInput.checked) {
                 entryTypeInput.checked = false
             }else if(entryTypeInput.value != '') {
@@ -196,8 +232,16 @@ window.addEventListener('DOMContentLoaded', function() {
     function initPaymentData() {
         const categoryPaymentDetailMap = JSON.parse(document.getElementById('categoryPaymentDetailMap').value);
         let appliedCoupons = {}
+        let appliedDiscounts = {}
+        let appliedAdjustments = {}
         if(document.getElementById('appliedCoupons').value != '') {
             appliedCoupons = JSON.parse(document.getElementById('appliedCoupons').value);
+        }
+        if(document.getElementById('appliedDiscounts').value != '') {
+            appliedDiscounts = JSON.parse(document.getElementById('appliedDiscounts').value);
+        }
+        if(document.getElementById('appliedAdjustments').value != '') {
+            appliedAdjustments = JSON.parse(document.getElementById('appliedAdjustments').value);
         }
         const reducedSubTotal = parseInt(document.getElementById('reducedSubTotalInput').value) || 0;
         const reducedTax = parseInt(document.getElementById('reducedTaxInput').value) || 0;
@@ -227,6 +271,8 @@ window.addEventListener('DOMContentLoaded', function() {
             paymentMethodName,
             renderPaymentTable,
             categoryPaymentDetailMap,
+            appliedDiscounts,
+            appliedAdjustments,
             appliedCoupons,
         );
     }
@@ -267,13 +313,13 @@ class PaymentData {
     couponData = {}
     // 適用クーポン couponId => 割引額
     appliedCoupons = {}
+    // 値引き itemName => 値引き額
+    discount = {}
+    // 調整 itemName => 調整額
+    adjustment = {}
 
     //小計(税抜)
     subtotal = 0
-    // 値引き
-    discount
-    // 調整
-    adjustment
     // 消費税 調整前
     originalTax = 0
     // 消費税 調整後
@@ -333,7 +379,9 @@ class PaymentData {
         selectedItemName,
         renderPaymentTable,
         categoryPaymentDetailMap = {},
-        appliedCoupons = {}
+        appliedDiscounts,
+        appliedAdjustments,
+        appliedCoupons = {},
     ) {
         this.BASE_PATH = BASE_PATH
         this.subtotal = subtotal
@@ -343,6 +391,8 @@ class PaymentData {
         this.totalAmount = totalAmount
         this.couponData = couponData
         this.appliedCoupons = appliedCoupons
+        this.discount = appliedDiscounts
+        this.adjustment = appliedAdjustments
         this.calculator = calculator
         this.selectedType = selectedType
         this.selectedItemName = selectedItemName
@@ -368,23 +418,29 @@ class PaymentData {
         this.isDirty = false
     }
 
-    adjustTax() {
-        // クーポンや値引きは常に10％消費税に対応する
+    discountTotal() {
+    }
 
-        let discount = (parseInt(this.discount) || 0) - (parseInt(this.adjustment) || 0);
+    adjustmentTotal() {
+    }
+
+    adjustTax() {
+        // クーポンは常に10％消費税に対応する
+
+        let couponDiscount = 0;
         Object.keys(this.appliedCoupons).forEach(couponId => {
             const value = this.appliedCoupons[String(couponId)];
-            discount += (parseInt(value) || 0);
+            couponDiscount += (parseInt(value) || 0);
         })
 
-        // 元の消費税額 - (クーポン・値引きの合計) * 10%
-        this.tax = parseInt(this.originalTax - (parseInt(discount * 0.1)));
+        // 元の消費税額 - (クーポン) * 10%
+        this.tax = parseInt(this.originalTax - (parseInt(couponDiscount * 0.1)));
     }
 
     sumTotals() {
         this.adjustTax();
 
-        this.totalAmount = (parseInt(this.subtotal) || 0) + (parseInt(this.tax) || 0) - (parseInt(this.discount) || 0) + (parseInt(this.adjustment) || 0);
+        this.totalAmount = (parseInt(this.subtotal) || 0) + (parseInt(this.tax) || 0) - this.discountTotal() + this.adjustmentTotal();
         this.totalPay = (parseInt(this.cash) || 0) + (parseInt(this.giftCertificates) || 0)
         for(const paymentType of this.listPaymentTypes) {
             Object.keys(this[paymentType]).forEach(key => {
@@ -465,9 +521,10 @@ class PaymentData {
         //小計(税抜)
         items.push(this.makeItemContainer('小計', this.subtotal))
         // 値引き
-        if(this.discount != null && !isNaN(this.discount)) {
-            items.push(this.makeItemContainerWithRemoveButton('discount', '値引き', this.discount))
-        }
+        Object.keys(this.discount).forEach(discountName => {
+            const price = this.discount[discountName];
+            items.push(this.makeItemContainerWithRemoveButton(discountName, discountName, price))
+        })
         // クーポン
         Object.keys(this.appliedCoupons).forEach(couponId => {
             const coupon = this.getCoupon(couponId);
@@ -479,9 +536,10 @@ class PaymentData {
             items.push(this.makeItemContainerWithRemoveButton(coupon.name, name, price))
         })
         // 調整
-        if(this.adjustment != null) {
-            items.push(this.makeItemContainerWithRemoveButton('adjustment', '調整', this.adjustment))
-        }
+        Object.keys(this.adjustment).forEach(adjustmentName => {
+            const price = this.adjustment[adjustmentName];
+            items.push(this.makeItemContainerWithRemoveButton(adjustmentName, adjustmentName, price))
+        })
         // 消費税
         items.push(this.makeItemContainer('消費税', this.tax))
 
@@ -591,6 +649,14 @@ class PaymentData {
                 return;
             }
         }
+        if(this.discount.hasOwnProperty(itemName)) {
+            delete this.discount[itemName]
+            return;
+        }
+        if(this.adjustment.hasOwnProperty(itemName)) {
+            delete this.adjustment[itemName]
+            return;
+        }
         Object.keys(this.appliedCoupons).forEach(couponId => {
             const coupon = this.getCoupon(couponId);
             if(coupon?.name == itemName) {
@@ -599,6 +665,20 @@ class PaymentData {
             }
         })
 
+    }
+
+    /**
+     *
+     * @param {string} itemName
+     */
+    #getDiscountRate(itemName) {
+        if(itemName.includes('8%')) {
+            return 0.08;
+        }
+        if(itemName.includes('10%')) {
+            return 0.1;
+        }
+        return 0;
     }
 
     /**
@@ -614,8 +694,8 @@ class PaymentData {
         return {
             appliedCoupons: this.appliedCoupons,
             subtotal: this.subtotal,
-            discount: this.discount ?? '',
-            adjustment: this.adjustment ?? '',
+            discount: this.discount,
+            adjustment: this.adjustment,
             tax: this.tax,
             totalAmount: this.totalAmount,
             totalChange: this.totalChange,
