@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Manage;
 
 use App\Enums\DealStatus;
+use App\Enums\PaymentMethod\AdjustmentType;
+use App\Enums\PaymentMethod\DiscountType;
+use App\Enums\PaymentMethodType;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\RegisterStoreRequest;
 use App\Models\Coupon;
 use App\Models\Deal;
 use App\Models\Good;
 use App\Models\GoodCategory;
+use App\Models\PaymentDetail;
 use App\Models\PaymentMethod;
 use App\Services\Deal\DealGoodsService;
 use App\Services\Deal\PaymentService;
@@ -38,6 +42,7 @@ class RegistersController extends Controller
             'coupons' => $coupons,
             'paymentMethodCategoryMap' => PaymentMethod::getIdNameMapGroupedByCategory(),
             'dealId' => $request->input('deal_id'),
+            'getDiscountTypeMap' => PaymentDetail::getDiscountTypeMap(),
         ]);
     }
 
@@ -81,11 +86,28 @@ class RegistersController extends Controller
         $service = new DealGoodsService($deal);
         $categoryPaymentDetailMap = [];
         $appliedCoupons = [];
+        $appliedDiscounts = [];
+        $appliedAdjustments = [];
         if($deal->payment?->paymentDetails) {
             foreach ($deal->payment->paymentDetails as $paymentDetail) {
                 if($paymentDetail->coupon()->exists()) {
                     $appliedCoupons[$paymentDetail->coupon->id] = $paymentDetail->total_price;
                     continue;
+                }
+                if(isset($paymentDetail->discount_type)) {
+                    $paymentMethodType = $paymentDetail->paymentMethodCategory();
+                    switch ($paymentMethodType) {
+                        case PaymentMethodType::DISCOUNT->symbol():
+                            /** @var DiscountType|null */
+                            $discountType = $paymentDetail->paymentMethodDiscountType();
+                            if($discountType) {
+                                $appliedDiscounts[$discountType->label()] = $paymentDetail->total_price;
+                                continue 2;
+                            }
+
+                        default:
+                            break;
+                    }
                 }
                 if(!isset($categoryDetails[$paymentDetail->paymentMethodCategory()]) && $paymentDetail->paymentMethod->multiple) {
                     $categoryDetails[$paymentDetail->paymentMethodCategory()] = [];
@@ -95,6 +117,7 @@ class RegistersController extends Controller
                 } else {
                     $categoryPaymentDetailMap[$paymentDetail->paymentMethodCategory()] = $paymentDetail->total_price;
                 }
+
             }
         }
 
@@ -107,6 +130,7 @@ class RegistersController extends Controller
                 'totalPrices' => $service->sumTotals(),
                 'categoryPaymentDetailMap' => $categoryPaymentDetailMap,
                 'appliedCoupons' => !empty($appliedCoupons) ? $appliedCoupons:null,
+                'appliedDiscounts' =>  !empty($appliedDiscounts) ? $appliedDiscounts:null,
             ],
          ]);
     }
