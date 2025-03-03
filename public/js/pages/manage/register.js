@@ -108,6 +108,9 @@ window.addEventListener('DOMContentLoaded', function() {
         adjustmentInput.addEventListener('click', () => {
             initpaymentMethodInput(adjustmentInput,paymentData, null, null)
         })
+        discountInput.addEventListener('click', () => {
+            initpaymentMethodInput(discountInput,paymentData, null, null)
+        })
         paymentMethodDiscountInput.addEventListener('change', () => {
             discountInput.checked = true;
             initpaymentMethodDiscountInput(discountInput, paymentMethodDiscountInput, paymentData, PaymentMethodTypes.discount, paymentMethodDiscountInput.options[paymentMethodDiscountInput.selectedIndex].text)
@@ -419,6 +422,11 @@ class PaymentData {
     }
 
     discountTotal() {
+        const total = Object.keys(this.discount).reduce(
+            (accumulator, discountName) => accumulator + parseInt(this.discount[discountName]),
+            0,
+          );
+        return parseInt(total) || 0;
     }
 
     adjustmentTotal() {
@@ -435,6 +443,23 @@ class PaymentData {
 
         // 元の消費税額 - (クーポン) * 10%
         this.tax = parseInt(this.originalTax - (parseInt(couponDiscount * 0.1)));
+
+        console.log(this.discount);
+        let appliedDiscountAmount = 0;
+        // 適用値引き itemName => 値引き額
+        Object.keys(this.discount).forEach((discountName) => {
+            const value = this.discount[discountName];
+            appliedDiscountAmount += (parseInt(value) || 0) * this.#getDiscountRate(discountName);
+        })
+        let appliedAdjustmentAmount = 0;
+        // 適用調整 itemName => 調整額
+        Object.keys(this.adjustment).forEach((adjustmentName) => {
+            const value = this.adjustment[adjustmentName];
+            appliedAdjustmentAmount += (parseInt(value) || 0) * this.#getDiscountRate(adjustmentName);
+        })
+
+        // クーポン分控除後の消費税額 - (値引き・調整消費税の合計)
+        this.tax = parseInt(this.tax - (parseInt(appliedDiscountAmount) - parseInt(appliedAdjustmentAmount)));
     }
 
     sumTotals() {
