@@ -104,6 +104,13 @@ class RegistersController extends Controller
                                 $appliedDiscounts[$discountType->label()] = $paymentDetail->total_price;
                                 continue 2;
                             }
+                        case PaymentMethodType::ADJUSTMENT->symbol():
+                            /** @var AdjustmentType|null */
+                            $adjustmentType = $paymentDetail->paymentMethodAdjustmentType();
+                            if($adjustmentType) {
+                                $appliedAdjustments[$adjustmentType->label()] = $paymentDetail->total_price;
+                                continue 2;
+                            }
 
                         default:
                             break;
@@ -131,6 +138,7 @@ class RegistersController extends Controller
                 'categoryPaymentDetailMap' => $categoryPaymentDetailMap,
                 'appliedCoupons' => !empty($appliedCoupons) ? $appliedCoupons:null,
                 'appliedDiscounts' =>  !empty($appliedDiscounts) ? $appliedDiscounts:null,
+                'appliedAdjustments' =>  !empty($appliedAdjustments) ? $appliedAdjustments:null,
             ],
          ]);
     }
