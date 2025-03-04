@@ -111,6 +111,11 @@ window.addEventListener('DOMContentLoaded', function() {
         discountInput.addEventListener('click', () => {
             initpaymentMethodInput(discountInput,paymentData, null, null)
         })
+
+        paymentMethodAdjustmentInput.addEventListener('change', () => {
+            adjustmentInput.checked = true;
+            initpaymentMethodDiscountInput(adjustmentInput, paymentMethodAdjustmentInput, paymentData, PaymentMethodTypes.adjustment, paymentMethodAdjustmentInput.options[paymentMethodAdjustmentInput.selectedIndex].text)
+        })
         paymentMethodDiscountInput.addEventListener('change', () => {
             discountInput.checked = true;
             initpaymentMethodDiscountInput(discountInput, paymentMethodDiscountInput, paymentData, PaymentMethodTypes.discount, paymentMethodDiscountInput.options[paymentMethodDiscountInput.selectedIndex].text)
@@ -430,6 +435,11 @@ class PaymentData {
     }
 
     adjustmentTotal() {
+        const total = Object.keys(this.adjustment).reduce(
+            (accumulator, adjustmentName) => accumulator + parseInt(this.adjustment[adjustmentName]),
+            0,
+          );
+        return parseInt(total) || 0;
     }
 
     adjustTax() {
