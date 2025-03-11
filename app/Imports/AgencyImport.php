@@ -58,11 +58,11 @@ class AgencyImport implements ToModel, WithHeadingRow, WithChunkReading, WithVal
     {
         return [
             'name' => 'required|string|max:100',
-            'code' => 'nullable|string|max:100',
-            'zip' => 'nullable|string|max:8',
+            'code' => 'nullable|max:100',
+            'zip' => 'nullable|max:8',
             'address1' => 'nullable|string|max:100',
             'address2' => 'nullable|string|max:100',
-            'tel' => 'nullable|string|max:16',
+            'tel' => 'nullable|max:16',
             'keyword' => 'nullable|string',
             'branch' => 'nullable|string|max:100',
             'department' => 'nullable|string|max:20',
