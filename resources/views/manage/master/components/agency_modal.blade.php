@@ -102,6 +102,16 @@
 
           <!-- 下段 -->
           <div class="l-grid__agency--center l-grid--gap1 u-mb2-half">
+              <span class="u-font--md">満車適用フラグ</span>
+              <div class="c-button-optionSelect">
+                <input type="radio" id="restriction_apply_flag1-{{$agency?->id}}" name="record_{{ $agency?->id ?? 0 }}[restriction_apply_flag]" value="1"  {{old('record_' . ($agency?->id ?? 0) . '.restriction_apply_flag', $agency?->restriction_apply_flag) == 1 ? "checked":""}}>
+                <label for="restriction_apply_flag1-{{$agency?->id}}" class="text-center u-lh38 c-button-optionSelect__radioLabel">適用</label>
+              </div>
+              <div class="c-button-optionSelect">
+                <input type="radio" id="restriction_apply_flag2-{{$agency?->id}}" name="record_{{ $agency?->id ?? 0 }}[restriction_apply_flag]" value="0" {{old('record_' . ($agency?->id ?? 0) . '.restriction_apply_flag', $agency?->restriction_apply_flag) == 0 ? "checked":""}}>
+                <label for="restriction_apply_flag2-{{$agency?->id}}" class="text-center u-lh38 c-button-optionSelect__radioLabel">適用なし</label>
+              </div>
+              <div></div>
               <span class="u-font--md">月額固定費用</span>
               <div class="c-button-optionSelect">
                 <input type="radio" id="monthly_fixed_cost_flag1-{{$agency?->id}}" name="record_{{ $agency?->id ?? 0 }}[monthly_fixed_cost_flag]" value="1"  {{old('record_' . ($agency?->id ?? 0) . '.monthly_fixed_cost_flag', $agency?->monthly_fixed_cost_flag) == 1 ? "checked":""}}>

@@ -147,7 +147,7 @@ class PaymentMethodSeeder extends Seeder
                 'name' => '値引き',
                 'type' => 9,
                 'memo' => null,
-                'multiple' => false,
+                'multiple' => true,
             ],
             // 10：調整
             [
@@ -156,7 +156,7 @@ class PaymentMethodSeeder extends Seeder
                 'name' => '調整',
                 'type' => 10,
                 'memo' => null,
-                'multiple' => false,
+                'multiple' => true,
             ],
             // 11：適用クーポン
             [

@@ -35,6 +35,7 @@ class Agency extends Model
         'payment_destination',
         'memo',
         'receipt_issue',
+        'restriction_apply_flag',
         'monthly_fixed_cost_flag',
         'monthly_fixed_cost',
         'incentive_flag',

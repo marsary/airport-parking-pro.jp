@@ -171,7 +171,7 @@
                         </dl>
                     </div>
 
-                    <dl class="p-reserve-selectedTime--detail">
+                    <dl class="p-reserve-selectedTime--detail" id="quarter_hour_section">
                         <dt class="c-calendar__heading">時間</dt>
                         <dd>
                             <ul class="p-reserve-selectedTime--detail__wrap">
@@ -272,7 +272,7 @@
 @push("scripts")
 <script src="{{ asset('js/close_button_toggle.js') }}"></script>
 <script src="{{ asset('js/index.global.min.js') }}"></script>
-<script src="{{ asset('js/pages/manage/entry_date.js') }}"></script>
+<script src="{{ asset('js/commons/entry_date.js') }}"></script>
 <script>
 </script>
 @endpush
@@ -294,27 +294,49 @@
         right: -30px;
     }
 
-    .fc-multimonth-title {
-        display: none;
-    }
+  {{--  単数月用  --}}
 
-    div.fc-multimonth-month {
-        padding: 8px 10px 8px !important;
-    }
+  .fc .fc-scrollgrid {
+    border-left-width: 0px;
+  }
 
-    table.fc-multimonth-daygrid-table {
-        border-spacing: 4px;
-        border-collapse: separate;
-    }
+  table.fc-col-header {
+    padding-top: 8px;
+    border-spacing: 4px;
+    border-collapse: separate;
+  }
 
-    table.fc-multimonth-header-table {
-        border-spacing: 4px;
-        border-collapse: separate;
-    }
+  table.fc-col-header tr {
+    height: 25px;
+  }
 
-    table.fc-multimonth-header-table tr {
-        height: 25px;
-    }
+  table.fc-scrollgrid-sync-table {
+    border-spacing: 4px;
+    border-collapse: separate;
+  }
+
+  {{--  複数月用  --}}
+  {{--  .fc-multimonth-title {
+    display: none;
+  }  --}}
+
+  {{--  div.fc-multimonth-month {
+    padding: 8px 10px 8px !important;
+  }  --}}
+
+  {{--  table.fc-multimonth-daygrid-table {
+    border-spacing: 4px;
+    border-collapse: separate;
+  }  --}}
+
+  {{--  table.fc-multimonth-header-table {
+    border-spacing: 4px;
+    border-collapse: separate;
+  }
+
+  table.fc-multimonth-header-table tr {
+    height: 25px;
+  }  --}}
 
     .fc-day-disabled {
         border: none !important;

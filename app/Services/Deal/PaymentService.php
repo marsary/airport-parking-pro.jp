@@ -2,6 +2,8 @@
 namespace App\Services\Deal;
 
 use App\Enums\GeneralStatus;
+use App\Enums\PaymentMethod\AdjustmentType;
+use App\Enums\PaymentMethod\DiscountType;
 use App\Enums\PaymentMethodType;
 use App\Enums\TaxType;
 use App\Models\CashRegister;
@@ -106,6 +108,12 @@ class PaymentService
                     if($symbol == PaymentMethodType::COUPON->symbol()) {
                         // 適用クーポン
                         $this->createCouponDetail($categoryData);
+                    } elseif($symbol == PaymentMethodType::DISCOUNT->symbol()) {
+                        // 値引き
+                        $this->createDiscountDetails($categoryData);
+                    } elseif($symbol == PaymentMethodType::ADJUSTMENT->symbol()) {
+                        // 調整
+                        $this->createAdjustmentDetails($categoryData);
                     } else {
                         foreach ($categoryData as $itemName => $itemValue) {
                             $paymentMethod = PaymentMethod::getByName($itemName);
@@ -125,6 +133,34 @@ class PaymentService
                     ]);
                 }
             }
+        }
+    }
+
+    private function createDiscountDetails(array $discounts)
+    {
+        foreach ($discounts as $itemName => $price) {
+            $discountType = DiscountType::getByLabel($itemName);
+            $paymentMethod = PaymentMethod::getByName(PaymentMethodType::DISCOUNT->label());
+            $this->payment->paymentDetails()->create([
+                'payment_id' => $this->payment->id,
+                'payment_method_id' => $paymentMethod->id,
+                'total_price' => (int) $price,
+                'discount_type' => $discountType->value,
+            ]);
+        }
+    }
+
+    private function createAdjustmentDetails(array $adjustments)
+    {
+        foreach ($adjustments as $itemName => $price) {
+            $adjustmentType = AdjustmentType::getByLabel($itemName);
+            $paymentMethod = PaymentMethod::getByName(PaymentMethodType::ADJUSTMENT->label());
+            $this->payment->paymentDetails()->create([
+                'payment_id' => $this->payment->id,
+                'payment_method_id' => $paymentMethod->id,
+                'total_price' => (int) $price,
+                'discount_type' => $adjustmentType->value,
+            ]);
         }
     }
 

@@ -16,16 +16,16 @@ document.addEventListener('DOMContentLoaded', function () {
   const unloadDateInput = document.querySelector('input[name=unload_date_plan]')
   const numDaysInput = document.querySelector('input[name=num_days]')
 
-
-  const initLoadDate = luxon.DateTime.fromISO(loadDateInput.value);
-  const initUnloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+  let initLoadDate = parseDateInput(loadDateInput.value);
+  let initUnloadDate = parseDateInput(unloadDateInput.value);
 
   const loadTimetableTitle = document.getElementById('load_timetable_title');
   const loadTimeSectionElem = document.getElementById('load_time_section');
+  const quarterHourSectionElem = document.getElementById('quarter_hour_section');
   const leftCalendar1Title = document.getElementById('left_calendar1_title');
-  const rightCalendar1Title = document.getElementById('right_calendar1_title');
+//   const rightCalendar1Title = document.getElementById('right_calendar1_title');
   const leftCalendar2Title = document.getElementById('left_calendar2_title');
-  const rightCalendar2Title = document.getElementById('right_calendar2_title');
+//   const rightCalendar2Title = document.getElementById('right_calendar2_title');
 
   const dispNumDaysElem = document.getElementById('disp_num_days');
   const dispLoadDateElem = document.getElementById('disp_load_date');
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadPriceTable()
   });
 
-  // 到着便情報の表示
+  // 駐車料金明細情報の表示
   async function loadPriceTable() {
     const agencyCode = agencyCodeInput.value;
     const loadDate = loadDateInput.value;
@@ -52,19 +52,19 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    // 到着便・到着日をAPIに送信
+    // 入出庫情報をAPIに送信
     const json = await apiRequest.get(BASE_PATH + "/prices/table",
       {load_date:loadDate, unload_date:unloadDate, agency_code:agencyCode}
     )
 
     console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
     if(json.success){
-      // 到着便情報の取得
       // alert(json.data);
 
       tableNumDaysElem.textContent = json.data.table.numDays  + '日間';
       subTotalElem.textContent = formatCurrency(json.data.table.subTotal, '￥');
       taxLabelElem.textContent = json.data.table.taxLabel;
+
       taxElem.textContent = formatCurrency(json.data.table.tax, '￥');
       totalElem.textContent = formatCurrency(json.data.table.total, '￥', '(税込)');
 
@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
         priceRowsElem.appendChild(div1)
         priceRowsElem.appendChild(div2)
       })
-      priceRowsElem
     }
   }
 
@@ -96,18 +95,20 @@ document.addEventListener('DOMContentLoaded', function () {
       removeQuaterHourSelected()
       cellElem.classList.add("quater_hour_selected");
       loadTimeInput.value = cellElem.dataset.time;
+      loadTimeInput.dispatchEvent(new Event('change'));
     })
   });
 
   var calendarEl1 = document.getElementById('calendar1');
   var calendar1 = new FullCalendar.Calendar(calendarEl1, {
-    initialView: 'multiMonthTwoMonth',
-    views: {
-      multiMonthTwoMonth: {
-        type: 'multiMonth',
-        duration: { months: 2 },
-      }
-    },
+    initialView: 'dayGridMonth',
+    // initialView: 'multiMonthTwoMonth',
+    // views: {
+    //   multiMonthTwoMonth: {
+    //     type: 'multiMonth',
+    //     duration: { months: 2 },
+    //   }
+    // },
     // multiMonthTitleFormat: {},//{ month: 'numeric', year: 'numeric' },
     firstDay:1,
     showNonCurrentDates:false,
@@ -124,9 +125,9 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     datesSet: function(dateInfo) {
       const startDate = luxon.DateTime.fromJSDate(dateInfo.start);
-      const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
+    //   const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
       leftCalendar1Title.textContent = startDate.toFormat('yyyy年M月')
-      rightCalendar1Title.textContent = endDate.toFormat('yyyy年M月')
+    //   rightCalendar1Title.textContent = endDate.toFormat('yyyy年M月')
     },
 
     eventColor: 'rgba(255, 255, 255, 0)',
@@ -149,9 +150,16 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     },
     eventDidMount: function(e) {
-      const startDate = luxon.DateTime.fromJSDate(e.event.start);
       let el = e.el;
-      if(startDate.hasSame(initLoadDate, 'day')) {
+      const startDate = luxon.DateTime.fromJSDate(e.event.start);
+      const loadDateObj = parseDateInput(loadDateInput.value);
+      if(loadDateObj.isValid && startDate.hasSame(loadDateObj, 'day')) {
+        //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
+        el.closest('.fc-daygrid-day').classList.add('day_selected');
+        // if(!selectedDateTime) {
+          dispLoadHourTable()
+        // }
+      } else if(startDate.hasSame(initLoadDate, 'day')) {
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
         dispLoadHourTable()
@@ -163,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     eventClick: function(info) {
       if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
-          return;
+        return;
       }
       alert(info.event.start);
       const startDate = luxon.DateTime.fromJSDate(info.event.start);
@@ -197,14 +205,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var calendarEl2 = document.getElementById('calendar2');
   var calendar2 = new FullCalendar.Calendar(calendarEl2, {
-    initialView: 'multiMonthTwoMonth',
-    views: {
-      multiMonthTwoMonth: {
-        type: 'multiMonth',
-        duration: { months: 2 }
-      }
-    },
-    multiMonthTitleFormat: { month: 'numeric', year: 'numeric' },
+    initialView: 'dayGridMonth',
+    // initialView: 'multiMonthTwoMonth',
+    // views: {
+    //   multiMonthTwoMonth: {
+    //     type: 'multiMonth',
+    //     duration: { months: 2 },
+    //   }
+    // },
+    // multiMonthTitleFormat: {},//{ month: 'numeric', year: 'numeric' },
     firstDay:1,
     showNonCurrentDates:false,
     headerToolbar: false,
@@ -220,9 +229,9 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     datesSet: function(dateInfo) {
       const startDate = luxon.DateTime.fromJSDate(dateInfo.start);
-      const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
+    //   const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
       leftCalendar2Title.textContent = startDate.toFormat('yyyy年M月')
-      rightCalendar2Title.textContent = endDate.toFormat('yyyy年M月')
+    //   rightCalendar2Title.textContent = endDate.toFormat('yyyy年M月')
     },
     eventColor: 'rgba(255, 255, 255, 0)',
     eventTextColor: '#5b915b',
@@ -244,9 +253,13 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     },
     eventDidMount: function(e) {
-      const startDate = luxon.DateTime.fromJSDate(e.event.start);
       let el = e.el;
-      if(startDate.hasSame(initUnloadDate, 'day')) {
+      const startDate = luxon.DateTime.fromJSDate(e.event.start);
+      const unloadDateObj = parseDateInput(unloadDateInput.value);
+      if(unloadDateObj.isValid && startDate.hasSame(unloadDateObj, 'day')) {
+        //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
+        el.closest('.fc-daygrid-day').classList.add('day_selected');
+      } else if(startDate.hasSame(initUnloadDate, 'day')) {
         //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
         el.closest('.fc-daygrid-day').classList.add('day_selected');
       }
@@ -257,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     eventClick: function(info) {
       if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
-        return;
+          return;
       }
       alert(info.event.start);
       unloadDateInput.value = luxon.DateTime.fromJSDate(info.event.start).toISODate();
@@ -297,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   }
   function removeQuaterHourSelected() {
-    Array.from(loadTimeSectionElem.getElementsByClassName('quater_hour_selected')).forEach(elem => {
+    Array.from(quarterHourSectionElem.getElementsByClassName('quater_hour_selected')).forEach(elem => {
       elem.classList.remove("quater_hour_selected")
     })
   }
@@ -317,8 +330,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function calcNumDays() {
-    const loadDate = luxon.DateTime.fromISO(loadDateInput.value);
-    const unloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+    const loadDate = parseDateInput(loadDateInput.value);
+    const unloadDate = parseDateInput(unloadDateInput.value);
     if(!loadDate.isValid || !unloadDate.isValid) {
       numDaysInput.value = ''
       return
@@ -331,12 +344,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   loadDateInput.addEventListener('change', function() {
     updateDispLoadDate()
+    initLoadDate = parseDateInput(loadDateInput.value);
   })
   loadTimeInput.addEventListener('change', function() {
     updateSelectedDateTime()
   })
   unloadDateInput.addEventListener('change', function() {
-    updateDispUnloadDate()
+    updateDispUnloadDate();
+    initUnloadDate = parseDateInput(unloadDateInput.value);
   })
   numDaysInput.addEventListener('change', function() {
     updateDispNumDays()
@@ -344,11 +359,12 @@ document.addEventListener('DOMContentLoaded', function () {
   agencyCodeInput.addEventListener('change', function() {
     loadPriceTable()
   })
+
   function updateSelectedDateTime() {
     if(loadTimeInput.value == '') {
       selectedDateTime = null;
     }
-    let loadDate = luxon.DateTime.fromISO(loadDateInput.value);
+    let loadDate = parseDateInput(loadDateInput.value)
     if(!loadDate.isValid) {
       return
     }
@@ -360,17 +376,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateDispLoadDate() {
-    const loadDate = luxon.DateTime.fromISO(loadDateInput.value);
+    const loadDate = parseDateInput(loadDateInput.value);
     if(!loadDate.isValid) {
         dispLoadDateElem.textContent = ''
         return
       }
     dispLoadDateElem.textContent = loadDate.toFormat(`M/dd`) + '(' + loadDate.weekdayShort + ')';
     loadTimetableTitle.textContent = loadDate.toFormat('yyyy年M月d日');
+
   }
 
   function updateDispUnloadDate() {
-    const unloadDate = luxon.DateTime.fromISO(unloadDateInput.value);
+    const unloadDate = parseDateInput(unloadDateInput.value)
     if(!unloadDate.isValid) {
         dispUnloadDateElem.textContent = ''
         return
@@ -386,6 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
   }
+
 
   async function dispLoadHourTable() {
     const loadDate = loadDateInput.value;
@@ -404,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // 入庫時間空き情報の取得
       //   alert(json.data);
       hourlyData = json.data.hourlyData;
-      const loadDateObj = luxon.DateTime.fromISO(loadDateInput.value);
+      const loadDateObj = parseDateInput(loadDateInput.value);
       let isSelectedDay = false;
       if(selectedDateTime && loadDateObj.hasSame(selectedDateTime, 'day')) {
           isSelectedDay = true;
@@ -417,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
       hourLabelCells.forEach(cellElem => {
         const hour = cellElem.dataset.hour;
         if(isSelectedDay && isSelectedHour(hour)) {
-          removeHourSelected()
+          // removeHourSelected()
           cellElem.classList.add("hour_selected");
           updateQuarterMinTable(cellElem, true)
         }

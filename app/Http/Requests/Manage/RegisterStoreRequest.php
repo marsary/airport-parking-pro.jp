@@ -24,8 +24,8 @@ class RegisterStoreRequest extends FormRequest
         return [
             'appliedCoupons' => 'nullable|array',
             'subtotal' => 'int',
-            'discount' => 'nullable|int',
-            'adjustment' => 'nullable|int',
+            'discounts' => 'nullable|array',
+            'adjustments' => 'nullable|array',
             'tax' => 'int',
             'totalAmount' => 'int',
             'totalChange' => 'int',
@@ -47,8 +47,8 @@ class RegisterStoreRequest extends FormRequest
         return [
             'appliedCoupons' => '割引クーポン',
             'subtotal' => '小計',
-            'discount' => '値引き',
-            'adjustment' => '調整',
+            'discounts' => '値引き',
+            'adjustments' => '調整',
             'tax' => '消費税',
             'totalAmount' => 'お支払い合計（税込）',
             'totalChange' => 'お釣り',
