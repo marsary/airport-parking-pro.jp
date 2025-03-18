@@ -24,6 +24,7 @@ class Deal extends Model
         'office_id',
         'agency_id',
         'reservation_route',
+        'transaction_type',
         'status',
         'reserve_code',
         'receipt_code',
