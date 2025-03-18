@@ -1,9 +1,14 @@
 <?php
 namespace App\Services\Deal;
 
+use App\Enums\DealStatus;
+use App\Enums\TransactionType;
 use App\Http\Controllers\Manage\Forms\DealEditForm;
+use App\Models\Deal;
 use App\Models\Member;
 use App\Services\Member\ReserveService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class DealService extends ReserveService
 {
@@ -90,4 +95,25 @@ class DealService extends ReserveService
         $this->createDealGoods();
     }
 
+
+    public static function makePurchaseOnly()
+    {
+        return Deal::make([
+            'member_id' => null,
+            'office_id' => config('const.commons.office_id'),
+            'agency_id' => null,  // 代理店設定なし
+            'transaction_type' => TransactionType::PURCHASE_ONLY->value,
+            'status' => DealStatus::UNLOADED->value,
+            'reserve_code' => Str::ulid(),
+            'num_members' => 0,
+            'name' => null,
+            'kana' => null,
+            'price' => 0,
+            'tax' => 0,
+            'total_price' => 0,
+            'total_tax' => 0,
+            'created_by' => Auth::id(),
+            'updated_by' => Auth::id(),
+        ]);
+    }
 }
