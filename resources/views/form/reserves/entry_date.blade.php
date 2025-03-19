@@ -166,19 +166,19 @@
                 <dt class="c-calendar__heading">時間</dt>
                 <dd>
                     <ul class="c-calendar-available-time__wrap">
-                        <li class="c-calendar-available-time">
+                        <li class="c-calendar-available-time__detail">
                             <div class="p-reserve-selectedTime__bg quarter_hour_label_cell" data-min="00" data-time="19:00">19:00～</div>
                             <div class="p-reserve-selectedTime__bg c-calendar__available-icon quarter_hour_vacancy" data-min="00"></div>
                         </li>
-                        <li class="c-calendar-available-time">
+                        <li class="c-calendar-available-time__detail">
                             <div class="p-reserve-selectedTime__bg quarter_hour_label_cell" data-min="15" data-time="19:15">19:15～</div>
                             <div class="p-reserve-selectedTime__bg c-calendar__available-icon quarter_hour_vacancy" data-min="15"></div>
                         </li>
-                        <li class="c-calendar-available-time">
+                        <li class="c-calendar-available-time__detail">
                             <div class="p-reserve-selectedTime__bg quarter_hour_label_cell" data-min="30" data-time="19:30">19:30～</div>
                             <div class="p-reserve-selectedTime__bg c-calendar__available-icon quarter_hour_vacancy" data-min="30"></div>
                         </li>
-                        <li class="c-calendar-available-time">
+                        <li class="c-calendar-available-time__detail">
                             <div class="p-reserve-selectedTime__bg quarter_hour_label_cell" data-min="45" data-time="19:45">19:45～</div>
                             <div class="p-reserve-selectedTime__bg c-calendar__available-icon quarter_hour_vacancy" data-min="45"></div>
                         </li>
@@ -283,49 +283,82 @@
         right: -30px;
     }
 
-    {{--  単数月用  --}}
+        {
+            {
+            -- 単数月用 --
+        }
+    }
 
     .fc .fc-scrollgrid {
-      border-left-width: 0px;
+        border-left-width: 0px;
     }
 
     table.fc-col-header {
-      padding-top: 8px;
-      border-spacing: 4px;
-      border-collapse: separate;
+        padding-top: 8px;
+        border-spacing: 4px;
+        border-collapse: separate;
     }
 
     table.fc-col-header tr {
-      height: 25px;
+        height: 25px;
     }
 
     table.fc-scrollgrid-sync-table {
-      border-spacing: 4px;
-      border-collapse: separate;
+        border-spacing: 4px;
+        border-collapse: separate;
     }
 
-    {{--  複数月用  --}}
-    {{--  .fc-multimonth-title {
-      display: none;
-    }  --}}
-
-    {{--  div.fc-multimonth-month {
-      padding: 8px 10px 8px !important;
-    }  --}}
-
-    {{--  table.fc-multimonth-daygrid-table {
-      border-spacing: 4px;
-      border-collapse: separate;
-    }  --}}
-
-    {{--  table.fc-multimonth-header-table {
-      border-spacing: 4px;
-      border-collapse: separate;
+        {
+            {
+            -- 複数月用 --
+        }
     }
 
-    table.fc-multimonth-header-table tr {
-      height: 25px;
-    }  --}}
+        {
+            {
+            -- .fc-multimonth-title {
+                display: none;
+            }
+
+            --
+        }
+    }
+
+        {
+            {
+            -- div.fc-multimonth-month {
+                padding: 8px 10px 8px !important;
+            }
+
+            --
+        }
+    }
+
+        {
+            {
+            -- table.fc-multimonth-daygrid-table {
+                border-spacing: 4px;
+                border-collapse: separate;
+            }
+
+            --
+        }
+    }
+
+        {
+            {
+            -- table.fc-multimonth-header-table {
+                border-spacing: 4px;
+                border-collapse: separate;
+            }
+
+            table.fc-multimonth-header-table tr {
+                height: 25px;
+            }
+
+            --
+        }
+    }
 
     .fc-day-disabled {
         border: none !important;
