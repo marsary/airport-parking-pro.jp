@@ -44,7 +44,7 @@ class DealEditForm extends ManageReserveForm
         $this->total_price = $deal->total_price;
         $this->total_tax = $deal->total_tax;
         $this->arr_flight_id = $deal->arr_flight_id;
-        $this->size_type = $deal->memberCar->car->size_type;
+        $this->size_type = $deal->memberCar?->car->size_type;
         $this->receipt_address = $deal->receipt_address;
         $this->member_memo = $deal->member?->memo;
         $this->reserve_memo = $deal->reserve_memo;
