@@ -116,4 +116,17 @@ class DealService extends ReserveService
             'updated_by' => Auth::id(),
         ]);
     }
+
+    public static function createPurchaseOnly()
+    {
+        $purchaseOnlyData = self::makePurchaseOnly();
+
+        Deal::doesntHave('payment')->each(function (Deal $deal) {
+            $deal->dealGoods()->delete(); // Deal に紐づく DealGood を削除
+            $deal->delete(); // Deal を削除
+        });
+
+        $purchaseOnlyData->save();
+        return $purchaseOnlyData;
+    }
 }
