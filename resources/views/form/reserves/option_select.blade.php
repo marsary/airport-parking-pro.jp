@@ -37,7 +37,7 @@
               $good = $goodsMap[$good_id];
             @endphp
             <div class="c-button__remove item-container remove_good">
-              <img src="{{ asset('images/icon/removeButton.svg') }}" value="{{$good->id}}" width="16" height="16" class="button_remove">
+              <img src="{{ asset('images/icon/removeButton.svg') }}" value="{{$good->id}}" width="16" height="16">
               {{$good->name}} ¥{{number_format($good->price)}}
             </div>
           @endforeach
