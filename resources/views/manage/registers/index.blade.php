@@ -696,8 +696,13 @@
 
         console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
         if(json.success){
+          if(json.data?.deal?.transaction_type == {{\App\Enums\TransactionType::PURCHASE_ONLY->value}}) {
+            dealId = json.data.deal.id;
+            paymentSubmitForm.action = `{{route('manage.registers.store')}}?deal_id=${dealId}`;
+          }
 
           optionInfosSavedInput.value = 1;
+          $('#optionInfosSaved')[0].dispatchEvent(new Event('change'))
           loadCouponOptions()
         } else {
           alert(json.message);
@@ -761,7 +766,11 @@
         console.log(json.data);
 
         deal = json.data.deal
-        modalDealName.textContent = deal.name + ' 様';
+        if(deal.transaction_type == {{\App\Enums\TransactionType::PURCHASE_ONLY->value}}) {
+          modalDealName.textContent = '商品のみ購入';
+        } else {
+          modalDealName.textContent = deal.name + ' 様';
+        }
 
         if(isObject(json.data.dealGoods)) {
           dealGoods = json.data.dealGoods
