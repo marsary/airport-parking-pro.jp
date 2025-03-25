@@ -48,7 +48,7 @@
             </div>
 
             <!-- ここのJSは</body>直前にあり -->
-            <div class="p-register__optionItem">
+            {{--  <div class="p-register__optionItem">
               <div>オプション1オプション1オプション1オプション1オプション1オプション1</div>
               <div class="p-register__optionItem--right">
                 <div>
@@ -58,18 +58,7 @@
                 <div><span class="count">1</span>点</div>
                 <div class="p-register__optionPrice optionPrice">4,000<span class="u-font-yen">円</span></div>
               </div>
-            </div>
-            <div class="p-register__optionItem">
-              <div>オプション2</div>
-              <div class="p-register__optionItem--right">
-                <div>
-                  <button type="button" class="button c-button-quantity" data-operation="up">＋</button>
-                  <button type="button" class="button c-button-quantity" data-operation="down">－</button>
-                </div>
-                <div><span class="count">1</span>点</div>
-                <div class="p-register__optionPrice optionPrice">1,500<span class="u-font-yen">円</span></div>
-              </div>
-            </div>
+            </div>  --}}
           </div>
 
           <div class="form-item l-grid--col2 u-border--all u-p1">
@@ -415,7 +404,7 @@
 
 <script>
   const goodsMap = @js($goodsMap);
-  const dealId = @js($dealId);
+  let dealId = @js($dealId);
   let goodNums = {};
   let goodIds = [];
   let deal = null;
@@ -597,7 +586,11 @@
     handleClickQuantityButton(button)
     if(dealGood.num == 0) {
       delete dealGoods[goodId]
+      goodIds = addRemoveList(goodIds, [], [goodId]);
       updateOptionList()
+
+      const modalGoodIdElem = document.getElementById('modal_good_ids_' + goodId);
+      modalGoodIdElem.checked = false;
     }
 
     const modalGoodNumElem = document.getElementById('modal_good_nums_' + goodId);
@@ -681,15 +674,15 @@
     const appliedDiscountsInput = document.getElementById('appliedDiscounts');
     const appliedAdjustmentsInput = document.getElementById('appliedAdjustments');
     const modalDealName = document.getElementById('modal_deal_name');
+    const paymentSubmitForm = document.getElementById('payment_submit_form');
 
     const modalArea = document.getElementById('modalArea');
     const modalOpen = document.getElementById('modal_open');
     const modalClose = document.getElementById('modal_close');
 
     modalOpen.addEventListener('click', async function() {
-      modalArea.classList.add('is-active');
-      if(dealId == '') {
-        return;
+      if(dealId == null) {
+        dealId = 0;
       }
 
       try {
@@ -703,8 +696,8 @@
 
         console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
         if(json.success){
+
           optionInfosSavedInput.value = 1;
-          $('#optionInfosSaved').trigger('change');
           loadCouponOptions()
         } else {
           alert(json.message);
@@ -743,8 +736,8 @@
 
     // オプション情報表示
     async function dispOptionTable() {
-      if(dealId == '') {
-        return;
+      if(dealId == null) {
+        dealId = 0;
       }
 
       // 取引IDをAPIに送信
