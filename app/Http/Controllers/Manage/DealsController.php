@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manage;
 
 use App\Enums\DealStatus;
+use App\Enums\TransactionType;
 use App\Exports\DealSearchExport;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Controllers\Manage\Forms\DealEditForm;
@@ -73,6 +74,7 @@ class DealsController extends Controller
         // dd($request->all());
         $query = $this->getDealQueryFromRequest($request);
         $deals = $query->with(['member', 'agency'])
+            ->whereNot('transaction_type', TransactionType::PURCHASE_ONLY->value)
             ->orderBy('reserve_date', 'asc')
             ->paginate($request->input('limit') ?? 25)
             ->withQueryString()
@@ -481,7 +483,18 @@ class DealsController extends Controller
      */
     public function updateGoods(DealUpdateGoodsRequest $request, string $id)
     {
-        $deal = Deal::findOrFail($id);
+        if($id == 0) {// 商品購入のみ
+            if(empty($request->dealGoods)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => '商品が選択されていません。',
+                 ]);
+            }
+            $deal = DealService::createPurchaseOnly();
+        } else {
+            $deal = Deal::findOrFail($id);
+        }
+
         try {
             DB::transaction(function () use($request, $deal) {
                 $deal->fill([
