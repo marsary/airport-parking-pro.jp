@@ -15,6 +15,7 @@ use App\Models\GoodCategory;
 use App\Models\PaymentDetail;
 use App\Models\PaymentMethod;
 use App\Services\Deal\DealGoodsService;
+use App\Services\Deal\DealService;
 use App\Services\Deal\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -82,7 +83,12 @@ class RegistersController extends Controller
      */
     public function show(string $id)
     {
-        $deal = Deal::findOrFail($id);
+        if($id == 0) {// 商品購入のみ
+            $deal = DealService::makePurchaseOnly();
+        } else {
+            $deal = Deal::findOrFail($id);
+        }
+
         $service = new DealGoodsService($deal);
         $categoryPaymentDetailMap = [];
         $appliedCoupons = [];
