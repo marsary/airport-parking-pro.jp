@@ -25,6 +25,7 @@ window.addEventListener('DOMContentLoaded', function() {
     const paymentSubmitButton = document.getElementById('paymentSubmitButton');
     const paymentSubmitForm = document.getElementById('payment_submit_form');
     const entryTypeInputList = document.querySelectorAll('.entryType');
+    const modalArea = document.getElementById('modalArea');
 
     /**
      * @type  {PaymentData} paymentData
@@ -46,16 +47,14 @@ window.addEventListener('DOMContentLoaded', function() {
         })
     })
 
-    document.getElementById('modal_open').addEventListener('click', () => {
+
+    document.getElementById('optionInfosSaved').addEventListener('change', () => {
         paymentData = initPaymentData();
         initpaymentMethodInputs(paymentData);
         togglePaymentSubmitButton();
         // 初期表示
         renderPaymentTable();
-    })
-
-    document.getElementById('optionInfosSaved').addEventListener('change', () => {
-        togglePaymentSubmitButton();
+        modalArea.classList.add('is-active');
     })
 
     couponApplyButton.addEventListener('click', async() => {
