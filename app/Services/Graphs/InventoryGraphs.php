@@ -3,6 +3,7 @@ namespace App\Services\Graphs;
 
 use App\Enums\DealStatus;
 use App\Enums\Graphs\InventoryType;
+use App\Enums\TransactionType;
 use App\Models\Deal;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -107,6 +108,7 @@ class InventoryGraphs
             ->where('office_id', config('const.commons.office_id'))
             ->whereDate($targetColumn, $startDate)
             ->whereNot('status', DealStatus::CANCEL->value)
+            ->whereNot('transaction_type', TransactionType::PURCHASE_ONLY->value)
             ->groupBy('hour')
             ->orderBy('hour', 'ASC')
             ->get();
@@ -140,6 +142,7 @@ class InventoryGraphs
             ->whereDate($targetColumn,'>=', $startDate->toDateString())
             ->whereDate($targetColumn,'<=', $endDate->toDateString())
             ->whereNot('status', DealStatus::CANCEL->value)
+            ->whereNot('transaction_type', TransactionType::PURCHASE_ONLY->value)
             ->groupBy($targetColumn)
             ->orderBy($targetColumn, 'ASC')
             ->get();
