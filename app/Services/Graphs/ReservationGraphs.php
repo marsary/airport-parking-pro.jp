@@ -2,6 +2,7 @@
 namespace App\Services\Graphs;
 
 use App\Enums\ReservationRoute;
+use App\Enums\TransactionType;
 use App\Models\Deal;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -108,6 +109,7 @@ class ReservationGraphs
             ->where('office_id', config('const.commons.office_id'))
             ->whereDate("reserve_date", $startDate)
             ->where('reservation_route', $route->value)
+            ->whereNot('transaction_type', TransactionType::PURCHASE_ONLY->value)
             ->groupBy('hour')
             ->orderBy('hour', 'ASC')
             ->get();
@@ -141,6 +143,7 @@ class ReservationGraphs
             ->whereDate('reserve_date','>=', $startDate->toDateString())
             ->whereDate('reserve_date','<=', $endDate->toDateString())
             ->where('reservation_route', $route->value)
+            ->whereNot('transaction_type', TransactionType::PURCHASE_ONLY->value)
             ->groupBy('reserve_date')
             ->orderBy('reserve_date', 'ASC')
             ->get();
