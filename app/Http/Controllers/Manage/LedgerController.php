@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manage;
 
 use App\Enums\DealStatus;
+use App\Enums\TransactionType;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\BunchIssuesRequest;
 use App\Http\Requests\Manage\UnloadAllRequest;
@@ -43,6 +44,7 @@ class LedgerController extends Controller
             ]);
         }
         $loadDeals = $query->with(['member.memberType', 'arrivalFlight.depAirport', 'memberCar.car', 'memberCar.carColor'])
+            ->whereNot('transaction_type', TransactionType::PURCHASE_ONLY->value)
             ->orderBy('load_time', 'asc')
             ->get()
             ;
@@ -64,6 +66,7 @@ class LedgerController extends Controller
             });
         }
         $unloadDeals = $query->with(['member', 'arrivalFlight.depAirport', 'arrivalFlight.airportTerminal', 'memberCar.car', 'memberCar.carColor', 'dealGoods.good', 'carCautionMemberCars.carCaution','office'])
+            ->whereNot('transaction_type', TransactionType::PURCHASE_ONLY->value)
             ->orderByRaw("COALESCE(unload_time, unload_time_plan) ASC")
             ->get()
             ;
