@@ -5,7 +5,13 @@
 <main class="l-wrap__main">
     <!-- パンくず -->
     <ul class="l-wrap__breadcrumb l-breadcrumb">
-      <li class="l-breadcrumb__list">予約詳細</li>
+      <li class="l-breadcrumb__list">
+        @if ($deal->transaction_type == \App\Enums\TransactionType::PURCHASE_ONLY->value)
+          予約詳細(商品購入のみ)
+        @else
+          予約詳細
+        @endif
+      </li>
     </ul>
 
     @include('include.messages.errors')
@@ -31,7 +37,7 @@
             <th>受付コード</th>
             <td>{{$deal->receipt_code}}</td>
             <th>予約日時</th>
-            <td>{{$deal->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
+            <td>{{$deal->reserve_date?->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
             <th>予約経路</th>
             <td>{{$deal->agency?->name}}</td>
           </tr>
@@ -39,9 +45,9 @@
             {{--  <th>入庫日時予定</th>
             <td>2024/1/31(水) 10:00</td>  --}}
             <th>入庫日時</th>
-            <td>{{$deal->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $deal->load_time}}</td>
+            <td>{{$deal->load_date?->isoFormat('YYYY/M/D(ddd)') . ' ' . $deal->load_time}}</td>
             <th>出庫予定日</th>
-            <td>{{$deal->unload_date_plan->isoFormat('YYYY/M/D(ddd)')}}</td>
+            <td>{{$deal->unload_date_plan?->isoFormat('YYYY/M/D(ddd)')}}</td>
             <th>利用日数</th>
             <td>{{$deal->num_days}}日</td>
           </tr>
@@ -129,17 +135,17 @@
       <table class="l-table-confirm">
         <tr>
           <th>メーカー</th>
-          <td>{{$deal->memberCar->car->carMaker->name}}</td>
+          <td>{{$deal->memberCar?->car->carMaker->name}}</td>
           <th>車種</th>
-          <td>{{$deal->memberCar->car->name}}</td>
+          <td>{{$deal->memberCar?->car->name}}</td>
           <th>車番</th>
-          <td>{{$deal->memberCar->number}}</td>
+          <td>{{$deal->memberCar?->number}}</td>
           <th>色</th>
-          <td>{{$deal->memberCar->carColor->name}}</td>
+          <td>{{$deal->memberCar?->carColor->name}}</td>
         </tr>
         <tr>
           <th>区分</th>
-          <td>{{$deal->memberCar->car->size_label}}</td>
+          <td>{{$deal->memberCar?->car->size_label}}</td>
           <th>人数</th>
           <td>{{$deal->num_members}}名</td>
           <th>車両取扱</th>
@@ -150,8 +156,9 @@
           <td colspan="3">{{$deal->remarks}}</td>
         </tr>
       </table>
-
-      <a href="{{route('manage.deals.edit', [$deal->id])}}" class="u-mb3 u-horizontal-auto c-link-no-border c-button__submit--dark-gray">予約内容を変更</a>
+      @if ($deal->transaction_type != \App\Enums\TransactionType::PURCHASE_ONLY->value)
+        <a href="{{route('manage.deals.edit', [$deal->id])}}" class="u-mb3 u-horizontal-auto c-link-no-border c-button__submit--dark-gray">予約内容を変更</a>
+      @endif
 
       <form action="{{route('manage.deals.update_memo', [$deal->id])}}" method="POST">
         @csrf
