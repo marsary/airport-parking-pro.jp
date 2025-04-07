@@ -57,6 +57,7 @@ class Deal extends Model
         'reserve_memo',
         'reception_memo',
         'remarks',
+        'remind_mail_sent_flg',
         'created_by',
         'updated_by',
     ];
