@@ -25,13 +25,15 @@ class CalcRenewalInventory extends Command
      *
      * @var string
      */
-    protected $description = '';
+    protected $description = 'リニューアル時在庫状況算出バッチ処理を実行する';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        $this->info('リニューアル時在庫状況算出バッチを実行します。');
+
         // 初回在庫数からデータを取得する。
         // 開始日付と開始在庫数を取得
         $initialStockQuantity = InitialStockQuantity::latest()->first();
@@ -70,11 +72,16 @@ class CalcRenewalInventory extends Command
                     'stock_quantity' => $stockQuantity,
                 ]);
 
+                // 在庫数を前日在庫数とする
+                $prevStockQuantity = $stockQuantity;
+
                 // 対象日付を１日進める
                 $targetDate->addDay();
             }
+            $this->info('バッチ処理を完了しました。');
         } catch (\Throwable $th) {
             Log::error('バッチ処理でエラーが発生しました: ' . $th->getMessage());
+            $this->error('バッチ処理でエラーが発生しました: ' . $th->getMessage());
         }
     }
 }
