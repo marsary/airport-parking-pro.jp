@@ -51,7 +51,7 @@
     </div>
 
     <div class="p-user-input-auto-output__wrap u-mb4">
-      <div class="l-flex--start l-flex--item-end l-grid--gap05 hidden">
+      <div class="l-flex--start l-flex--item-end l-grid--gap05">
         <div>
           <label for="coupon_code">割引クーポン</label>
           <!-- クーポン -->
