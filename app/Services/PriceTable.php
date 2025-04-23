@@ -47,7 +47,6 @@ class PriceTable
         $table->numDays = (int) ceil($table->unloadDate->diffInDays($loadDate, true));
 
         $priceData = new PriceData($loadDate, $unloadDate, $table->numDays, $agencyId);
-        error_log(json_encode($priceData)."\n",3,"../storage/logs/test.log");
 
         /** @var Price|AgencyPrice $price */
         $table->subTotal = $priceData->getBasePrice();
@@ -72,7 +71,6 @@ class PriceTable
     {
         $numDays = (int) ceil($unloadDate->diffInDays($loadDate->subDay(), true));
         $priceData = new PriceData($unloadDate, $today, $numDays, $agencyId);
-        error_log(json_encode($priceData)."\n",3,"../storage/logs/test.log");
 
 
         /** @var PriceData $priceData */
