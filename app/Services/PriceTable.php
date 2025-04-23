@@ -48,7 +48,6 @@ class PriceTable
 
         $priceData = new PriceData($loadDate, $unloadDate, $table->numDays, $agencyId);
         dd($priceData);
-        exit();
 
         /** @var Price|AgencyPrice $price */
         $table->subTotal = $priceData->getBasePrice();
@@ -74,7 +73,6 @@ class PriceTable
         $numDays = (int) ceil($unloadDate->diffInDays($loadDate->subDay(), true));
         $priceData = new PriceData($unloadDate, $today, $numDays, $agencyId);
         dd($priceData);
-        exit();
 
 
         /** @var PriceData $priceData */
