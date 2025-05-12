@@ -69,7 +69,20 @@ class DealForDailyInventorySeeder extends Seeder
                 'load_date' => Carbon::today(),
                 'unload_date' => null
             ],
-
+            // 1日後入庫、2日後出庫予定
+            [
+                'status' => DealStatus::LOADED->value,
+                'transaction_type' => TransactionType::PARKING->value,
+                'load_date' => Carbon::today()->addDays(1),
+                'unload_date' => Carbon::today()->addDays(2),
+            ],
+            // 1日後入庫、3日後出庫予定
+            [
+                'status' => DealStatus::LOADED->value,
+                'transaction_type' => TransactionType::PARKING->value,
+                'load_date' => Carbon::today()->addDays(1),
+                'unload_date' => Carbon::today()->addDays(3),
+            ],
         ];
 
         foreach ($data as $row) {
