@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\CalcDailyInventory;
 use App\Console\Commands\SendReminderEmails;
 use Illuminate\Support\Facades\Schedule;
 use Illuminate\Foundation\Inspiring;
@@ -13,3 +14,5 @@ use Illuminate\Support\Facades\Artisan;
 // Schedule::command(SendReminderEmails::class, ['--test'])->hourly();
 // 本番モード
 Schedule::command(SendReminderEmails::class)->hourly();
+
+Schedule::command(CalcDailyInventory::class)->dailyAt('2:00');
