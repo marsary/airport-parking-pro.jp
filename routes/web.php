@@ -62,6 +62,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::post('/prices/carsize_rate', [\App\Http\Controllers\Manage\Master\PricesController::class, 'storeCarSizeRate'])->name('prices.carsize_rate');
             Route::resource('/prices', \App\Http\Controllers\Manage\Master\PricesController::class);
             Route::resource('/dynamic_pricings', \App\Http\Controllers\Manage\Master\DynamicPricingsController::class);
+            Route::get('/load_unload_full_limit_settings/calendar', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'calendar'])->name('load_unload_full_limit_settings.calendar');
+            Route::post('/load_unload_full_limit_settings/store_all', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'storeAll'])->name('load_unload_full_limit_settings.store_all');
+            Route::put('/load_unload_full_limit_settings/update_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'updateByDate'])->name('load_unload_full_limit_settings.update_by_date');
+            Route::delete('/load_unload_full_limit_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'destroyByDate'])->name('load_unload_full_limit_settings.delete_by_date');
             Route::resource('/load_unload_full_limit_settings', \App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class);
         });
 
