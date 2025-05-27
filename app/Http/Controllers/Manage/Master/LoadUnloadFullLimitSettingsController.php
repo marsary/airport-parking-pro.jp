@@ -23,12 +23,9 @@ class LoadUnloadFullLimitSettingsController extends Controller
 
 
         $persistedYear = (int) session('persisted_calendar_year', $today->year);
-
         $defaultMonth = ($persistedYear == $today->year) ? $today->month : 1;
         $persistedMonth1 = (int) session('persisted_calendar_month1', $defaultMonth);
 
-
-        // サンプルデータを生成
         return view('manage.master.load_unload_full_limit_settings', [
             'yearList' => $yearList,
             'persistedYear' => $persistedYear,
@@ -50,6 +47,7 @@ class LoadUnloadFullLimitSettingsController extends Controller
 
         foreach ($period as $date) {
             $dataToUpsert[] = [
+                'office_id' => config('const.commons.office_id'),
                 'target_date' => $date,
                 'load_limit' => $validated['load_limit'],
                 'unload_limit' => $validated['unload_limit'],
@@ -83,10 +81,11 @@ class LoadUnloadFullLimitSettingsController extends Controller
         $validated = $request->validated();
         $targetDate = $validated['edit_target_date'];
 
+
         try {
             // ParkingLimit モデルを使用して、指定された日付のデータを更新または作成
             $parkingLimit = ParkingLimit::updateOrCreate(
-                ['target_date' => $targetDate],
+                ['target_date' => $targetDate, 'office_id' => config('const.commons.office_id')],
                 [
                     'load_limit' => $validated['edit_load_limit'],
                     'unload_limit' => $validated['edit_unload_limit'],
@@ -112,7 +111,9 @@ class LoadUnloadFullLimitSettingsController extends Controller
         $targetDate = $validated['delete_target_date'];
 
         try {
-            ParkingLimit::where('target_date', $targetDate)->delete();
+            ParkingLimit::where('target_date', $targetDate)
+                ->where('office_id', config('const.commons.office_id'))
+                ->delete();
             return redirect()->back()->with('success', $targetDate . 'の入出庫上限を削除しました。');
 
         } catch (\Exception $e) {
@@ -132,7 +133,8 @@ class LoadUnloadFullLimitSettingsController extends Controller
 
         $results = []; // 結果を格納する配列を初期化
         foreach ($period as $date) {
-            $results[$date->format('Y-m-d')] = $this->generateSampleStockData($date->format('Y-m-d')); // デバッグ用
+            // $results[$date->format('Y-m-d')] = $this->generateSampleStockData($date->format('Y-m-d')); // デバッグ用
+            $results[$date->format('Y-m-d')] = $this->getStockData($date->format('Y-m-d'));
         }
 
         $eventData = []; // イベントデータを格納する配列を初期化
@@ -149,6 +151,33 @@ class LoadUnloadFullLimitSettingsController extends Controller
         // dd($eventData);
         return response()->json($eventData);
 
+    }
+
+    /**
+     * 指定された日付の在庫データを取得
+     */
+    private function getStockData(string $dateStr)
+    {
+        $parkingLimit = ParkingLimit::where('target_date', $dateStr)->first();
+
+        if ($parkingLimit) {
+            return [
+                'target_date' => $parkingLimit->target_date->format('Y-m-d'),
+                'load_limit' => $parkingLimit->load_limit,
+                'unload_limit' => $parkingLimit->unload_limit,
+                'at_closing_time' => $parkingLimit->at_closing_time,
+                'per_fifteen_munites' => $parkingLimit->per_fifteen_munites,
+            ];
+        }
+
+        // データが存在しない場合は、カレンダー表示のために全てのキーを返す
+        return [
+            'target_date' => $dateStr,
+            'load_limit' => null,
+            'unload_limit' => null,
+            'at_closing_time' => null,
+            'per_fifteen_munites' => null,
+        ];
     }
 
     /**
