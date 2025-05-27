@@ -257,12 +257,37 @@
       this.cal2YearEl = params.cal2YearEl;
       this.cal2MonthEl = params.cal2MonthEl;
 
+      this.yearItems.forEach(item => {
+        item.addEventListener('click', () => {
+          this.handleYearChange(item.textContent);
+        });
+      });
+
       // 選択された年またはカレンダーのデフォルトに基づいて初期設定
       const initiallySelectedYearItem = this.yearListContainer ? this.yearListContainer.querySelector('.c-pager__year-item.--selected') : null;
 
       if (!initiallySelectedYearItem || parseInt(initiallySelectedYearItem.textContent) !== jsPersistedYear) {
         this.updateSelectedYearClass(jsPersistedYear.toString());
       }
+
+      // カレンダーヘッダーとアクティブ状態の初期表示を設定
+      const initialCal1Date = luxon.DateTime.fromObject({ year: jsPersistedYear, month: jsPersistedMonth1, day: 1 });
+      this.updateCalendarHeaderDisplays(initialCal1Date);
+      this.updateActiveCalendarState(jsPersistedYear, jsPersistedMonth1);
+    },
+
+    // Function to update hidden inputs in forms and global JS state
+    updateActiveCalendarState: function(year, month1) {
+      currentDisplayedYear = parseInt(year);
+      currentDisplayedMonth1 = parseInt(month1);
+    },
+
+    updateCalendarHeaderDisplays: function(cal1Date) {
+        const cal2Date = cal1Date.plus({ months: 1 });
+        if (this.cal1YearEl) this.cal1YearEl.textContent = cal1Date.year;
+        if (this.cal1MonthEl) this.cal1MonthEl.textContent = cal1Date.month;
+        if (this.cal2YearEl) this.cal2YearEl.textContent = cal2Date.year;
+        if (this.cal2MonthEl) this.cal2MonthEl.textContent = cal2Date.month;
     },
 
     updateCalendarDisplays: function(year) { // 年ページャーが年を変更したときに呼び出される
@@ -281,6 +306,8 @@
       if (this.calendar2) {
         this.calendar2.gotoDate(cal1Date.plus({ months: 1 }).toISODate());
       }
+      this.updateCalendarHeaderDisplays(cal1Date);
+      this.updateActiveCalendarState(yearNum, currentDisplayedMonth1);
     },
 
     updateSelectedYearClass: function(selectedYearText) {
@@ -296,9 +323,21 @@
     },
 
     prevPage: function() { // 年ページャー 前へ
+      if (!this.yearListContainer) return;
+      const currentIndex = this.yearItems.indexOf(currentSelected);
+      if (currentIndex > 0) {
+        const prevYearItem = this.yearItems[currentIndex - 1];
+        this.handleYearChange(prevYearItem.textContent);
+      }
     },
 
     nextPage: function() { // 年ページャー 次へ
+      if (!this.yearListContainer) return;
+      const currentIndex = this.yearItems.indexOf(currentSelected);
+      if (currentIndex < this.yearItems.length - 1) {
+        const nextYearItem = this.yearItems[currentIndex + 1];
+        this.handleYearChange(nextYearItem.textContent);
+      }
     }
   };
 
@@ -319,6 +358,12 @@
     }
     globalYearHandler.calendar1.gotoDate(newCal1LuxonDate.toISODate());
     globalYearHandler.calendar2.gotoDate(newCal1LuxonDate.plus({ months: 1 }).toISODate());
+
+    const newYear = newCal1LuxonDate.year;
+    const newMonth1 = newCal1LuxonDate.month;
+
+    globalYearHandler.updateCalendarHeaderDisplays(newCal1LuxonDate);
+    globalYearHandler.updateActiveCalendarState(newYear, newMonth1);
   }
 
   function handleDelete() {
@@ -351,6 +396,21 @@ function openPeriodModal() {
 
     document.getElementById('edit_target_date').value = dateStr;
     document.getElementById('delete_target_date').value = dateStr;
+    if (stockEntry && stockEntry.stock) {
+      const stock = stockEntry.stock;
+      // フォームフィールドに値を設定
+      document.getElementById('edit_load_limit').value = stock.load_limit || '';
+      document.getElementById('edit_unload_limit').value = stock.unload_limit || '';
+      document.getElementById('edit_at_closing_time').value = stock.at_closing_time || '';
+      document.getElementById('edit_per_fifteen_munites').value = stock.per_fifteen_munites || '';
+    } else {
+      // データが見つからない場合、オプションでフォームをクリアするかデフォルト値を設定
+      document.getElementById('edit_load_limit').value = '';
+      document.getElementById('edit_unload_limit').value = '';
+      document.getElementById('edit_at_closing_time').value = '';
+      document.getElementById('edit_per_fifteen_munites').value = '';
+      console.warn(`No stock data found for ${dateStr}`);
+    }
     editModal.classList.add('is-active');
   }
   function closePeriodModal() {
