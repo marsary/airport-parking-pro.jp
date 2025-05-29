@@ -29,7 +29,7 @@
                 </div>
                 <div>
                   <input type="radio" name="type" value="2" id="type2" {{request('type') == 2 ? "checked":""}}>
-                  <label for="type2" class="u-h38 u-mb0">出庫までに作業が不要</label>
+                  <label for="type2" class="u-h38 u-mb0">出庫までに作業が不必要</label>
                 </div>
                 <button class="c-button__register --gray u-mt0 u-mb0">検索</button>
               </div>
