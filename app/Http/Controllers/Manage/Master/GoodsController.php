@@ -14,7 +14,7 @@ class GoodsController extends Controller
 {
     public function index(Request $request)
     {
-        $goods = Good::where('office_id', config('const.commons.office_id'))
+        $goods = Good::with('goodCategory')->where('office_id', config('const.commons.office_id'))
             ->when($request->input('name'), function($query, $search){
                 $query->where('name', 'LIKE', '%' . $search . '%');
             })
