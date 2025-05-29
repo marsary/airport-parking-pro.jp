@@ -22,7 +22,7 @@ class GoodsController extends Controller
                 $query->where('good_category_id', $search);
             })->orderBy('name')->get();
 
-
+            dd($goods);
         return view('manage.master.goods', [
             'goodCategories' => GoodCategory::all(),
             'goods' => $goods,
