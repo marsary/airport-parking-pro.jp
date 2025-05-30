@@ -45,7 +45,7 @@
           <thead class="l-table-list__head l-table-list--category_setting__head">
             <tr>
               <th><div class="c-button-sort sort-enable --asc" style="width: 140px;">カテゴリー名</div></th>
-              <th><div class="c-button-sort" style="width: 120px;">区分</div></th>
+              <th><div class="c-button-sort" style="width: 150px;">区分</div></th>
               <th>メモ</th>
               <th> </th>
             </tr>
