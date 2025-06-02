@@ -280,6 +280,18 @@
     updateActiveCalendarState: function(year, month1) {
       currentDisplayedYear = parseInt(year);
       currentDisplayedMonth1 = parseInt(month1);
+
+      const yearStr = currentDisplayedYear.toString();
+      const month1Str = currentDisplayedMonth1.toString();
+
+      ['period_active_calendar_year', 'edit_active_calendar_year', 'delete_active_calendar_year'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = yearStr;
+      });
+      ['period_active_calendar_month1', 'edit_active_calendar_month1', 'delete_active_calendar_month1'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = month1Str;
+      });
     },
 
     updateCalendarHeaderDisplays: function(cal1Date) {
@@ -324,6 +336,14 @@
 
     prevPage: function() { // 年ページャー 前へ
       if (!this.yearListContainer) return;
+      const currentSelected = this.yearListContainer.querySelector('.c-pager__year-item.--selected');
+      if (!currentSelected) { // 何も選択されていない場合、永続化された年または最初の年を選択
+        const targetYear = jsPersistedYear.toString(); // 永続化された年を文字列に変換
+        const targetItem = this.yearItems.find(item => item.textContent === targetYear);
+        if (targetItem) this.handleYearChange(targetYear);
+        else if (this.yearItems.length > 0) this.handleYearChange(this.yearItems[0].textContent);
+        return;
+      }
       const currentIndex = this.yearItems.indexOf(currentSelected);
       if (currentIndex > 0) {
         const prevYearItem = this.yearItems[currentIndex - 1];
@@ -333,6 +353,14 @@
 
     nextPage: function() { // 年ページャー 次へ
       if (!this.yearListContainer) return;
+      const currentSelected = this.yearListContainer.querySelector('.c-pager__year-item.--selected');
+      if (!currentSelected) { // 何も選択されていない場合、永続化された年または最初の年を選択
+        const targetYear = jsPersistedYear.toString();
+        const targetItem = this.yearItems.find(item => item.textContent === targetYear);
+        if (targetItem) this.handleYearChange(targetYear);
+        else if (this.yearItems.length > 0) this.handleYearChange(this.yearItems[0].textContent);
+        return;
+      }
       const currentIndex = this.yearItems.indexOf(currentSelected);
       if (currentIndex < this.yearItems.length - 1) {
         const nextYearItem = this.yearItems[currentIndex + 1];
@@ -361,6 +389,11 @@
 
     const newYear = newCal1LuxonDate.year;
     const newMonth1 = newCal1LuxonDate.month;
+
+    // 月ナビゲーションによって年が変更された場合、年ページャーを更新
+    if (newYear !== parseInt(globalYearHandler.yearListContainer.querySelector('.c-pager__year-item.--selected')?.textContent)) {
+      globalYearHandler.updateSelectedYearClass(newYear.toString());
+    }
 
     globalYearHandler.updateCalendarHeaderDisplays(newCal1LuxonDate);
     globalYearHandler.updateActiveCalendarState(newYear, newMonth1);
