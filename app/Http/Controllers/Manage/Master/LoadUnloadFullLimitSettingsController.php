@@ -36,6 +36,8 @@ class LoadUnloadFullLimitSettingsController extends Controller
     public function storeAll(LoadUnloadFullLimitSettingStoreAllRequest $request)
     {
         $validated = $request->validated();
+        session(['persisted_calendar_year' => $request->input('active_calendar_year')]);
+        session(['persisted_calendar_month1' => $request->input('active_calendar_month1')]);
 
         $startDate = Carbon::parse($validated['start_date']);
         $endDate = Carbon::parse($validated['end_date']);
@@ -81,6 +83,9 @@ class LoadUnloadFullLimitSettingsController extends Controller
         $validated = $request->validated();
         $targetDate = $validated['edit_target_date'];
 
+        session(['persisted_calendar_year' => $request->input('active_calendar_year')]);
+        session(['persisted_calendar_month1' => $request->input('active_calendar_month1')]);
+
 
         try {
             // ParkingLimit モデルを使用して、指定された日付のデータを更新または作成
@@ -109,6 +114,10 @@ class LoadUnloadFullLimitSettingsController extends Controller
     {
         $validated = $request->validated();
         $targetDate = $validated['delete_target_date'];
+
+        session(['persisted_calendar_year' => $request->input('active_calendar_year')]);
+        session(['persisted_calendar_month1' => $request->input('active_calendar_month1')]);
+
 
         try {
             ParkingLimit::where('target_date', $targetDate)
