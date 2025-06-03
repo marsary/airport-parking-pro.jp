@@ -36,6 +36,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('ledger/agency_result', [\App\Http\Controllers\Manage\LedgerController::class, 'agencyResult'])->name('ledger.agency_result');
         Route::get('ledger/bunch_issues', [\App\Http\Controllers\Manage\LedgerController::class, 'bunch_issues'])->name('ledger.bunch_issues');
         Route::put('ledger/unload_all', [\App\Http\Controllers\Manage\LedgerController::class, 'unloadAll'])->name('ledger.unload_all');
+        Route::get('ledger/reservation_result', [\App\Http\Controllers\Manage\LedgerController::class, 'reservationResult'])->name('ledger.reservation_result');
 
         Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
         Route::get('marketing/graph/inventory/chart_by_day', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByDay'])->name('marketing.graph.inventory.chart_by_day');
@@ -61,6 +62,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::post('/prices/carsize_rate', [\App\Http\Controllers\Manage\Master\PricesController::class, 'storeCarSizeRate'])->name('prices.carsize_rate');
             Route::resource('/prices', \App\Http\Controllers\Manage\Master\PricesController::class);
             Route::resource('/dynamic_pricings', \App\Http\Controllers\Manage\Master\DynamicPricingsController::class);
+            Route::get('/load_unload_full_limit_settings/calendar', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'calendar'])->name('load_unload_full_limit_settings.calendar');
+            Route::post('/load_unload_full_limit_settings/store_all', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'storeAll'])->name('load_unload_full_limit_settings.store_all');
+            Route::put('/load_unload_full_limit_settings/update_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'updateByDate'])->name('load_unload_full_limit_settings.update_by_date');
+            Route::delete('/load_unload_full_limit_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'destroyByDate'])->name('load_unload_full_limit_settings.delete_by_date');
             Route::resource('/load_unload_full_limit_settings', \App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class);
         });
 

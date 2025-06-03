@@ -18,7 +18,6 @@ class ParkingLimitSeeder extends Seeder
                 'id' => 1,
                 'office_id' => 1,
                 'target_date' => '2024-04-16',
-                'max_parking_num' => '100',
                 'load_limit' => '30',
                 'unload_limit' => '30',
                 'per_fifteen_munites' => '4',

@@ -26,7 +26,6 @@ class ParkingLimit extends Model
     protected $fillable = [
         'office_id',
         'target_date',
-        'max_parking_num',
         'load_limit',
         'unload_limit',
         'at_closing_time',
@@ -49,12 +48,12 @@ class ParkingLimit extends Model
         switch ($limitType) {
             case self::LOAD_LIMIT:
                 // 最大駐車数
-                if(isset($parkingNum) && $parkingNum >= $this->max_parking_num) {
-                    return LimitOverStatus::FULL;
-                }
-                if(isset($parkingNum) && $parkingNum >= $this->max_parking_num * self::THRESHOLD) {
-                    return LimitOverStatus::HALF_FILLED;
-                }
+                // if(isset($parkingNum) && $parkingNum >= $this->max_parking_num) {
+                //     return LimitOverStatus::FULL;
+                // }
+                // if(isset($parkingNum) && $parkingNum >= $this->max_parking_num * self::THRESHOLD) {
+                //     return LimitOverStatus::HALF_FILLED;
+                // }
                 // 入庫上限
                 if(isset($loadCount) && $loadCount >= $this->load_limit) {
                     return LimitOverStatus::FULL;

@@ -1,4 +1,4 @@
-<!-- B-3-3 予約詳細 -->
+<!-- B-3-3 取引詳細 -->
 @extends('layouts.manage.authenticated')
 
 @section('content')
@@ -7,9 +7,9 @@
     <ul class="l-wrap__breadcrumb l-breadcrumb">
       <li class="l-breadcrumb__list">
         @if ($deal->transaction_type == \App\Enums\TransactionType::PURCHASE_ONLY->value)
-          予約詳細(商品購入のみ)
+          取引詳細(商品購入のみ)
         @else
-          予約詳細
+          取引詳細
         @endif
       </li>
     </ul>
@@ -24,7 +24,7 @@
         <div class="l-breadcrumb-step__item-gray {{ $deal->status == \App\Enums\DealStatus::UNLOADED->value ? '--current':'' }}">出庫済</div>
       </div>
 
-      <div class="c-title__table">予約情報</div>
+      <div class="c-title__table">取引情報</div>
       <div class="l-table-top-parent">
         <div class="l-table-top-list {{ $extraPayment->needPayment ? '':'hidden' }}">
           <div class="l-table-top-item u-bg--red">追加清算あり[{{ number_format($extraPayment->additionalCharge) }}円]</div>

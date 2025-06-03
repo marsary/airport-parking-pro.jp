@@ -25,11 +25,13 @@ class ApiRequest
         })
 
         url = url + '?' + searchParams.toString();
+        console.log(url);
 
         return this.fetch(url, 'GET')
     }
 
     async fetch(url = '', method, data = {}) {
+        console.log(url);
         // 既定のオプションには * が付いています
         const option = {
             method: method, // *GET, POST, PUT, DELETE, etc.

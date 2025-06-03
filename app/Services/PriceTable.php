@@ -72,6 +72,7 @@ class PriceTable
         $numDays = (int) ceil($unloadDate->diffInDays($loadDate->subDay(), true));
         $priceData = new PriceData($unloadDate, $today, $numDays, $agencyId);
 
+
         /** @var PriceData $priceData */
         $additionalCharge = 0;
         $currentDate = $unloadDate->copy();

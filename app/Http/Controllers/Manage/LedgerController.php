@@ -180,4 +180,9 @@ class LedgerController extends Controller
         return view('manage.ledger.agency_result');
     }
 
+    public function reservationResult(Request $request)
+    {
+        return view('manage.ledger.reservation_result');
+    }
+
 }

@@ -16,7 +16,7 @@ enum GoodCategoryType: int
         return match($this)
         {
             GoodCategoryType::WORK_BEFORE_UNLOAD => '出庫までに作業が必要',
-            GoodCategoryType::NO_WORK_BEFORE_UNLOAD => '出庫までに作業が不要',
+            GoodCategoryType::NO_WORK_BEFORE_UNLOAD => '出庫までに作業が不必要',
         };
     }
 }
