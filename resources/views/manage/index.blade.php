@@ -5,7 +5,7 @@
 <main class="l-wrap__main">
     <!-- パンくず -->
     <ul class="l-wrap__breadcrumb l-breadcrumb">
-      <li class="l-breadcrumb__list">予約管理TOP</li>
+      <li class="l-breadcrumb__list">取引管理TOP</li>
     </ul>
     <div class="l-container__inner">
       <ul class="p-index__list">

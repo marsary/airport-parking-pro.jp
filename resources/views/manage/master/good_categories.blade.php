@@ -29,7 +29,7 @@
                 </div>
                 <div>
                   <input type="radio" name="type" value="2" id="type2" {{request('type') == 2 ? "checked":""}}>
-                  <label for="type2" class="u-h38 u-mb0">出庫までに作業が不要</label>
+                  <label for="type2" class="u-h38 u-mb0">出庫までに作業が不必要</label>
                 </div>
                 <button class="c-button__register --gray u-mt0 u-mb0">検索</button>
               </div>
@@ -44,8 +44,8 @@
         <table class="l-table-list">
           <thead class="l-table-list__head l-table-list--category_setting__head">
             <tr>
-              <th><div class="c-button-sort sort-enable --asc">カテゴリー名</div></th>
-              <th><div class="c-button-sort">区分</div></th>
+              <th><div class="c-button-sort sort-enable --asc" style="width: 140px;">カテゴリー名</div></th>
+              <th><div class="c-button-sort" style="width: 150px;">区分</div></th>
               <th>メモ</th>
               <th> </th>
             </tr>

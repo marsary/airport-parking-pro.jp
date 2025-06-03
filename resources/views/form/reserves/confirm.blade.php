@@ -188,15 +188,17 @@
     </table>
 
     <div class="l-table-charge-detail--second">
-      <div class="l-table-charge-detail--second__column">
-        <div>消費税8%</div>
-        <div>{{number_format($reserve->total_tax_8)}}円</div>
-        <div colspan="2" class="text-right">合計金額</div>
-        <div class="u-font--24 u-font--medium">{{number_format($reserve->total_price)}} <span>円</span>（税抜）</div>
-        <div>消費税10%</div>
-        <div>{{number_format($reserve->total_tax_10)}}円</div>
-        <div class="u-font--24 u-font--medium l-grid--colspan2">{{number_format($reserve->totalCharge())}} <span>円</span>（税込）</div>
-      </div>
+      <div>消費税8%</div>
+      <div>{{number_format($reserve->total_tax_8)}}円</div>
+      <div></div>
+      <div>消費税10%</div>
+      <div>{{number_format($reserve->total_tax_10)}}円</div>
+      <div></div>
+      <div colspan="2" class="text-right">合計金額</div>
+      <div class="u-font--lg u-font--medium">{{number_format($reserve->total_price)}} <span>円</span></div>
+      <div class="u-font--normal">（税抜）</div>
+      <div class="u-font--lg u-font--medium l-grid--colspan2">{{number_format($reserve->totalCharge())}} <span>円</span></div>
+      <div class="u-font--normal">（税込）</div>
     </div>
 
     <!--  -->

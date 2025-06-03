@@ -36,6 +36,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('ledger/agency_result', [\App\Http\Controllers\Manage\LedgerController::class, 'agencyResult'])->name('ledger.agency_result');
         Route::get('ledger/bunch_issues', [\App\Http\Controllers\Manage\LedgerController::class, 'bunch_issues'])->name('ledger.bunch_issues');
         Route::put('ledger/unload_all', [\App\Http\Controllers\Manage\LedgerController::class, 'unloadAll'])->name('ledger.unload_all');
+        Route::get('ledger/reservation_result', [\App\Http\Controllers\Manage\LedgerController::class, 'reservationResult'])->name('ledger.reservation_result');
 
         Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
         Route::get('marketing/graph/inventory/chart_by_day', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByDay'])->name('marketing.graph.inventory.chart_by_day');
