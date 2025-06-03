@@ -223,6 +223,7 @@
 @endsection
 @push("scripts")
 <script src="{{ asset('js/index.global.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/gh/osamutake/japanese-holidays-js@v1.0.10/lib/japanese-holidays.min.js"></script>
 <script>
   // コントローラーから渡された永続化された値
   const jsPersistedYear = {{ $persistedYear ?? \Carbon\Carbon::today()->year }};
@@ -309,7 +310,7 @@
         return;
       }
       // 年ページャー経由で年が変更された場合、現在の表示月を維持する
-      const cal1Date = luxon.DateTime.fromObject({ year: yearNum, month: currentDisplayedMonth1, day: 1 }); // 以前は月を1にリセットしていたが、現在の月を維持するように変更
+      const cal1Date = luxon.DateTime.fromObject({ year: yearNum, month: currentDisplayedMonth1, day: 1 });
 
 
       if (this.calendar1) {
@@ -478,6 +479,12 @@ function openPeriodModal() {
       dayCellContent: function (e) {
           return e.date.getDate();
       },
+      dayCellDidMount: function(info) {
+        // 祝日判定
+        if (JapaneseHolidays.isHoliday(info.date)) {
+          info.el.classList.add('holiday');
+        }
+      },
       eventContent: function (arg) {
         return {
           html: arg.event.title // HTML をそのまま出力
@@ -530,12 +537,12 @@ function openPeriodModal() {
         }
       },
       dateClick: function(info) {
-      if(!info.dayEl.classList.contains("active")) {
-        return;
-      }
-      // alert(info.date);
-      const selectedDate = luxon.DateTime.fromJSDate(info.date);
-      openEditModal(selectedDate, calendar1StockData);
+        if(!info.dayEl.classList.contains("active")) {
+            return;
+        }
+        // alert(info.date);
+        const selectedDate = luxon.DateTime.fromJSDate(info.date);
+        openEditModal(selectedDate, calendar1StockData);
       },
       eventClick: function(info) {
         if(!info.el.closest('.fc-day').classList.contains("active")) {
@@ -567,6 +574,12 @@ function openPeriodModal() {
       contentHeight: 'auto',
       dayCellContent: function (e) {
           return e.date.getDate();
+      },
+      dayCellDidMount: function(info) {
+        // 祝日判定
+        if (JapaneseHolidays.isHoliday(info.date)) {
+          info.el.classList.add('holiday');
+        }
       },
       eventContent: function (arg) {
         return {
@@ -768,6 +781,23 @@ function openPeriodModal() {
   }
 
   /* 日付セルのボーダー */
+  .fc-day-mon:not(.fc-day-disabled),
+  .fc-day-tue:not(.fc-day-disabled),
+  .fc-day-wed:not(.fc-day-disabled),
+  .fc-day-thu:not(.fc-day-disabled),
+  .fc-day-fri:not(.fc-day-disabled) {
+    color: black;
+    border-bottom: 2px solid black !important;
+  }
+
+  .fc-day-sat:not(.fc-day-disabled) {
+    border-bottom: 2px solid #0066cc !important;
+  }
+
+  .fc-day-sun:not(.fc-day-disabled),
+  .holiday:not(.fc-day-disabled) {
+    border-bottom: 2px solid #cc0000 !important;
+  }
   .fc-day-mon.active,
   .fc-day-tue.active,
   .fc-day-wed.active,
@@ -842,9 +872,17 @@ function openPeriodModal() {
     font-weight: bold;
   }
 
+  .l-modal__trashButton {
+    cursor: pointer;
+  }
+
   /* カレンダーの位置調整 */
   .fc .fc-scrollgrid-liquid {
     margin-left: 100px;
+  }
+
+  .fc-daygrid-day-events {
+    height: 89px;
   }
 </style>
 @endpush
