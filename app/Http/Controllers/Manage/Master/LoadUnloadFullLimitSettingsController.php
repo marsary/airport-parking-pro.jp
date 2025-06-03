@@ -18,7 +18,7 @@ class LoadUnloadFullLimitSettingsController extends Controller
     public function index()
     {
         $today = \Carbon\Carbon::today();
-        // 当年及び過去3年、未来2年
+        // 当年及び過去3年、未来3年
         $yearList = range($today->year - 3, $today->year + 3);
 
 
@@ -186,20 +186,6 @@ class LoadUnloadFullLimitSettingsController extends Controller
             'unload_limit' => null,
             'at_closing_time' => null,
             'per_fifteen_munites' => null,
-        ];
-    }
-
-    /**
-     * サンプルの在庫データを生成 (デバッグ用)
-     */
-    private function generateSampleStockData(string $dateStr)
-    {
-        return [
-            'target_date' => $dateStr,
-            'load_limit' => 400,
-            'unload_limit' => 400,
-            'at_closing_time' => 800,
-            'per_fifteen_munites' => 800
         ];
     }
 }
