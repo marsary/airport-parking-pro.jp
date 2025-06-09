@@ -182,7 +182,13 @@ class LedgerController extends Controller
 
     public function reservationResult(Request $request)
     {
-        return view('manage.ledger.reservation_result');
+        $today = \Carbon\Carbon::today();
+        // 当年及び過去4年、未来2年
+        $yearList = range($today->year - 4, $today->year + 2);
+
+        return view('manage.ledger.reservation_result', [
+            'yearList' => $yearList,
+        ]);
     }
 
 }
