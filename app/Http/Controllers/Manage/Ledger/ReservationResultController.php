@@ -46,8 +46,12 @@ class ReservationResultController extends Controller
 
     }
 
-
-    private function getStockDataForDate(string $dateStr, LoadUnloadInventoryPerformance $performance)
+    /**
+     * 指定された日付の入出庫在庫実績データを取得
+     * @param string $dateStr 'Y-m-d' 書式
+     * @param LoadUnloadInventoryPerformance|null $performance
+     */
+    private function getStockDataForDate(string $dateStr, ?LoadUnloadInventoryPerformance $performance)
     {
         if ($performance) {
             return [
@@ -58,6 +62,15 @@ class ReservationResultController extends Controller
                 'no_data' => false,
             ];
         }
+
+        // データが存在しない場合は、カレンダー表示のために全てのキーを返す
+        return [
+            'target_date' => $dateStr,
+            'load_quantity' => null,
+            'unload_quantity' => null,
+            'stock_quantity' => null,
+            'no_data' => true,
+        ];
     }
 
 }
