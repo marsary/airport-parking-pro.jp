@@ -1,20 +1,13 @@
-let hourlyData = [];
-
 document.addEventListener('DOMContentLoaded', function () {
+  const BASE_PATH = document.getElementById('base_path').value;
   const leftCalendar1Title = document.getElementById('left_calendar1_title');
-//   const rightCalendar1Title = document.getElementById('right_calendar1_title');
+
+  let currentDisplayedMonth1 = null;
+  let currentDisplayedYear1 = null;
 
   var calendarEl1 = document.getElementById('calendar1');
   var calendar1 = new FullCalendar.Calendar(calendarEl1, {
     initialView: 'dayGridMonth',
-    // initialView: 'multiMonthTwoMonth',
-    // views: {
-    //   multiMonthTwoMonth: {
-    //     type: 'multiMonth',
-    //     duration: { months: 2 },
-    //   }
-    // },
-    // multiMonthTitleFormat: {},//{ month: 'numeric', year: 'numeric' },
     firstDay:1,
     showNonCurrentDates:false,
     headerToolbar: false,
@@ -30,11 +23,55 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     datesSet: function(dateInfo) {
       const startDate = luxon.DateTime.fromJSDate(dateInfo.start);
-    //   const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
       leftCalendar1Title.textContent = startDate.toFormat('yyyy年M月')
-    //   rightCalendar1Title.textContent = endDate.toFormat('yyyy年M月')
-    },
+      currentDisplayedMonth1 = startDate.month;
+      currentDisplayedYear1 = startDate.year;
 
+    },
+    eventContent: function (arg) {
+      return {
+        html: arg.event.title // HTML をそのまま出力
+      };
+    },
+    events:
+    function(info, successCallback, failureCallback) {
+      url = BASE_PATH +  '/manage/ledger/reservation_result/calendar';
+
+      const response = apiRequest.get(url, {
+        start: info.startStr,
+        end: info.endStr,
+      })
+
+      response.then(data => {
+        const eventData = [];
+        console.log(data);
+        data.forEach(row => {
+          let eventTitle = '';
+          if(!row.stock.no_data) {
+            eventTitle = `
+            <div class="stock-item"><span>入庫 ${row.stock.load_quantity ?? ''}</span></div>
+            <div class="stock-item"><span>出庫 ${row.stock.unload_quantity ?? ''}</span></div>
+            <div class="stock-item"><span>在庫 ${row.stock.stock_quantity ?? ''}</span></div>
+            `;
+          }
+
+
+          eventData.push({
+              id : row.start,
+              title :eventTitle,
+              start : row.start,
+              end : row.end,
+              allDay : true,
+          });
+
+        })
+
+
+        successCallback(
+          eventData
+        )
+      }).catch(failureCallback);
+    },
     // eventColor: 'rgba(255, 255, 255, 0)',
     // eventTextColor: '#5b915b',
     // events:
@@ -103,17 +140,58 @@ document.addEventListener('DOMContentLoaded', function () {
     //   info.dayEl.classList.add("day_selected");
     // },
   });
-  // if(initLoadDate.isValid) {
-  //     calendar1.gotoDate( initLoadDate.toISODate() );
-  // }
   calendar1.render();
 
 
-  document.getElementById('cal1_prev').addEventListener('click', function() {
-    calendar1.prev();
-  });
-  document.getElementById('cal1_next').addEventListener('click', function() {
-    calendar1.next();
+  // 年ページネーションとカレンダー更新のためのグローバルハンドラー
+  const globalYearHandler = {
+    yearItems: [],
+    yearListContainer: null,
+    calendar1: null,
+
+    init: function(params) {
+      this.yearListContainer = document.getElementById('yearList');
+      if (this.yearListContainer) {
+        this.yearItems = Array.from(this.yearListContainer.getElementsByClassName('c-pager__year-item'));
+      }
+      this.calendar1 = params.calendar1;
+
+      this.yearItems.forEach(item => {
+        item.addEventListener('click', () => {
+          this.handleYearChange(item.textContent);
+        });
+      });
+    },
+
+    updateCalendarDisplays: function(year) { // 年ページャーが年を変更したときに呼び出される
+      const yearNum = parseInt(year);
+      if (isNaN(yearNum)) {
+        console.error("Invalid year for calendar display:", year);
+        return;
+      }
+    },
+
+    updateSelectedYearClass: function(selectedYearText) {
+      const selectedYearNum = parseInt(selectedYearText);
+      this.yearItems.forEach(item => {
+        item.classList.toggle('--selected', parseInt(item.textContent) === selectedYearNum);
+      });
+    },
+
+    handleYearChange: function(newYearText) {
+      this.updateSelectedYearClass(newYearText);
+      this.updateCalendarDisplays(newYearText);
+    },
+  };
+
+  // グローバル年ハンドラーを初期化
+  globalYearHandler.init({
+    calendar1: calendar1,
   });
 
+
+  const cal1PrevButton = document.getElementById('cal1_prev');
+  if (cal1PrevButton) cal1PrevButton.addEventListener('click', () => calendar1.prev());
+  const cal1NextButton = document.getElementById('cal1_next');
+  if (cal1NextButton) cal1NextButton.addEventListener('click', () => calendar1.next());
 });
