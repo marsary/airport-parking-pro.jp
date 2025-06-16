@@ -74,71 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     // eventColor: 'rgba(255, 255, 255, 0)',
     // eventTextColor: '#5b915b',
-    // events:
-    // function(info, successCallback, failureCallback) {
-    //   url = BASE_PATH +  '/calendar/load_dates';
-
-    //   const response = apiRequest.get(url, {
-    //     start: info.startStr,
-    //     end: info.endStr,
-    //   })
-
-    //   response.then(data => {
-    //     // console.log(data);
-
-    //     successCallback(
-    //       data
-    //     )
-    //   });
-    // },
-    // eventDidMount: function(e) {
-    //   let el = e.el;
-    //   const startDate = luxon.DateTime.fromJSDate(e.event.start);
-    //   const loadDateObj = parseDateInput(loadDateInput.value);
-    //   if(loadDateObj.isValid && startDate.hasSame(loadDateObj, 'day')) {
-    //     //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
-    //     el.closest('.fc-daygrid-day').classList.add('day_selected');
-    //     // if(!selectedDateTime) {
-    //       dispLoadHourTable()
-    //     // }
-    //   } else if(startDate.hasSame(initLoadDate, 'day')) {
-    //     //イベントが表示される場所の親をたどって各日の枠にたどり着いたらclassを追加
-    //     el.closest('.fc-daygrid-day').classList.add('day_selected');
-    //     dispLoadHourTable()
-    //   }
-    //   if(e.event.toPlainObject().title == '×') {
-    //     el.classList.add('event_full');
-    //     el.closest('.fc-daygrid-day').classList.add('day_full');
-    //   }
-    // },
-    // eventClick: function(info) {
-    //   if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
-    //     return;
-    //   }
-    //   alert(info.event.start);
-    //   const startDate = luxon.DateTime.fromJSDate(info.event.start);
-    //   loadDateInput.value = startDate.toISODate();
-    //   loadDateInput.dispatchEvent(new Event('change'));
-    //   dispLoadHourTable()
-    //   calcNumDays()
-    //   // alert('Event: ' + info.event.title);
-    //   // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-    //   // alert('View: ' + info.view.type);
-    //   removeDaySelected(calendarEl1)
-    //   info.el.closest('td').classList.add("day_selected");
-    // },
-    // dateClick: function(info) {
-    //   if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
-    //     return;
-    //   }
-    //   // alert(info.date);
-    //   loadDateInput.value = luxon.DateTime.fromJSDate(info.date).toISODate();
-    //   loadDateInput.dispatchEvent(new Event('change'));
-    //   dispLoadHourTable()
-    //   calcNumDays()
-    //   removeDaySelected(calendarEl1)
-    //   info.dayEl.classList.add("day_selected");
-    // },
   });
   calendar1.render();
 
@@ -169,6 +104,12 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error("Invalid year for calendar display:", year);
         return;
       }
+      // 年ページャー経由で年が変更された場合、現在の表示月を維持する
+      const cal1Date = luxon.DateTime.fromObject({ year: yearNum, month: currentDisplayedMonth1, day: 1 });
+
+      if (this.calendar1) {
+        this.calendar1.gotoDate(cal1Date.toISODate());
+      }
     },
 
     updateSelectedYearClass: function(selectedYearText) {
@@ -190,8 +131,31 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
+  // 月ナビゲーション関数
+  function navigateMonths(direction) {
+    if (!globalYearHandler.calendar1) return;
+
+    let cal1CurrentLuxonDate = luxon.DateTime.fromJSDate(globalYearHandler.calendar1.getDate());
+    let newCal1LuxonDate;
+    if (direction === 'prev') {
+      globalYearHandler.calendar1.prev();
+      newCal1LuxonDate = cal1CurrentLuxonDate.minus({ months: 1 });
+    } else if (direction === 'next') {
+      globalYearHandler.calendar1.next();
+      newCal1LuxonDate = cal1CurrentLuxonDate.plus({ months: 1 });
+    }
+
+    const newYear = newCal1LuxonDate.year;
+
+    // 月ナビゲーションによって年が変更された場合、年ページャーを更新
+    if (newYear !== parseInt(globalYearHandler.yearListContainer.querySelector('.c-pager__year-item.--selected')?.textContent)) {
+      globalYearHandler.updateSelectedYearClass(newYear.toString());
+    }
+  }
+
+
   const cal1PrevButton = document.getElementById('cal1_prev');
-  if (cal1PrevButton) cal1PrevButton.addEventListener('click', () => calendar1.prev());
+  if (cal1PrevButton) cal1PrevButton.addEventListener('click', () => navigateMonths('prev'));
   const cal1NextButton = document.getElementById('cal1_next');
-  if (cal1NextButton) cal1NextButton.addEventListener('click', () => calendar1.next());
+  if (cal1NextButton) cal1NextButton.addEventListener('click', () => navigateMonths('next'));
 });
