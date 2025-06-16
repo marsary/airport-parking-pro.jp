@@ -169,5 +169,18 @@
   .fc .fc-daygrid-day-top {
       margin-top: 3px;
   }
+
+  /* イベントのスタイル */
+  .fc .fc-daygrid-event {
+      background-color: transparent !important;
+      color: black !important;
+      border: none !important;
+      text-align: left;
+      padding-left: 20%;
+  }
+  .fc-h-event .fc-event-main {
+      color: black !important;
+  }
+
 </style>
 @endpush
