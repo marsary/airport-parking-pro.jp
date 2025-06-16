@@ -37,6 +37,9 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('ledger/bunch_issues', [\App\Http\Controllers\Manage\LedgerController::class, 'bunch_issues'])->name('ledger.bunch_issues');
         Route::put('ledger/unload_all', [\App\Http\Controllers\Manage\LedgerController::class, 'unloadAll'])->name('ledger.unload_all');
         Route::get('ledger/reservation_result', [\App\Http\Controllers\Manage\LedgerController::class, 'reservationResult'])->name('ledger.reservation_result');
+        Route::get('ledger/regi_check_lists', [\App\Http\Controllers\Manage\LedgerController::class, 'regiCheckLists'])->name('ledger.regi_check_lists');
+        Route::get('ledger/regi_payment_summaries', [\App\Http\Controllers\Manage\LedgerController::class, 'regiPaymentSummaries'])->name('ledger.regi_payment_summaries');
+        Route::get('ledger/regi_sales_account_books', [\App\Http\Controllers\Manage\LedgerController::class, 'regiSalesAccountBooks'])->name('ledger.regi_sales_account_books');
 
         Route::get('/ledger/reservation_result/calendar', [\App\Http\Controllers\Manage\Ledger\ReservationResultController::class, 'calendar'])->name('ledger.reservation_result.calendar');
 
