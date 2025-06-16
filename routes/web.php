@@ -38,6 +38,8 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::put('ledger/unload_all', [\App\Http\Controllers\Manage\LedgerController::class, 'unloadAll'])->name('ledger.unload_all');
         Route::get('ledger/reservation_result', [\App\Http\Controllers\Manage\LedgerController::class, 'reservationResult'])->name('ledger.reservation_result');
 
+        Route::get('/ledger/reservation_result/calendar', [\App\Http\Controllers\Manage\Ledger\ReservationResultController::class, 'calendar'])->name('ledger.reservation_result.calendar');
+
         Route::get('marketing/graph/inventory', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'inventory'])->name('marketing.graph.inventory');
         Route::get('marketing/graph/inventory/chart_by_day', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByDay'])->name('marketing.graph.inventory.chart_by_day');
         Route::get('marketing/graph/inventory/chart_by_hour', [\App\Http\Controllers\Manage\Marketing\GraphController::class, 'chartByHour'])->name('marketing.graph.inventory.chart_by_hour');

@@ -15,7 +15,7 @@
     <div class="c-pager__pagination-container">
       <div class="c-pager__year-list-wrapper">
         <div class="c-pager__year-list" id="yearList">
-          <div class="c-pager__year-item">2021</div>
+          {{--  <div class="c-pager__year-item">2021</div>
           <div class="c-pager__year-item">2022</div>
           <div class="c-pager__year-item">2023</div>
           <div class="c-pager__year-item">2024</div>
@@ -24,14 +24,16 @@
           <div class="c-pager__year-item">2027</div>
           <div class="c-pager__year-item">2028</div>
           <div class="c-pager__year-item">2029</div>
-          <div class="c-pager__year-item">2030</div>
+          <div class="c-pager__year-item">2030</div>  --}}
+          @foreach ($yearList as $year)
+            <div class="c-pager__year-item  {{ $year == (\Carbon\Carbon::today()->year) ? '--selected' : '' }}">{{$year}}</div>
+          @endforeach
         </div>
       </div>
     </div>
 
     <!-- カレンダー本体 -->
     <div class="p-reserve__wrap">
-        <p class="text-center u-mb2 u-font--medium">pメッセージ</p>
         <div>
             <div class="c-title__calendar" id="left_calendar1_title"></div>
         </div>
@@ -79,7 +81,7 @@
 
   table.fc-col-header {
     padding-top: 8px;
-    border-spacing: 4px;  
+    border-spacing: 4px;
     border-collapse: separate;
   }
 
@@ -167,5 +169,18 @@
   .fc .fc-daygrid-day-top {
       margin-top: 3px;
   }
+
+  /* イベントのスタイル */
+  .fc .fc-daygrid-event {
+      background-color: transparent !important;
+      color: black !important;
+      border: none !important;
+      text-align: left;
+      padding-left: 20%;
+  }
+  .fc-h-event .fc-event-main {
+      color: black !important;
+  }
+
 </style>
 @endpush
