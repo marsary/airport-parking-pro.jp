@@ -20,6 +20,7 @@ class Office extends Model
         'short_name',
         'airport_id',
         'receipt_issuer',
+        'zip',
         'receipt_address',
         'receipt_tel',
         'email',
