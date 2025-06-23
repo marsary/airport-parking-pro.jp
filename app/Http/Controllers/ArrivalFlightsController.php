@@ -13,10 +13,6 @@ class ArrivalFlightsController extends Controller
             ->where('arrive_date', $request->arrive_date)
             ->where('airline_id', $request->airline_id)
             ->first();
-error_log($request->flight_no."\n",3,"../storage/logs/test.log");
-error_log($request->arrive_date."\n",3,"../storage/logs/test.log");
-error_log($request->airline_id."\n",3,"../storage/logs/test.log");
-error_log(json_encode($arrivalFlight)."\n",3,"../storage/logs/test.log");
 
         return response()->json([
             'success' => isset($arrivalFlight),
