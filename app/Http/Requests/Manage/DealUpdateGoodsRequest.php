@@ -25,6 +25,7 @@ class DealUpdateGoodsRequest extends FormRequest
             'dealGoods' => 'array',
             'total_price' => 'int',
             'total_tax' => 'int',
+            'tax_free' => 'int',
         ];
     }
 
@@ -35,6 +36,7 @@ class DealUpdateGoodsRequest extends FormRequest
             'dealGoods' => '取引商品',
             'total_price' => '合計金額',
             'total_tax' => '合計税額',
+            'tax_free' => '消費税対象外',
         ];
     }
 }
