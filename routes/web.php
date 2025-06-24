@@ -23,6 +23,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::put('deals/{deal}/unload', [\App\Http\Controllers\Manage\DealsController::class, 'unload'])->name('deals.unload');
         Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
         Route::resource('registers', \App\Http\Controllers\Manage\RegistersController::class);
+
+        Route::get('/receipts/{deal}', [\App\Http\Controllers\Manage\ReceiptController::class, 'show'])->name('receipts.show');
+        Route::put('/receipts/{deal}/update_register', [\App\Http\Controllers\Manage\ReceiptController::class, 'updateRegister'])->name('receipts.update_register');
+
         Route::get('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
         Route::get('reserves/entry_info', [\App\Http\Controllers\Manage\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
         Route::post('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'postEntryDate'])->name('reserves.post_entry_date');
