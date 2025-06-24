@@ -1,13 +1,16 @@
 @extends('layouts.member.authenticated')
 
 @section('content')
+    @include('include.messages.errors')
 <div id="common">
 <div id="header">
     <input type="button" onclick="self.print();window.close();" value="印刷" style="float: left;" id="print_button">
     <dev id="time_display">読込時刻：<span id="time_display_text"></span></dev>
-    <form action="/receipt.php" method="post" style="text-align: right;">
+    <form action="{{route('manage.receipts.update_register', $deal->id)}}" method="post" style="text-align: right;">
+        @csrf
+        @method('PUT')
         レジ番号：
-        <input type="text" id="regi_id" name="regi_id" value="<?=isset($html['regi_id']) && !empty($html['regi_id']) ? $html['regi_id'] : '';?>">
+        <input type="text" id="cash_register_id" name="cash_register_id" value="{{$payment->cash_register_id ?? ''}}">
         <input type="submit" value="再読み込み" id="reload_button">
     </form>
 </div>
@@ -15,20 +18,24 @@
         <section class="ticket">
             <div class="ticket_meta">
                 <p>
-                    <?= date('Y/m/d H:i', strtotime($html['reciept_time'])); ?>
+                    {{$recieptTime->format('Y/m/d H:i')}}
+                    {{--   date('Y/m/d H:i', strtotime($html['reciept_time']));   --}}
                 </p>
                 <p>
-                    <?= isset($html['o_name']) && !empty($html['o_name']) ? $html['o_name']  : '　' ?>
+                    {{$office->name}}
+                    {{--   isset($html['o_name']) && !empty($html['o_name']) ? $html['o_name']  : '　'   --}}
                 </p>
             </div>
             <!-- ticket_meta -->
 
             <div class="ticket_number" style="width: 80%;">
                 <p>
-                    <?= $html['rcp_id'] ?>
+                    {{$deal->receipt_code}}
+                    {{--  <?= $html['rcp_id'] ?>  --}}
                 </p>
                 <p>
-                    <?= $html['user']['used_num'] ?>                
+                    {{$member->used_num}}
+                    {{--  <?= $html['user']['used_num'] ?>  --}}
                 </p>
             </div>
             <!-- ticket_number -->
@@ -36,27 +43,33 @@
             <div class="ticket_detail">
                 <div class="ticket_detail_item">
                     <p style="white-space: nowrap; width: 330px !important;" id="user_name">
-                            <?= isset($html['name_k']) && !empty($html['name_k']) ? mb_convert_kana($html['name_k'], "Vc"): '　' ?>
+                        {{$deal->kana ? mb_convert_kana($deal->kana, "Vc"): '　'}}
+                            {{--  <?= isset($html['name_k']) && !empty($html['name_k']) ? mb_convert_kana($html['name_k'], "Vc"): '　' ?>  --}}
                     </p>
                     <p style="width: 103px;"></p>
                     <p style="white-space: nowrap; width: 390px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" id="car_model">
-                        <?= $html['car_model'] ?>
+                        {{$memberCar?->car->carMaker->name}} {{$memberCar?->car->name}}
+                        {{--  <?= $html['car_model'] ?>  --}}
                     </p>
                 </div>
                 <div class="ticket_detail_item">
                     <p>
-                        <?= date('Y年m月d日', strtotime($html['load_date'])) ?>
+                        {{$payment->load_date->format('Y年m月d日')}}
+                        {{--  <?= date('Y年m月d日', strtotime($html['load_date'])) ?>  --}}
                     </p>
                     <p>
-                        <?= sprintf('%04d', $html['car_number']) ?>
+                        {{$memberCar?->number}}
+                        {{--  <?= sprintf('%04d', $html['car_number']) ?>  --}}
                     </p>
                 </div>
                 <div class="ticket_detail_item">
                     <p>
-                        <?= date('Y年m月d日', strtotime($html['unload_date_plan'])) ?>
+                        {{$payment->unload_date_plan->format('Y年m月d日')}}
+                        {{--  <?= date('Y年m月d日', strtotime($html['unload_date_plan'])) ?>  --}}
                     </p>
-                    <p> 
-                        <?= $html['car_color'] ?>
+                    <p>
+                        {{$memberCar?->carColor->name}}
+                        {{--  <?= $html['car_color'] ?>  --}}
                     </p>
                 </div>
             </div>
@@ -64,7 +77,8 @@
 
             <div class="ticket_name">
                 <p>
-                    <?= $html['stf_name'] ?>
+                    {{$payment->user_name}}
+                    {{--  <?= $html['stf_name'] ?>  --}}
                 </p>
             </div>
             <!-- ticket_name -->
@@ -74,46 +88,56 @@
         <section class="receipt">
             <div class="receipt_date">
                 <p style="padding-right: 35px;">
-                    <?= date('Y', strtotime($html['reciept_time'])); ?>
+                    {{$recieptTime->format('Y')}}
+                    {{--  <?= date('Y', strtotime($html['reciept_time'])); ?>  --}}
                 </p>
                 <p style="padding-right: 35px;">
-                    <?= date('m', strtotime($html['reciept_time'])); ?>
+                    {{$recieptTime->format('m')}}
+                    {{--  <?= date('m', strtotime($html['reciept_time'])); ?>  --}}
                 </p>
                 <p>
-                    <?= date('d', strtotime($html['reciept_time'])); ?>
+                    {{$recieptTime->format('d')}}
+                    {{--  <?= date('d', strtotime($html['reciept_time'])); ?>  --}}
                 </p>
             </div>
             <!-- receipt_date -->
 
             <div class="receipt_money">
                 <p>
-                    <?= ($html['total_price'] > 0 ? number_format($html['total_price']) . ' -' : '＊＊＊＊＊＊＊＊'); ?>
+                    {{$payment->total_price > 0 ? number_format($payment->total_price) . ' -' : '＊＊＊＊＊＊＊＊';}}
+                    {{--  <?= ($html['total_price'] > 0 ? number_format($html['total_price']) . ' -' : '＊＊＊＊＊＊＊＊'); ?>  --}}
                 </p>
             </div>
             <!-- receipt_money -->
 
             <div class="receipt_about">
                 <p style="padding-bottom: 8px;">
-                    <?= isset($html['o_name']) && !empty($html['o_name']) ? $html['o_name'] : '　' ?>
+                    {{$office->name ? $office->name : '　'}}
+                    {{--  <?= isset($html['o_name']) && !empty($html['o_name']) ? $html['o_name'] : '　' ?>  --}}
                 </p>
                 <p style="padding-bottom: 8px;">
-                    <?= isset($html['receipt_addr']) && !empty($html['receipt_addr']) ? $html['receipt_addr'] : '　' ?>
+                    {{$office->receipt_address ? $office->receipt_address : '　'}}
+                    {{--  <?= isset($html['receipt_addr']) && !empty($html['receipt_addr']) ? $html['receipt_addr'] : '　' ?>  --}}
                 </p>
                 <p style="padding-bottom: 8px;">
-                    <?= isset($html['receipt_tel']) && !empty($html['receipt_tel']) ? $html['receipt_tel'] : '　' ?>
+                    {{$office->receipt_tel ? $office->receipt_tel : '　'}}
+                    {{--  <?= isset($html['receipt_tel']) && !empty($html['receipt_tel']) ? $html['receipt_tel'] : '　' ?>  --}}
                 </p>
             </div>
             <!-- receipt_about -->
 
             <div class="receipt_detail">
                 <p>
-                    <?= number_format(($html['total_price'] - $html['tax_exemption_price'])); ?>
+                    {{number_format($payment->total_price - $payment->tax_free)}}
+                    {{--  <?= number_format(($html['total_price'] - $html['tax_exemption_price'])); ?>  --}}
                 </p>
                 <p>
-                    <?= number_format($html['total_tax']) ?>
+                    {{number_format($payment->total_tax)}}
+                    {{--  <?= number_format($html['total_tax']) ?>  --}}
                 </p>
                 <p>
-                    <?= number_format($html['tax_exemption_price']) ?>
+                    {{number_format($payment->tax_free)}}
+                    {{--  <?= number_format($html['tax_exemption_price']) ?>  --}}
                 </p>
             </div>
             <!-- receipt_detail -->
@@ -122,59 +146,79 @@
 
         <section class="remarks">
             <div>
-                <div><span class="remarks_title">※弊社使用欄※　<small>（お客様より収集した個人情報は駐車場管理に適切に使用いたします。）</small></span></div><div class="remarks_user_num"><?= $html['rcp']['rc_user_num'] ?>人</div>
+                <div><span class="remarks_title">※弊社使用欄※　<small>（お客様より収集した個人情報は駐車場管理に適切に使用いたします。）</small></span></div>
+                <div class="remarks_user_num">{{$deal->num_members}}人</div>
+                {{--  <div class="remarks_user_num"><?= $html['rcp']['rc_user_num'] ?>人</div>  --}}
                 <table class="remarks_table">
                     <tbody>
                         <tr>
                             <th>駐車場</th>
-                            <td><?= isset($html['o_name']) && !empty($html['o_name']) ? $html['o_name'] : '　' ?></td>
+                            <td>{{$office->name ? $office->name : '　'}}</td>
+                            {{--  <td><?= isset($html['o_name']) && !empty($html['o_name']) ? $html['o_name'] : '　' ?></td>  --}}
                             <th>顧客ID</th>
-                            <td><?= isset($html['user']['u_id']) && !empty($html['user']['u_id']) ? $html['user']['u_id'] : '　' ?></td>
+                            <td>{{$member->member_code ? $member->member_code : '　'}}</td>
+                            {{--  <td><?= isset($html['user']['u_id']) && !empty($html['user']['u_id']) ? $html['user']['u_id'] : '　' ?></td>  --}}
                             <th>氏名</th>
                             <td>
                                 <?php
                                     $name = '';
-                                    if (isset($html['name']) && !empty($html['name'])) {
+                                    if($deal->name) {
+                                        $name = $deal->name;
+                                    } elseif($deal->kana) {
+                                        $name = mb_convert_kana($deal->kana, "Vc");
+                                    }
+                                    {{--  if (isset($html['name']) && !empty($html['name'])) {
                                         $name = $html['name'];
                                     } elseif (isset($html['name_k']) && !empty($html['name_k'])) {
                                         $name = $html['name_k'];
-                                    }
+                                    }  --}}
                                 ?>
                                 <?= $name ?>
                             </td>
                         </tr>
                         <tr>
                             <th>受付ID</th>
-                            <td><?= $html['rcp_id'] ?><?= !empty($html['user']['used_num']) ? '（' . $html['user']['used_num'] . '回目）' : '' ?>
+                            <td>{{$deal->receipt_code}}{{$member->used_num ? '（' . $member->used_num . '回目）' : ''}}</td>
+                            {{--  <td><?= $html['rcp_id'] ?><?= !empty($html['user']['used_num']) ? '（' . $html['user']['used_num'] . '回目）' : '' ?>  --}}
                             </td>
                             <th>住所</th>
                             <td colspan="3">
-                                <?= !empty($html['user']['zip']) ? '〒' . $html['user']['zip'] : ''; ?>
+                                {{--  住所は不要  --}}
+                                {{--  <?= !empty($html['user']['zip']) ? '〒' . $html['user']['zip'] : ''; ?>
                                 <?= $html['user']['addr1'] ?>
-                                <?= $html['user']['addr2'] ?>
+                                <?= $html['user']['addr2'] ?>  --}}
                             </td>
                         </tr>
                         <tr>
                             <th>携帯</th>
-                            <td><?= $html['user']['tel_mb'] ?></td>
+                            {{--  <td><?= $html['user']['tel_mb'] ?></td>  --}}
                             <th>TEL</th>
-                            <td><?= $html['user']['tel'] ?></td>
+                            <td>{{$deal->tel}}</td>
+                            {{--  <td><?= $html['user']['tel'] ?></td>  --}}
                             <th>車種</th>
-                            <td><?= $html['rcp']['ca_name'] ?> <?= sprintf('%04d', $html['car_number']) ?> <?= $html['car_color'] ?>
+                            <td>
+                                {{$memberCar?->car->name}} {{$memberCar?->number}} {{$memberCar?->carColor->name}}
+                            </td>
+                            {{--  <td><?= $html['rcp']['ca_name'] ?> <?= sprintf('%04d', $html['car_number']) ?> <?= $html['car_color'] ?>  --}}
                             </td>
                         </tr>
                         <tr>
                             <th>日程</th>
                             <td>
-                                <?php if (empty($html['rcp']['rc_one_day_flg'])) : ?>
+                                @if ($payment->days == 1)
+                                    {{$payment->load_date->format('Y.m.d')}}（１日利用）
+                                @else
+                                    {{$payment->load_date->format('Y.m.d')}}-{{$payment->unload_date_plan->format('Y.m.d')}}({{$payment->days}}日間)
+                                @endif
+                                {{--  <?php if (empty($html['rcp']['rc_one_day_flg'])) : ?>
                                     <?= date('Y.m.d', strtotime($html['load_date'])) ?>-<?= date('Y.m.d', strtotime($html['unload_date_plan'])) ?>(<?= $html['rcp']['days'] ?>日間)
                                 <?php else : ?>
                                     <?= date('Y.m.d', strtotime($html['load_date'])) ?>（１日利用）
-                                <?php endif ;?>
+                                <?php endif ;?>  --}}
                             </td>
                             <th>到着便</th>
                             <td colspan="3">
-                                <?php
+                                {{--  <?php
                                     $fit_text = '';
                                     if (!empty($html['rcp']['rc_flt_corp_id']) &&!empty($html['rcp']['rc_flt_id']) && !empty($html['rcp']['unload_time_plan']) && !empty($html['rcp']['fd_name'])) {
                                         if (!empty($html['rcp']['rc_flt_corp_id'])) {
@@ -194,26 +238,31 @@
                                         }
                                     }
                                     echo ($fit_text);
-                                ?>
+                                ?>  --}}
                             </td>
                         </tr>
                         <tr>
                             <th nowrap>合計金額</th>
-                            <td><?= number_format($html['total_price']) ?> 円 
-                            </td>
+                            <td>{{number_format($payment->total_price)}} 円</td>
+                            {{--  <td><?= number_format($html['total_price']) ?> 円
+                            </td>  --}}
                             <th>割引率</th>
-                            <td><?= $html['rcp']['rc_dsc_rate'] . '%' ?>
+                            <td>
+                                {{--  <?= $html['rcp']['rc_dsc_rate'] . '%' ?>  --}}
                             </td>
                             <th>割引券</th>
                             <td>
-                                <?= !empty($html['rcp']['rc_dt_price']) ? number_format($html['rcp']['rc_dt_price']) . ' 円' : '' ?>
-                                <?= !empty($html['rcp']['dt_name']) ? '（' . $html['rcp']['dt_name'] . '）' : '' ?>
+                                {{$couponTotal ? number_format($couponTotal) . ' 円' : ''}}
+                                {{!empty($couponDetails) ? ' (' . implode(', ', $couponDetails) . '引き) ':''}}
+                                {{--  <?= !empty($html['rcp']['rc_dt_price']) ? number_format($html['rcp']['rc_dt_price']) . ' 円' : '' ?>  --}}
+                                {{--  <?= !empty($html['rcp']['dt_name']) ? '（' . $html['rcp']['dt_name'] . '）' : '' ?>  --}}
                             </td>
                         </tr>
                         <tr>
                             <th>支払１</th>
                             <td>
-                                <?php
+                                {{\App\Services\View\Receipt::getPaymentDetail($paymentDetails, 0)}}
+                                {{--  <?php
                                     $pay1 = '';
                                     if (isset($html['rcp']['pay'][0]) && !empty($html['rcp']['pay'][0])) {
                                         $pay1 .= (isset($html['rcp']['pay'][0]['pay']) && !empty($html['rcp']['pay'][0]['pay']) ? number_format($html['rcp']['pay'][0]['pay']) . ' 円,' : '');
@@ -221,11 +270,12 @@
                                         $pay1 .= (isset($html['rcp']['pay'][0]['pt2_name']) && !empty($html['rcp']['pay'][0]['pt2_name']) ? ' ' . $html['rcp']['pay'][0]['pt2_name'] : '');
                                     }
                                     echo($pay1);
-                                ?>
+                                ?>  --}}
                             </td>
                             <th>支払２</th>
                             <td>
-                                <?php
+                                {{\App\Services\View\Receipt::getPaymentDetail($paymentDetails, 1)}}
+                                {{--  <?php
                                     $pay2 = '';
                                     if (isset($html['rcp']['pay'][1]) && !empty($html['rcp']['pay'][1])) {
                                         $pay2 .= (isset($html['rcp']['pay'][1]['pay']) && !empty($html['rcp']['pay'][1]['pay']) ? number_format($html['rcp']['pay'][1]['pay']) . ' 円,' : '');
@@ -233,11 +283,12 @@
                                         $pay2 .= (isset($html['rcp']['pay'][1]['pt2_name']) && !empty($html['rcp']['pay'][1]['pt2_name']) ? ' ' . $html['rcp']['pay'][1]['pt2_name'] : '');
                                     }
                                     echo($pay2);
-                                ?>
+                                ?>  --}}
                             </td>
                             <th>支払３</th>
                             <td>
-                                <?php
+                                {{\App\Services\View\Receipt::getPaymentDetail($paymentDetails, 2)}}
+                                {{--  <?php
                                     $pay3 = '';
                                     if (isset($html['rcp']['pay'][2]) && !empty($html['rcp']['pay'][2])) {
                                         $pay3 .= (isset($html['rcp']['pay'][2]['pay']) && !empty($html['rcp']['pay'][2]['pay']) ? number_format($html['rcp']['pay'][2]['pay']) . ' 円,' : '');
@@ -245,31 +296,32 @@
                                         $pay3 .= (isset($html['rcp']['pay'][2]['pt2_name']) && !empty($html['rcp']['pay'][2]['pt2_name']) ? ' ' . $html['rcp']['pay'][2]['pt2_name'] : '');
                                     }
                                     echo($pay3);
-                                ?>
+                                ?>  --}}
                             </td>
                         </tr>
                         <tr>
                             <th>追加pt</th>
                             <td>
-                                <?= !empty($html['rcp']['rc_pt_add']) ? $html['rcp']['rc_pt_add'] . ' pt' : ''; ?>
+                                {{--  <?= !empty($html['rcp']['rc_pt_add']) ? $html['rcp']['rc_pt_add'] . ' pt' : ''; ?>  --}}
                             </td>
                             <th>使用pt</th>
                             <td>
-                                <?= !empty($html['rcp']['rc_pt_used']) ? $html['rcp']['rc_pt_used'] . ' pt' : ''; ?>
+                                {{--  <?= !empty($html['rcp']['rc_pt_used']) ? $html['rcp']['rc_pt_used'] . ' pt' : ''; ?>  --}}
                             </td>
                             <th>累積pt</th>
-                                <?= !empty($html['rcp']['rc_pt_correct']) ? $html['rcp']['rc_pt_correct'] . ' pt' : ''; ?>
+                                {{--  <?= !empty($html['rcp']['rc_pt_correct']) ? $html['rcp']['rc_pt_correct'] . ' pt' : ''; ?>  --}}
                             <td>
                             </td>
                         </tr>
                         <tr>
                             <th>代理店</th>
                             <td>
-                                <?= sprintf('%04d', $html['rcp']['rc_ag_id1']); ?>-<?= sprintf('%03d', $html['rcp']['rc_ag_id2']); ?>&nbsp;<?= $html['rcp']['ag_name'] ?>
+                                {{$office->name}}
+                                {{--  <?= sprintf('%04d', $html['rcp']['rc_ag_id1']); ?>-<?= sprintf('%03d', $html['rcp']['rc_ag_id2']); ?>&nbsp;<?= $html['rcp']['ag_name'] ?>  --}}
                             </td>
                             <th>マイル</th>
                             <td>
-                                <?= $html['rcp']['ml_name'] ?>
+                                {{--  <?= $html['rcp']['ml_name'] ?>  --}}
                             </td>
                             <th></th>
                             <td>
@@ -278,7 +330,7 @@
                         <tr>
                             <th>商品</th>
                             <td>
-                                <?php
+                                {{--  <?php
                                     $goods_text = '';
                                     if (!empty($html['rcp']['goods'])) {
                                         foreach ($html['rcp']['goods'] as $goods) {
@@ -289,11 +341,11 @@
                                         }
                                     }
                                     echo ($goods_text);
-                                ?>
+                                ?>  --}}
                             </td>
                             <th>取扱</th>
                             <td>
-                            <?php
+                                {{--  <?php
                                     $note_text = '';
                                     if (!empty($html['rcp']['note'])) {
                                         foreach ($html['rcp']['note'] as $note) {
@@ -304,11 +356,12 @@
                                         }
                                     }
                                     echo ($note_text);
-                                ?>
+                                ?>  --}}
                             </td>
                             <th>レジ</th>
-                            <td><?= $html['stf_name'] ?>（レジNo：<?=$html['regi_id']?>）
-                            </td>
+                            <td>{{$payment->user_name}}（レジNo：{{$payment->cash_register_id}}）</td>
+                            {{--  <td><?= $html['stf_name'] ?>（レジNo：<?=$html['regi_id']?>）
+                            </td>  --}}
                         </tr>
                         <tr>
                             <th>　</th>
@@ -323,7 +376,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <p class="bottom_time"><?= date('Y/m/d H:i', strtotime($html['reciept_time'])); ?></p>
+                <p class="bottom_time">{{$recieptTime->format('Y/m/d H:i')}}</p>
+                {{--  <p class="bottom_time"><?= date('Y/m/d H:i', strtotime($html['reciept_time'])); ?></p>  --}}
             </div>
             <!-- receipt_detail -->
         </section>
@@ -331,6 +385,7 @@
     </div>
 @endsection
 @push("scripts")
+    <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
     <script>
         // 画面表示された際に印刷ボタンにフォーカスする
         $(document).ready( function(){
@@ -384,9 +439,9 @@
 
             if (nameSize <= 15) {
                 userNameTextElem.style.whiteSpace = 'normal';
-                userNameTextElem.style.lineHeight = '15px'; 
-                userNameTextElem.style.marginTop = 'auto'; 
-                userNameTextElem.style.marginBottom = 'auto'; 
+                userNameTextElem.style.lineHeight = '15px';
+                userNameTextElem.style.marginTop = 'auto';
+                userNameTextElem.style.marginBottom = 'auto';
                 userText =  $('#user_name').text();
                 $('#user_name').text(userText.substring(0 ,65) + '...');
 
@@ -414,9 +469,9 @@
             // carModelTextElem.setAttribute("style", `font-size: ${size}px`); // こちらも可能
             }
         }
-        $(window).focus(function(){ // タブアクティブ
+        {{--  $(window).focus(function(){ // タブアクティブ
             $('#reload_button').click();
-        });
+        });  --}}
         setTimeout(function () {
             location.reload();
         }, 60000);
