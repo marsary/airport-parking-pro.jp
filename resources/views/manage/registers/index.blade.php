@@ -692,6 +692,7 @@
           'dealGoods': dealGoods,
           'total_price': parseInt(totalInput.value),
           'total_tax': parseInt(reducedTaxInput.value) + parseInt(taxInput.value),
+          'tax_free': parseInt(taxExemptInput.value),
         });
 
         console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
