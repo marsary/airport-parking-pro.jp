@@ -63,6 +63,7 @@ class PaymentService
             'goods_total_price' => $this->deal->dealGoodsTotalPrice(),
             'total_price' => $this->deal->total_price,
             'total_tax' => $this->deal->total_tax,
+            'tax_free' => $this->deal->tax_free,
             // 値引き・調整は含めず？
             'demand_price' => $this->deal->total_price + $this->deal->total_tax,
             'total_pay' => $this->data['totalAmount'], // 支払合計金額
@@ -191,6 +192,7 @@ class PaymentService
             'goods_total_price' => $this->deal->dealGoodsTotalPrice(),
             'total_price' => $this->deal->total_price,
             'total_tax' => $this->deal->total_tax,
+            'tax_free' => $this->deal->tax_free,
             // 値引き・調整は含めず？
             'demand_price' => $this->deal->total_price + $this->deal->total_tax,
             'total_pay' => $this->data['totalAmount'], // 支払合計金額
