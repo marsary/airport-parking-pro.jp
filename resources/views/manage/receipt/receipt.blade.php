@@ -17,8 +17,8 @@
     <div class="page">
         <section class="ticket">
             <div class="ticket_meta">
-                <p>
-                    {{$recieptTime->format('Y/m/d H:i')}}
+                <p class="receipt_time">
+                    {{$receiptTime->format('Y/m/d H:i')}}
                     {{--   date('Y/m/d H:i', strtotime($html['reciept_time']));   --}}
                 </p>
                 <p>
@@ -28,7 +28,7 @@
             </div>
             <!-- ticket_meta -->
 
-            <div class="ticket_number" style="width: 80%;">
+            <div class="ticket_number">
                 <p>
                     {{$deal->receipt_code}}
                     {{--  <?= $html['rcp_id'] ?>  --}}
@@ -42,12 +42,11 @@
 
             <div class="ticket_detail">
                 <div class="ticket_detail_item">
-                    <p style="white-space: nowrap; width: 330px !important;" id="user_name">
+                    <p style="white-space: nowrap; max-width: 330px !important;" id="user_name">
                         {{$deal->kana ? mb_convert_kana($deal->kana, "Vc"): '　'}}
                             {{--  <?= isset($html['name_k']) && !empty($html['name_k']) ? mb_convert_kana($html['name_k'], "Vc"): '　' ?>  --}}
                     </p>
-                    <p style="width: 103px;"></p>
-                    <p style="white-space: nowrap; width: 390px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" id="car_model">
+                    <p style="white-space: nowrap; max-width: 390px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" id="car_model">
                         {{$memberCar?->car->carMaker->name}} {{$memberCar?->car->name}}
                         {{--  <?= $html['car_model'] ?>  --}}
                     </p>
@@ -88,15 +87,15 @@
         <section class="receipt">
             <div class="receipt_date">
                 <p style="padding-right: 35px;">
-                    {{$recieptTime->format('Y')}}
+                    {{$receiptTime->format('Y')}}
                     {{--  <?= date('Y', strtotime($html['reciept_time'])); ?>  --}}
                 </p>
                 <p style="padding-right: 35px;">
-                    {{$recieptTime->format('m')}}
+                    {{$receiptTime->format('m')}}
                     {{--  <?= date('m', strtotime($html['reciept_time'])); ?>  --}}
                 </p>
                 <p>
-                    {{$recieptTime->format('d')}}
+                    {{$receiptTime->format('d')}}
                     {{--  <?= date('d', strtotime($html['reciept_time'])); ?>  --}}
                 </p>
             </div>
@@ -120,7 +119,7 @@
                     {{--  <?= isset($html['receipt_addr']) && !empty($html['receipt_addr']) ? $html['receipt_addr'] : '　' ?>  --}}
                 </p>
                 <p style="padding-bottom: 8px;">
-                    {{$office->receipt_tel ? $office->receipt_tel : '　'}}
+                    {{$office->receipt_tel ? 'TEL:' . $office->receipt_tel : '　'}}
                     {{--  <?= isset($html['receipt_tel']) && !empty($html['receipt_tel']) ? $html['receipt_tel'] : '　' ?>  --}}
                 </p>
             </div>
@@ -146,8 +145,10 @@
 
         <section class="remarks">
             <div>
-                <div><span class="remarks_title">※弊社使用欄※　<small>（お客様より収集した個人情報は駐車場管理に適切に使用いたします。）</small></span></div>
-                <div class="remarks_user_num">{{$deal->num_members}}人</div>
+                <div class="remark_header">
+                    <div><span class="remarks_title">※弊社使用欄※　<small>（お客様より収集した個人情報は駐車場管理に適切に使用いたします。）</small></span></div>
+                    <div class="remarks_user_num">{{$deal->num_members}}人</div>
+                </div>
                 {{--  <div class="remarks_user_num"><?= $html['rcp']['rc_user_num'] ?>人</div>  --}}
                 <table class="remarks_table">
                     <tbody>
@@ -316,7 +317,7 @@
                         <tr>
                             <th>代理店</th>
                             <td>
-                                {{$office->name}}
+                                {{$deal->agency?->name}}
                                 {{--  <?= sprintf('%04d', $html['rcp']['rc_ag_id1']); ?>-<?= sprintf('%03d', $html['rcp']['rc_ag_id2']); ?>&nbsp;<?= $html['rcp']['ag_name'] ?>  --}}
                             </td>
                             <th>マイル</th>
@@ -376,7 +377,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <p class="bottom_time">{{$recieptTime->format('Y/m/d H:i')}}</p>
+                <p class="bottom_time receipt_time">{{$receiptTime->format('Y/m/d H:i')}}</p>
                 {{--  <p class="bottom_time"><?= date('Y/m/d H:i', strtotime($html['reciept_time'])); ?></p>  --}}
             </div>
             <!-- receipt_detail -->
@@ -483,6 +484,244 @@
 @endpush
 @push('css')
     <style>
+        /* 全体のスタイル */
+        body {
+            font-family: 'MS Gothic', monospace;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        #common {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        #header {
+            background-color: black;
+            color: white;
+            padding: 4px 6px;
+            height: 60px;
+        }
+
+        #header input {
+            margin-bottom: 0 !important;
+            border-radius: 0;
+        }
+
+        #print_button, #reload_button {
+            width: 120px;
+            height: 40px;
+            background-color: white;
+            color: black;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        #time_display {
+            color: white;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        /* ページ全体のレイアウト */
+        .page {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background-color: white;
+        }
+
+        /* チケット部分 */
+        section.ticket {
+            margin-bottom: 10px;
+            padding: 15px;
+            background-color: white;
+            font-weight: bold;
+        }
+
+        .ticket_meta {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .ticket_number {
+            display: flex;
+            justify-content: space-around;
+            text-align: left;
+            margin: 15px 0;
+        }
+
+
+        .ticket_number p:first-child {
+            font-size: 18px;
+            margin: 0 0 5px 0;
+            min-width: 200px;
+        }
+
+        .ticket_number p:last-child {
+            font-size: 16px;
+            margin: 0;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .ticket_detail {
+            margin: 15px 0;
+        }
+
+        .ticket_detail_item {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .ticket_detail_item p {
+            text-align: left;
+            margin: 0;
+            padding: 2px 5px;
+            min-width: 200px;
+        }
+
+        .ticket_name {
+            text-align: right;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* 領収書部分 */
+        section.receipt {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+        }
+
+        .receipt_date {
+            display: flex;
+            justify-content: end;
+            margin-bottom: 20px;
+            font-size: 12px;
+            padding-right: 15%;
+        }
+
+        .receipt_date p {
+            margin: 0;
+            padding: 0 10px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .receipt_money {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .receipt_about {
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 0 40%;
+        }
+
+        .receipt_about p {
+            margin: 0 auto;
+            padding: 4px 0;
+        }
+
+        .receipt_detail {
+            margin: 20px 0;
+            font-size: 14px;
+            padding-right: 70%;
+        }
+
+        .receipt_detail p {
+            margin: 0;
+            text-align: right;
+        }
+
+        /* 備考欄 */
+        section.remarks {
+            padding: 10px;
+            background-color: white;
+        }
+
+        .remark_header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .remarks_title {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .remarks_user_num {
+            text-align: right;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .remarks_table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .remarks_table th,
+        .remarks_table td {
+            border: 1px solid black;
+            padding: 3px 5px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .remarks_table th {
+            font-weight: bold;
+            white-space: nowrap;
+            width: 80px;
+        }
+
+        .remarks_table td {
+            background-color: white;
+        }
+
+        .bottom_time {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* 印刷用スタイル */
+        @media print {
+            #header {
+                display: none;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .page {
+                padding: 0px;
+            }
+
+            section.ticket,
+            section.receipt,
+            section.remarks {
+                page-break-inside: avoid;
+            }
+        }
+
         #print_button, #reload_button {
             width: 150px;
             height: 50px;
