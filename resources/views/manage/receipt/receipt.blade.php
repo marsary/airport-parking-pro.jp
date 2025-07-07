@@ -11,7 +11,7 @@
         @method('PUT')
         レジ番号：
         <input type="text" id="cash_register_id" name="cash_register_id" value="{{$payment->cash_register_id ?? ''}}">
-        <input type="submit" value="再読み込み" id="reload_button">
+        {{--  <input type="submit" value="再読み込み" id="reload_button">  --}}
     </form>
 </div>
     <div class="page">
@@ -192,6 +192,7 @@
                         </tr>
                         <tr>
                             <th>携帯</th>
+                            <td></td>
                             {{--  <td><?= $html['user']['tel_mb'] ?></td>  --}}
                             <th>TEL</th>
                             <td>{{$deal->tel}}</td>
@@ -388,23 +389,37 @@
 @push("scripts")
     <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
     <script>
+        const pad = (num) => String(num).padStart(2, '0');
+        function getCurrentTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const Hour = now.getHours();
+            const Min = now.getMinutes();
+
+            return {
+                year: year,
+                month: month,
+                day: day,
+                Hour: Hour,
+                Min: Min,
+            }
+        }
+
         // 画面表示された際に印刷ボタンにフォーカスする
         $(document).ready( function(){
             // 印刷ボタンにフォーカス
             $('#print_button').focus();
-            var now = new Date();
-            var Hour = now.getHours();
-            var Min = now.getMinutes();
-            var Sec = now.getSeconds();
+            const {Hour, Min} = getCurrentTime();
 
-            $("#time_display_text").text(Hour + "時" + Min + "分");
+            $("#time_display_text").text(pad(Hour) + "時" + pad(Min) + "分");
 
         });
         const userNameText = $('#user_name').text();
         const carModelText = $('#car_model').text();
         const userNameTextElem = document.getElementById("user_name");
         const carModelTextElem = document.getElementById("car_model");
-
         function selectUserName() {
             userNameTextElem.innerText = userNameText;
             resizeUserText();
@@ -423,7 +438,7 @@
             userNameTextElem.removeAttribute('style');
             console.log(userNameTextElem.getBoundingClientRect().width , userNameTextElem.scrollWidth);
             userNameTextElem.style.whiteSpace ='nowrap';
-            userNameTextElem.style.width ='330px';
+            userNameTextElem.style.maxWidth ='330px';
             userNameTextElem.style.textOverflow = 'ellipsis';
             userNameTextElem.style.overflow = 'hidden';
             for (
@@ -456,7 +471,7 @@
             carModelTextElem.removeAttribute('style');
             console.log(carModelTextElem.getBoundingClientRect().width , carModelTextElem.scrollWidth);
             carModelTextElem.style.whiteSpace ='nowrap';
-            carModelTextElem.style.width ='390px';
+            carModelTextElem.style.maxWidth ='390px';
             carModelTextElem.style.textOverflow = 'ellipsis';
             carModelTextElem.style.overflow = 'hidden';
             for (
@@ -470,12 +485,19 @@
             // carModelTextElem.setAttribute("style", `font-size: ${size}px`); // こちらも可能
             }
         }
-        {{--  $(window).focus(function(){ // タブアクティブ
-            $('#reload_button').click();
-        });  --}}
-        setTimeout(function () {
-            location.reload();
-        }, 60000);
+
+        setInterval(function () {
+            const {
+                year,
+                month,
+                day,
+                Hour,
+                Min,
+            } = getCurrentTime();
+            $("#time_display_text").text(pad(Hour) + "時" + pad(Min) + "分");
+            const formattedDateTime = `${year}/${pad(month)}/${pad(day)} ${pad(Hour)}:${pad(Min)}`;
+            $(".receipt_time").text(formattedDateTime);
+        }, 5000);
 
         //ブラウザを開いたとき
         selectUserName();
