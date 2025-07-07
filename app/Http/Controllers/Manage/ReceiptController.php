@@ -26,7 +26,7 @@ class ReceiptController extends Controller
         $couponTotal = null;
         foreach ($payment->paymentDetails as $paymentDetail) {
             if($paymentDetail->coupon()->exists()) {
-                $description = $paymentDetail->coupon()->name . $paymentDetail->total_price . '円';
+                $description = $paymentDetail->coupon->name . $paymentDetail->total_price . '円';
 
                 $couponDetails[] = $description;
                 $couponTotal += $paymentDetail->total_price;
@@ -36,7 +36,7 @@ class ReceiptController extends Controller
         }
 
         return view('manage.receipt.receipt', [
-            'recieptTime' => Carbon::now(),
+            'receiptTime' => Carbon::now(),
             'deal' => $deal,
             'payment' => $payment,
             'office' => $payment->office,
