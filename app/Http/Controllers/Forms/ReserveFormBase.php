@@ -87,6 +87,8 @@ class ReserveFormBase extends StdObject
     public $total_tax_8;
     public $total_tax_10;
 
+    public $tax_free;
+
     protected $cast = [
         'load_date' => 'date',
         'unload_date_plan' => 'date',
@@ -179,6 +181,7 @@ class ReserveFormBase extends StdObject
         $this->total_tax_10 = 0;
         $this->total_price = 0;
         $this->total_tax = 0;
+        $this->tax_free = 0;
     }
 
     public function handleGoodsAndTotals()
@@ -202,7 +205,7 @@ class ReserveFormBase extends StdObject
                 }
 
                 $goodTotalPrice = $good->price * $numOfEachGood;
-                $goodTotalTax = roundTax(TaxType::tryFrom($good->tax_type)?->rate() * $goodTotalPrice);
+                $goodTotalTax = roundTax((TaxType::tryFrom($good->tax_type)?->rate() ?? 0) * $goodTotalPrice);
                 $this->dealGoodData[] = [
                     'good_id' => $good->id,
                     'num' => $numOfEachGood,
@@ -216,6 +219,7 @@ class ReserveFormBase extends StdObject
                 $this->total_tax += $goodTotalTax;
                 $this->total_price += $good->price * $numOfEachGood;
                 $this->addToEachTaxType($goodTotalTax, $good->tax_type);
+                $this->addToTaxFree($goodTotalPrice, $good->tax_type);
             }
         }
     }
@@ -232,10 +236,17 @@ class ReserveFormBase extends StdObject
 
     protected function addToEachTaxType($tax, $taxType)
     {
-        if($taxType == TaxType::EIGHT_PERCENT->value) {
+        if ($taxType == TaxType::EIGHT_PERCENT->value) {
             $this->total_tax_8 += $tax;
-        } else {
+        } elseif ($taxType == TaxType::TEN_PERCENT->value) {
             $this->total_tax_10 += $tax;
+        }
+    }
+
+    protected function addToTaxFree($price, $taxType)
+    {
+        if($taxType == TaxType::EXEMPT->value) {
+            $this->tax_free += $price;
         }
     }
 

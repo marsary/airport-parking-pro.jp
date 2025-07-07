@@ -191,4 +191,19 @@ class LedgerController extends Controller
         ]);
     }
 
+    public function regiCheckLists(Request $request)
+    {
+        return view('manage.ledger.regi_check_lists');
+    }
+
+    public function regiPaymentSummaries(Request $request)
+    {
+        return view('manage.ledger.regi_payment_summaries');
+    }
+
+    public function regiSalesAccountBooks(Request $request)
+    {
+        return view('manage.ledger.regi_sales_account_books');
+    }
+
 }

@@ -51,6 +51,7 @@
               <label for="check_all">すべて<br>選択</label>
           </div>
         </th>
+        <th>詳細</th><!-- 2番目に移動 -->
         <th class="c-button-sort --active --desc test">予約コード</th>
         <th>予約日時</th>
         <th>予約経路</th>
@@ -62,13 +63,13 @@
         <th>お客様氏名</th>
         <th>ふりがな</th>
         <th>利用回数</th>
-        <th>詳細</th>
       </tr>
       @foreach ($deals as $deal)
         <tr>
           <td>
             <input type="checkbox" name="sel_row" value="{{$deal->id}}">
           </td>
+          <td><a href="{{route('manage.deals.show', [$deal->id])}}">表示</a></td><!-- 2番目に移動 -->
           <td>{{$deal->reserve_code}}</td>
           <td>{{$deal->reserve_date?->format('Y/m/d H:i')}}</td>
           <td>{{$deal->agency?->name}}</td>
@@ -80,7 +81,6 @@
           <td>{{$deal->name}}</td>
           <td>{{$deal->kana}}</td>
           <td>{{$deal->member?->used_num}}</td>
-          <td><a href="{{route('manage.deals.show', [$deal->id])}}">表示</a></td>
         </tr>
 
       @endforeach

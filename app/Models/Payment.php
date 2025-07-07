@@ -32,6 +32,7 @@ class Payment extends Model
         'goods_total_price',
         'total_price',
         'total_tax',
+        'tax_free',
         'demand_price',
         'total_pay',
         'cash_enter',
@@ -55,6 +56,17 @@ class Payment extends Model
             'unload_date' => 'date',
         ];
     }
+
+    public function office()
+    {
+        return $this->belongsTo(Office::class);
+    }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class);
+    }
+
 
     public function paymentGoods()
     {

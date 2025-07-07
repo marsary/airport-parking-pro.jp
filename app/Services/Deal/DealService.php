@@ -77,6 +77,7 @@ class DealService extends ReserveService
             'tax' => $this->reserve->tax,
             'total_price' => $this->reserve->total_price,
             'total_tax' => $this->reserve->total_tax,
+            'tax_free' => $this->reserve->tax_free,
             'arr_flight_id' => $this->reserve->arr_flight_id,
             'member_car_id' => $this->reserve->member_car_id,
             'receipt_address' => $this->reserve->receipt_address,

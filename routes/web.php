@@ -23,6 +23,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::put('deals/{deal}/unload', [\App\Http\Controllers\Manage\DealsController::class, 'unload'])->name('deals.unload');
         Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
         Route::resource('registers', \App\Http\Controllers\Manage\RegistersController::class);
+
+        Route::get('/receipts/{deal}', [\App\Http\Controllers\Manage\ReceiptController::class, 'show'])->name('receipts.show');
+        Route::put('/receipts/{deal}/update_register', [\App\Http\Controllers\Manage\ReceiptController::class, 'updateRegister'])->name('receipts.update_register');
+
         Route::get('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
         Route::get('reserves/entry_info', [\App\Http\Controllers\Manage\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');
         Route::post('reserves/entry_date', [\App\Http\Controllers\Manage\ReservesController::class, 'postEntryDate'])->name('reserves.post_entry_date');
@@ -37,6 +41,9 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('ledger/bunch_issues', [\App\Http\Controllers\Manage\LedgerController::class, 'bunch_issues'])->name('ledger.bunch_issues');
         Route::put('ledger/unload_all', [\App\Http\Controllers\Manage\LedgerController::class, 'unloadAll'])->name('ledger.unload_all');
         Route::get('ledger/reservation_result', [\App\Http\Controllers\Manage\LedgerController::class, 'reservationResult'])->name('ledger.reservation_result');
+        Route::get('ledger/regi_check_lists', [\App\Http\Controllers\Manage\LedgerController::class, 'regiCheckLists'])->name('ledger.regi_check_lists');
+        Route::get('ledger/regi_payment_summaries', [\App\Http\Controllers\Manage\LedgerController::class, 'regiPaymentSummaries'])->name('ledger.regi_payment_summaries');
+        Route::get('ledger/regi_sales_account_books', [\App\Http\Controllers\Manage\LedgerController::class, 'regiSalesAccountBooks'])->name('ledger.regi_sales_account_books');
 
         Route::get('/ledger/reservation_result/calendar', [\App\Http\Controllers\Manage\Ledger\ReservationResultController::class, 'calendar'])->name('ledger.reservation_result.calendar');
 

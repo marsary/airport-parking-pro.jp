@@ -501,6 +501,7 @@ class DealsController extends Controller
                     // 'dsc_rate' => $this->reserve->dsc_rate,
                     'total_price' => $request->total_price,
                     'total_tax' => $request->total_tax,
+                    'tax_free' => $request->tax_free,
                 ])->save();
                 $deal->dealGoods()->delete();
                 foreach ($request->dealGoods as $newDealGood) {

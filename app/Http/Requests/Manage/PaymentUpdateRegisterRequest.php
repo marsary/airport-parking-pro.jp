@@ -4,7 +4,7 @@ namespace App\Http\Requests\Manage;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DealUpdateGoodsRequest extends FormRequest
+class PaymentUpdateRegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,7 @@ class DealUpdateGoodsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'dealGoods' => 'array',
-            'total_price' => 'int',
-            'total_tax' => 'int',
-            'tax_free' => 'int',
+            'cash_register_id' => 'required|int|exists:cash_registers,id',
         ];
     }
 
@@ -33,10 +30,7 @@ class DealUpdateGoodsRequest extends FormRequest
     public function attributes()
     {
         return [
-            'dealGoods' => '取引商品',
-            'total_price' => '合計金額',
-            'total_tax' => '合計税額',
-            'tax_free' => '消費税対象外',
+            'cash_register_id' => 'レジ番号',
         ];
     }
 }

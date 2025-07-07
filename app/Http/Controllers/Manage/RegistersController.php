@@ -75,7 +75,8 @@ class RegistersController extends Controller
             Log::error('エラー内容：' . $th->getMessage());
             return redirect()->back()->with('failure', '決済処理に失敗しました。決済手続きをやり直してください。');
         }
-        return redirect(route('manage.deals.show', [$request->deal_id]));
+        return redirect(route('manage.receipts.show', [$request->deal_id]));
+        // return redirect(route('manage.deals.show', [$request->deal_id]));
     }
 
     /**
