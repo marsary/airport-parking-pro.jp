@@ -1,5 +1,5 @@
-<!-- D-2-3 -->
-<!-- レジ点検表 -->
+<!-- D-2-2 -->
+<!-- レジ売上帳 -->
 @extends('layouts.manage.authenticated')
 
 @section('content')    <main class="l-wrap__main">
@@ -7,11 +7,12 @@
       <ul class="l-wrap__breadcrumb l-breadcrumb l-print__none">
         <!-- D-1-0にリンク -->
         <li class="l-breadcrumb__list"><a href="">帳票印刷</a></li>
-        <li class="l-breadcrumb__list">レジ点検表</li>
+        <li class="l-breadcrumb__list">レジ売上帳</li>
       </ul>
 
       <div class="l-container__inner">
-        <form action="" class="u-mb4 l-print__none">
+        <form action="" method="" class="u-mb4 l-print__none">
+
           <div class="l-flex--column l-flex--item-start l-grid--gap05 u-mb2">
             レジ番号
             <!-- チェックボックス レジ番号 -->
@@ -33,7 +34,6 @@
               </label>
             </div>
           </div>
-
           <div class="l-flex--start l-flex--item-end l-grid--gap2">
             <div class="l-flex l-grid--gap2">
               <!-- 日付  -->
@@ -76,110 +76,83 @@
             <input type="submit" value="印刷プレビュー" class="c-button c-button--deep-gray hover">
           </div>
           <ul class="u-font--md">
-            <li>・入金系の金額がマイナスの場合、件数もマイナスされます。</li>
-            <li>・レジで現金の追加・返金が発生した場合に操作を誤ると現金の計算が正しく出来なくなります。</li>
+            <li>・入庫時に未収が発生したデータは赤字で表示され、名前の後ろに「後」と表示されます。<br>
+              正確な意味での後払いではないのでご注意ください。
+            <li>・レジで現金の追加・返金が発生した場合に操作を誤ると現金の計算が正しく出来なくなります（入金の現金の預り・釣りが表示されなくなります）。
+            </li>
           </ul>
         </form>
 
         <ul class="l-flex l-grid--gap1 u-mb1 l-print__none">
-          <li class="c-button--green pointer hover">
-            <button id="printButton" class="link-white" onclick="window.print()">印刷</button>
-          </li>
+          <li class="c-button--green pointer hover" id="a4-vertical">A4縦</li>
+          <li class="c-button--yellow pointer hover" id="b4-horizontal">B4ヨコ</li>
+          <li class="c-button--yellow pointer hover" id="a3-horizontal">A3ヨコ</li>
+          <li class="c-button--yellow pointer hover" id="a4-horizontal">A4ヨコ</li>
           <!-- 点検表へのリンクURL未設定 -->
-          <li class="c-button--deep-gray"><a href="" class="link-white">売上帳へ</a></li>
+          <li class="c-button--deep-gray"><a href="" class="link-white">点検表へ</a></li>
         </ul>
         <div class="l-table-print__wrap l-print__wrap">
-          <div>【売上 成田】</div>
-          <table class="l-table-print u-mb2">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>売上項目</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-                <th>税抜金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>駐車料金（前払い）</td>
-                <td>6</td>
-                <td>6</td>
-                <td>30,600</td>
-                <td>27,800</td>
-              </tr>
-            </tbody>
-          </table>
-          <div>【売上 商品のみ】</div>
-          <table class="l-table-print u-mb2">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>売上項目</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-                <th>税抜金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>駐車料金（前払い）</td>
-                <td>6</td>
-                <td>6</td>
-                <td>30,600</td>
-                <td>27,800</td>
-              </tr>
-            </tbody>
-          </table>
-          <div>【売上 合計】</div>
-          <table class="l-table-print u-mb2">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>売上項目</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-                <th>税抜金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>駐車料金（前払い）</td>
-                <td>6</td>
-                <td>6</td>
-                <td>30,600</td>
-                <td>27,800</td>
-              </tr>
-            </tbody>
-          </table>
-          <div>【現金】</div>
           <table class="l-table-print">
             <thead>
               <tr>
                 <th></th>
-                <th></th>
-                <th>処理回数</th>
-                <th>金額</th>
+                <th>受付ID</th>
+                <th>時刻</th>
+                <th>氏名</th>
+                <th>修</th>
+                <th>帰</th>
+                <th>事</th>
+                <th>日</th>
+                <th>代理店</th>
+                <th>率</th>
+                <th>駐車</th>
+                <th>券</th>
+                <th>マイル</th>
+                <th>WAX</th>
+                <th>保険</th>
+                <th>他</th>
+                <th>合計</th>
+                <th>現金</th>
+                <th>預り</th>
+                <th>釣り</th>
+                <th>クレ</th>
+                <th>クーポ</th>
+                <th>前力</th>
+                <th>SBI</th>
+                <th>他</th>
+                <th>合計</th>
+                <th>担当</th>
               </tr>
             </thead>
             <tbody>
               <tr>
+                <td>1</td>
+                <td>01-2311-01044</td>
+                <td>05:11</td>
+                <td>茂木茂雄</td>
                 <td></td>
-                <td>現金</td>
-                <td>4</td>
-                <td>24,330</td>
-              </tr>
-              <tr>
                 <td></td>
-                <td>入金</td>
-                <td>4</td>
-                <td>24,330</td>
+                <td>成</td>
+                <td>3</td>
+                <td>サン公式LINE</td>
+                <td>0</td>
+                <td>4,620(4,200)</td>
+                <td>LINE2</td>
+                <td></td>
+                <td>◎洗車機シャンプー880</td>
+                <td></td>
+                <td></td>
+                <td>4,620</td>
+                <td>4,620</td>
+                <td>5,000</td>
+                <td>380</td>
+                <td></td>
+                <td>akippa 10,560</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>4,620</td>
+                <td>鈴木</td>
               </tr>
             </tbody>
           </table>
@@ -187,3 +160,49 @@
       </div><!-- l-container__inner -->
     </main>
 @endsection
+@push("scripts")
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const a4VerticalButton = document.getElementById('a4-vertical');
+      const b4HorizontalButton = document.getElementById('b4-horizontal');
+      const a3HorizontalButton = document.getElementById('a3-horizontal');
+      const a4HorizontalButton = document.getElementById('a4-horizontal');
+
+      a4VerticalButton.addEventListener('click', function() {
+        setPrintStyle('A4 portrait');
+        addPrintClass('a4-vertical-print');
+        window.print();
+      });
+
+      b4HorizontalButton.addEventListener('click', function() {
+        setPrintStyle('B4 landscape');
+        addPrintClass('b4-horizontal-print');
+        window.print();
+      });
+
+      a3HorizontalButton.addEventListener('click', function() {
+        setPrintStyle('A3 landscape');
+        addPrintClass('a3-horizontal-print');
+        window.print();
+      });
+
+      a4HorizontalButton.addEventListener('click', function() {
+        setPrintStyle('A4 landscape');
+        addPrintClass('a4-horizontal-print');
+        window.print();
+      });
+
+      function setPrintStyle(size) {
+        const style = document.createElement('style');
+        style.media = 'print';
+        style.innerHTML = '@page { size: ' + size + '; margin: 10mm; }';
+        document.head.appendChild(style);
+      }
+
+      function addPrintClass(className) {
+        document.documentElement.classList.remove('a4-vertical-print', 'b4-horizontal-print', 'a3-horizontal-print', 'a4-horizontal-print');
+        document.documentElement.classList.add(className);
+      }
+    });
+  </script>
+@endpush
