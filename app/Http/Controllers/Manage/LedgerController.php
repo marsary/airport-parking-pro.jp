@@ -6,9 +6,12 @@ use App\Enums\DealStatus;
 use App\Enums\TransactionType;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\BunchIssuesRequest;
+use App\Http\Requests\Manage\Ledger\RegiSalesAccountBooksRequest;
 use App\Http\Requests\Manage\UnloadAllRequest;
+use App\Models\CashRegister;
 use App\Models\Deal;
 use App\Models\GoodCategory;
+use App\Services\Ledger\RegiSalesAccountBooksService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -193,17 +196,30 @@ class LedgerController extends Controller
 
     public function regiCheckLists(Request $request)
     {
+        // レジ点検表
         return view('manage.ledger.regi_check_lists');
     }
 
     public function regiPaymentSummaries(Request $request)
     {
+        // レジ清算集計表
         return view('manage.ledger.regi_payment_summaries');
     }
 
-    public function regiSalesAccountBooks(Request $request)
+    public function regiSalesAccountBooks(RegiSalesAccountBooksRequest $request)
     {
-        return view('manage.ledger.regi_sales_account_books');
+        $registers = CashRegister::where('office_id', config('const.commons.office_id'))->orderBy('id')->get();
+
+        $data = [];
+        if($request->has('entry_date')) {
+            $service = new RegiSalesAccountBooksService;
+            $data = $service->getSalesTableData($request);
+        }
+
+        return view('manage.ledger.regi_sales_account_books', [
+            'registers' => $registers,
+            'data' => $data,
+        ]);
     }
 
 }
