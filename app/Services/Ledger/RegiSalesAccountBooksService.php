@@ -24,14 +24,32 @@ class RegiSalesAccountBooksService
         $bottomLine = new RegiSalesBottomLineRow();
 
         foreach ($dbData as $payment) {
+            $row = new RegiSalesAccountBooksRow();
             $row->dealId = $payment->deal->id;
             $row->paymentTime = $payment->payment_date;
             $row->memberName = $payment->member->name;
             $row->isUpdated = ($payment->created_at == $payment->updated_at);
+            $row->isUnloaded = $payment->deal->status == DealStatus::UNLOADED->value;
             $row->officeName = $this->office->short_name;
             $row->days = $payment->days;
             $row->agencyName = $payment->deal->agency?->name;
             $row->dscRate = $payment->deal->dsc_rate;
+            $row->dealPrice = $payment->deal->price;
+            $row->dealTax = $payment->deal->tax;
+
+            $this->setCategorizedGoodPrices($payment, $row);
+
+            $row->dealTotalPrice = $payment->deal->total_price;
+            $row->cashEnter = $payment->cash_enter;
+            $row->cashChange = $payment->cash_change;
+            $row->totalPay = $payment->total_pay;
+
+            $this->setPaymentMethodPrices($payment, $row);
+
+            $row->userName = $payment->user_name;
+
+            $bottomLine->sumUp($row);
+
             $tableData['rows'][] = $row;
         }
 
@@ -40,7 +58,13 @@ class RegiSalesAccountBooksService
         return $tableData;
     }
 
+    private function setCategorizedGoodPrices(Payment $payment, RegiSalesAccountBooksRow $row)
+    {
+    }
 
+    private function setPaymentMethodPrices(Payment $payment, RegiSalesAccountBooksRow $row)
+    {
+    }
 
     private function fetchData(Request $request)
     {
@@ -48,6 +72,15 @@ class RegiSalesAccountBooksService
 
         $data = $query->whereDate('payment_date', $request->entry_date)
             ->where('office_id', config('const.commons.office_id'))
+            ->when($request->input('register'), function($query, $search) {
+                $query->where('cash_register_id', $search);
+            })->when($request->input('entry_time'), function($query, $search) {
+                if($search != 'all') {
+                    $hour = (int)explode(':', $search)[0];
+                    $query->whereRaw('HOUR(payment_date) = ?', [$hour]);
+                }
+            })
+            ->with(['deal', 'member', 'cashRegister', 'paymentGoods.goodCategory', 'paymentDetails.paymentMethod'])
             ->orderBy('payment_date', 'asc')
             ->get();
 
@@ -55,8 +88,91 @@ class RegiSalesAccountBooksService
         return $data;
     }
 
+    private function accumulateValueByKey(&$array, $key, $value)
+    {
+        if(isset($array[$key])) {
+            $array[$key] += $value;
+        } else {
+            $array[$key] = $value;
+        }
+    }
 }
 
+class RegiSalesAccountBooksRow
+{
+    // 受付ID
+    public $dealId;
+    // 時刻
+    public $paymentTime;
+    // 氏名
+    public $memberName;
+    // 修
+    public $isUpdated;
+    // 帰
+    public $isUnloaded;
+    // 事
+    public $officeName;
+    // 日
+    public $days;
+    // 代理店
+    public $agencyName;
+    // 率
+    public $dscRate = 0;
+    // 駐車
+    public $dealPrice = 0;
+    public $dealTax = 0;
+    // 券
+    public $discountTicketName = "";
+    // マイル
+    public $mile = "";
+    // WAX
+    public $waxPrices = [];
+    // 保険
+    public $insurancePrices = [];
+    // 他
+    public $otherPrices = [];
+    // 合計
+    public $dealTotalPrice = 0;
+
+    // 現金
+    public $cash = 0;
+    // 預り
+    public $cashEnter = 0;
+    // 釣り
+    public $cashChange = 0;
+    /** @var array<string,int> クレ */
+    public $credits = [];
+    /** @var array<string,int> クーポ */
+    // クーポ
+    public $coupons = [];
+    // 前力
+    // public $prepaidCard = null;
+    // SBI
+    // public $sbi = null;
+    // 他
+    public $others = [
+        // 電子マネー
+        "電子マネー" => 0,
+        // QRコード
+        "QRコード" => 0,
+        // 商品券
+        "商品券" => 0,
+        // 旅行支援
+        "旅行支援" => 0,
+        // バウチャー
+        "バウチャー" => 0,
+        // その他
+        "その他" => 0,
+        // 値引き
+        "値引き" => 0,
+        // 調整
+        "調整" => 0,
+    ];
+    // 合計
+    public $totalPay = 0;
+    // 担当
+    public $userName;
+}
 
 class RegiSalesBottomLineRow
 {
@@ -82,11 +198,19 @@ class RegiSalesBottomLineRow
     // 合計
     public $totalPay = 0;
 
-    public function sumUp($row)
+    public function sumUp(RegiSalesAccountBooksRow $row)
     {
         $this->dealPriceTaxed += $row->dealPrice + $row->dealTax;
+        $this->waxPrice += array_sum($row->waxPrices);
+        $this->insurancePrice += array_sum($row->insurancePrices);
+        $this->otherPrice += array_sum($row->otherPrices);
         $this->dealTotalPrice += $row->dealTotalPrice;
         $this->cash += $row->cash;
         $this->totalPay += $row->totalPay;
+
+
+        $this->credits += array_sum($row->credits);
+        $this->coupons += array_sum($row->coupons);
+        $this->others += array_sum($row->others);
     }
 }
