@@ -35,4 +35,9 @@ class PaymentGood extends Model
         return $this->belongsTo(Payment::class);
     }
 
+    public function goodCategory()
+    {
+        return $this->belongsTo(GoodCategory::class);
+    }
+
 }
