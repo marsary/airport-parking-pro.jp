@@ -6,21 +6,25 @@
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb l-print__none">
         <!-- D-1-0にリンク -->
-        <li class="l-breadcrumb__list"><a href="">帳票印刷</a></li>
+        <li class="l-breadcrumb__list"><a href="{{route('manage.ledger')}}">帳票印刷</a></li>
         <li class="l-breadcrumb__list">レジ売上帳</li>
       </ul>
 
       <div class="l-container__inner">
-        <form action="" method="" class="u-mb4 l-print__none">
-
+        <form action="{{route('manage.ledger.regi_sales_account_books')}}" method="GET" class="u-mb4 l-print__none">
+          @csrf
           <div class="l-flex--column l-flex--item-start l-grid--gap05 u-mb2">
             レジ番号
             <!-- チェックボックス レジ番号 -->
             <div class="l-flex l-grid--gap2">
-              <label class="l-flex l-grid--gap05">
-                <input class="u-mb0" type="radio" name="register" value="1">レジ01
-              </label>
-              <label class="l-flex l-grid--gap05">
+              @foreach ($registers as $register)
+                <label class="l-flex l-grid--gap05">
+                  <input class="u-mb0" type="radio" name="register" value="{{$register->id}}"
+                     {{request('register') == $register->id ? "checked":""}}
+                  >レジ{{str_pad($register->id, 2, '0', STR_PAD_LEFT)}}
+                </label>
+              @endforeach
+              {{--  <label class="l-flex l-grid--gap05">
                 <input class="u-mb0" type="radio" name="register" value="2">レジ02
               </label>
               <label class="l-flex l-grid--gap05">
@@ -31,7 +35,7 @@
               </label>
               <label class="l-flex l-grid--gap05">
                 <input class="u-mb0" type="radio" name="register" value="5">レジ05
-              </label>
+              </label>  --}}
             </div>
           </div>
           <div class="l-flex--start l-flex--item-end l-grid--gap2">
@@ -39,37 +43,37 @@
               <!-- 日付  -->
               <div class="l-flex--column l-flex--item-start l-grid--gap025">
                 <label for="entry_date" class="l-flex l-grid--gap05">日付</label>
-                <input type="date" id="entry_date" name="entry_date" placeholder="例) 2021/01/01">
+                <input type="date" id="entry_date" name="entry_date" placeholder="例) 2021/01/01" value="{{request('entry_date')}}">
               </div>
               <!-- 時刻  -->
               <div class="l-flex--column l-flex--item-start l-grid--gap025">
-                <label for="entry_date" class="l-flex l-grid--gap05">時刻</label>
-                <select name="" id="">
+                <label for="entry_time" class="l-flex l-grid--gap05">時刻</label>
+                <select name="entry_time" id="entry_time">
                   <option value="all" selected>全て</option>
-                  <option value="00:00">00:00</option>
-                  <option value="01:00">01:00</option>
-                  <option value="02:00">02:00</option>
-                  <option value="03:00">03:00</option>
-                  <option value="04:00">04:00</option>
-                  <option value="05:00">05:00</option>
-                  <option value="06:00">06:00</option>
-                  <option value="07:00">07:00</option>
-                  <option value="08:00">08:00</option>
-                  <option value="09:00">09:00</option>
-                  <option value="10:00">10:00</option>
-                  <option value="11:00">11:00</option>
-                  <option value="12:00">12:00</option>
-                  <option value="13:00">13:00</option>
-                  <option value="14:00">14:00</option>
-                  <option value="15:00">15:00</option>
-                  <option value="16:00">16:00</option>
-                  <option value="17:00">17:00</option>
-                  <option value="18:00">18:00</option>
-                  <option value="19:00">19:00</option>
-                  <option value="20:00">20:00</option>
-                  <option value="21:00">21:00</option>
-                  <option value="22:00">22:00</option>
-                  <option value="23:00">23:00</option>
+                  <option value="00:00" {{request('entry_time')=="00:00" ? 'selected':''}}>00:00</option>
+                  <option value="01:00" {{request('entry_time')=="01:00" ? 'selected':''}}>01:00</option>
+                  <option value="02:00" {{request('entry_time')=="02:00" ? 'selected':''}}>02:00</option>
+                  <option value="03:00" {{request('entry_time')=="03:00" ? 'selected':''}}>03:00</option>
+                  <option value="04:00" {{request('entry_time')=="04:00" ? 'selected':''}}>04:00</option>
+                  <option value="05:00" {{request('entry_time')=="05:00" ? 'selected':''}}>05:00</option>
+                  <option value="06:00" {{request('entry_time')=="06:00" ? 'selected':''}}>06:00</option>
+                  <option value="07:00" {{request('entry_time')=="07:00" ? 'selected':''}}>07:00</option>
+                  <option value="08:00" {{request('entry_time')=="08:00" ? 'selected':''}}>08:00</option>
+                  <option value="09:00" {{request('entry_time')=="09:00" ? 'selected':''}}>09:00</option>
+                  <option value="10:00" {{request('entry_time')=="10:00" ? 'selected':''}}>10:00</option>
+                  <option value="11:00" {{request('entry_time')=="11:00" ? 'selected':''}}>11:00</option>
+                  <option value="12:00" {{request('entry_time')=="12:00" ? 'selected':''}}>12:00</option>
+                  <option value="13:00" {{request('entry_time')=="13:00" ? 'selected':''}}>13:00</option>
+                  <option value="14:00" {{request('entry_time')=="14:00" ? 'selected':''}}>14:00</option>
+                  <option value="15:00" {{request('entry_time')=="15:00" ? 'selected':''}}>15:00</option>
+                  <option value="16:00" {{request('entry_time')=="16:00" ? 'selected':''}}>16:00</option>
+                  <option value="17:00" {{request('entry_time')=="17:00" ? 'selected':''}}>17:00</option>
+                  <option value="18:00" {{request('entry_time')=="18:00" ? 'selected':''}}>18:00</option>
+                  <option value="19:00" {{request('entry_time')=="19:00" ? 'selected':''}}>19:00</option>
+                  <option value="20:00" {{request('entry_time')=="20:00" ? 'selected':''}}>20:00</option>
+                  <option value="21:00" {{request('entry_time')=="21:00" ? 'selected':''}}>21:00</option>
+                  <option value="22:00" {{request('entry_time')=="22:00" ? 'selected':''}}>22:00</option>
+                  <option value="23:00" {{request('entry_time')=="23:00" ? 'selected':''}}>23:00</option>
                 </select>
               </div>
             </div>
@@ -125,35 +129,101 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>01-2311-01044</td>
-                <td>05:11</td>
-                <td>茂木茂雄</td>
-                <td></td>
-                <td></td>
-                <td>成</td>
-                <td>3</td>
-                <td>サン公式LINE</td>
-                <td>0</td>
-                <td>4,620(4,200)</td>
-                <td>LINE2</td>
-                <td></td>
-                <td>◎洗車機シャンプー880</td>
-                <td></td>
-                <td></td>
-                <td>4,620</td>
-                <td>4,620</td>
-                <td>5,000</td>
-                <td>380</td>
-                <td></td>
-                <td>akippa 10,560</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>4,620</td>
-                <td>鈴木</td>
-              </tr>
+              @if (empty($data))
+                <tr>
+                  <td colspan="17">
+                  </td>
+                </tr>
+              @else
+                @php
+                  /** @var array{rows: \App\Services\Ledger\RegiSalesAccountBooksRow[], bottomLine: null|\App\Services\Ledger\RegiSalesBottomLineRow} $data */
+                  /** @var \App\Services\Ledger\RegiSalesAccountBooksRow $row */
+                @endphp
+                @foreach ($data['rows'] as $idx => $row)
+                  <tr>
+                    <td>{{$idx+1}}</td>
+                    <td>
+                        <a href="{{route('manage.deals.show', $row->dealId)}}" target="_blank">{{$row->dealId}}</a>
+                    </td>
+                    <td>{{$row->paymentTime->format("H:i")}}</td>
+                    <td>{{$row->memberName}}</td>
+                    <td>{{$row->isUpdated ? '修':''}}</td>
+                    <td>{{$row->isUnloaded ? '帰':''}}</td>
+                    <td>{{$row->officeName}}</td>
+                    <td>{{$row->days}}</td>
+                    <td>{{$row->agencyName}}</td>
+                    <td>{{$row->dscRate}}</td>
+                    <td>{{number_format($row->dealPrice + $row->dealTax)}}({{number_format($row->dealPrice)}})</td>
+                    <td>{{$row->discountTicketName}}</td>
+                    <td>{{$row->mile}}</td>
+                    <td>
+                      @foreach ($row->waxPrices as $waxName => $waxPrice)
+                        {{$waxName}} {{number_format($waxPrice)}} <br />
+                      @endforeach
+                    </td>
+                    <td>
+                      @foreach ($row->insurancePrices as $insName => $insPrice)
+                        {{$insName}} {{number_format($insPrice)}} <br />
+                      @endforeach
+                    </td>
+                    <td>
+                      @foreach ($row->otherPrices as $otherName => $otherPrice)
+                        {{$otherName}} {{number_format($otherPrice)}} <br />
+                      @endforeach
+                    </td>
+                    <td>{{number_format($row->dealTotalPrice)}}</td>
+                    <td>{{number_format($row->cash)}}</td>
+                    <td>{{number_format($row->cashEnter)}}</td>
+                    <td>{{number_format($row->cashChange)}}</td>
+                    <td>
+                      @foreach ($row->credits as $creditName => $creditPrice)
+                        {{$creditName}} {{number_format($creditPrice)}} <br />
+                      @endforeach
+                    </td>
+                    <td>
+                      @foreach ($row->coupons as $couponName => $couponPrice)
+                        {{$couponName}} {{number_format($couponPrice)}} <br />
+                      @endforeach
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      @foreach ($row->others as $otherPaymentName => $otherPaymentPrice)
+                        @if ($otherPaymentPrice > 0)
+                          {{$otherPaymentName}} {{number_format($otherPaymentPrice)}} <br />
+                        @endif
+                      @endforeach
+                    </td>
+                    <td>{{number_format($row->totalPay)}}</td>
+                    <td>{{$row->userName}}</td>
+                  </tr>
+                @endforeach
+                @if (isset($data['bottomLine']))
+                  <tr>
+                    <td colspan="10">
+                      合計 {{count($data['rows'])}} 件
+                    </td>
+                    <td>{{number_format($data['bottomLine']->dealPriceTaxed)}}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{number_format($data['bottomLine']->waxPrice)}}</td>
+                    <td>{{number_format($data['bottomLine']->insurancePrice)}}</td>
+                    <td>{{number_format($data['bottomLine']->otherPrice)}}</td>
+                    <td>{{number_format($data['bottomLine']->dealTotalPrice)}}</td>
+                    <td>{{number_format($data['bottomLine']->cash)}}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{number_format($data['bottomLine']->credits)}}</td>
+                    <td>{{number_format($data['bottomLine']->coupons)}}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{number_format($data['bottomLine']->others)}}</td>
+                    <td>{{number_format($data['bottomLine']->totalPay)}}</td>
+                    <td></td>
+                  </tr>
+                @endif
+
+              @endif
             </tbody>
           </table>
         </div>
