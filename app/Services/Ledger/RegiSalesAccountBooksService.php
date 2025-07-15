@@ -60,10 +60,78 @@ class RegiSalesAccountBooksService
 
     private function setCategorizedGoodPrices(Payment $payment, RegiSalesAccountBooksRow $row)
     {
+        $waxPrices = [];
+        $insurancePrices = [];
+        $otherPrices = [];
+
+        foreach ($payment->paymentGoods as $paymentGood) {
+            switch($paymentGood->goodCategory->name)
+            {
+                case "洗車":
+                    $this->accumulateValueByKey($waxPrices, $paymentGood->name, $paymentGood->total_price + $paymentGood->total_tax);
+                    break;
+                case "保険":
+                    $this->accumulateValueByKey($insurancePrices, $paymentGood->name, $paymentGood->total_price + $paymentGood->total_tax);
+                    break;
+                default:
+                    $this->accumulateValueByKey($otherPrices, $paymentGood->name, $paymentGood->total_price + $paymentGood->total_tax);
+                    break;
+            }
+        }
+
+        $row->waxPrices = $waxPrices;
+        $row->insurancePrices = $insurancePrices;
+        $row->otherPrices = $otherPrices;
     }
 
     private function setPaymentMethodPrices(Payment $payment, RegiSalesAccountBooksRow $row)
     {
+        $cash = 0;
+        $credits = [];
+        $coupons = [];
+        $others = (new RegiSalesAccountBooksRow)->others;
+
+        foreach ($payment->paymentDetails as $paymentDetail) {
+            /** @var PaymentDetail $paymentDetail */
+            $paymentMethodType = PaymentMethodType::tryFrom($paymentDetail->paymentMethod->type);
+            if (!$paymentMethodType) {
+                continue;
+            }
+
+            switch($paymentMethodType)
+            {
+                case PaymentMethodType::CASH:
+                    $cash += $paymentDetail->total_price;
+                    break;
+                case PaymentMethodType::CREDIT:
+                    $this->accumulateValueByKey($credits, $paymentDetail->paymentMethod->name, $paymentDetail->total_price);
+                    break;
+                case PaymentMethodType::E_MONEY:
+                case PaymentMethodType::QR_CODE:
+                case PaymentMethodType::GIFT_CERTIFICATE:
+                case PaymentMethodType::TRAVEL_ASSIST:
+                case PaymentMethodType::VOUCHER:
+                case PaymentMethodType::OTHER:
+                case PaymentMethodType::DISCOUNT:
+                case PaymentMethodType::ADJUSTMENT:
+                    $this->accumulateValueByKey($others, $paymentMethodType->label(), $paymentDetail->total_price);
+                    break;
+                case PaymentMethodType::COUPON:
+                    $coupon = $paymentDetail->coupon;
+                    if($coupon) {
+                        $this->accumulateValueByKey($coupons, $coupon->name, $paymentDetail->total_price);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        $row->cash = $cash;
+        $row->credits = $credits;
+        $row->coupons = $coupons;
+        $row->others = $others;
     }
 
     private function fetchData(Request $request)
