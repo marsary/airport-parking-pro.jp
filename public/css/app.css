@@ -4,3 +4,8 @@
 .word-break {
     word-break: break-all;
 }
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
