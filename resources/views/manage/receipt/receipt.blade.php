@@ -34,7 +34,7 @@
                     {{--  <?= $html['rcp_id'] ?>  --}}
                 </p>
                 <p>
-                    {{$member->used_num}}
+                    {{$member?->used_num}}
                     {{--  <?= $html['user']['used_num'] ?>  --}}
                 </p>
             </div>
@@ -53,7 +53,7 @@
                 </div>
                 <div class="ticket_detail_item">
                     <p>
-                        {{$payment->load_date->format('Y年m月d日')}}
+                        {{$payment->load_date?->format('Y年m月d日')}}
                         {{--  <?= date('Y年m月d日', strtotime($html['load_date'])) ?>  --}}
                     </p>
                     <p>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="ticket_detail_item">
                     <p>
-                        {{$payment->unload_date_plan->format('Y年m月d日')}}
+                        {{$payment->unload_date_plan?->format('Y年m月d日')}}
                         {{--  <?= date('Y年m月d日', strtotime($html['unload_date_plan'])) ?>  --}}
                     </p>
                     <p>
@@ -157,7 +157,7 @@
                             <td>{{$office->name ? $office->name : '　'}}</td>
                             {{--  <td><?= isset($html['o_name']) && !empty($html['o_name']) ? $html['o_name'] : '　' ?></td>  --}}
                             <th>顧客ID</th>
-                            <td>{{$member->member_code ? $member->member_code : '　'}}</td>
+                            <td>{{$member?->member_code ? $member?->member_code : '　'}}</td>
                             {{--  <td><?= isset($html['user']['u_id']) && !empty($html['user']['u_id']) ? $html['user']['u_id'] : '　' ?></td>  --}}
                             <th>氏名</th>
                             <td>
@@ -179,7 +179,7 @@
                         </tr>
                         <tr>
                             <th>受付ID</th>
-                            <td>{{$deal->receipt_code}}{{$member->used_num ? '（' . $member->used_num . '回目）' : ''}}</td>
+                            <td>{{$deal->receipt_code}}{{$member?->used_num ? '（' . $member?->used_num . '回目）' : ''}}</td>
                             {{--  <td><?= $html['rcp_id'] ?><?= !empty($html['user']['used_num']) ? '（' . $html['user']['used_num'] . '回目）' : '' ?>  --}}
                             </td>
                             <th>住所</th>
@@ -207,10 +207,12 @@
                         <tr>
                             <th>日程</th>
                             <td>
-                                @if ($payment->days == 1)
-                                    {{$payment->load_date->format('Y.m.d')}}（１日利用）
-                                @else
-                                    {{$payment->load_date->format('Y.m.d')}}-{{$payment->unload_date_plan->format('Y.m.d')}}({{$payment->days}}日間)
+                                @if ($deal->transaction_type != \App\Enums\TransactionType::PURCHASE_ONLY->value)
+                                    @if ($payment->days == 1)
+                                        {{$payment->load_date?->format('Y.m.d')}}（１日利用）
+                                    @else
+                                        {{$payment->load_date?->format('Y.m.d')}}-{{$payment->unload_date_plan?->format('Y.m.d')}}({{$payment->days}}日間)
+                                    @endif
                                 @endif
                                 {{--  <?php if (empty($html['rcp']['rc_one_day_flg'])) : ?>
                                     <?= date('Y.m.d', strtotime($html['load_date'])) ?>-<?= date('Y.m.d', strtotime($html['unload_date_plan'])) ?>(<?= $html['rcp']['days'] ?>日間)
