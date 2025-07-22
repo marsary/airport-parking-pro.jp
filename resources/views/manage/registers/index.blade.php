@@ -862,6 +862,11 @@
       applyButton.classList.add('--disabled');
     }
   });
+
+  // let button = document.getElementById('paymentSubmitButton');
+  // button.addEventListener('click', function(){
+  //     window.open(BASE_PATH + "/manage/receipts/" + deal.id, '_blank');
+  // });
 </script>
 @endpush
 @push('css')
