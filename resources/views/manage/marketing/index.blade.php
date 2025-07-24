@@ -14,6 +14,7 @@
         <div class="l-grid--col5 l-grid--rgap2">
           <a href="{{ route('manage.marketing.graph.inventory') }}"  class="c-button__submit c-button--yellow c-link-no-border">入出庫グラフ</a>
           <a href="{{ route('manage.marketing.reservation_graph.index') }}"  class="c-button__submit c-button--yellow c-link-no-border">予約実績グラフ</a>
+          <a href="/manage/ledger/reservation_result"  class="c-button__submit c-button--yellow c-link-no-border">予定実績表</a>
         </div>
       </div><!-- ./l-container__inner -->
 

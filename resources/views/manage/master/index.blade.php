@@ -16,6 +16,9 @@
             <a href="/manage/master/goods" class="c-button--yellow c-link-no-border">商品マスタ</a>
             <a href="/manage/master/agencies" class="c-button--yellow c-link-no-border">代理店マスタ</a>
             <a href="/manage/master/coupons" class="c-button--yellow c-link-no-border">クーポンマスタ</a>
+            <a href="/manage/master/prices" class="c-button--yellow c-link-no-border">金額マスタ</a>
+            <a href="/manage/master/agency_prices" class="c-button--yellow c-link-no-border">代理店金額マスタ</a>
+            <a href="/manage/master/load_unload_full_limit_settings" class="c-button--yellow c-link-no-border">上限設定マスタ</a>
         </div>
     </div><!-- ./l-container__inner -->
 </main>
