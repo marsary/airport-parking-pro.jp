@@ -205,6 +205,47 @@ class RegiChecklistsService
 
     public function getCreditsTableData()
     {
+        $creditsTable = new CreditSales;
+
+        foreach ($this->dbData as $payment) {
+
+            foreach ($payment->paymentDetails as $paymentDetail) {
+                /** @var PaymentDetail $paymentDetail */
+                $paymentMethodType = PaymentMethodType::tryFrom($paymentDetail->paymentMethod->type);
+                if (!$paymentMethodType || $paymentMethodType != PaymentMethodType::CREDIT) {
+                    continue;
+                }
+
+                if(!isset($creditsTable->rows[$paymentDetail->paymentMethod->id])) {
+                    $creditsTable->rows[$paymentDetail->paymentMethod->id] = new TableRow([
+                        'itemName' => $paymentDetail->paymentMethod->name,
+                        'count' => 0,
+                        'amount' => 0,
+                        'price' => 0,
+                    ]);
+                }
+
+                $row = $creditsTable->rows[$paymentDetail->paymentMethod->id];
+
+                // 処理回数
+                $row->count += 1;
+                $creditsTable->total->count += 1;
+
+                // 数量 処理回数(total_price >= 0) - 返金回数(total_price < 0)
+                if($paymentDetail->total_price >= 0) {
+                    $row->amount += 1;
+                    $creditsTable->total->amount += 1;
+                } else {
+                    $row->amount -= 1;
+                    $creditsTable->total->amount -= 1;
+                }
+
+                $row->price += $paymentDetail->total_price;
+                $creditsTable->total->price += $paymentDetail->total_price;
+            }
+        }
+
+        return $creditsTable;
     }
 
     public function getGiftCertificatesTableData()
@@ -367,5 +408,65 @@ class CashAccounting
             'price' => 0,
         ]);
 
+    }
+}
+
+class CreditSales
+{
+    // PaymentRow.amount (件数) の意味は
+    // 処理回数(total_price >= 0 のケース) - 返金回数(total_price < 0 のケース)
+
+    /** @var PaymentRow[] */
+    public $rows = [];
+    /** @var PaymentRow 合計 */
+    public $total;
+
+    function __construct()
+    {
+        $this->total = new PaymentRow([
+            'itemName' => '合計',
+            'count' => 0,
+            'amount' => 0,
+            'price' => 0,
+        ]);
+    }
+}
+
+class CouponSales
+{
+    // PaymentRow.amount (数量) の意味は
+    // 処理回数(total_price >= 0 のケース) - 返金回数(total_price < 0 のケース)
+
+    /** @var PaymentRow[] */
+    public $rows = [];
+    /** @var PaymentRow 合計 */
+    public $total;
+
+    function __construct()
+    {
+        $this->total = new PaymentRow([
+            'itemName' => '合計',
+            'count' => 0,
+            'amount' => 0,
+            'price' => 0,
+        ]);
+    }
+}
+
+class GiftCertificatesSales
+{
+    // PaymentRow.amount (件数) の意味は
+    // 処理回数(total_price >= 0 のケース) - 返金回数(total_price < 0 のケース)
+
+    /** @var PaymentRow 合計 */
+    public $total;
+
+    function __construct()
+    {
+        $this->total = new PaymentRow([
+            'itemName' => '合計',
+            'amount' => 0,
+            'price' => 0,
+        ]);
     }
 }
