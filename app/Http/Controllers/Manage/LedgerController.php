@@ -209,6 +209,10 @@ class LedgerController extends Controller
                 'purchaseOnlyTable' => $purchaseOnlyTable,
                 'officeTables' => $service->getOfficeSaleTablesData(),
                 'totalSalesTable' => $service->getTotalSalesTableData(),
+                'cashTable' => $service->getCashTableData($request),
+                'creditsTable' => $service->getCreditsTableData(),
+                'couponTable' => $service->getCouponTableData(),
+                'giftCertificatesTable' => $service->getGiftCertificatesTableData(),
             ];
         }
         return view('manage.ledger.regi_check_lists', [
