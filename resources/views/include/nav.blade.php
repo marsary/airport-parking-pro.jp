@@ -11,13 +11,13 @@
       <a href="{{route('manage.registers.index')}}" class="c-nav__link --en {{Request::routeIs('manage.registers.index') ? '--current' : '' }}">レジ</a>
     </li>
     <li class="c-nav__item">
-      <a href="{{route('manage.master')}}" class="c-nav__link --setting">設定</a>
+      <a href="{{route('manage.master')}}" class="c-nav__link --setting {{Request::routeIs('manage.master') ? '--current' : '' }}">設定</a>
     </li>
     <li class="c-nav__item">
-      <a href="{{route('manage.marketing')}}" class="c-nav__link --support">営業支援</a>
+      <a href="{{route('manage.marketing')}}" class="c-nav__link --support {{Request::routeIs('manage.marketing') ? '--current' : '' }}">営業支援</a>
     </li>
     <li class="c-nav__item">
-      <a href="{{route('manage.ledger')}}" class="c-nav__link --print">帳票印刷</a>
+      <a href="{{route('manage.ledger')}}" class="c-nav__link --print {{Request::routeIs('manage.ledger') ? '--current' : '' }}">帳票印刷</a>
     </li>
   </ul>
 

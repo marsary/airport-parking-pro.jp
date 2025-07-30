@@ -56,6 +56,9 @@ class CouponsController extends Controller
     {
         // 動的なレコードIDに基づいた入力データの取得
         $recordKey = "record_0";
+        $start_date = date('Y-M-d H:i', strtotime($request->{$recordKey}['start_date'] . ' ' . $request->{$recordKey}['start_time']));
+        $end_date = date('Y-M-d H:i', strtotime($request->{$recordKey}['end_date'] . ' ' . $request->{$recordKey}['end_time']));
+
         $coupon = Coupon::create([
             'office_id' => config('const.commons.office_id'),
             'name' => $request->{$recordKey}['name'],
@@ -65,8 +68,8 @@ class CouponsController extends Controller
             'good_category_id' => $request->{$recordKey}['good_category_id'],
             'limit_flg' => $request->{$recordKey}['limit_flg'],
             'combination_flg' => $request->{$recordKey}['combination_flg'],
-            'start_date' => $request->{$recordKey}['start_date'],
-            'end_date' => $request->{$recordKey}['end_date'],
+            'start_date' => $start_date,
+            'end_date' => $end_date,
             'memo' => $request->{$recordKey}['memo'],
         ]);
 
@@ -78,6 +81,9 @@ class CouponsController extends Controller
     {
         // 動的なレコードIDに基づいた入力データの取得
         $recordKey = "record_" . $request->route()->parameter('coupon', 0);
+        $start_date = date('Y-M-d H:i', strtotime($request->{$recordKey}['start_date'] . ' ' . $request->{$recordKey}['start_time']));
+        $end_date = date('Y-M-d H:i', strtotime($request->{$recordKey}['end_date'] . ' ' . $request->{$recordKey}['end_time']));
+
         $coupon = Coupon::findOrFail($id);
         $coupon->fill([
             'name' => $request->{$recordKey}['name'],
@@ -87,8 +93,8 @@ class CouponsController extends Controller
             'good_category_id' => $request->{$recordKey}['good_category_id'],
             'limit_flg' => $request->{$recordKey}['limit_flg'],
             'combination_flg' => $request->{$recordKey}['combination_flg'],
-            'start_date' => $request->{$recordKey}['start_date'],
-            'end_date' => $request->{$recordKey}['end_date'],
+            'start_date' => $start_date,
+            'end_date' => $end_date,
             'memo' => $request->{$recordKey}['memo'],
         ])->save();
 
