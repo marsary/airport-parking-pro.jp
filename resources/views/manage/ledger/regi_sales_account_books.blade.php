@@ -2,7 +2,8 @@
 <!-- レジ売上帳 -->
 @extends(request('print') ? 'layouts.manage.print' : 'layouts.manage.authenticated')
 
-@section('content')    <main class="l-wrap__main">
+@section('content')
+    <main class="l-wrap__main">
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb l-print__none">
         <!-- D-1-0にリンク -->
