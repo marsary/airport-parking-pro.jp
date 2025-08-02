@@ -250,10 +250,76 @@ class RegiChecklistsService
 
     public function getGiftCertificatesTableData()
     {
+        $giftCertificatesTable = new GiftCertificatesSales;
+
+        foreach ($this->dbData as $payment) {
+
+            foreach ($payment->paymentDetails as $paymentDetail) {
+                /** @var PaymentDetail $paymentDetail */
+                $paymentMethodType = PaymentMethodType::tryFrom($paymentDetail->paymentMethod->type);
+                if (!$paymentMethodType || $paymentMethodType != PaymentMethodType::GIFT_CERTIFICATE) {
+                    continue;
+                }
+
+                // 処理回数
+                $giftCertificatesTable->total->count += 1;
+
+                // 数量 処理回数(total_price >= 0) - 返金回数(total_price < 0)
+                if($paymentDetail->total_price >= 0) {
+                    $giftCertificatesTable->total->amount += 1;
+                } else {
+                    $giftCertificatesTable->total->amount -= 1;
+                }
+                $giftCertificatesTable->total->price += $paymentDetail->total_price;
+            }
+        }
+
+        return $giftCertificatesTable;
     }
 
     public function getCouponTableData()
     {
+        $couponTable = new CouponSales;
+
+        foreach ($this->dbData as $payment) {
+
+            foreach ($payment->paymentDetails as $paymentDetail) {
+                /** @var PaymentDetail $paymentDetail */
+                $paymentMethodType = PaymentMethodType::tryFrom($paymentDetail->paymentMethod->type);
+                if (!$paymentMethodType || $paymentMethodType != PaymentMethodType::COUPON) {
+                    continue;
+                }
+
+                if(!isset($couponTable->rows[$paymentDetail->coupon_id])) {
+                    $couponTable->rows[$paymentDetail->coupon_id] = new TableRow([
+                        'itemName' => $paymentDetail->coupon->name,
+                        'count' => 0,
+                        'amount' => 0,
+                        'price' => 0,
+                    ]);
+                }
+
+                $row = $couponTable->rows[$paymentDetail->coupon_id];
+
+                // 処理回数
+                $row->count += 1;
+                $couponTable->total->count += 1;
+
+                // 数量 処理回数(total_price >= 0) - 返金回数(total_price < 0)
+                if($paymentDetail->total_price >= 0) {
+                    $row->amount += 1;
+                    $couponTable->total->amount += 1;
+                } else {
+                    $row->amount -= 1;
+                    $couponTable->total->amount -= 1;
+                }
+
+                $row->price += $paymentDetail->total_price;
+                $couponTable->total->price += $paymentDetail->total_price;
+            }
+        }
+
+        return $couponTable;
     }
 }
 
