@@ -1,6 +1,6 @@
 <!-- D-2-3 -->
 <!-- レジ点検表 -->
-@extends('layouts.manage.authenticated')
+@extends(request('print') ? 'layouts.manage.print' : 'layouts.manage.authenticated')
 
 @section('content')    <main class="l-wrap__main">
       <!-- パンくず -->
@@ -23,21 +23,6 @@
                   >レジ{{str_pad($register->id, 2, '0', STR_PAD_LEFT)}}
                 </label>
               @endforeach
-              {{--  <label class="l-flex l-grid--gap05">
-                <input class="u-mb0" type="radio" name="register" value="1">レジ01
-              </label>
-              <label class="l-flex l-grid--gap05">
-                <input class="u-mb0" type="radio" name="register" value="2">レジ02
-              </label>
-              <label class="l-flex l-grid--gap05">
-                <input class="u-mb0" type="radio" name="register" value="3">レジ03
-              </label>
-              <label class="l-flex l-grid--gap05">
-                <input class="u-mb0" type="radio" name="register" value="4">レジ04
-              </label>
-              <label class="l-flex l-grid--gap05">
-                <input class="u-mb0" type="radio" name="register" value="5">レジ05
-              </label>  --}}
             </div>
           </div>
 
@@ -80,7 +65,9 @@
                 </select>
               </div>
             </div>
-            <input type="submit" value="印刷プレビュー" class="c-button c-button--deep-gray hover">
+            @if (!request('print'))
+              <input type="submit" value="印刷プレビュー" class="c-button c-button--deep-gray hover">
+            @endif
           </div>
           <ul class="u-font--md">
             <li>・入金系の金額がマイナスの場合、件数もマイナスされます。</li>
@@ -88,360 +75,499 @@
           </ul>
         </form>
 
-        <ul class="l-flex l-grid--gap1 u-mb1 l-print__none">
-          <li class="c-button--green pointer hover">
-            <button id="printButton" class="link-white" onclick="window.print()">印刷</button>
-          </li>
-          <!-- 点検表へのリンクURL未設定 -->
-          <li class="c-button--deep-gray"><a href="{{route('manage.ledger.regi_sales_account_books')}}" class="link-white">売上帳へ</a></li>
-        </ul>
+        @if (!request('print'))
+          <ul class="l-flex l-grid--gap1 u-mb1 l-print__none no-print">
+            <li class="c-button--green pointer hover">
+              <button id="printButton" class="link-white">印刷</button>
+            </li>
+            <!-- 点検表へのリンクURL未設定 -->
+            <li class="c-button--deep-gray"><a href="{{route('manage.ledger.regi_sales_account_books')}}" class="link-white">売上帳へ</a></li>
+          </ul>
+        @endif
         <div class="l-table-print__wrap l-print__wrap">
-          <p>【売上 成田】</p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>売上項目</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-                <th>税抜金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>駐車料金（前払い）</td>
-                <td>40</td>
-                <td>40</td>
-                <td>221,910</td>
-                <td>201,420</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>駐車料金（後払い）</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>駐車料金（追加／返金）</td>
-                <td>1</td>
-                <td>1</td>
-                <td>770</td>
-                <td>700</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>一日利用（チケット）</td>
-                <td></td>
-                <td>0</td>
-                <td>0</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>一日利用（チケット以外）</td>
-                <td></td>
-                <td>4</td>
-                <td>0</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>合計</td>
-                <td></td>
-                <td></td>
-                <td>222,680</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <p>【売上 プレ】</p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>売上項目</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-                <th>税抜金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>駐車料金（前払い）</td>
-                <td>5</td>
-                <td>5</td>
-                <td>33,390</td>
-                <td>30,243</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>駐車料金（後払い）</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>駐車料金（追加／返金）</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>一日利用（チケット）</td>
-                <td></td>
-                <td>0</td>
-                <td>0</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>一日利用（チケット以外）</td>
-                <td></td>
-                <td>0</td>
-                <td>0</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>合計</td>
-                <td></td>
-                <td></td>
-                <td>33,390</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <p>【売上 商品のみ】</p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>売上項目</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-                <th>税抜金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>合計</td>
-                <td></td>
-                <td></td>
-                <td>0</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <p>【売上 合計】</p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>売上項目</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-                <th>税抜金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>駐車料金（前払い）</td>
-                <td>45</td>
-                <td>45</td>
-                <td>255,300</td>
-                <td>231,663</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>駐車料金（後払い）</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>駐車料金（追加／返金）</td>
-                <td>1</td>
-                <td>1</td>
-                <td>770</td>
-                <td>700</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>一日利用（チケット）</td>
-                <td></td>
-                <td>0</td>
-                <td>0</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>一日利用（チケット以外）</td>
-                <td></td>
-                <td>4</td>
-                <td>0</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>合計</td>
-                <td></td>
-                <td></td>
-                <td>0</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-          <p>【現金】</p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th></th>
-                <th></th>
-                <th>処理回数</th>
-                <th></th>
-                <th>金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>現金</td>
-                <td>18</td>
-                <td></td>
-                <td>99,420</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>入金</td>
-                <td>0</td>
-                <td></td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>出金</td>
-                <td>0</td>
-                <td></td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>両替</td>
-                <td>0</td>
-                <td></td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>釣り銭</td>
-                <td></td>
-                <td></td>
-                <td>98,800</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>現金残高</td>
-                <td></td>
-                <td></td>
-                <td>198,220</td>
-              </tr>
-            </tbody>
-          </table>
-          <p>【クレジット】</p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>クレジット</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>3</td>
-                <td>JCB</td>
-                <td>6</td>
-                <td>6</td>
-                <td>38,490</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td>イオンカード</td>
-                <td>2</td>
-                <td>2</td>
-                <td>13,310</td>
-              </tr>
-              <tr>
-                <td>23</td>
-                <td>PayPay</td>
-                <td>1</td>
-                <td>1</td>
-                <td>1,430</td>
-              </tr>
-              <tr>
-                <td>24</td>
-                <td>145 VISA</td>
-                <td>14</td>
-                <td>14</td>
-                <td>77,690</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>事前決済SBI</td>
-                <td>5</td>
-                <td>5</td>
-                <td>25,730</td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>合計</td>
-                <td>28</td>
-                <td>28</td>
-                <td>156,650</td>
-              </tr>
-            </tbody>
-          </table>
-          <p>【クーポン】</p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>クーポン</th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>合計</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-            </tbody>
-          </table>
-          <p>【割引券】<span style="font-size:small;">バグ: 割引券の種類を修正すると表示がおかしくなる</span></p>
+          @isset($data['officeTables'])
+            @foreach ($data['officeTables'] as $officeName => $officeTable)
+              <p>【売上 {{$officeName}}】</p>
+              <table class="l-table-print">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>売上項目</th>
+                    <th>処理回数</th>
+                    <th>数量</th>
+                    <th>金額</th>
+                    <th>税抜金額</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td>駐車料金（前払い）</td>
+                    <td>{{$officeTable->parkingFeeInAdvance->count}}</td>
+                    <td>{{$officeTable->parkingFeeInAdvance->amount}}</td>
+                    <td>{{number_format($officeTable->parkingFeeInAdvance->price)}}</td>
+                    <td>{{number_format($officeTable->parkingFeeInAdvance->priceExcludingTax)}}</td>
+                  </tr>
+                  {{--  <tr>
+                    <td></td>
+                    <td>駐車料金（後払い）</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>駐車料金（追加／返金）</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>770</td>
+                    <td>700</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>一日利用（チケット）</td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>一日利用（チケット以外）</td>
+                    <td></td>
+                    <td>4</td>
+                    <td>0</td>
+                    <td></td>
+                  </tr>  --}}
+                  @isset($officeTable->goodsSales)
+                    @foreach ($officeTable->goodsSales->rows as $row)
+                      <tr>
+                        <td>{{$row->id}}</td>
+                        <td>{{$row->itemName}}</td>
+                        <td>{{$row->count}}</td>
+                        <td>{{$row->amount}}</td>
+                        <td>{{number_format($row->price)}}</td>
+                        <td>{{number_format($row->priceExcludingTax)}}</td>
+                      </tr>
+                    @endforeach
+                  @endisset
+                  <tr>
+                    <td></td>
+                    <td>合計</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{number_format($officeTable->total->price)}}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            @endforeach
+            {{--  <p>【売上 成田】</p>
+            <table class="l-table-print">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>売上項目</th>
+                  <th>処理回数</th>
+                  <th>数量</th>
+                  <th>金額</th>
+                  <th>税抜金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（前払い）</td>
+                  <td>40</td>
+                  <td>40</td>
+                  <td>221,910</td>
+                  <td>201,420</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（後払い）</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（追加／返金）</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>770</td>
+                  <td>700</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>一日利用（チケット）</td>
+                  <td></td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>一日利用（チケット以外）</td>
+                  <td></td>
+                  <td>4</td>
+                  <td>0</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>合計</td>
+                  <td></td>
+                  <td></td>
+                  <td>222,680</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+            <p>【売上 プレ】</p>
+            <table class="l-table-print">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>売上項目</th>
+                  <th>処理回数</th>
+                  <th>数量</th>
+                  <th>金額</th>
+                  <th>税抜金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（前払い）</td>
+                  <td>5</td>
+                  <td>5</td>
+                  <td>33,390</td>
+                  <td>30,243</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（後払い）</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（追加／返金）</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>一日利用（チケット）</td>
+                  <td></td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>一日利用（チケット以外）</td>
+                  <td></td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>合計</td>
+                  <td></td>
+                  <td></td>
+                  <td>33,390</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>  --}}
+          @endisset
+          @isset($data['purchaseOnlyTable'])
+            <p>【売上 商品のみ】</p>
+            <table class="l-table-print">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>売上項目</th>
+                  <th>処理回数</th>
+                  <th>数量</th>
+                  <th>金額</th>
+                  <th>税抜金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($data['purchaseOnlyTable']->rows as $row)
+                  <tr>
+                    <td>{{$row->id}}</td>
+                    <td>{{$row->itemName}}</td>
+                    <td>{{$row->count}}</td>
+                    <td>{{$row->amount}}</td>
+                    <td>{{number_format($row->price)}}</td>
+                    <td>{{number_format($row->priceExcludingTax)}}</td>
+                  </tr>
+                @endforeach
+                <tr>
+                  <td></td>
+                  <td>合計</td>
+                  <td></td>
+                  <td></td>
+                  <td>{{number_format($data['purchaseOnlyTable']->total->price)}}</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          @endisset
+          @isset($data['totalSalesTable'])
+            <p>【売上 合計】</p>
+            <table class="l-table-print">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>売上項目</th>
+                  <th>処理回数</th>
+                  <th>数量</th>
+                  <th>金額</th>
+                  <th>税抜金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（前払い）</td>
+                  <td>{{$data['totalSalesTable']->parkingFeeInAdvance->count}}</td>
+                  <td>{{$data['totalSalesTable']->parkingFeeInAdvance->amount}}</td>
+                  <td>{{number_format($data['totalSalesTable']->parkingFeeInAdvance->price)}}</td>
+                  <td>{{number_format($data['totalSalesTable']->parkingFeeInAdvance->priceExcludingTax)}}</td>
+                </tr>
+                @isset($data['totalSalesTable']->goodsSales)
+                  @foreach ($data['totalSalesTable']->goodsSales->rows as $row)
+                    <tr>
+                      <td>{{$row->id}}</td>
+                      <td>{{$row->itemName}}</td>
+                      <td>{{$row->count}}</td>
+                      <td>{{$row->amount}}</td>
+                      <td>{{number_format($row->price)}}</td>
+                      <td>{{number_format($row->priceExcludingTax)}}</td>
+                    </tr>
+                  @endforeach
+                @endisset
+                {{--  <tr>
+                  <td></td>
+                  <td>駐車料金（前払い）</td>
+                  <td>45</td>
+                  <td>45</td>
+                  <td>255,300</td>
+                  <td>231,663</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（後払い）</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>駐車料金（追加／返金）</td>
+                  <td>1</td>
+                  <td>1</td>
+                  <td>770</td>
+                  <td>700</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>一日利用（チケット）</td>
+                  <td></td>
+                  <td>0</td>
+                  <td>0</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>一日利用（チケット以外）</td>
+                  <td></td>
+                  <td>4</td>
+                  <td>0</td>
+                  <td></td>
+                </tr>  --}}
+                <tr>
+                  <td></td>
+                  <td>合計</td>
+                  <td></td>
+                  <td></td>
+                  <td>{{number_format($data['totalSalesTable']->total->price)}}</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          @endisset
+          @isset($data['cashTable'])
+            <p>【現金】</p>
+            <table class="l-table-print">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>処理回数</th>
+                  <th></th>
+                  <th>金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>現金</td>
+                  <td>{{$data['cashTable']->cash->count}}</td>
+                  <td></td>
+                  <td>{{number_format($data['cashTable']->cash->price)}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>入金</td>
+                  <td>{{$data['cashTable']->deposit->count}}</td>
+                  <td></td>
+                  <td>{{number_format($data['cashTable']->deposit->price)}}</td>
+                </tr>
+                {{--  <tr>
+                  <td></td>
+                  <td>出金</td>
+                  <td>0</td>
+                  <td></td>
+                  <td>0</td>
+                </tr>  --}}
+                {{--  <tr>
+                  <td></td>
+                  <td>両替</td>
+                  <td>0</td>
+                  <td></td>
+                  <td>0</td>
+                </tr>  --}}
+                <tr>
+                  <td></td>
+                  <td>釣り銭</td>
+                  <td></td>
+                  <td></td>
+                  <td>{{number_format($data['cashTable']->change->price)}}</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>現金残高</td>
+                  <td></td>
+                  <td></td>
+                  <td>{{number_format($data['cashTable']->cashBalance->price)}}</td>
+                </tr>
+              </tbody>
+            </table>
+          @endisset
+          @isset($data['creditsTable'])
+            <p>【クレジット】</p>
+            <table class="l-table-print">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>クレジット</th>
+                    <th>処理回数</th>
+                    <th>数量</th>
+                    <th>金額</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($data['creditsTable']->rows as $row)
+                  <tr>
+                    <td>{{$row->id}}</td>
+                    <td>{{$row->itemName}}</td>
+                    <td>{{$row->count}}</td>
+                    <td>{{$row->amount}}</td>
+                    <td>{{number_format($row->price)}}</td>
+                  </tr>
+                @endforeach
+                {{--  <tr>
+                    <td>3</td>
+                    <td>JCB</td>
+                    <td>6</td>
+                    <td>6</td>
+                    <td>38,490</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>イオンカード</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>13,310</td>
+                </tr>
+                <tr>
+                    <td>23</td>
+                    <td>PayPay</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1,430</td>
+                </tr>
+                <tr>
+                    <td>24</td>
+                    <td>145 VISA</td>
+                    <td>14</td>
+                    <td>14</td>
+                    <td>77,690</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>事前決済SBI</td>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>25,730</td>
+                </tr>  --}}
+                <tr>
+                  <td></td>
+                  <td>合計</td>
+                  <td>{{$data['creditsTable']->total->count}}</td>
+                  <td>{{$data['creditsTable']->total->amount}}</td>
+                  <td>{{number_format($data['creditsTable']->total->price)}}</td>
+                </tr>
+                </tbody>
+            </table>
+          @endisset
+          @isset($data['couponTable'])
+            <p>【クーポン】</p>
+            <table class="l-table-print">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>クーポン</th>
+                  <th>処理回数</th>
+                  <th>数量</th>
+                  <th>金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($data['couponTable']->rows as $row)
+                  <tr>
+                    <td>{{$row->id}}</td>
+                    <td>{{$row->itemName}}</td>
+                    <td>{{$row->count}}</td>
+                    <td>{{$row->amount}}</td>
+                    <td>{{number_format($row->price)}}</td>
+                  </tr>
+                @endforeach
+                <tr>
+                  <td></td>
+                  <td>合計</td>
+                  <td>{{$data['couponTable']->total->count}}</td>
+                  <td>{{$data['couponTable']->total->amount}}</td>
+                  <td>{{number_format($data['couponTable']->total->price)}}</td>
+                </tr>
+              </tbody>
+            </table>
+          @endisset
+          {{--  <p>【割引券】<span style="font-size:small;">バグ: 割引券の種類を修正すると表示がおかしくなる</span></p>
           <table class="l-table-print">
             <thead>
               <tr>
@@ -482,50 +608,83 @@
                 <td>4,610</td>
               </tr>
             </tbody>
-          </table>
-          <p>【商品券】</p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th></th>
-                <th></th>
-                <th>処理回数</th>
-                <th>数量</th>
-                <th>金額</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>合計</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-              </tr>
-            </tbody>
-          </table>
-          <p>【マイル】<span style="font-size:small;">入庫時分のみ</span></p>
-          <table class="l-table-print">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>マイル</th>
-                <th></th>
-                <th>数量</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td>合計</td>
-                <td></td>
-                <td>0</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+          </table>  --}}
+          @isset($data['giftCertificatesTable'])
+            <p>【商品券】</p>
+            <table class="l-table-print">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>処理回数</th>
+                  <th>数量</th>
+                  <th>金額</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>合計</td>
+                  <td>{{$data['giftCertificatesTable']->total->count}}</td>
+                  <td>{{$data['giftCertificatesTable']->total->amount}}</td>
+                  <td>{{number_format($data['giftCertificatesTable']->total->price)}}</td>
+                </tr>
+              </tbody>
+            </table>
+          @endisset
         </div>
       </div><!-- l-container__inner -->
     </main>
 @endsection
+@push("scripts")
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // URLに ?print=1 が含まれているかどうかで処理を分岐します
+      const isPrintView = new URLSearchParams(window.location.search).has('print');
+
+      if (isPrintView) {
+        // --- 印刷用ページの処理 ---
+        const params = new URLSearchParams(window.location.search);
+        const pageSize = params.get('page_size');
+
+        // @page スタイルを動的に設定
+        if (pageSize) {
+            setPrintStyle(pageSize.replace('_', ' '))
+        }
+
+        // ページの読み込みが完了したら印刷ダイアログを開く
+        window.addEventListener('load', () => {
+            window.print();
+        });
+
+      } else {
+        // --- 通常表示ページの処理 ---
+        const buttonInfo = { id: 'printButton', size: 'A4 portrait'};
+
+        const button = document.getElementById(buttonInfo.id);
+        if (button) {
+          button.addEventListener('click', function() {
+            // 現在のURLとパラメータを取得
+            const currentUrl = new URL(window.location.href);
+
+            // 印刷用のパラメータを追加
+            currentUrl.searchParams.set('print', '1');
+            // CSSの 'size' プロパティ値に半角スペースが含まれるため '_' に置換
+            currentUrl.searchParams.set('page_size', buttonInfo.size.replace(' ', '_'));
+
+            // 新しいタブで印刷用URLを開く
+            window.open(currentUrl.href, '_blank');
+          });
+        }
+      }
+
+      function setPrintStyle(size) {
+        const style = document.createElement('style');
+        style.media = 'print';
+        style.innerHTML = '@page { size: ' + size + '; margin: 10mm; }';
+        document.head.appendChild(style);
+      }
+    });
+  </script>
+@endpush
