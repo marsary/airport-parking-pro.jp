@@ -37,7 +37,7 @@
             <th>受付コード</th>
             <td>{{$deal->receipt_code}}</td>
             <th>予約日時</th>
-            <td>{{$deal->reserve_date?->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
+            <td>{{$deal->reserve_date?->isoFormat('YYYY/M/D(ddd) H:mm')}}</td>
             <th>予約経路</th>
             <td>{{$deal->agency?->name}}</td>
           </tr>
