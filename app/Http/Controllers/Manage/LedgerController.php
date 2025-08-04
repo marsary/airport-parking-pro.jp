@@ -243,4 +243,10 @@ class LedgerController extends Controller
         ]);
     }
 
+    public function agencyRecords(Request $request)
+    {
+        // レジ清算集計表
+        return view('manage.ledger.agency_records');
+    }
+
 }
