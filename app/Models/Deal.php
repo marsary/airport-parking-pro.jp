@@ -95,7 +95,9 @@ class Deal extends Model
     {
         return Attribute::make(
             get: function ($value, $attributes) {
-                return DealStatus::tryFrom($attributes['status'])?->label();
+                if(isset($attributes['status'])) {
+                    return DealStatus::tryFrom($attributes['status'])?->label();
+                }
             }
         );
     }
