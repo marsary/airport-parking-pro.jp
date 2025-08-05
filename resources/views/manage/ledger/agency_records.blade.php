@@ -5,7 +5,7 @@
 @section('content')    <main class="l-wrap__main">
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb">
-        <li class="l-breadcrumb__list">代理店実績表</li>
+        <li class="l-breadcrumb__list">代理店実績表及び代理店別売上リスト</li>
       </ul>
 
       <div class="l-container__inner">
@@ -18,27 +18,8 @@
               -
               <input type="text" id="store_number_2" name="store_number_2" placeholder="567" maxlength="3" class="u-mb0 u-w50">
             </label>
-            <!-- 入庫日  -->
-            <label for="entry_date" class="l-flex l-grid--gap05">入庫日
-              <input type="date" id="entry_date" name="entry_date" placeholder="2021/01/01" class="u-mb0">
-              ～
-              <input type="date" id="exit_date" name="exit_date" placeholder="2021/12/31" class="u-mb0">
-            </label>
-          </div>
-          <input type="submit" value="CSVをダウンロード" class="c-button__submit u-w-auto u-horizontal-auto">
-        </form>
-
-        <div class="u-font--20 u-font--medium u-font--green u-mb05">マージン計算月範囲指定</div>
-        <form action="" class="u-mb4">
-          <div class="l-flex l-grid--gap2 u-mb2">
-            <!-- text 代理店番号 -->
-            <label for="store_number" class="l-flex l-grid--gap05">代理店
-              <input type="text" id="store_number_3" name="store_number_3" placeholder="1234" maxlength="4" class="u-mb0 u-w70">
-              -
-              <input type="text" id="store_number_4" name="store_number_4" placeholder="567" maxlength="3" class="u-mb0 u-w50">
-            </label>
-            <!-- マージン計算月  -->
-            <label for="entry_date" class="l-flex l-grid--gap05">マージン計算月
+            <!-- 対象月  -->
+            <label for="entry_date" class="l-flex l-grid--gap05">対象月
               <!-- 年と月のみを分ける input -->
               <input type="text" id="margin_year" name="margin_year" placeholder="2021" maxlength="4" class="u-mb0 u-w50">
               年
@@ -46,7 +27,9 @@
               月
             </label>
           </div>
-          <input type="submit" value="CSVをダウンロード" class="c-button__submit u-w-auto u-horizontal-auto">
+          <input type="submit" value="代理店別売上リスト" class="c-button__submit u-w-auto u-horizontal-auto">
+          <input type="submit" value="代理店実績表" class="c-button__submit u-w-auto u-horizontal-auto">
+          <input type="submit" value="マージン計算月" class="c-button__submit u-w-auto u-horizontal-auto">
         </form>
 
         <ul class="u-font--md">
@@ -60,3 +43,13 @@
     </main>
 
 @endsection
+@push('css')
+<style>
+  .u-w-auto, input.u-w-auto {
+    width: 200px !important;
+    display: inline-block !important;
+    margin-right: 50px !important;
+  }
+</style>
+@endpush
+
