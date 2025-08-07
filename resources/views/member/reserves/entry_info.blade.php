@@ -45,7 +45,7 @@
     <textarea name="remarks" id="remarks" cols="50" rows="3">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">
-      <button type="submit" class="c-button__pagination--next">次へ進む</button>
+      <button type="button" onclick="submit();" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>
 </div><!-- ./p-user-input__inner -->

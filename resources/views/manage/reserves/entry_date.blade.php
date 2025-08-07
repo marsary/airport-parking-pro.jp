@@ -258,7 +258,7 @@
 
                     </div><!-- /.p-input-user-total-parking-charges__inner -->
 
-                    <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
+                    <button type="button" onclick="submit();" class="c-button__submit u-horizontal-auto">予約に進む</button>
                 </div><!-- /.p-input-user-total-parking-charges -->
 
             </form>
