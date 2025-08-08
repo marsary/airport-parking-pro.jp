@@ -146,7 +146,7 @@
         </tr>
         <tr>
           <th>備考</th>
-          <td>{{$reserve->reserve_memo}}</td>
+          <td>{!! nl2br(e($reserve->reserve_memo)) !!}</td>
         </tr>
       </table>
 
