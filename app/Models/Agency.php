@@ -12,6 +12,8 @@ class Agency extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const NARITA_PREMIUM_ID = 1;
+
     /**
      * The attributes that are mass assignable.
      *

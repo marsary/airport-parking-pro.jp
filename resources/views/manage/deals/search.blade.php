@@ -363,7 +363,6 @@
   </div>
   <div class="l-container__button-fixed">
     <div class="c-button-group__form">
-      <input type="reset" class="c-button__clear" form="form1">すべてをクリア</input>
       <button type="submit" class="c-button__submit" form="form1">検索</button>
     </div>
 

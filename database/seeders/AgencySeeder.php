@@ -16,7 +16,7 @@ class AgencySeeder extends Seeder
         Agency::insert([
             [
                 'id' => 1,
-                'name' => 'テスト代理店1'
+                'name' => '成田プレ'
             ],
         ]);
     }

@@ -40,4 +40,9 @@ class PaymentGood extends Model
         return $this->belongsTo(GoodCategory::class);
     }
 
+    public function dealGood()
+    {
+        return $this->belongsTo(DealGood::class);
+    }
+
 }

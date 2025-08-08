@@ -122,10 +122,14 @@ class DealService extends ReserveService
     {
         $purchaseOnlyData = self::makePurchaseOnly();
 
-        Deal::doesntHave('payment')->each(function (Deal $deal) {
-            $deal->dealGoods()->delete(); // Deal に紐づく DealGood を削除
-            $deal->delete(); // Deal を削除
-        });
+        // ログイン中のユーザーが作成した、決済情報がない「商品購入のみ」の取引（＝中断された取引）を削除する
+        Deal::where('transaction_type', TransactionType::PURCHASE_ONLY->value)
+            ->where('created_by', Auth::id())
+            ->doesntHave('payment')
+            ->each(function (Deal $deal) {
+                $deal->dealGoods()->delete(); // Deal に紐づく DealGood を削除
+                $deal->delete(); // Deal を削除
+            });
 
         $purchaseOnlyData->save();
         return $purchaseOnlyData;

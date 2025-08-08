@@ -1,8 +1,9 @@
 <!-- D-2-2 -->
 <!-- レジ売上帳 -->
-@extends('layouts.manage.authenticated')
+@extends(request('print') ? 'layouts.manage.print' : 'layouts.manage.authenticated')
 
-@section('content')    <main class="l-wrap__main">
+@section('content')
+    <main class="l-wrap__main">
       <!-- パンくず -->
       <ul class="l-wrap__breadcrumb l-breadcrumb l-print__none">
         <!-- D-1-0にリンク -->
@@ -77,7 +78,9 @@
                 </select>
               </div>
             </div>
-            <input type="submit" value="印刷プレビュー" class="c-button c-button--deep-gray hover">
+            @if (!request('print'))
+              <input type="submit" value="印刷プレビュー" class="c-button c-button--deep-gray hover">
+            @endif
           </div>
           <ul class="u-font--md">
             <li>・入庫時に未収が発生したデータは赤字で表示され、名前の後ろに「後」と表示されます。<br>
@@ -86,15 +89,15 @@
             </li>
           </ul>
         </form>
-
-        <ul class="l-flex l-grid--gap1 u-mb1 l-print__none">
-          <li class="c-button--green pointer hover" id="a4-vertical">A4縦</li>
-          <li class="c-button--yellow pointer hover" id="b4-horizontal">B4ヨコ</li>
-          <li class="c-button--yellow pointer hover" id="a3-horizontal">A3ヨコ</li>
-          <li class="c-button--yellow pointer hover" id="a4-horizontal">A4ヨコ</li>
-          <!-- 点検表へのリンクURL未設定 -->
-          <li class="c-button--deep-gray"><a href="" class="link-white">点検表へ</a></li>
-        </ul>
+        @if (!request('print'))
+          <ul class="l-flex l-grid--gap1 u-mb1 l-print__none no-print">
+            <li class="c-button--green pointer hover" id="a4-vertical">A4縦</li>
+            <li class="c-button--yellow pointer hover" id="b4-horizontal">B4ヨコ</li>
+            <li class="c-button--yellow pointer hover" id="a3-horizontal">A3ヨコ</li>
+            <li class="c-button--yellow pointer hover" id="a4-horizontal">A4ヨコ</li>
+            <li class="c-button--deep-gray"><a href="{{route('manage.ledger.regi_check_lists')}}" class="link-white">点検表へ</a></li>
+          </ul>
+        @endif
         <div class="l-table-print__wrap l-print__wrap">
           <table class="l-table-print">
             <thead>
@@ -233,7 +236,7 @@
 @push("scripts")
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const a4VerticalButton = document.getElementById('a4-vertical');
+      {{--  const a4VerticalButton = document.getElementById('a4-vertical');
       const b4HorizontalButton = document.getElementById('b4-horizontal');
       const a3HorizontalButton = document.getElementById('a3-horizontal');
       const a4HorizontalButton = document.getElementById('a4-horizontal');
@@ -260,7 +263,61 @@
         setPrintStyle('A4 landscape');
         addPrintClass('a4-horizontal-print');
         window.print();
-      });
+      });  --}}
+
+
+    // URLに ?print=1 が含まれているかどうかで処理を分岐します
+    const isPrintView = new URLSearchParams(window.location.search).has('print');
+
+    if (isPrintView) {
+        // --- 印刷用ページの処理 ---
+        const params = new URLSearchParams(window.location.search);
+        const pageSize = params.get('page_size');
+        const printClass = params.get('print_class');
+
+        // @page スタイルを動的に設定
+        if (pageSize) {
+            setPrintStyle(pageSize.replace('_', ' '))
+        }
+
+        // 印刷用のCSSクラスをhtml要素に付与
+        if (printClass) {
+            addPrintClass(printClass)
+        }
+
+        // ページの読み込みが完了したら印刷ダイアログを開く
+        window.addEventListener('load', () => {
+            window.print();
+        });
+
+    } else {
+        // --- 通常表示ページの処理 ---
+        const printButtons = [
+            { id: 'a4-vertical', size: 'A4 portrait', class: 'a4-vertical-print' },
+            { id: 'b4-horizontal', size: 'B4 landscape', class: 'b4-horizontal-print' },
+            { id: 'a3-horizontal', size: 'A3 landscape', class: 'a3-horizontal-print' },
+            { id: 'a4-horizontal', size: 'A4 landscape', class: 'a4-horizontal-print' }
+        ];
+
+        printButtons.forEach(buttonInfo => {
+            const button = document.getElementById(buttonInfo.id);
+            if (button) {
+                button.addEventListener('click', function() {
+                    // 現在のURLとパラメータを取得
+                    const currentUrl = new URL(window.location.href);
+
+                    // 印刷用のパラメータを追加
+                    currentUrl.searchParams.set('print', '1');
+                    // CSSの 'size' プロパティ値に半角スペースが含まれるため '_' に置換
+                    currentUrl.searchParams.set('page_size', buttonInfo.size.replace(' ', '_'));
+                    currentUrl.searchParams.set('print_class', buttonInfo.class);
+
+                    // 新しいタブで印刷用URLを開く
+                    window.open(currentUrl.href, '_blank');
+                });
+            }
+        });
+    }
 
       function setPrintStyle(size) {
         const style = document.createElement('style');

@@ -13,10 +13,10 @@ function calcTax(taxType, price = null) {
             return parseInt(price * 0.1);
             break;
         case TaxTypes.EXEMPT:
-            return price;
+            return 0;
             break;
         default:
-            return price
+            return 0;
             break;
     }
 }

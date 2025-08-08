@@ -26,6 +26,12 @@ class PaymentDetail extends Model
         'discount_type',
     ];
 
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
     public function paymentMethod()
     {
         return $this->belongsTo(PaymentMethod::class);

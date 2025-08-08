@@ -27,7 +27,7 @@ class RegiSalesAccountBooksService
             $row = new RegiSalesAccountBooksRow();
             $row->dealId = $payment->deal->id;
             $row->paymentTime = $payment->payment_date;
-            $row->memberName = $payment->member->name;
+            $row->memberName = $payment->member?->name ? $payment->member->name : $payment->deal->name;
             $row->isUpdated = ($payment->created_at == $payment->updated_at);
             $row->isUnloaded = $payment->deal->status == DealStatus::UNLOADED->value;
             $row->officeName = $this->office->short_name;
