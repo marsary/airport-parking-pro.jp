@@ -1,25 +1,34 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+@extends('layouts.manage.app')
+
+@section('content')
+
+
+    <div class="l-container__admin">
+        <div class="c-form__admin--title">パスワードを忘れた場合</div>
+            <form method="POST" action="{{ route('password.email') }}" class="c-form__admin">
+                @csrf
+                <div>
+                    <x-input-label for="email" :value="__('メールアドレスを入力してください')" />
+                    <x-text-input id="email" class="c-input__admin" type="email" name="email" :value="old('email')" required autofocus />
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    <!-- Session Status -->
+                    <x-auth-session-status class="mb-4" :status="session('status')" />
+                </div>
+                <input type="submit" value="パスワード再設定用メール送信" class="c-button--yellow u-horizontal-auto" />
+            </form>
+            <p class="text-center">上記メールアドレスに再設定用のURLを送信します。</p>
+        </div>
+    <div class="text-center u-mt2">
+        <a href="">ログイン画面に戻る</a>
     </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@endsection
+@push("scripts")
+<script>
 
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</script>
+@endpush
+@push('css')
+<style>
+</style>
+@endpush
