@@ -882,3 +882,55 @@
 
 @endsection
 
+@push("scripts")
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // URLに ?print=1 が含まれているかどうかで処理を分岐します
+      const isPrintView = new URLSearchParams(window.location.search).has('print');
+
+      if (isPrintView) {
+        // --- 印刷用ページの処理 ---
+        const params = new URLSearchParams(window.location.search);
+        const pageSize = params.get('page_size');
+
+        // @page スタイルを動的に設定
+        if (pageSize) {
+            setPrintStyle(pageSize.replace('_', ' '))
+        }
+
+        // ページの読み込みが完了したら印刷ダイアログを開く
+        window.addEventListener('load', () => {
+            window.print();
+        });
+
+      } else {
+        // --- 通常表示ページの処理 ---
+        const buttonInfo = { id: 'printButton', size: 'A4 portrait'};
+
+        const button = document.getElementById(buttonInfo.id);
+        if (button) {
+          button.addEventListener('click', function() {
+            // 現在のURLとパラメータを取得
+            const currentUrl = new URL(window.location.href);
+
+            // 印刷用のパラメータを追加
+            currentUrl.searchParams.set('print', '1');
+            // CSSの 'size' プロパティ値に半角スペースが含まれるため '_' に置換
+            currentUrl.searchParams.set('page_size', buttonInfo.size.replace(' ', '_'));
+
+            // 新しいタブで印刷用URLを開く
+            window.open(currentUrl.href, '_blank');
+          });
+        }
+      }
+
+      function setPrintStyle(size) {
+        const style = document.createElement('style');
+        style.media = 'print';
+        style.innerHTML = '@page { size: ' + size + '; margin: 10mm; }';
+        document.head.appendChild(style);
+      }
+    });
+  </script>
+@endpush
