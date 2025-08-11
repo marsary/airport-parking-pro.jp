@@ -13,7 +13,7 @@
         <div class="l-grid--col5-1fr l-grid--rgap2 l-grid--cgap1 u-font--white">
           <a href="{{route('manage.ledger.regi_sales_account_books')}}" class="c-button--yellow c-link-no-border">レジ売上帳</a>
           <a href="{{route('manage.ledger.regi_check_lists')}}" class="c-button--yellow c-link-no-border">レジ点検表</a>
-          <a href="d-2-9.php" class="c-button--yellow c-link-no-border">レジ清算集計</a>
+          <a href="{{route('manage.ledger.regi_payment_summaries')}}" class="c-button--yellow c-link-no-border">レジ清算集計</a>
           <a href="d-2-11.php" class="c-button--yellow c-link-no-border">代理店別売上リスト</a>
           <a href="d-1-5.php" class="c-button--yellow c-link-no-border">代理店実績表</a>
         </div>
