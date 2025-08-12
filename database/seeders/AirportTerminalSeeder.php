@@ -13,7 +13,7 @@ class AirportTerminalSeeder extends Seeder
     public function run(): void
     {
         SeedFromCSV::seed('airport_terminals',
-            'airport_terminals.csv',
+            'airport_terminals_test.csv',
             [
                 'id',
                 'airport_id',

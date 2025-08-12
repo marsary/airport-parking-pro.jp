@@ -15,8 +15,13 @@ class SystemDateSeeder extends Seeder
     public function run(): void
     {
         $today = Carbon::today();
-        SystemDate::create([
-            'system_date' => $today,
-        ]);
+        SystemDate::updateOrCreate(
+            [
+                'id' => 1
+            ],
+            [
+                'system_date' => $today,
+            ]
+        );
     }
 }

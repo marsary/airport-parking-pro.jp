@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\CashRegister;
+use App\Models\Deal;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -45,5 +46,23 @@ class PaymentFactory extends Factory
             'created_by' => \App\Models\User::first(),
             'updated_by' => \App\Models\User::first(),
         ];
+    }
+
+
+    public function fromDeal(Deal $deal): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'office_id' => \App\Models\Office::first(),
+            'deal_id' => $deal->id,
+            'member_id' => $deal->member?->id,
+            'load_date' => $deal->load_date,
+            'unload_date' => $deal->unload_date,
+            'unload_date_plan' => $deal->unload_date_plan,
+            'days' => $deal->days,
+            'price' => $deal->price,
+            'total_price' => $deal->total_price,
+            'demand_price' => (int) $deal->total_price + $deal->total_tax,
+            'total_tax' => (int) $deal->total_tax,
+        ]);
     }
 }
