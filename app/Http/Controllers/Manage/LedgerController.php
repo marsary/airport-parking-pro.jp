@@ -7,13 +7,16 @@ use App\Enums\TransactionType;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\BunchIssuesRequest;
 use App\Http\Requests\Manage\Ledger\RegiChecklistsRequest;
+use App\Http\Requests\Manage\Ledger\RegiPaymentSummariesRequest;
 use App\Http\Requests\Manage\Ledger\RegiSalesAccountBooksRequest;
 use App\Http\Requests\Manage\UnloadAllRequest;
 use App\Models\CashRegister;
 use App\Models\Deal;
 use App\Models\GoodCategory;
 use App\Services\Ledger\RegiChecklistsService;
+use App\Services\Ledger\RegiPaymentSummariesService;
 use App\Services\Ledger\RegiSalesAccountBooksService;
+use App\Services\Ledger\Repositories\PaymentSummaryRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -221,10 +224,35 @@ class LedgerController extends Controller
         ]);
     }
 
-    public function regiPaymentSummaries(Request $request)
+    public function regiPaymentSummaries(RegiPaymentSummariesRequest $request, PaymentSummaryRepository $repository)
     {
         // レジ清算集計表
-        return view('manage.ledger.regi_payment_summaries');
+        // レジ点検表
+        $registers = CashRegister::where('office_id', config('const.commons.office_id'))->orderBy('id')->get();
+
+        $data = [];
+        if($request->has('entry_date_start') && $request->has('entry_date_fin')) {
+            $summariesService = new RegiPaymentSummariesService($repository);
+
+            $service = new RegiChecklistsService($request);
+            $purchaseOnlyTable = $service->getGoodsTableData(true);
+            $data = [
+                'loadUnloadTables' => $summariesService->getLoadUnloadCounts($request),
+                'paymentMethodTable' => $summariesService->getPaymentMethodTable($request),
+                'regiPaymentGoodsTables' => $summariesService->getRegiPaymentGoodsTables($request),
+                'creditTableOfficeData' => $summariesService->getCreditTableOfficeData($request),
+
+                'purchaseOnlyTable' => $purchaseOnlyTable,
+                'officeTables' => $service->getOfficeSaleTablesData(),
+                'totalSalesTable' => $service->getTotalSalesTableData(),
+                'creditsTableData' => $service->getCreditsTableData(),
+            ];
+        }
+
+        return view('manage.ledger.regi_payment_summaries', $data + [
+            'registers' => $registers,
+            'office' => myOffice(),
+        ]);
     }
 
     public function regiSalesAccountBooks(RegiSalesAccountBooksRequest $request)
