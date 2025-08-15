@@ -8,7 +8,7 @@
   <ul class="l-wrap__breadcrumb l-breadcrumb">
   <li class="l-breadcrumb__list">予約管理TOP</li>
   <li class="l-breadcrumb__list">検索</li>
-  <li class="l-breadcrumb__list">検索結果（{{$deals->count()}}件）</li>
+  <li class="l-breadcrumb__list">検索結果（{{$deals->total()}}件）</li>
   </ul>
 
   <div class="l-container__inner">

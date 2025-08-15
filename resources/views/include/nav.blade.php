@@ -17,7 +17,7 @@
       <a href="{{route('manage.marketing')}}" class="c-nav__link --support {{Request::routeIs('manage.marketing', 'manage.marketing.*') ? '--current' : '' }}">営業支援</a>
     </li>
     <li class="c-nav__item">
-      <a href="{{route('manage.ledger')}}" class="c-nav__link --print {{Request::routeIs('manage.ledger', 'manage.ledger.*') ? '--current' : '' }}">帳票印刷</a>
+      <a href="{{route('manage.ledger')}}" class="c-nav__link --print {{Request::routeIs('manage.ledger', 'manage.ledger.*') && !Request::routeIs('manage.ledger.inventories') ? '--current' : '' }}">帳票印刷</a>
     </li>
   </ul>
 
