@@ -75,6 +75,14 @@
           <td colspan="3">
             <input type="date" id="load_date_start" class="u-w-auto" name="load_date_start" value="{{old('load_date_start')}}" />～
             <input type="date" id="load_date_end" class="u-w-auto" name="load_date_end" value="{{old('load_date_end')}}" />
+            <script>
+                const load_date_start = document.getElementById("load_date_start");
+                const load_date_end = document.getElementById("load_date_end");
+
+                load_date_start.addEventListener("change", () => {
+                    load_date_end.min = load_date_start.value;
+                });
+            </script>
           </td>
           <!-- 入庫時間 -->
           <th><label for="load_time">入庫時間</label></th>
@@ -88,11 +96,27 @@
           <td colspan="3">
             <input type="date" id="unload_date_plan_start" class="u-w-auto" name="unload_date_plan_start" value="{{old('unload_date_plan_start')}}" />～
             <input type="date" id="unload_date_plan_end" class="u-w-auto" name="unload_date_plan_end" value="{{old('unload_date_plan_end')}}" />
+            <script>
+                const unload_date_plan_start = document.getElementById("unload_date_plan_start");
+                const unload_date_plan_end = document.getElementById("unload_date_plan_end");
+
+                unload_date_plan_start.addEventListener("change", () => {
+                    unload_date_plan_end.min = unload_date_plan_start.value;
+                });
+            </script>
           </td>
           <th><label for="unload_date">出庫日</label></th>
           <td colspan="3">
             <input type="date" id="unload_date_start" class="u-w-auto" name="unload_date_start" value="{{old('unload_date_start')}}" />～
             <input type="date" id="unload_date_end" class="u-w-auto" name="unload_date_end" value="{{old('unload_date_end')}}" />
+            <script>
+                const unload_date_start = document.getElementById("unload_date_start");
+                const unload_date_end = document.getElementById("unload_date_end");
+
+                unload_date_start.addEventListener("change", () => {
+                    unload_date_end.min = unload_date_start.value;
+                });
+            </script>
           </td>
         </tr>
         <tr>
@@ -203,6 +227,14 @@
           <td colspan="3">
             <input type="date" id="arrive_date_start" class="u-w-auto" name="arrive_date_start" placeholder="2024/2/5(月)" value="{{old('arrive_date_start')}}" />～
             <input type="date" id="arrive_date_end" class="u-w-auto" name="arrive_date_end" placeholder="2024/2/5(月)" value="{{old('arrive_date_end')}}" />
+            <script>
+                const arrive_date_start = document.getElementById("arrive_date_start");
+                const arrive_date_end = document.getElementById("arrive_date_end");
+
+                arrive_date_start.addEventListener("change", () => {
+                    arrive_date_end.min = arrive_date_start.value;
+                });
+            </script>
           </td>
           <!-- 到着予定時間 -->
           <th>到着予定時間</th>
