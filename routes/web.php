@@ -37,6 +37,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('ledger', [\App\Http\Controllers\Manage\LedgerController::class, 'index'])->name('ledger');
         Route::get('ledger/inventories', [\App\Http\Controllers\Manage\LedgerController::class, 'inventories'])->name('ledger.inventories');
         Route::get('ledger/agency_sales_lists', [\App\Http\Controllers\Manage\LedgerController::class, 'agencySalesLists'])->name('ledger.agency_sales_lists');
+        Route::get('ledger/agency_sales_lists/download', [\App\Http\Controllers\Manage\LedgerController::class, 'agencySalesListsDownload'])->name('ledger.agency_sales_lists.download');
         Route::get('ledger/agency_result', [\App\Http\Controllers\Manage\LedgerController::class, 'agencyResult'])->name('ledger.agency_result');
         Route::get('ledger/bunch_issues', [\App\Http\Controllers\Manage\LedgerController::class, 'bunch_issues'])->name('ledger.bunch_issues');
         Route::put('ledger/unload_all', [\App\Http\Controllers\Manage\LedgerController::class, 'unloadAll'])->name('ledger.unload_all');
