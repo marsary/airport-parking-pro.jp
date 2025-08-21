@@ -678,6 +678,18 @@ label.c-button-optionSelect__radioLabel {
 
 // オプション選択の数量ボタン
 .c-button-optionQuantity {
+
+  // 増減ボタン
+  font-size: 1rem;
+  width: 40px;
+  height: 1.5rem;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 1.5rem;
+  background-color: #B4B4B4;
+  cursor: pointer;
+  color: #FFF;
+
   &__wrap {
     display: flex;
     justify-content: flex-end;
@@ -693,21 +705,6 @@ label.c-button-optionSelect__radioLabel {
       border: 1px solid #ccc;
       margin: 0 5px;
     }
-  }
-
-  // 増減ボタン
-  font-size: 1rem;
-  width: 40px;
-  height: 1.5rem;
-  border-radius: 4px;
-  text-align: center;
-  line-height: 1.5rem;
-  background-color: #B4B4B4;
-  cursor: pointer;
-  color: #FFF;
-  &--down {
-  }
-  &--up {
   }
 }
 
