@@ -479,6 +479,10 @@
 
 // I-3 ダイナミックプライシング料金設定
 .l-table-dynamic-pricing-list {
+  margin-top: 3rem;
+  border-spacing: 0;
+  table-layout: fixed;
+
   &__button {
     margin-left: auto;
     margin-right: auto;
@@ -489,16 +493,13 @@
     }
   }
 
-  margin-top: 3rem;
-  border-spacing: 0;
-  table-layout: fixed;
-
   thead {
     font-weight: normal;
     th {
       padding: 0 0 1rem 0;
     }
   }
+  
   tbody {
     font-size: 0.875rem;
     line-height: 44px;
