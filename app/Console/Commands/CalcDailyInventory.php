@@ -127,7 +127,7 @@ class CalcDailyInventory extends Command
 
         // 対象日付（出庫予定日が対象日付）の出庫実績を取得する。
         $unloadCount = Deal::whereDate('unload_date_plan', $targetDate)
-            ->where('status', DealStatus::UNLOADED->value)
+            ->whereIn('status', [DealStatus::NOT_LOADED->value, DealStatus::LOADED->value])
             ->where('transaction_type', TransactionType::PARKING->value)
             ->count();
 
