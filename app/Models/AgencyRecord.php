@@ -46,6 +46,7 @@ class AgencyRecord extends Model
         'pay_not_real',
         'has_voucher',
         'coupon_name',
+        'margin_rate',
     ];
 
     /**
@@ -78,5 +79,18 @@ class AgencyRecord extends Model
     public function office()
     {
         return $this->belongsTo(Office::class);
+    }
+
+    public function calcMarginAmount(): int
+    {
+        if ($this->margin_rate == 0) {
+            return 0;
+        }
+
+        $parkingPrice = $this->price - $this->dt_price_load - $this->pay_not_real - $this->base_price;
+        if( $parkingPrice <= 0 ) {
+            return 0;
+        }
+        return (int) round($parkingPrice * ($this->margin_rate / 100));
     }
 }

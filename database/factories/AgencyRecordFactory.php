@@ -55,6 +55,7 @@ class AgencyRecordFactory extends Factory
             'pay_not_real'      => $this->faker->numberBetween(1000, 2000),
             'has_voucher'       => $this->faker->boolean(),
             'coupon_name'       => Coupon::inRandomOrder()->take(3)->pluck('name')->join(', '),
+            'margin_rate'      => $agency->margin_rate,
         ];
     }
 }
