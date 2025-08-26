@@ -1,6 +1,7 @@
 <?php
 namespace App\Exports;
 
+use App\Models\AgencyRecord;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromGenerator;
@@ -34,12 +35,13 @@ class AgencySalesListsGenExport implements FromGenerator
                 '受付ID','顧客ID','顧客名','入庫日','出庫日','日数','出発地',
                 '車番','車種','割引率','割引券名','割引券金額','駐車料金',
                 'クーポン',
-                // 'マージン率','マージン額', // 使用しない
+                'マージン率','マージン額',
                 // 'マイル'
             ];
 
             // ---- データ行 ----
             foreach ($agencyRecords as $agencyRecord) {
+                /** @var AgencyRecord $agencyRecord */
                 yield [
                     // 受付ID
                     $agencyRecord->receipt_code,
@@ -50,7 +52,7 @@ class AgencySalesListsGenExport implements FromGenerator
                     // 入庫日
                     $agencyRecord->load_date->format('Y-m-d'),
                     // 出庫日
-                    $agencyRecord->unload_date->format('Y-m-d'),
+                    $agencyRecord->unload_date?->format('Y-m-d'),
                     // 日数
                     $agencyRecord->num_days,
                     // 出発地
@@ -70,9 +72,9 @@ class AgencySalesListsGenExport implements FromGenerator
                     // クーポン
                     isBlank($agencyRecord->coupon_name) ? '無' : '有',
                     // マージン率
-                    // null,
+                    "{$agencyRecord->margin_rate}",
                     // マージン額
-                    // null,
+                    "{$agencyRecord->calcMarginAmount()}",
                     // マイル
                     // null,
                 ];
