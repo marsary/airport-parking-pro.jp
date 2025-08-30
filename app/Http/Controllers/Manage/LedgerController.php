@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Manage;
 
 use App\Enums\DealStatus;
 use App\Enums\TransactionType;
+use App\Exports\AgencyRecordsGenExport;
 use App\Exports\AgencySalesListsGenExport;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\BunchIssuesRequest;
+use App\Http\Requests\Manage\Ledger\AgencyRecordsDownloadRequest;
 use App\Http\Requests\Manage\Ledger\AgencySalesListsDownloadRequest;
 use App\Http\Requests\Manage\Ledger\RegiChecklistsRequest;
 use App\Http\Requests\Manage\Ledger\RegiPaymentSummariesRequest;
@@ -16,6 +18,7 @@ use App\Models\AgencyRecord;
 use App\Models\CashRegister;
 use App\Models\Deal;
 use App\Models\GoodCategory;
+use App\Models\Office;
 use App\Services\Ledger\AgencySalesListsDownloadService;
 use App\Services\Ledger\RegiChecklistsService;
 use App\Services\Ledger\RegiPaymentSummariesService;
@@ -24,6 +27,7 @@ use App\Services\Ledger\Repositories\PaymentSummaryRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LedgerController extends Controller
 {
@@ -215,6 +219,11 @@ class LedgerController extends Controller
             1
         )->endOfMonth()->endOfDay();
 
+        return $this->downloadAgencySalesLists($request, $startDate, $endDate);
+    }
+
+    private function downloadAgencySalesLists(Request $request, Carbon $startDate, Carbon $endDate)
+    {
         $agencyRecords = AgencyRecord::when($request->input('agency_code'), function($query, $search){
                 $query->whereHas('agency', function (Builder $query) use($search){
                     $query->where('code', $search);
@@ -326,6 +335,75 @@ class LedgerController extends Controller
     {
         // レジ清算集計表
         return view('manage.ledger.agency_records');
+    }
+
+
+    public function agencyRecordsDownload(AgencyRecordsDownloadRequest $request)
+    {
+        // 開始期間（指定月の1日）
+        $startDate = Carbon::createFromDate(
+            $request->margin_year,
+            $request->margin_month,
+            1
+        )->startOfDay();
+
+        // 終了期間（指定月の末日）
+        $endDate = Carbon::createFromDate(
+            $request->margin_year,
+            $request->margin_month,
+            1
+        )->endOfMonth()->endOfDay();
+
+
+        if($request->has('agency_sales_lists')) {
+            return $this->downloadAgencySalesLists($request, $startDate, $endDate);
+        }
+
+        // 代理店実績表
+
+        $query = AgencyRecord::when($request->input('agency_code'), function($query, $search){
+                $query->whereHas('agency', function (Builder $query) use($search){
+                    $query->where('code', $search);
+                });
+            })
+            ->whereBetween('load_date', [$startDate, $endDate])
+            // ->where('office_id', config('const.commons.office_id'))
+            // マージン計算用駐車料金（割引券適用後，ポイント等除外，固定料金除外，税抜き）
+            ->select(
+                'agency_id',
+                'agency_name',
+                'office_id',
+                DB::raw('COUNT(*) as record_count'),
+                DB::raw('SUM(price-dt_price_load-pay_not_real-base_price) as price_parking'),
+                DB::raw('SUM(
+					CASE WHEN (price-dt_price_load-pay_not_real-base_price) <= 0 THEN 0
+					ELSE ROUND((price-dt_price_load-pay_not_real-base_price) * margin_rate / 100.0)
+					END
+				) AS margin')
+            )
+            ->groupBy('agency_id', 'office_id', 'agency_name')
+            ->orderBy('agency_id', 'asc')
+            ->orderBy('office_id', 'asc');
+
+        if($request->has('for_margin')) {
+            $query->where('margin_rate', '>', 0)
+                ->whereRaw('(price - dt_price_load - pay_not_real - base_price) > 0');
+                ;
+        }
+        $agencyRecords = $query->get();
+
+        $offices = Office::whereIn('id', $agencyRecords->pluck('office_id')->unique()->all())->orderBy('id')->get();
+
+
+        $grouped = $agencyRecords->groupBy('agency_id')
+            ->all();
+
+
+        /** @var AgencyExport $export */
+        $export = new AgencyRecordsGenExport($grouped, $offices, $endDate);
+
+        $fileName = 'agency_past_record.csv';
+        return $export->download($fileName, \Maatwebsite\Excel\Excel::CSV);
     }
 
 }
