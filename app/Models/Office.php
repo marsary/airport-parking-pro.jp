@@ -43,4 +43,9 @@ class Office extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    public function agencyRecords()
+    {
+        return $this->hasMany(AgencyRecord::class);
+    }
 }
