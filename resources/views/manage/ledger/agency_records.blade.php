@@ -10,26 +10,27 @@
 
       <div class="l-container__inner">
         <div class="u-font--20 u-font--medium u-font--green u-mb05">日付範囲指定</div>
-        <form action="" class="u-mb4">
+        <form action="{{route('manage.ledger.agency_records.download')}}" class="u-mb4" method="GET">
           <div class="l-flex l-grid--gap2 u-mb2">
             <!-- text 代理店番号 -->
             <label for="store_number" class="l-flex l-grid--gap05">代理店
-              <input type="text" id="store_number" name="store_number" placeholder="1234" maxlength="4" class="u-mb0 u-w70">
+              <input type="text" id="agency_code" name="agency_code" value="{{old('agency_code')}}" class="u-mb0">
+              {{--  <input type="text" id="store_number" name="store_number" placeholder="1234" maxlength="4" class="u-mb0 u-w70">
               -
-              <input type="text" id="store_number_2" name="store_number_2" placeholder="567" maxlength="3" class="u-mb0 u-w50">
+              <input type="text" id="store_number_2" name="store_number_2" placeholder="567" maxlength="3" class="u-mb0 u-w50">  --}}
             </label>
             <!-- 対象月  -->
             <label for="entry_date" class="l-flex l-grid--gap05">対象月
               <!-- 年と月のみを分ける input -->
-              <input type="text" id="margin_year" name="margin_year" placeholder="2021" maxlength="4" class="u-mb0 u-w50">
+              <input type="text" id="margin_year" name="margin_year" value="{{old('margin_year')}}" placeholder="2021" maxlength="4" class="u-mb0 u-w50">
               年
-              <input type="text" id="margin_month" name="margin_month" placeholder="01" maxlength="2" class="u-mb0 u-w40">
+              <input type="text" id="margin_month" name="margin_month" value="{{old('margin_month')}}" placeholder="01" maxlength="2" class="u-mb0 u-w40">
               月
             </label>
           </div>
-          <input type="submit" value="代理店別売上リスト" class="c-button__submit u-w-auto u-horizontal-auto">
-          <input type="submit" value="代理店実績表" class="c-button__submit u-w-auto u-horizontal-auto">
-          <input type="submit" value="マージン計算月" class="c-button__submit u-w-auto u-horizontal-auto">
+          <input type="submit" name="agency_sales_lists" value="代理店別売上リスト" class="c-button__submit u-w-auto u-horizontal-auto">
+          <input type="submit" name="agency_records" value="代理店実績表" class="c-button__submit u-w-auto u-horizontal-auto">
+          <input type="submit" name="for_margin" value="マージン計算月" class="c-button__submit u-w-auto u-horizontal-auto">
         </form>
 
         <ul class="u-font--md">
