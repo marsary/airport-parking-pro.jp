@@ -49,6 +49,36 @@ class AgencyRecordsGenExport implements FromGenerator
 
 
             // ---- データ行 ----
+            $firstRecord = $agencyRecords->first();
+            if (!$firstRecord) {
+                continue;
+            }
+
+            $row = [
+                // 対象年月
+                $this->targetDate->format('Ym'),
+                // 代理店ID
+                $firstRecord->agency_id,
+                // 代理店名
+                $firstRecord->agency_name,
+            ];
+
+            $recordsByOffice = $agencyRecords->keyBy('office_id');
+
+            foreach ($this->offices as $office) {
+                $record = $recordsByOffice->get($office->id);
+                /** @var AgencyRecord $record */
+                if ($record) {
+                    $row[] = $record->record_count;
+                    $row[] = $record->price_parking;
+                    $row[] = $record->margin;
+                } else {
+                    $row[] = '';
+                    $row[] = '';
+                    $row[] = '';
+                }
+            }
+            yield $row;
         }
     }
 }
