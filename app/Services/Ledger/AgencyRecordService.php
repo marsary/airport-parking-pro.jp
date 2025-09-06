@@ -43,8 +43,8 @@ class AgencyRecordService
                 $row->unload_date = $deal->unload_date;
                 $row->unload_date_plan = $deal->unload_date_plan;
                 $row->unload_time_plan = $deal->unload_time_plan;
-                $row->num_days = (int) ceil($unloadDate->diffInDays($deal->load_date->subDay(), true));
-                $row->num_days_plan = (int) ceil($deal->unload_date_plan->diffInDays($deal->load_date->subDay(), true));
+                $row->num_days = (int) ceil($unloadDate->diffInDays($deal->load_date->copy()->subDay(), true));
+                $row->num_days_plan = (int) ceil($deal->unload_date_plan->diffInDays($deal->load_date->copy()->subDay(), true));
 
                 $row->airline_name = $deal->arrivalFlight?->airline?->name;
                 $row->dep_airport_name = $deal->arrivalFlight?->depAirport?->name;
@@ -100,7 +100,7 @@ class AgencyRecordService
         $couponTotal = 0;
         $payNotReal = 0;
         foreach ($payment->paymentDetails as $paymentDetail) {
-            if($paymentDetail->coupon()->exists()) {
+            if($paymentDetail->coupon) {
                 $hasCoupon = true;
                 $couponNames[] = $paymentDetail->coupon->name;
                 $couponTotal += $paymentDetail->total_price;
