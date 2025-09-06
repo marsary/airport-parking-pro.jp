@@ -76,7 +76,14 @@ class SaveAgencyRecords extends Command
             ->whereDate('load_date', $targetDate)
             ->where('office_id', config('const.commons.office_id'))
             ->whereNotNull('agency_id')
-            ->with(['office', 'agency', 'member', 'payment.paymentDetails.paymentMethod', 'memberCar.car', 'arrivalFlight.depAirport'])
+            // AgencyRecordServiceで利用するリレーションをEager-loadしてN+1問題を解消
+            ->with([
+                'office', 'agency', 'member',
+                'payment.paymentDetails.paymentMethod',
+                'payment.paymentDetails.coupon',
+                'memberCar.car.carMaker', 'memberCar.carColor',
+                'arrivalFlight.airline', 'arrivalFlight.depAirport'
+            ])
             ->orderBy('agency_id', 'asc')
             ->orderBy('deals.id', 'asc')
             ->get();
