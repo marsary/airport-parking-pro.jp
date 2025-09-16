@@ -36,6 +36,7 @@ class Deal extends Model
         'visit_time_plan',
         'unload_date_plan',
         'unload_time_plan',
+        'overdue',
         'arrival_flg',
         'unload_date',
         'unload_time',
