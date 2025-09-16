@@ -3,6 +3,7 @@ namespace App\Services\Deal;
 
 use App\Enums\DealStatus;
 use App\Models\Deal;
+use App\Models\SystemDate;
 use App\Services\PriceTable;
 use Carbon\Carbon;
 
@@ -44,5 +45,18 @@ class ExtraPaymentManager
                 $this->deal->agency_id
             );
         }
+    }
+
+    public function recalcDealPricesWithExtraPayment()
+    {
+        if($this->deal->status != DealStatus::LOADED->value) {
+            return;
+        }
+        // 追加精算あるかチェック
+        $sysDate = SystemDate::latest()->first();
+        if(!$sysDate) {
+            throw new \Exception('システム日付が設定されていません。');
+        }
+        $today = $sysDate->system_date->copy();
     }
 }
