@@ -68,8 +68,9 @@ class RegistersController extends Controller
                 // ステータス更新 入庫済み
                 if($service->deal->status != DealStatus::UNLOADED->value) {
                     $service->deal->status = DealStatus::LOADED->value;
-                    $service->deal->save();
                 }
+                $service->deal->overdue = false; // 延長フラグをリセット
+                $service->deal->save();
             });
         } catch (\Throwable $th) {
             Log::error('エラー内容：' . $th->getMessage());
