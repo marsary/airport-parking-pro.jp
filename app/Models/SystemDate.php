@@ -48,7 +48,10 @@ class SystemDate extends Model
 
         if ($sysDate->exists) {
             // 既存レコードの日付を指定された日数進める
-            $sysDate->system_date = $sysDate->system_date->addDays($days);
+            /** @var Carbon $currentDate */
+            $currentDate = $sysDate->system_date;
+            $newDate = $currentDate->addDays($days);
+            $sysDate->system_date = $newDate;
         } else {
             // レコードが存在しない場合、今日の日付から開始して指定された日数進める
             $currentDate = Carbon::today();
