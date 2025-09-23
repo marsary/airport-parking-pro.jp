@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Manage;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -50,6 +51,26 @@ class EntryDateRequest extends FormRequest
         $this->merge([
             'coupon_ids' => $coupon_ids,
         ]);
+
+        if ($this->unload_time_plan) {
+            try {
+                $this->merge([
+                    'unload_time_plan' => Carbon::parse($this->unload_time_plan)->format('H:i'),
+                ]);
+            } catch (\Throwable $th) {
+                // パースに失敗した場合はバリデーションに任せる
+            }
+        }
+
+        if ($this->load_time) {
+            try {
+                $this->merge([
+                    'load_time' => Carbon::parse($this->load_time)->format('G:i'),
+                ]);
+            } catch (\Throwable $th) {
+                // パースに失敗した場合はバリデーションに任せる
+            }
+        }
     }
 
     public function attributes()
