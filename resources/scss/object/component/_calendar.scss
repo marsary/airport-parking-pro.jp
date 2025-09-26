@@ -26,12 +26,6 @@
 }
 
 .c-calendar-available-time {
-  &__wrap {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(6, auto);
-    gap: .25rem;
-  }
   display: grid;
   grid-template-columns: 1fr 45px;
   gap: .25rem;
@@ -39,6 +33,12 @@
   height: 50px;
   line-height: 50px;
   font-size: 1.25rem;
+  &__wrap {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(6, auto);
+    gap: .25rem;
+  }
 }
 
 // 受付入力1カレンダー
