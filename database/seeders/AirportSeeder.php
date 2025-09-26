@@ -16,10 +16,12 @@ class AirportSeeder extends Seeder
         Airport::insert([
             [
                 'id' => 1,
+                'code' => 'NRT',
                 'name' => '成田'
             ],
             [
                 'id' => 2,
+                'code' => 'HND',
                 'name' => '羽田'
             ],
         ]);

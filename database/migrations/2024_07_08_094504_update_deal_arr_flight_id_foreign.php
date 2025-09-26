@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('deals', function (Blueprint $table) {
-            $table->dropForeign(['arr_flight_id']);
+            if (env('DB_CONNECTION') !== 'sqlite') {
+                $table->dropForeign(['arr_flight_id']);
+            }
             $table->foreign('arr_flight_id')->references('id')->on('arrival_flights')->nullOnDelete();
         });
     }

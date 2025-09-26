@@ -12,13 +12,13 @@
 
     <div class="l-container__inner">
         <div class="l-grid--col5-1fr l-grid--rgap2 l-grid--cgap1 u-font--white">
-            <a href="/manage/master/good_categories" class="c-button--yellow c-link-no-border">商品カテゴリーマスタ</a>
-            <a href="/manage/master/goods" class="c-button--yellow c-link-no-border">商品マスタ</a>
-            <a href="/manage/master/agencies" class="c-button--yellow c-link-no-border">代理店マスタ</a>
-            <a href="/manage/master/coupons" class="c-button--yellow c-link-no-border">クーポンマスタ</a>
-            <a href="/manage/master/prices" class="c-button--yellow c-link-no-border">金額マスタ</a>
-            <a href="/manage/master/agency_prices" class="c-button--yellow c-link-no-border">代理店金額マスタ</a>
-            <a href="/manage/master/load_unload_full_limit_settings" class="c-button--yellow c-link-no-border">上限設定マスタ</a>
+            <a href="{{route('manage.master.good_categories.index')}}" class="c-button--yellow c-link-no-border">商品カテゴリーマスタ</a>
+            <a href="{{route('manage.master.goods.index')}}" class="c-button--yellow c-link-no-border">商品マスタ</a>
+            <a href="{{route('manage.master.agencies.index')}}" class="c-button--yellow c-link-no-border">代理店マスタ</a>
+            <a href="{{route('manage.master.coupons.index')}}" class="c-button--yellow c-link-no-border">クーポンマスタ</a>
+            <a href="{{route('manage.master.prices.index')}}" class="c-button--yellow c-link-no-border">金額マスタ</a>
+            <a href="{{route('manage.master.agency_prices.index')}}" class="c-button--yellow c-link-no-border">代理店金額マスタ</a>
+            <a href="{{route('manage.master.load_unload_full_limit_settings.index')}}" class="c-button--yellow c-link-no-border">上限設定マスタ</a>
         </div>
     </div><!-- ./l-container__inner -->
 </main>

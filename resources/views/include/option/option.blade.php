@@ -33,16 +33,16 @@
                   $goodNums = old('modal_good_nums', isset($reserve->good_nums) ? $reserve->good_nums: []);
                   $goodNum = $goodNums[$good->id] ?? 0;
                 @endphp
+                <button type="button" class="c-button-optionQuantity c-button-optionQuantity--down" onclick="changeQuantity('modal_good_nums_{{$good->id}}', -1);updateOptionQuantity({{$good->id}})">－</button>
                 <input type="text" id="modal_good_nums_{{$good->id}}" class="c-buttonQuantity__input modal_good_nums" name="modal_good_nums[{{$good->id}}]" value="{{$goodNum}}" readonly data-price="{{$good->price}}">
                 <button type="button" class="c-button-optionQuantity c-button-optionQuantity--up" onclick="changeQuantity('modal_good_nums_{{$good->id}}', 1);updateOptionQuantity({{$good->id}})">＋</button>
-                <button type="button" class="c-button-optionQuantity c-button-optionQuantity--down" onclick="changeQuantity('modal_good_nums_{{$good->id}}', -1);updateOptionQuantity({{$good->id}})">－</button>
               </div>
             </div>
           @endforeach
         </div>
         <div class="l-flex--center l-grid--gap1 u-mt3">
           <button type="button" class="c-button__submit--gray modal_optionClose" onclick="closeOptionModal({{$modalId}})">閉じる</button>
-          <button type="button" id="modal_add_{{$modalId}}" onclick="addOptions({{$modalId}})" class="c-button__submit--green">追加</button>
+          <button type="button" id="modal_add_{{$modalId}}" onclick="addOptions({{$modalId}}); closeOptionModal({{$modalId}});" class="c-button__submit--green">追加</button>
         </div>
       </div>
     </div>

@@ -146,7 +146,7 @@
         </tr>
         <tr>
           <th>備考</th>
-          <td>{{$reserve->reserve_memo}}</td>
+          <td>{!! nl2br(e($reserve->reserve_memo)) !!}</td>
         </tr>
       </table>
 
@@ -154,8 +154,8 @@
       <!--  -->
       <div class="c-button-group__form u-mt3">
         <button type="button" id="returnButton" onclick="location.href='{{route('manage.reserves.entry_info')}}';" class="c-button__submit--dark-gray u-h50">修正する</button>
-        <button type="submit" name="confirm_btn" value="1" id="confirmButton" class="c-button__submit--green u-h50">予約を完了する</button>
-        <button type="submit" name="to_register" value="0" class="c-button__pagination--next">お会計へ</button>
+        <button type="button" onclick="submit();" name="confirm_btn" value="1" id="confirmButton" class="c-button__submit--green u-h50">予約を完了する</button>
+        <button type="button" onclick="submit();" name="to_register" value="0" class="c-button__pagination--next">お会計へ</button>
         <img src="{{ asset('images/card_5brand.png') }}" height="16" style="margin-left: 20px;">
       </div>
     </form>

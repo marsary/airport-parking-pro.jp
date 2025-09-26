@@ -7,6 +7,7 @@ use App\Helpers\StdObject;
 use App\Models\Agency;
 use App\Models\Payment;
 use App\Models\PaymentDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RegiChecklistsService
@@ -16,7 +17,18 @@ class RegiChecklistsService
     {
         $query = Payment::query();
 
-        $this->dbData = $query->whereDate('payment_date', $request->entry_date)
+        $this->dbData = $query
+            ->when($request->input('entry_date'), function($query, $search) {
+                $query->whereDate('payment_date', $search);
+            })
+            ->when($request->input('entry_date_start'), function($query, $search){
+                $datetime = Carbon::parse($search)->toDateString();
+                $query->where('payment_date','>=', $datetime);
+            })
+            ->when($request->input('entry_date_fin'), function($query, $search){
+                $datetime = Carbon::parse($search)->toDateString();
+                $query->where('payment_date','<=', $datetime);
+            })
             ->where('office_id', config('const.commons.office_id'))
             ->when($request->input('register'), function($query, $search) {
                 $query->where('cash_register_id', $search);
@@ -74,9 +86,10 @@ class RegiChecklistsService
 
 
             foreach ($payment->paymentGoods as $paymentGood){
-                if(!isset($officeTable->goodsSales->rows[$paymentGood->dealGood->good_id])) {
-                    $officeTable->goodsSales->rows[$paymentGood->dealGood->good_id] = new TableRow([
-                        'itemName' => $paymentGood->dealGood->good->name,
+                $dealGood = $paymentGood->dealGood()->withTrashed()->first();
+                if(!isset($officeTable->goodsSales->rows[$dealGood->good_id])) {
+                    $officeTable->goodsSales->rows[$dealGood->good_id] = new TableRow([
+                        'itemName' => $dealGood->good->name,
                         'count' => 0,
                         'amount' => 0,
                         'price' => 0,
@@ -84,8 +97,8 @@ class RegiChecklistsService
                     ]);
                 }
 
-                $goodsRow = $officeTable->goodsSales->rows[$paymentGood->dealGood->good_id];
-                $goodsRow->id = $paymentGood->dealGood->good_id;
+                $goodsRow = $officeTable->goodsSales->rows[$dealGood->good_id];
+                $goodsRow->id = $dealGood->good_id;
                 $goodsRow->count += 1;
                 $goodsRow->amount += $paymentGood->num;
                 $goodsRow->price += $paymentGood->total_price + $paymentGood->total_tax;
@@ -137,9 +150,10 @@ class RegiChecklistsService
             }
 
             foreach ($payment->paymentGoods as $paymentGood){
-                if(!isset($goodsTable->rows[$paymentGood->dealGood->good_id])) {
-                    $goodsTable->rows[$paymentGood->dealGood->good_id] = new TableRow([
-                        'itemName' => $paymentGood->dealGood->good->name,
+                $dealGood = $paymentGood->dealGood()->withTrashed()->first();
+                if(!isset($goodsTable->rows[$dealGood->good_id])) {
+                    $goodsTable->rows[$dealGood->good_id] = new TableRow([
+                        'itemName' => $dealGood->good->name,
                         'count' => 0,
                         'amount' => 0,
                         'price' => 0,
@@ -147,8 +161,8 @@ class RegiChecklistsService
                     ]);
                 }
 
-                $goodsRow = $goodsTable->rows[$paymentGood->dealGood->good_id];
-                $goodsRow->id = $paymentGood->dealGood->good_id;
+                $goodsRow = $goodsTable->rows[$dealGood->good_id];
+                $goodsRow->id = $dealGood->good_id;
                 $goodsRow->count += 1;
                 $goodsRow->amount += $paymentGood->num;
                 $goodsRow->price += $paymentGood->total_price + $paymentGood->total_tax;

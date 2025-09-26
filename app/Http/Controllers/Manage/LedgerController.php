@@ -4,18 +4,30 @@ namespace App\Http\Controllers\Manage;
 
 use App\Enums\DealStatus;
 use App\Enums\TransactionType;
+use App\Exports\AgencyRecordsGenExport;
+use App\Exports\AgencySalesListsGenExport;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\BunchIssuesRequest;
+use App\Http\Requests\Manage\Ledger\AgencyRecordsDownloadRequest;
+use App\Http\Requests\Manage\Ledger\AgencySalesListsDownloadRequest;
 use App\Http\Requests\Manage\Ledger\RegiChecklistsRequest;
+use App\Http\Requests\Manage\Ledger\RegiPaymentSummariesRequest;
 use App\Http\Requests\Manage\Ledger\RegiSalesAccountBooksRequest;
 use App\Http\Requests\Manage\UnloadAllRequest;
+use App\Models\AgencyRecord;
 use App\Models\CashRegister;
 use App\Models\Deal;
 use App\Models\GoodCategory;
+use App\Models\Office;
+use App\Services\Ledger\AgencySalesListsDownloadService;
 use App\Services\Ledger\RegiChecklistsService;
+use App\Services\Ledger\RegiPaymentSummariesService;
 use App\Services\Ledger\RegiSalesAccountBooksService;
+use App\Services\Ledger\Repositories\PaymentSummaryRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LedgerController extends Controller
 {
@@ -175,9 +187,60 @@ class LedgerController extends Controller
         return redirect()->route('manage.ledger.bunch_issues');
     }
 
-    public function agencySalesLists(Request $request)
+    public function agencySalesLists()
     {
-        return view('manage.ledger.agency_sales_lists');
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
+
+        // 過去５年分の years
+        $thisYear = Carbon::today()->year;
+        $years = range($thisYear - 5, $thisYear);
+
+        return view('manage.ledger.agency_sales_lists',[
+            'years' => $years,
+            'currentYear' => $currentYear,
+            'currentMonth' => $currentMonth,
+        ]);
+    }
+
+    public function agencySalesListsDownload(AgencySalesListsDownloadRequest $request)
+    {
+        // 開始期間（指定月の1日）
+        $startDate = Carbon::createFromDate(
+            $request->load_date_start_year,
+            $request->load_date_start_month,
+            1
+        )->startOfDay();
+
+        // 終了期間（指定月の末日）
+        $endDate = Carbon::createFromDate(
+            $request->load_date_end_year,
+            $request->load_date_end_month,
+            1
+        )->endOfMonth()->endOfDay();
+
+        return $this->downloadAgencySalesLists($request, $startDate, $endDate);
+    }
+
+    private function downloadAgencySalesLists(Request $request, Carbon $startDate, Carbon $endDate)
+    {
+        $agencyRecords = AgencyRecord::when($request->input('agency_code'), function($query, $search){
+                $query->whereHas('agency', function (Builder $query) use($search){
+                    $query->where('code', $search);
+                });
+            })
+            ->whereBetween('load_date', [$startDate, $endDate])
+            ->where('office_id', config('const.commons.office_id'))
+            ->with(['deal'])
+            ->orderBy('agency_id', 'asc')
+            ->orderBy('deal_id', 'asc')
+            ->get()->groupBy('agency_id')->all();
+
+        /** @var AgencyExport $export */
+        $export = new AgencySalesListsGenExport($agencyRecords);
+
+        $fileName = 'agency_sales_account_list.csv';
+        return $export->download($fileName, \Maatwebsite\Excel\Excel::CSV);
     }
 
     public function agencyResult(Request $request)
@@ -221,10 +284,35 @@ class LedgerController extends Controller
         ]);
     }
 
-    public function regiPaymentSummaries(Request $request)
+    public function regiPaymentSummaries(RegiPaymentSummariesRequest $request, PaymentSummaryRepository $repository)
     {
         // レジ清算集計表
-        return view('manage.ledger.regi_payment_summaries');
+        // レジ点検表
+        $registers = CashRegister::where('office_id', config('const.commons.office_id'))->orderBy('id')->get();
+
+        $data = [];
+        if($request->has('entry_date_start') && $request->has('entry_date_fin')) {
+            $summariesService = new RegiPaymentSummariesService($repository);
+
+            $service = new RegiChecklistsService($request);
+            $purchaseOnlyTable = $service->getGoodsTableData(true);
+            $data = [
+                'loadUnloadTables' => $summariesService->getLoadUnloadCounts($request),
+                'paymentMethodTable' => $summariesService->getPaymentMethodTable($request),
+                'regiPaymentGoodsTables' => $summariesService->getRegiPaymentGoodsTables($request),
+                'creditTableOfficeData' => $summariesService->getCreditTableOfficeData($request),
+
+                'purchaseOnlyTable' => $purchaseOnlyTable,
+                'officeTables' => $service->getOfficeSaleTablesData(),
+                'totalSalesTable' => $service->getTotalSalesTableData(),
+                'creditsTableData' => $service->getCreditsTableData(),
+            ];
+        }
+
+        return view('manage.ledger.regi_payment_summaries', $data + [
+            'registers' => $registers,
+            'office' => myOffice(),
+        ]);
     }
 
     public function regiSalesAccountBooks(RegiSalesAccountBooksRequest $request)
@@ -247,6 +335,75 @@ class LedgerController extends Controller
     {
         // レジ清算集計表
         return view('manage.ledger.agency_records');
+    }
+
+
+    public function agencyRecordsDownload(AgencyRecordsDownloadRequest $request)
+    {
+        // 開始期間（指定月の1日）
+        $startDate = Carbon::createFromDate(
+            $request->margin_year,
+            $request->margin_month,
+            1
+        )->startOfDay();
+
+        // 終了期間（指定月の末日）
+        $endDate = Carbon::createFromDate(
+            $request->margin_year,
+            $request->margin_month,
+            1
+        )->endOfMonth()->endOfDay();
+
+
+        if($request->has('agency_sales_lists')) {
+            return $this->downloadAgencySalesLists($request, $startDate, $endDate);
+        }
+
+        // 代理店実績表
+
+        $query = AgencyRecord::when($request->input('agency_code'), function($query, $search){
+                $query->whereHas('agency', function (Builder $query) use($search){
+                    $query->where('code', $search);
+                });
+            })
+            ->whereBetween('load_date', [$startDate, $endDate])
+            // ->where('office_id', config('const.commons.office_id'))
+            // マージン計算用駐車料金（割引券適用後，ポイント等除外，固定料金除外，税抜き）
+            ->select(
+                'agency_id',
+                'agency_name',
+                'office_id',
+                DB::raw('COUNT(*) as record_count'),
+                DB::raw('SUM(price-dt_price_load-pay_not_real-base_price) as price_parking'),
+                DB::raw('SUM(
+					CASE WHEN (price-dt_price_load-pay_not_real-base_price) <= 0 THEN 0
+					ELSE ROUND((price-dt_price_load-pay_not_real-base_price) * margin_rate / 100.0)
+					END
+				) AS margin')
+            )
+            ->groupBy('agency_id', 'office_id', 'agency_name')
+            ->orderBy('agency_id', 'asc')
+            ->orderBy('office_id', 'asc');
+
+        if($request->has('for_margin')) {
+            $query->where('margin_rate', '>', 0)
+                ->whereRaw('(price - dt_price_load - pay_not_real - base_price) > 0');
+                ;
+        }
+        $agencyRecords = $query->get();
+
+        $offices = Office::whereIn('id', $agencyRecords->pluck('office_id')->unique()->all())->orderBy('id')->get();
+
+
+        $grouped = $agencyRecords->groupBy('agency_id')
+            ->all();
+
+
+        /** @var AgencyExport $export */
+        $export = new AgencyRecordsGenExport($grouped, $offices, $endDate);
+
+        $fileName = 'agency_past_record.csv';
+        return $export->download($fileName, \Maatwebsite\Excel\Excel::CSV);
     }
 
 }

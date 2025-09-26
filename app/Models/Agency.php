@@ -46,6 +46,7 @@ class Agency extends Model
         'title_set',
         'logo_image',
         'campaign_image',
+        'margin_rate',
     ];
 
     public function agencyPrices()

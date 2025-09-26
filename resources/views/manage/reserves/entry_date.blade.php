@@ -58,8 +58,8 @@
                 <div class="p-reserve__wrap">
                     <p class="text-center u-mb2 u-font--medium">入庫予定時間を指定してください</p>
                     <div class="c-title__calendar u-mb1" id="load_timetable_title">0000年0月</div>
-                    <div class="u-mb2 l-grid--col2 l-grid--gap1 p-reserve-selectedTime" id="load_time_section">
-                        <dl>
+                    {{-- <div class="u-mb2 l-grid--col2 l-grid--gap1 p-reserve-selectedTime" id="load_time_section"> --}}
+                        {{-- <dl>
                             <dt class="c-calendar__heading">午前</dt>
                             <dd>
                                 <ul class="c-calendar-available-time__wrap">
@@ -168,8 +168,38 @@
                                     </li>
                                 </ul>
                             </dd>
-                        </dl>
-                    </div>
+                        </dl> --}}
+                          <!--
+    変更ここから 2025/6/23
+  -->
+  <!--
+    1時間おきの時間選択削除
+  -->
+  <dl class="p-reserve-selectedTime--detail">
+    <dt class="c-calendar__heading">時間</dt>
+    <dd>
+      <ul class="p-reserve-selectedTime--detail__wrap" id="load_time_section">
+        @for ($hour = 0; $hour < 24; $hour++)
+          @foreach (['00', '15', '30', '45'] as $minute)
+            <li class="c-calendar-available-time__detail">
+              <div class="p-reserve-selectedTime__bg time_label_cell" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
+              <div class="p-reserve-selectedTime__bg c-calendar__available-icon time_vacancy" data-time="{{ $hour }}:{{ $minute }}">
+                {{--
+                     - 予約可能画像: <img src="{{ asset('images/svg/calendar_available.svg') }}">
+                     - 残数小画像（△）:  <img src="{{ asset('images/svg/calendar_some-available.svg') }}">
+                     - 予約不可画像: <img src="{{ asset('images/svg/calendar_none.svg') }}">
+                --}}
+                <img src="{{ asset('images/svg/calendar_available.svg') }}">
+              </div>
+            </li>
+          @endforeach
+        @endfor
+      </ul>
+    </dd>
+  </dl>
+  <!-- 変更ここまで 2025/6/23 -->
+
+                    {{-- </div>
 
                     <dl class="p-reserve-selectedTime--detail" id="quarter_hour_section">
                         <dt class="c-calendar__heading">時間</dt>
@@ -193,7 +223,7 @@
                                 </li>
                             </ul>
                         </dd>
-                    </dl>
+                    </dl> --}}
                 </div>
 
                 <!-- 駐車料金合計 -->
@@ -258,7 +288,7 @@
 
                     </div><!-- /.p-input-user-total-parking-charges__inner -->
 
-                    <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
+                    <button type="button" onclick="submit();" class="c-button__submit u-horizontal-auto">予約に進む</button>
                 </div><!-- /.p-input-user-total-parking-charges -->
 
             </form>
@@ -391,16 +421,25 @@
         margin-top: 3px;
     }
 
-    .hour_label_cell,
-    .quarter_hour_label_cell {
-        cursor: pointer;
+    .time_label_cell {
+      cursor: pointer;
     }
 
     .day_selected,
-    .hour_selected,
-    .quater_hour_selected {
-        border-color: rgb(167, 207, 249) !important;
-        background-color: rgb(167, 207, 249) !important;
+    .time_selected {
+      border-color: rgb(167, 207, 249) !important;
+      background-color: rgb(167, 207, 249) !important;
+    }
+    .fc-h-event .fc-event-title {
+        display: inline-block;
+        left: 0px;
+        max-width: 100%;
+        overflow: hidden;
+        right: 0px;
+        vertical-align: top;
+        /* ここを追加 */
+        font-weight: bold;
+        color: #24a12c;
     }
 </style>
 @endpush

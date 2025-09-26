@@ -13,7 +13,7 @@ class AirlineSeeder extends Seeder
     public function run(): void
     {
         SeedFromCSV::seed('airlines',
-            'airlines.csv',
+            'airlines_test.csv',
             [
                 'id',
                 'code',

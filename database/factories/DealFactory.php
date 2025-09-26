@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Agency;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -44,5 +45,15 @@ class DealFactory extends Factory
             'created_by' => \App\Models\User::first(),
             'updated_by' => \App\Models\User::first(),
         ];
+    }
+
+    /**
+     * Indicate that this is a premium one.
+     */
+    public function premium(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'agency_id' => Agency::NARITA_PREMIUM_ID,
+        ]);
     }
 }

@@ -20,6 +20,7 @@ class OfficeSeeder extends Seeder
                 'short_name' => 'テスト',
                 'airport_id' => 1, //成田
                 'receipt_issuer' => '領収書発行者名1',
+                'zip' => '000-0000',
                 'receipt_address' => '領収書住所1',
                 'receipt_tel' => '000-0000-0000',
                 'email' => 'hello@example.com',

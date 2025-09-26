@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Deal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,5 +26,12 @@ class DealGoodFactory extends Factory
             'total_price' => $good->price,
             'total_tax' => $good->tax,
         ];
+    }
+
+    public function fromDeal(Deal $deal): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'deal_id' => $deal->id,
+        ]);
     }
 }

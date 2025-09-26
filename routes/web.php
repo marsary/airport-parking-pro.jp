@@ -37,6 +37,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('ledger', [\App\Http\Controllers\Manage\LedgerController::class, 'index'])->name('ledger');
         Route::get('ledger/inventories', [\App\Http\Controllers\Manage\LedgerController::class, 'inventories'])->name('ledger.inventories');
         Route::get('ledger/agency_sales_lists', [\App\Http\Controllers\Manage\LedgerController::class, 'agencySalesLists'])->name('ledger.agency_sales_lists');
+        Route::get('ledger/agency_sales_lists/download', [\App\Http\Controllers\Manage\LedgerController::class, 'agencySalesListsDownload'])->name('ledger.agency_sales_lists.download');
         Route::get('ledger/agency_result', [\App\Http\Controllers\Manage\LedgerController::class, 'agencyResult'])->name('ledger.agency_result');
         Route::get('ledger/bunch_issues', [\App\Http\Controllers\Manage\LedgerController::class, 'bunch_issues'])->name('ledger.bunch_issues');
         Route::put('ledger/unload_all', [\App\Http\Controllers\Manage\LedgerController::class, 'unloadAll'])->name('ledger.unload_all');
@@ -45,6 +46,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::get('ledger/regi_payment_summaries', [\App\Http\Controllers\Manage\LedgerController::class, 'regiPaymentSummaries'])->name('ledger.regi_payment_summaries');
         Route::get('ledger/regi_sales_account_books', [\App\Http\Controllers\Manage\LedgerController::class, 'regiSalesAccountBooks'])->name('ledger.regi_sales_account_books');
         Route::get('ledger/agency_records', [\App\Http\Controllers\Manage\LedgerController::class, 'agencyRecords'])->name('ledger.agency_records');
+        Route::get('ledger/agency_records/download', [\App\Http\Controllers\Manage\LedgerController::class, 'agencyRecordsDownload'])->name('ledger.agency_records.download');
 
         Route::get('/ledger/reservation_result/calendar', [\App\Http\Controllers\Manage\Ledger\ReservationResultController::class, 'calendar'])->name('ledger.reservation_result.calendar');
 
@@ -77,6 +79,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::put('/load_unload_full_limit_settings/update_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'updateByDate'])->name('load_unload_full_limit_settings.update_by_date');
             Route::delete('/load_unload_full_limit_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'destroyByDate'])->name('load_unload_full_limit_settings.delete_by_date');
             Route::resource('/load_unload_full_limit_settings', \App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class);
+            Route::resource('/season_price_settings', \App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class);
         });
 
         Route::get('/settings/daily_update', [\App\Http\Controllers\Manage\Settings\DailyUpdateController::class, 'index'])->name('daily_update');
