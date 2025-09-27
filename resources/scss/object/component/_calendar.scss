@@ -120,14 +120,12 @@ a.fc-daygrid-day-number {
   margin-top: 5px;
 }
 
-.hour_label_cell,
-.quarter_hour_label_cell {
+.time_label_cell {
   cursor: pointer;
 }
 
 .day_selected,
-.hour_selected,
-.quater_hour_selected {
+.time_selected {
   border-color: rgb(167, 207, 249) !important;
   background-color: rgb(167, 207, 249) !important;
 }
