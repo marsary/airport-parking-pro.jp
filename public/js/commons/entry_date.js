@@ -21,20 +21,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const loadTimetableTitle = document.getElementById('load_timetable_title');
   const loadTimeSectionElem = document.getElementById('load_time_section');
-//   const quarterHourSectionElem = document.getElementById('quarter_hour_section');
   const leftCalendar1Title = document.getElementById('left_calendar1_title');
-//   const rightCalendar1Title = document.getElementById('right_calendar1_title');
   const leftCalendar2Title = document.getElementById('left_calendar2_title');
-//   const rightCalendar2Title = document.getElementById('right_calendar2_title');
 
   const dispNumDaysElem = document.getElementById('disp_num_days');
   const dispLoadDateElem = document.getElementById('disp_load_date');
   const dispUnloadDateElem = document.getElementById('disp_unload_date_plan');
 
-//   const hourLabelCells = Array.from(document.getElementsByClassName('hour_label_cell'));
-//   const quarterHourLabelCells = Array.from(document.getElementsByClassName('quarter_hour_label_cell'));
-//   const hourVacancyCells = Array.from(document.getElementsByClassName('hour_vacancy'));
-//   const quarterHourVacancyCells = Array.from(document.getElementsByClassName('quarter_hour_vacancy'));
   const timeLabelCells = Array.from(document.getElementsByClassName('time_label_cell'));
   const timeVacancyCells = Array.from(document.getElementsByClassName('time_vacancy'));
 
@@ -84,40 +77,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  hourLabelCells.forEach(cellElem => {
+  timeLabelCells.forEach(cellElem => {
     cellElem.addEventListener('click', function(){
-      removeHourSelected()
-      cellElem.classList.add("hour_selected");
-      updateQuarterMinTable(cellElem)
-    })
-  });
-
-  quarterHourLabelCells.forEach(cellElem => {
-    cellElem.addEventListener('click', function(){
-      removeQuaterHourSelected()
-      cellElem.classList.add("quater_hour_selected");
+      removeTimeSelected()
+      cellElem.classList.add("time_selected");
       loadTimeInput.value = cellElem.dataset.time;
       loadTimeInput.dispatchEvent(new Event('change'));
     })
   });
-
-
-  hourLabelCells.forEach(cellElem => {
-    cellElem.addEventListener('click', function(){
-      removeHourSelected()
-      cellElem.classList.add("hour_selected");
-      updateQuarterMinTable(cellElem)
+  function removeTimeSelected() {
+    Array.from(loadTimeSectionElem.getElementsByClassName('time_selected')).forEach(elem => {
+      elem.classList.remove("time_selected")
     })
-  });
+  }
 
-  quarterHourLabelCells.forEach(cellElem => {
-    cellElem.addEventListener('click', function(){
-      removeQuaterHourSelected()
-      cellElem.classList.add("quater_hour_selected");
-      loadTimeInput.value = cellElem.dataset.time;
-      loadTimeInput.dispatchEvent(new Event('change'));
-    })
-  });
 
   var calendarEl1 = document.getElementById('calendar1');
   var calendar1 = new FullCalendar.Calendar(calendarEl1, {
@@ -145,9 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     datesSet: function(dateInfo) {
       const startDate = luxon.DateTime.fromJSDate(dateInfo.start);
-    //   const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
       leftCalendar1Title.textContent = startDate.toFormat('yyyy年M月')
-    //   rightCalendar1Title.textContent = endDate.toFormat('yyyy年M月')
     },
 
     eventColor: 'rgba(255, 255, 255, 0)',
@@ -249,9 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     datesSet: function(dateInfo) {
       const startDate = luxon.DateTime.fromJSDate(dateInfo.start);
-    //   const endDate = luxon.DateTime.fromJSDate(dateInfo.end).minus({days: 1});
       leftCalendar2Title.textContent = startDate.toFormat('yyyy年M月')
-    //   rightCalendar2Title.textContent = endDate.toFormat('yyyy年M月')
     },
     eventColor: 'rgba(255, 255, 255, 0)',
     eventTextColor: '#5b915b',
@@ -326,16 +295,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-//   function removeHourSelected() {
-//     Array.from(loadTimeSectionElem.getElementsByClassName('hour_selected')).forEach(elem => {
-//       elem.classList.remove("hour_selected")
-//     })
-//   }
-//   function removeQuaterHourSelected() {
-//     Array.from(quarterHourSectionElem.getElementsByClassName('quater_hour_selected')).forEach(elem => {
-//       elem.classList.remove("quater_hour_selected")
-//     })
-//   }
 
 
   document.getElementById('cal1_prev').addEventListener('click', function() {
@@ -451,21 +410,14 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       timeVacancyCells.forEach(timeVacancyCell => {
         const [hour, min] = timeVacancyCell.dataset.time.split(':');
-        // hourVacancyCell.textContent = hourlyData[hour]?.status;
         setVacancyColor(timeVacancyCell, hourlyData[hour][min] || '-')
       });
       timeLabelCells.forEach(cellElem => {
         const [hour, min] = cellElem.dataset.time.split(':');
         if(isSelectedDay && isSelectedTime(hour, min)) {
-          // removeHourSelected()
           cellElem.classList.add("time_selected");
-        //   updateTimeTable(cellElem, true)
         }
       });
-
-    //   if(!isSelectedDay) {
-    //     resetQuarterMinTable()
-    //   }
     }
   }
 
@@ -476,60 +428,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return hour == selectedDateTime.hour && min == selectedDateTime.minute
   }
 
-//   function isSelectedHour(hour) {
-//     return hour == selectedDateTime.hour
-//   }
-
-//   function isSelectedmin(min) {
-//     return min == selectedDateTime.minute
-//   }
-
-
-
-//   function updateTimeTable(cellElem, isSelectedDayTime = false) {
-//     removeTimeSelected()
-//     const [hour, min] = cellElem.dataset.time.split(':');
-//     timeLabelCells.forEach(labelCell => {
-//       if(isSelectedDayTime && isSelectedTime(min)) {
-//         labelCell.classList.add("time_selected");
-//       }
-//     });
-//     timeVacancyCells.forEach(vacancyCell => {
-//       const [hour, min] = vacancyCell.dataset.time.split(':');
-//     //   vacancyCell.textContent = hourlyData[hour][min];
-//       setVacancyColor(vacancyCell, hourlyData[hour][min])
-//     });
-//   }
-//   function updateQuarterMinTable(cellElem, isSelectedDayHour = false) {
-//     removeQuaterHourSelected()
-//     const hour = cellElem.dataset.hour;
-//     quarterHourLabelCells.forEach(labelCell => {
-//       const min = labelCell.dataset.min;
-//       labelCell.textContent = hour + ':' + min + '～';
-//       labelCell.dataset.time = hour + ':' + min;
-
-//       if(isSelectedDayHour && isSelectedmin(min)) {
-//         removeQuaterHourSelected()
-//         labelCell.classList.add("quater_hour_selected");
-//       }
-//     });
-//     quarterHourVacancyCells.forEach(vacancyCell => {
-//       const min = vacancyCell.dataset.min;
-//       vacancyCell.textContent = hourlyData[hour][min];
-//       setVacancyColor(vacancyCell, hourlyData[hour][min])
-//     });
-//   }
-//   function resetQuarterMinTable() {
-//     removeQuaterHourSelected()
-//     quarterHourLabelCells.forEach(labelCell => {
-//       const min = labelCell.dataset.min;
-//       labelCell.textContent = ':' + min + '～';
-//       labelCell.dataset.time = ':' + min;
-//     });
-//     quarterHourVacancyCells.forEach(vacancyCell => {
-//       vacancyCell.textContent = '';
-//     });
-//   }
 
   function setVacancyColor(cell, status) {
     removeAllChildNodes(cell);
