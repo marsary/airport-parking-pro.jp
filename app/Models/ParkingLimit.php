@@ -16,7 +16,7 @@ class ParkingLimit extends Model
     const UNLOAD_LIMIT = 'unload_date';
     const LOAD_TIME_LIMIT = 'load_time';
 
-    const THRESHOLD = 0.7;
+    const THRESHOLD = 0.5;
 
     /**
      * The attributes that are mass assignable.
@@ -76,6 +76,9 @@ class ParkingLimit extends Model
                 if(isset($countByQuarterhour)) {
                     if($countByQuarterhour >= $this->per_fifteen_munites) {
                         return LimitOverStatus::FULL;
+                    }
+                    if($countByQuarterhour >=  $this->per_fifteen_munites * self::THRESHOLD) {
+                        return LimitOverStatus::HALF_FILLED;
                     }
                 }
                 break;
