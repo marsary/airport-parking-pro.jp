@@ -164,7 +164,9 @@ class ReserveFormBase extends StdObject
 
         $memberCar = MemberCar::with('car.carMaker')->where('member_id', $member->id)
             ->where('office_id', $this->office_id)
-            ->orderBy('default_flg', 'desc')->first();
+            ->orderBy('default_flg', 'desc')
+            ->orderBy('updated_at', 'desc')
+            ->first();
 
         if($memberCar) {
             $this->car_maker_id = $memberCar->car->carMaker->id;

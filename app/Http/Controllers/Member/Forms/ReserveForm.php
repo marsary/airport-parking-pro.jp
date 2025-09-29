@@ -18,8 +18,9 @@ class ReserveForm extends ReserveFormBase
                 ->where('car_caution_member_cars.member_id', $member->id)
                 ->where('car_caution_member_cars.office_id', $this->office_id)
                 ->where('car_caution_member_cars.member_car_id', $this->member_car_id)
+                ->where('car_caution_member_cars.deleted_at', null)
                 ->orderBy('car_cautions.sort')
-                ->pluck('car_cautions.name')->implode('name', ', ');
+                ->pluck('car_cautions.name')->implode(', ');
         }
     }
 
