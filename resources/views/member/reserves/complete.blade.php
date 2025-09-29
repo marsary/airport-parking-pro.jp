@@ -7,10 +7,10 @@
 
 
 <div class="l-user-input__inner">
-  <p class="text-center u-font--green u-font--36 u-font--bold u-font-lh--2 u-mb4">受付入力は以上です。<br>スタッフへ端末をお返しください。</p>
+  <p class="p-user-input-complete__text u-font--green u-font--bold">受付入力は以上です。<br>スタッフへ端末をお返しください。</p>
 
   <div class="p-user-input-complete__message u-horizontal-auto ">
-    <p class="text-center">お客様の予約コードは {{$reserveCode}} です。</p>
+    <p class="text-center">お客様の予約コードは<br> {{$reserveCode}} <br>です。</p>
     <div id="qrcodeLink">
       {!! QrCode::size(150)->generate(route('manage.deals.show', [$deal->id])) !!}
       {{--  <img src="{{ asset('images/dummy/dummy_qr.jpg') }}" width="150" height="150" alt="QRコード" class="is-block u-mt4 u-horizontal-auto">  --}}

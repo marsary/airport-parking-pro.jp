@@ -85,13 +85,13 @@
         <div>
           <label for="flight_no">到着便名（例：200,300）</label>
           <input type="text" id="flight_no" name="flight_no" class="u-w-full-wide u-mb025" value="{{old('flight_no', $reserve->flight_no)}}">
-          <p id="flight_no_not_found" class="text-center hidden"></p>
+          <p id="flight_no_not_found" class="note u-font--sm text-left hidden"></p>
         </div>
         <div>
           <label for="arrive_date">到着日</label>
           <input type="hidden" id="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
           <input type="date" id="arrive_date" name="arrive_date" class="u-w-full-wide u-mb025" value="{{old('arrive_date', $reserve->arrive_date ?  $reserve->arrive_date->format('Y-m-d'): $reserve->unload_date_plan?->format('Y-m-d'))}}">
-          <p class="text-center arrival_flg hidden">到着日がお迎え日と異なる</p>
+          <p class="c-label--lg arrival_flg hidden">到着日がお迎え日と異なる</p>
         </div>
         <div>
           <label for="num_members">ご利用人数</label>
@@ -112,7 +112,7 @@
           <dt>到着予定時間</dt>
           <dd class="text-right" id="arrive_time"></dd>
         </dl>
-        <div class="arrival_flg hidden">到着日がお迎え日と異なる</div>
+        <div class="c-label--lg rrival_flg hidden">到着日がお迎え日と異なる</div>
       </div>
     </div>
 

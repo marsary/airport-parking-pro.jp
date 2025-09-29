@@ -48,7 +48,7 @@
           @endif
         </td>
       </tr>
-      <tr>
+      {{-- <tr>
         @for ($i = 0; $i < 4; $i++)
           @if (isset($reserve->member->tagMembers[$i]))
             <th>{{$reserve->member->tagMembers[$i]->label->name}}</th>
@@ -57,15 +57,7 @@
             <th></th><td></td>
           @endif
         @endfor
-        {{--  <th>会員ランク</th>
-        <td>シルバー</td>
-        <th>ラベル2</th>
-        <td>ダミーダミー</td>
-        <th>ラベル3</th>
-        <td>ダミーダミー</td>
-        <th>ラベル4</th>
-        <td>ダミーダミー</td>  --}}
-      </tr>
+      </tr> --}}
       <tr>
         <th>郵便番号</th>
         <td>{{$reserve->zip}}{{--111-0000--}}</td>

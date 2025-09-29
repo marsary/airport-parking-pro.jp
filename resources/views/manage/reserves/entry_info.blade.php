@@ -136,7 +136,7 @@
             <div>
               <!-- セレクト（取扱注意メモ） -->
               <label for="car_caution_ids">取扱注意メモ</label>
-              <div class="c-form-select-color">
+              <div class="">
                 <select name="car_caution_ids[]" id="car_caution_ids" class="u-mb0" multiple>
                   <option value="" disabled></option>
                   @foreach ($carCautions as $carCaution)

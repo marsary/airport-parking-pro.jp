@@ -124,7 +124,7 @@
       const div = document.createElement('div')
       const img = document.createElement('img')
       const span = document.createElement('span')
-      div.classList.add("button__remove","item-container", "remove_good")
+      div.classList.add("c-button__remove","item-container", "remove_good")
       // div.value = good.id
       img.src = "{{ asset('images/icon/removeButton.svg') }}"
       img.width = 16
