@@ -8,9 +8,9 @@
     }
   @endphp
   <!-- オプションをクリックしたら出てくるmodal -->
-  <div id="modalAreaOption{{$modalId}}" class="l-modal modal-option">
+  <div id="modalAreaOption{{$modalId}}" class="l-modal l-modal--option">
     <!-- モーダルのinnerを記述   -->
-    <div class="l-modal__inner">
+    <div class="l-modal__inner l-modal__inner--option">
       <div class="l-modal__head">オプション選択：{{$goodCategory->name}}
         <!-- 合計金額を表示 -->
         <div class="l-modal__head--option__total">
@@ -46,6 +46,10 @@
         </div>
       </div>
     </div>
+        <div class="l-flex--center l-grid--gap1 u-mt3">
+          <button type="button" class="c-button__submit--gray modal_optionClose" onclick="closeOptionModal({{$modalId}})">閉じる</button>
+          <button type="button" id="modal_add_{{$modalId}}" onclick="addOptions({{$modalId}}); closeOptionModal({{$modalId}});" class="c-button__submit--green">追加</button>
+        </div>
   </div>
 
 <script>

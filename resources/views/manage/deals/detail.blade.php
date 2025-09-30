@@ -190,7 +190,7 @@
         <form action="{{route('manage.deals.unload', [$deal->id])}}" method="post">
           @csrf
           @method('PUT')
-          <button type="submit" class="c-button__pagination--next c-link-no-border">出庫済</button>
+          <button type="submit" class="c-button__pagination--next c-link-no-border u-w170">出庫済</button>
         </form>
       </div>
 

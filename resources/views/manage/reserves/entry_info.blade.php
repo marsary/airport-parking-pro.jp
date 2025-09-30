@@ -136,7 +136,7 @@
             <div>
               <!-- セレクト（取扱注意メモ） -->
               <label for="car_caution_ids">取扱注意メモ</label>
-              <div class="c-form-select-color">
+              <div class="">
                 <select name="car_caution_ids[]" id="car_caution_ids" class="u-mb0" multiple>
                   <option value="" disabled></option>
                   @foreach ($carCautions as $carCaution)
@@ -204,7 +204,7 @@
             <label for="arrive_date">到着日</label>
             <input type="hidden" id="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
             <input type="date" id="arrive_date" name="arrive_date" class="c-form-input--w100 u-mb05" value="{{old('arrive_date', $reserve->arrive_date ?  $reserve->arrive_date->format('Y-m-d'): $reserve->unload_date_plan?->format('Y-m-d'))}}">
-            <div class="c-label arrival_flg hidden">到着日とお迎え日が異なる</div>
+            <div class="c-label--lg arrival_flg hidden">到着日とお迎え日が異なる</div>
           </div>
           <div>
             <!-- 到着時間 -->

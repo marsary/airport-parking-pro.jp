@@ -10,27 +10,27 @@
   <form action="{{route('reserves.post_entry_info')}}" method="POST">
     @csrf
     <!-- 基本情報 -->
-    <div class="l-flex l-grid--gap1">
-      <div>
+    <div class="l-flex l-grid--gap1 l-flex--column--md l-flex--items-start--md">
+      <div class="u-w-full-wide">
         <label for="name">氏名※</label>
-        <input type="text" id="name" name="name" value="{{old('name', $reserve->name)}}">
+        <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}">
       </div>
-      <div>
+      <div class="u-w-full-wide">
         <label for="kana">ふりがな※</label>
-        <input type="text" id="kana" name="kana" value="{{old('kana', $reserve->kana)}}">
+        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}">
       </div>
     </div>
 
-    <div>
+    <div class="u-w-full-wide">
       <label for="tel">携帯番号※</label>
-      <input type="tel" id="tel" name="tel" value="{{old('tel', $reserve->tel)}}">
+      <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}">
     </div>
 
     <!-- 郵便番号・メールアドレス・領収書の名前・備考 -->
     <label for="zip">郵便番号</label>
-    <input type="text" id="zip" name="zip" value="{{old('zip', $reserve->zip)}}">
+    <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}">
 
-    <div class="l-grid--col2 l-grid--gap1">
+    <div class="l-grid--col2 l-grid--gap1 l-flex--column--md">
       <div>
         <label for="email">メールアドレス※</label>
         <input type="email" id="email" name="email" class="u-w-full-wide" value="{{old('email', $reserve->email)}}">
@@ -42,7 +42,7 @@
     </div>
 
     <label for="note">備考</label>
-    <textarea name="remarks" id="remarks" cols="50" rows="3">{{old('remarks', $reserve->remarks)}}</textarea>
+    <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">
       <button type="button" onclick="submit();" class="c-button__pagination--next">次へ進む</button>
