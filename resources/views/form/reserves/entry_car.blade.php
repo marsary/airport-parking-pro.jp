@@ -85,7 +85,7 @@
         <div>
           <label for="flight_no">到着便名（例：200,300）</label>
           <input type="text" id="flight_no" name="flight_no" class="u-w-full-wide u-mb025" value="{{old('flight_no', $reserve->flight_no)}}">
-          <p id="flight_no_not_found" class="text-center hidden"></p>
+          <p id="flight_no_not_found" class="note u-font--sm text-left hidden"></p>
         </div>
         <div>
           <label for="arrive_date">到着日</label>

@@ -107,7 +107,7 @@
           <td>{{$arrivalFlight?->arrAirport->name}}</td>
           <th>到着ターミナル</th>
           <td>{{$arrivalFlight?->terminal_id}}</td>
-          <td colspan="3">
+          <td colspan="3" class="--mark">
             @if ($reserve->arrival_flg)
               <div class="c-label--lg">到着日とお迎え日が異なる</div>
             @endif
