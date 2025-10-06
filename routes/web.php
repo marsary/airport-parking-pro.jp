@@ -79,6 +79,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::put('/load_unload_full_limit_settings/update_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'updateByDate'])->name('load_unload_full_limit_settings.update_by_date');
             Route::delete('/load_unload_full_limit_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'destroyByDate'])->name('load_unload_full_limit_settings.delete_by_date');
             Route::resource('/load_unload_full_limit_settings', \App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class);
+            Route::get('/season_price_settings/calendar', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'calendar'])->name('season_price_settings.calendar');
+            Route::post('/season_price_settings/store_all', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'storeAll'])->name('season_price_settings.store_all');
+            Route::put('/season_price_settings/update_by_date', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'updateByDate'])->name('season_price_settings.update_by_date');
+            Route::delete('/season_price_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'destroyByDate'])->name('season_price_settings.delete_by_date');
             Route::resource('/season_price_settings', \App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class);
         });
 
