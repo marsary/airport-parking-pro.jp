@@ -22,11 +22,11 @@ class RegiChecklistsService
                 $query->whereDate('payment_date', $search);
             })
             ->when($request->input('entry_date_start'), function($query, $search){
-                $datetime = Carbon::parse($search)->startOfDay()->toDateString();
+                $datetime = Carbon::parse($search)->toDateString();
                 $query->where('payment_date','>=', $datetime);
             })
             ->when($request->input('entry_date_fin'), function($query, $search){
-                $datetime = Carbon::parse($search)->endOfDay()->toDateString();
+                $datetime = Carbon::parse($search)->toDateString();
                 $query->where('payment_date','<=', $datetime);
             })
             ->where('office_id', config('const.commons.office_id'))
