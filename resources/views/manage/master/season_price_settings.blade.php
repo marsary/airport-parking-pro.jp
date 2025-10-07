@@ -43,10 +43,8 @@
       <div class="calendar1-headers">
         <div class="month-header">
           <div class="month-header-year" id="cal1Year">
-            2024
           </div>
           <div class="month-header-month" id="cal1Month">
-            1
           </div>
         </div>
       </div>
@@ -58,10 +56,8 @@
       <div class="calendar2-headers">
         <div class="month-header">
           <div class="month-header-year" id="cal2Year">
-            2024
           </div>
           <div class="month-header-month" id="cal2Month">
-            2
           </div>
         </div>
       </div>
@@ -82,7 +78,7 @@
     <div class="l-modal__close modal_optionClose" onclick="closePeriodModal()">×</div>
     <div class="l-modal__content">
 
-      <form method="POST" action="{{route('manage.master.load_unload_full_limit_settings.store_all')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
+      <form method="POST" action="{{route('manage.master.season_price_settings.store_all')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
         @csrf
         <!-- 開始日 -->
         <input type="hidden" name="active_calendar_year" id="period_active_calendar_year">
@@ -127,7 +123,7 @@
     <div class="l-modal__close modal_optionClose" onclick="closeEditModal()">×</div>
     <div class="l-modal__content">
 
-      <form  id="editForm" method="POST" action="{{route('manage.master.load_unload_full_limit_settings.update_by_date')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
+      <form  id="editForm" method="POST" action="{{route('manage.master.season_price_settings.update_by_date')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
         @csrf
         @method('PUT')
         <input type="hidden" name="active_calendar_year" id="edit_active_calendar_year">
@@ -157,7 +153,7 @@
     </div><!-- ./l-modal__content -->
 
     <!-- 編集の場合のデータ削除ボタン -->
-    <form id="deleteForm" action="{{route('manage.master.load_unload_full_limit_settings.delete_by_date')}}" method="post">
+    <form id="deleteForm" action="{{route('manage.master.season_price_settings.delete_by_date')}}" method="post">
       @csrf
       @method('DELETE')
       <input type="hidden" name="active_calendar_year" id="delete_active_calendar_year">
@@ -631,13 +627,14 @@ function openPeriodModal() {
   .prev_button {
       position: absolute;
       left: -30px;
-      align-self: center;
+      top: 480px;
+
   }
 
   .next_button {
       position: absolute;
       right: -30px;
-      align-self: center;
+      top: 480px;
   }
 
   .calendar1-headers, .calendar2-headers {
@@ -648,14 +645,6 @@ function openPeriodModal() {
     flex-direction: column; /* 縦方向 */
     height: 100%;
     align-self: stretch;
-  }
-
-  .stock-container {
-    margin-top: 30px;
-    display:flex;
-    flex-direction: column;
-    gap: 68px;
-    justify-content: space-between;
   }
 
   .month-calendar {
@@ -770,19 +759,6 @@ function openPeriodModal() {
     color: black !important;
   }
 
-  /* 在庫情報スタイル */
-  .stock-info {
-    font-size: 11px;
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .stock-item {
-    margin-bottom: 2px;
-  }
-
 
   /* 月ヘッダー */
   .month-header {
@@ -800,20 +776,6 @@ function openPeriodModal() {
     font-size: 40px;
     margin-bottom: 10px;
     text-align: center;
-  }
-
-  /* 在庫ヘッダー */
-  .stock-headers {
-    width: 100px;
-    text-align: left;
-    padding-right: 5px;
-  }
-
-  .stock-header-item {
-    height: 18px;
-    margin-bottom: 4px;
-    font-size: 11px;
-    font-weight: bold;
   }
 
   .l-modal__trashButton {
