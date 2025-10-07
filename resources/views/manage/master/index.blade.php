@@ -19,6 +19,7 @@
             <a href="{{route('manage.master.prices.index')}}" class="c-button--yellow c-link-no-border">金額マスタ</a>
             <a href="{{route('manage.master.agency_prices.index')}}" class="c-button--yellow c-link-no-border">代理店金額マスタ</a>
             <a href="{{route('manage.master.load_unload_full_limit_settings.index')}}" class="c-button--yellow c-link-no-border">上限設定マスタ</a>
+            <a href="{{route('manage.master.season_price_settings.index')}}" class="c-button--yellow c-link-no-border">シーズン料金設定マスタ</a>
         </div>
     </div><!-- ./l-container__inner -->
 </main>
