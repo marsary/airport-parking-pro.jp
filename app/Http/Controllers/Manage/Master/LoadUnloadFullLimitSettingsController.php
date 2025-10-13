@@ -63,9 +63,9 @@ class LoadUnloadFullLimitSettingsController extends Controller
         try {
             DB::transaction(function () use($dataToUpsert) {
                 // 'target_date' カラムをユニークキーとして、存在すれば更新、なければ新規作成
-                ParkingLimit::upsert(
+                ParkingLimit::withoutTrashed()->upsert(
                     $dataToUpsert,
-                    ['target_date'],
+                    ['office_id', 'target_date'],
                     ['load_limit', 'unload_limit', 'at_closing_time', 'per_fifteen_munites']
                 );
 
@@ -167,7 +167,8 @@ class LoadUnloadFullLimitSettingsController extends Controller
      */
     private function getStockData(string $dateStr)
     {
-        $parkingLimit = ParkingLimit::where('target_date', $dateStr)->first();
+        $parkingLimit = ParkingLimit::where('office_id', config('const.commons.office_id'))
+            ->where('target_date', $dateStr)->first();
 
         if ($parkingLimit) {
             return [
