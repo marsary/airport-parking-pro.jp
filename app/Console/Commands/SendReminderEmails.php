@@ -52,6 +52,7 @@ class SendReminderEmails extends Command
 
             // 3. 各取引に対してメール送信処理
             foreach ($deals as $deal) {
+                /** @var Deal $deal */
                 try {
                     if(isBlank($deal->email)) {
                         throw new ErrorException('この取引にはメールアドレスが設定されていません。');

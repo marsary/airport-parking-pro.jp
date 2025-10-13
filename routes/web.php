@@ -79,6 +79,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::put('/load_unload_full_limit_settings/update_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'updateByDate'])->name('load_unload_full_limit_settings.update_by_date');
             Route::delete('/load_unload_full_limit_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class, 'destroyByDate'])->name('load_unload_full_limit_settings.delete_by_date');
             Route::resource('/load_unload_full_limit_settings', \App\Http\Controllers\Manage\Master\LoadUnloadFullLimitSettingsController::class);
+            Route::get('/season_price_settings/calendar', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'calendar'])->name('season_price_settings.calendar');
+            Route::post('/season_price_settings/store_all', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'storeAll'])->name('season_price_settings.store_all');
+            Route::put('/season_price_settings/update_by_date', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'updateByDate'])->name('season_price_settings.update_by_date');
+            Route::delete('/season_price_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'destroyByDate'])->name('season_price_settings.delete_by_date');
             Route::resource('/season_price_settings', \App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class);
         });
 
@@ -104,6 +108,18 @@ Route::prefix('form')->name('form.')->group(function () {
 
 });
 
+// マイページ用のルーティング
+Route::prefix('mypage')->name('mypage.')->group(function () {
+    Route::get('/reserve_info', [\App\Http\Controllers\MypageController::class, 'reserveInfo'])->name('reserve_info');
+    Route::get('/reserve_info_detail', [\App\Http\Controllers\MypageController::class, 'reserveInfoDetail'])->name('reserve_info_detail');
+    Route::get('/member_info_detail', [\App\Http\Controllers\MypageController::class, 'memberInfoDetail'])->name('member_info_detail');
+    Route::get('/member_info_change', [\App\Http\Controllers\MypageController::class, 'memberInfoChange'])->name('member_info_change');
+    Route::get('/member_cars_change', [\App\Http\Controllers\MypageController::class, 'memberCarsChange'])->name('member_cars_change');
+    Route::get('/change', [\App\Http\Controllers\MypageController::class, 'change'])->name('change');
+    Route::get('/reserve_cancel', [\App\Http\Controllers\MypageController::class, 'reserveCancel'])->name('reserve_cancel');
+    Route::get('/reset-password', [\App\Http\Controllers\MypageController::class, 'resetPassword'])->name('reset-password');
+    Route::get('/reset-password_complete', [\App\Http\Controllers\MypageController::class, 'resetPasswordComplete'])->name('reset-password_complete');
+});
 
 Route::get('reserves/entry_date', [\App\Http\Controllers\Member\ReservesController::class, 'entryDate'])->name('reserves.entry_date');
 Route::get('reserves/entry_info', [\App\Http\Controllers\Member\ReservesController::class, 'entryInfo'])->name('reserves.entry_info');

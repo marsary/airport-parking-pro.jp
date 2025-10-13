@@ -43,10 +43,8 @@
       <div class="calendar1-headers">
         <div class="month-header">
           <div class="month-header-year" id="cal1Year">
-            2024
           </div>
           <div class="month-header-month" id="cal1Month">
-            1
           </div>
         </div>
         <div class="stock-container">
@@ -70,10 +68,8 @@
       <div class="calendar2-headers">
         <div class="month-header">
           <div class="month-header-year" id="cal2Year">
-            2024
           </div>
           <div class="month-header-month" id="cal2Month">
-            2
           </div>
         </div>
         <div class="stock-container">
@@ -687,13 +683,13 @@ function openPeriodModal() {
   .prev_button {
       position: absolute;
       left: -30px;
-      align-self: center;
+      top: 480px;
   }
 
   .next_button {
       position: absolute;
       right: -30px;
-      align-self: center;
+      top: 480px;
   }
 
   .calendar1-headers, .calendar2-headers {

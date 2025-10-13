@@ -43,10 +43,8 @@
       <div class="calendar1-headers">
         <div class="month-header">
           <div class="month-header-year" id="cal1Year">
-            2024
           </div>
           <div class="month-header-month" id="cal1Month">
-            1
           </div>
         </div>
       </div>
@@ -58,10 +56,8 @@
       <div class="calendar2-headers">
         <div class="month-header">
           <div class="month-header-year" id="cal2Year">
-            2024
           </div>
           <div class="month-header-month" id="cal2Month">
-            2
           </div>
         </div>
       </div>
@@ -82,7 +78,7 @@
     <div class="l-modal__close modal_optionClose" onclick="closePeriodModal()">×</div>
     <div class="l-modal__content">
 
-      <form method="POST" action="{{route('manage.master.load_unload_full_limit_settings.store_all')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
+      <form method="POST" action="{{route('manage.master.season_price_settings.store_all')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
         @csrf
         <!-- 開始日 -->
         <input type="hidden" name="active_calendar_year" id="period_active_calendar_year">
@@ -127,7 +123,7 @@
     <div class="l-modal__close modal_optionClose" onclick="closeEditModal()">×</div>
     <div class="l-modal__content">
 
-      <form  id="editForm" method="POST" action="{{route('manage.master.load_unload_full_limit_settings.update_by_date')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
+      <form  id="editForm" method="POST" action="{{route('manage.master.season_price_settings.update_by_date')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
         @csrf
         @method('PUT')
         <input type="hidden" name="active_calendar_year" id="edit_active_calendar_year">
@@ -157,7 +153,7 @@
     </div><!-- ./l-modal__content -->
 
     <!-- 編集の場合のデータ削除ボタン -->
-    <form id="deleteForm" action="{{route('manage.master.load_unload_full_limit_settings.delete_by_date')}}" method="post">
+    <form id="deleteForm" action="{{route('manage.master.season_price_settings.delete_by_date')}}" method="post">
       @csrf
       @method('DELETE')
       <input type="hidden" name="active_calendar_year" id="delete_active_calendar_year">
@@ -182,8 +178,8 @@
   let currentDisplayedYear = jsPersistedYear;
   let currentDisplayedMonth1 = jsPersistedMonth1;
 
-  const calendar1StockData = new Map();
-  const calendar2StockData = new Map();
+  const calendar1SeasonPriceData = new Map();
+  const calendar2SeasonPriceData = new Map();
 
   // 年ページネーションとカレンダー更新のためのグローバルハンドラー
   const globalYearHandler = {
@@ -227,8 +223,8 @@
       this.updateActiveCalendarState(jsPersistedYear, jsPersistedMonth1);
     },
 
-    // Function to update hidden inputs in forms and global JS state
     updateActiveCalendarState: function(year, month1) {
+      // フォーム内のhidden inputとグローバルなJSの状態を更新する関数
       currentDisplayedYear = parseInt(year);
       currentDisplayedMonth1 = parseInt(month1);
 
@@ -353,42 +349,42 @@
   function handleDelete() {
     if(confirm("本当に削除しますか？")) {
       const deleteForm = document.getElementById('deleteForm');
-      // document.getElementById('delete_active_calendar_year').value = currentDisplayedYear;
-      // document.getElementById('delete_active_calendar_month1').value = currentDisplayedMonth1;
+      document.getElementById('delete_active_calendar_year').value = currentDisplayedYear;
+      document.getElementById('delete_active_calendar_month1').value = currentDisplayedMonth1;
       deleteForm.submit();
     }
   }
 
-function openPeriodModal() {
+  function openPeriodModal() {
     const modal = document.getElementById('modalAreaOption_Period_');
     const inputs = modal.querySelectorAll('input[type="text"], input[type="date"]');
 
     inputs.forEach(input => {
-        input.value = '';
+      input.value = '';
     });
 
     modal.classList.add('is-active');
-}
-  function openEditModal(selectedDate, calendarStockData) {
+  }
+  function openEditModal(selectedDate, calendarSeasonPriceData) {
     const editModal = document.getElementById(`modalAreaOption_edit_`);
 
-    // 選択された日付の在庫データを取得
+    // 選択された日付のシーズン料金データを取得
     // FullCalendarのdateClickから得られるselectedDateはLuxon DateTimeオブジェクト
-    // calendarStockDataのキーと一致させるために 'YYYY-MM-DD' 形式にフォーマットする必要がある
+    // calendarSeasonPriceDataのキーと一致させるために 'YYYY-MM-DD' 形式にフォーマットする必要がある
     const dateStr = selectedDate.toISODate(); // 'YYYY-MM-DD' 形式にフォーマット
-    const stockEntry = calendarStockData.get(dateStr);
+    const seasonPriceData = calendarSeasonPriceData.get(dateStr);
 
     document.getElementById('edit_target_date').value = dateStr;
     document.getElementById('delete_target_date').value = dateStr;
-    // if (stockEntry && stockEntry.stock) {
-    //   const stock = stockEntry.stock;
-    //   // フォームフィールドに値を設定
-    //   document.getElementById('edit_season_price').value = stock.season_price || '';
-    // } else {
-    //   // データが見つからない場合、オプションでフォームをクリアするかデフォルト値を設定
-    //   document.getElementById('edit_season_price').value = '';
-    //   console.warn(`No stock data found for ${dateStr}`);
-    // }
+    if (seasonPriceData && seasonPriceData.seasonPriceSetting) {
+      const seasonPriceSetting = seasonPriceData.seasonPriceSetting;
+      // フォームフィールドに値を設定
+      document.getElementById('edit_season_price').value = seasonPriceSetting.season_price || '';
+    } else {
+      // データが見つからない場合、オプションでフォームをクリアするかデフォルト値を設定
+      document.getElementById('edit_season_price').value = '';
+      console.warn(`No season_price data found for ${dateStr}`);
+    }
     editModal.classList.add('is-active');
   }
   function closePeriodModal() {
@@ -436,7 +432,7 @@ function openPeriodModal() {
       },
       events:
       function(info, successCallback, failureCallback) {
-        url = BASE_PATH +  '/manage/master/load_unload_full_limit_settings/calendar';
+        url = BASE_PATH +  '/manage/master/season_price_settings/calendar';
 
         const response = apiRequest.get(url, {
           start: info.startStr,
@@ -447,13 +443,10 @@ function openPeriodModal() {
           const eventData = [];
           // console.log(data);
           data.forEach(row => {
-            calendar1StockData.set(row.start, row);
+            calendar1SeasonPriceData.set(row.start, row);
 
             const eventTitle = `
-            <div class="stock-item"><span>${row.stock.load_limit ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.unload_limit ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.at_closing_time ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.per_fifteen_munites ?? ''}</span></div>
+            <div class="price-item"><span>${row.seasonPriceSetting.season_price ?? ''}</span></div>
             `;
 
             eventData.push({
@@ -471,7 +464,7 @@ function openPeriodModal() {
             eventData
           )
         }).catch(failureCallback);
-        console.log(calendar1StockData);
+        console.log(calendar1SeasonPriceData);
       },
       eventDidMount: function(e) {
         let el = e.el;
@@ -486,7 +479,7 @@ function openPeriodModal() {
         }
         // alert(info.date);
         const selectedDate = luxon.DateTime.fromJSDate(info.date);
-        openEditModal(selectedDate, calendar1StockData);
+        openEditModal(selectedDate, calendar1SeasonPriceData);
       },
       eventClick: function(info) {
         if(!info.el.closest('.fc-day').classList.contains("active")) {
@@ -494,7 +487,7 @@ function openPeriodModal() {
         }
         // alert(info.event.start);
         const selectedDate = luxon.DateTime.fromJSDate(info.event.start);
-        openEditModal(selectedDate, calendar1StockData);
+        openEditModal(selectedDate, calendar1SeasonPriceData);
       },
     });
     calendar1Instance.render();
@@ -532,7 +525,7 @@ function openPeriodModal() {
       },
       events:
       function(info, successCallback, failureCallback) {
-        url = BASE_PATH +  '/manage/master/load_unload_full_limit_settings/calendar';
+        url = BASE_PATH +  '/manage/master/season_price_settings/calendar';
 
         const response = apiRequest.get(url, {
           start: info.startStr,
@@ -543,13 +536,10 @@ function openPeriodModal() {
           const eventData = [];
           // console.log(data);
           data.forEach(row => {
-            calendar2StockData.set(row.start, row);
+            calendar2SeasonPriceData.set(row.start, row);
 
             const eventTitle = `
-            <div class="stock-item"><span>${row.stock.load_limit ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.unload_limit ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.at_closing_time ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.per_fifteen_munites ?? ''}</span></div>
+            <div class="price-item"><span>${row.seasonPriceSetting.season_price ?? ''}</span></div>
             `;
 
             eventData.push({
@@ -581,7 +571,7 @@ function openPeriodModal() {
         }
         // alert(info.date);
         const selectedDate = luxon.DateTime.fromJSDate(info.date);
-        openEditModal(selectedDate, calendar2StockData);
+        openEditModal(selectedDate, calendar2SeasonPriceData);
       },
       eventClick: function(info) {
         if(!info.el.closest('.fc-day').classList.contains("active")) {
@@ -589,7 +579,7 @@ function openPeriodModal() {
         }
         // alert(info.event.start);
         const selectedDate = luxon.DateTime.fromJSDate(info.event.start);
-        openEditModal(selectedDate, calendar2StockData);
+        openEditModal(selectedDate, calendar2SeasonPriceData);
       },
     });
     calendar2Instance.render();
@@ -631,13 +621,14 @@ function openPeriodModal() {
   .prev_button {
       position: absolute;
       left: -30px;
-      align-self: center;
+      top: 480px;
+
   }
 
   .next_button {
       position: absolute;
       right: -30px;
-      align-self: center;
+      top: 480px;
   }
 
   .calendar1-headers, .calendar2-headers {
@@ -648,14 +639,6 @@ function openPeriodModal() {
     flex-direction: column; /* 縦方向 */
     height: 100%;
     align-self: stretch;
-  }
-
-  .stock-container {
-    margin-top: 30px;
-    display:flex;
-    flex-direction: column;
-    gap: 68px;
-    justify-content: space-between;
   }
 
   .month-calendar {
@@ -770,19 +753,6 @@ function openPeriodModal() {
     color: black !important;
   }
 
-  /* 在庫情報スタイル */
-  .stock-info {
-    font-size: 11px;
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .stock-item {
-    margin-bottom: 2px;
-  }
-
 
   /* 月ヘッダー */
   .month-header {
@@ -800,20 +770,6 @@ function openPeriodModal() {
     font-size: 40px;
     margin-bottom: 10px;
     text-align: center;
-  }
-
-  /* 在庫ヘッダー */
-  .stock-headers {
-    width: 100px;
-    text-align: left;
-    padding-right: 5px;
-  }
-
-  .stock-header-item {
-    height: 18px;
-    margin-bottom: 4px;
-    font-size: 11px;
-    font-weight: bold;
   }
 
   .l-modal__trashButton {
