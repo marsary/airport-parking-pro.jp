@@ -481,6 +481,21 @@ class DealsController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    public function deferPayment(Request $request, string $id)
+    {
+        $validated = $request->validate([
+            'payment_timing' => 'required|in:1,3'
+        ]);
+        $deal = Deal::findOrFail($id);
+        $deal->payment_timing = $validated['payment_timing'];
+        $deal->save();
+
+        return redirect(route('manage.deals.show', [$deal->id]));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
     public function updateGoods(DealUpdateGoodsRequest $request, string $id)
     {
         if($id == 0) {// 商品購入のみ
