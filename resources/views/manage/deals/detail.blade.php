@@ -50,6 +50,8 @@
             <td>{{$deal->unload_date_plan?->isoFormat('YYYY/M/D(ddd)')}}</td>
             <th>利用日数</th>
             <td>{{$deal->num_days}}日</td>
+            <th>支払い</th>
+            <td>{{\App\Enums\PaymentTiming::tryFrom($deal->payment_timing)?->label()}}</td>
           </tr>
         </table>
       </div>
@@ -187,6 +189,21 @@
       <!--  -->
       <div class="c-button-group__form u-mt3">
         <a href="{{route('manage.registers.index', ['deal_id' => $deal->id])}}" class="c-button__submit--gray c-link-no-border">追加精算に進む</a>
+        @if (\App\Enums\PaymentTiming::ADVANCE->value != $deal->payment_timing)
+          <form action="{{route('manage.deals.defer_payment', [$deal->id])}}" method="post">
+            @csrf
+            @method('PUT')
+            <button type="submit" class="c-button__submit--yellow c-link-no-border">
+              @if (\App\Enums\PaymentTiming::LATER->value == $deal->payment_timing)
+                受付時に設定
+                <input type="hidden" name="payment_timing" value="1">
+              @else
+                後払いに設定
+                <input type="hidden" name="payment_timing" value="3">
+              @endif
+            </button>
+          </form>
+        @endif
         <form action="{{route('manage.deals.unload', [$deal->id])}}" method="post">
           @csrf
           @method('PUT')
