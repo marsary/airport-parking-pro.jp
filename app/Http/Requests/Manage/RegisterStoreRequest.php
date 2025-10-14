@@ -38,6 +38,7 @@ class RegisterStoreRequest extends FormRequest
             'travelAssistance' => 'nullable|array',
             'voucher' => 'nullable|array',
             'others' => 'nullable|array',
+            'accountsReceivable' => 'nullable|int',
         ];
     }
 
@@ -61,6 +62,7 @@ class RegisterStoreRequest extends FormRequest
             'travelAssistance' => '旅行支援',
             'voucher' => 'バウチャー',
             'others' => 'その他',
+            'accountsReceivable' => '売掛',
         ];
     }
 }
