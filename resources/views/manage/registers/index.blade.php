@@ -234,7 +234,7 @@
               <!-- 支払方法　チェックボックス -->
               <div class="p-register__paymentMethod">
                 <div class="c-button-optionSelect">
-                  <input type="checkbox" id="paymentMethod_cash" name="paymentMethod" value="現金" checked class=" entryType" />
+                  <input type="checkbox" id="paymentMethod_cash" name="paymentMethod" value="現金" checked class="entryType" />
                   <label for="paymentMethod_cash" class="u-border--none c-button--light-gray">現金</label>
                 </div>
                 <div class="c-form-select-wrap">
@@ -303,7 +303,7 @@
                   </select>
                 </div>
                 <div class="c-form-select-wrap">
-                  <!-- バウチャー -->
+                  <!-- その他 -->
                   <select name="paymentMethod" id="paymentMethod_other" class="entryType">
                     <option value="" selected>その他</option>
                     @foreach (\Illuminate\Support\Arr::get($paymentMethodCategoryMap, 'others', []) as $paymentMethod)
@@ -314,6 +314,10 @@
                     {{--  <option value="その他">その他1</option>
                     <option value="その他">その他2</option>  --}}
                   </select>
+                </div>
+                <div class="c-button-optionSelect">
+                  <input type="checkbox" id="paymentMethod_accounts_receivable" name="paymentMethod" value="売掛" class="entryType" />
+                  <label for="paymentMethod_accounts_receivable" class="u-border--none c-button--light-gray">売掛</label>
                 </div>
               </div>
 
