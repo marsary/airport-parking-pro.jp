@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const arrivalFlgElems = Array.from(document.getElementsByClassName('arrival_flg'));
 
   // $(carCautionSelect).select2({width:"calc(100% - 39px)"});
-  $(carCautionSelect).select2({width:100%});
+  $(carCautionSelect).select2({width:"100%"});
   $(carMakersElem).select2({width:"calc(100% - 39px)"});
   $(carsElem).select2({width:"calc(100% - 39px)"});
   $(airlineInputElem).select2({width:"calc(100% - 39px)"});
