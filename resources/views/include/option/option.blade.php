@@ -10,7 +10,7 @@
   <!-- オプションをクリックしたら出てくるmodal -->
   <div id="modalAreaOption{{$modalId}}" class="l-modal l-modal--option">
     <!-- モーダルのinnerを記述   -->
-    <div class="l-modal__inner l-modal__inner--option">
+    <div class="l-modal__inner l-modal__inner--optionm modal-option">
       <div class="l-modal__head">オプション選択：{{$goodCategory->name}}
         <!-- 合計金額を表示 -->
         <div class="l-modal__head--option__total">
