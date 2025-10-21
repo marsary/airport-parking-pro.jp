@@ -14,7 +14,7 @@ class MonthlySalesTarget extends Model
 
     const TOTAL_SALES_ORDER = 1;
     const PARKING_FEE = 2;
-    const GOOD_CATEGORY_ORDERS = [3, 4, 5];
+    const GOOD_CATEGORY_ORDERS = [3, 4, 5, 6];
 
     /**
      * The attributes that are mass assignable.
