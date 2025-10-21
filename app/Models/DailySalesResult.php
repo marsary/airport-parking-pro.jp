@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Models;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class DailySalesResult extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    const TOTAL_SALES_ORDER = 1;
+    const PARKING_FEE = 2;
+    const GOOD_CATEGORY_ORDERS = [3, 4, 5, 6];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'office_id',
+        'target_date',
+        'order',
+        'good_category_id',
+        'sales_target',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'target_date' => 'date',
+        ];
+    }
+
+    public function office()
+    {
+        return $this->belongsTo(Office::class);
+    }
+
+    public function goodCategory()
+    {
+        return $this->belongsTo(GoodCategory::class);
+    }
+}
