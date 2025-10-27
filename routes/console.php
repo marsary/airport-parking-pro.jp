@@ -2,6 +2,7 @@
 
 use App\Console\Commands\CalcDailyInventory;
 use App\Console\Commands\DailyUpdate;
+use App\Console\Commands\SaveDailySalesResults;
 use App\Console\Commands\SaveAgencyRecords;
 use App\Console\Commands\SendReminderEmails;
 use Illuminate\Support\Facades\Schedule;
@@ -20,3 +21,4 @@ Schedule::command(SendReminderEmails::class)->hourly();
 Schedule::command(DailyUpdate::class)->dailyAt('2:00');
 Schedule::command(CalcDailyInventory::class)->dailyAt('2:00');
 Schedule::command(SaveAgencyRecords::class)->dailyAt('2:00');
+Schedule::command(SaveDailySalesResults::class)->dailyAt('2:00');
