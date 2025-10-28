@@ -93,6 +93,7 @@ class SaveDailySalesResults extends Command
 
     /**
      * 商品カテゴリとorderの対応マップを取得する
+     * 当月の設定がない場合は過去の最新の設定を流用する
      *
      * @param int $officeId
      * @param Carbon $targetDate
@@ -108,6 +109,20 @@ class SaveDailySalesResults extends Command
             ->whereIn('order', DailySalesResult::GOOD_CATEGORY_ORDERS)
             ->pluck('good_category_id', 'order');
 
+        // 今月の目標設定がない場合、過去の最新の設定を取得する
+        if ($goodCategoryOrderMap->isEmpty()) {
+            $goodCategoryOrderMap = collect();
+            foreach (DailySalesResult::GOOD_CATEGORY_ORDERS as $order) {
+                $latestTarget = MonthlySalesTarget::where('office_id', $officeId)
+                    ->where('target_month', '<', $targetMonthStr)
+                    ->where('order', $order)
+                    ->orderBy('target_month', 'desc')
+                    ->first();
+                if ($latestTarget) {
+                    $goodCategoryOrderMap->put($order, $latestTarget->good_category_id);
+                }
+            }
+        }
         return $goodCategoryOrderMap;
     }
 
