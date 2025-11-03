@@ -9,12 +9,15 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use Maatwebsite\Excel\Row;
 
+HeadingRowFormatter::default('none');
 
-class MonthlySalesTargetImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithValidation
+class MonthlySalesTargetImport implements OnEachRow, WithHeadingRow, WithChunkReading, WithValidation, WithCustomCsvSettings
 {
     use Importable;
 
@@ -41,7 +44,7 @@ class MonthlySalesTargetImport implements OnEachRow, WithHeadingRow, WithChunkRe
         // $rowIndex = $row->getIndex();
         $row = $row->toArray();
 
-        dd($row);
+        // dd($row);
 
         $officeId = $this->offices->get($row['事業所名']);
         $targetMonth = $row['対象年月'];
@@ -106,6 +109,13 @@ class MonthlySalesTargetImport implements OnEachRow, WithHeadingRow, WithChunkRe
     }
 
 
+    public function getCsvSettings(): array
+    {
+         return [
+            'input_encoding' => 'SJIS',
+        ];
+
+    }
 
     public function rules(): array
     {
