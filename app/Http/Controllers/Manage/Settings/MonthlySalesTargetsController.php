@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Manage\Settings;
 
-use App\Exports\MonthlySalesTargetsExport;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\Master\MonthlySalesTargetUploadRequest;
 use App\Imports\MonthlySalesTargetImport;
@@ -28,4 +27,13 @@ class MonthlySalesTargetsController extends Controller
         return redirect()->back()->with('success', '月次売上目標のインポートが完了しました。');
     }
 
+
+    public function loadTables(Request $request)
+    {
+        $year = (int) $request->input('year', \Carbon\Carbon::today()->year);
+        $service = new \App\Services\Settings\MonthlySalesTargetResultsService($year);
+        $tableData = $service->generateData();
+        // dd($tableData);
+        return response()->json($tableData);
+    }
 }
