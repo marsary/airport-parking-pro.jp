@@ -8,16 +8,25 @@
         <li class="l-breadcrumb__list">売上目標設定と実績​</li>
       </ul>
 
+      @include('include.messages.errors')
+
       <div class="l-container__inner">
         <form action="" class="u-mb2">
           <div class="l-flex--end l-grid--gap1 upload c-button__csv--upload">
             {{-- <div class="c-button__register button_select">設定</div> --}}
             <a href="" class="c-button__load link-white u-mt0">CSVダウンロード</a>
             <button type="button" class="c-button__load --gray upload u-mt0 uploadButton">CSVアップロード</button>
-            <input type="file" id="csvFileInput" />
             {{-- <input type="submit" value="CSV登録" class="c-button__register register u-mb0" disabled> --}}
           </div>
           <div id="csvFileNameDisplay" class="text-right u-mt1"></div>
+        </form>
+
+        <form id="csv-upload-form" action="{{route('manage.monthly_sales_targets.upload')}}" method="POST" enctype="multipart/form-data">
+          @method('POST')
+          @csrf
+          <div class="c-button__csv--upload">
+            <input type="file" name="csvFileInput" id="csvFileInput" />
+          </div>
         </form>
 
         <!-- ページネーション -->
@@ -25,14 +34,17 @@
           <button class="c-pager__button c-button__prev" id="prevButton" onclick="prevPage()"></button>
           <div class="c-pager__year-list-wrapper">
               <div class="c-pager__year-list" id="yearList">
-                  <div class="c-pager__year-item">2020</div>
+                  {{--  <div class="c-pager__year-item">2020</div>
                   <div class="c-pager__year-item">2021</div>
                   <div class="c-pager__year-item">2022</div>
                   <div class="c-pager__year-item">2023</div>
                   <div class="c-pager__year-item">2024</div>
                   <div class="c-pager__year-item --selected">2025</div>
                   <div class="c-pager__year-item">2026</div>
-                  <div class="c-pager__year-item">2027</div>
+                  <div class="c-pager__year-item">2027</div>  --}}
+                  @foreach ($yearList as $year)
+                    <div class="c-pager__year-item  {{ $year == (\Carbon\Carbon::today()->year) ? '--selected' : '' }}">{{$year}}</div>
+                  @endforeach
               </div>
           </div>
           <button class="c-pager__button c-button__next" id="nextButton" onclick="nextPage()"></button>
@@ -65,10 +77,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年1月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="1" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="1" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="1" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="1" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -81,10 +93,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年2月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="2" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="2" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="2" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="2" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -97,10 +109,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年3月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="3" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="3" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="3" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="3" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -113,10 +125,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年4月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="4" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="4" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="4" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="4" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -129,10 +141,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年5月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="5" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="5" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="5" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="5" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -145,10 +157,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年6月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="6" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="6" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="6" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="6" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -161,10 +173,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年7月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="7" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="7" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="7" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="7" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -177,10 +189,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年8月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="8" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="8" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="8" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="8" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -193,10 +205,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年9月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="9" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="9" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="9" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="9" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -209,10 +221,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年10月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="10" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="10" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="10" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="10" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -225,10 +237,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年11月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="11" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="11" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="11" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="11" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -241,10 +253,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年12月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="12" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="12" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="12" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="total_sales" data-month="12" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -257,12 +269,12 @@
             <button type="button" class="p-salesTarget-table__button--right"></button>
            </div>
         </div>
-        
+
         <!-- 2段目 -->
         <div class="p-salesTarget__wrap">
           <!-- 左側 項目-->
           <dl class="p-salesTarget__def">
-            <dt class="p-salesTarget__left-dttl">駐車料金</dt>
+            <dt class="p-salesTarget__left-dttl" data-table-title="parking_fee">駐車料金</dt>
             <dd class="p-salesTarget__list">
               <div class="p-salesTarget__item">１）売上目標​</div>
               <div class="p-salesTarget__item">２）売上実績​</div>
@@ -285,10 +297,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年1月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="1" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="1" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="1" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="1" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -301,10 +313,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年2月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="2" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="2" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="2" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="2" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -317,10 +329,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年3月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="3" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="3" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="3" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="3" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -333,10 +345,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年4月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="4" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="4" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="4" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="4" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -349,10 +361,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年5月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="5" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="5" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="5" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="5" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -365,10 +377,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年6月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="6" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="6" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="6" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="6" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -381,10 +393,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年7月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="7" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="7" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="7" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="7" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -397,10 +409,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年8月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="8" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="8" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="8" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="8" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -413,10 +425,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年9月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="9" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="9" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="9" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="9" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -429,10 +441,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年10月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="10" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="10" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="10" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="10" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -445,10 +457,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年11月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="11" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="11" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="11" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="11" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -461,10 +473,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年12月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="12" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="12" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="12" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="parking_fee" data-month="12" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -478,11 +490,11 @@
            </div>
         </div>
 
-        <!-- 3段目 -->
+        <!-- 3段目(商品カテゴリ1) -->
         <div class="p-salesTarget__wrap">
           <!-- 左側 項目-->
           <dl class="p-salesTarget__def">
-            <dt class="p-salesTarget__left-dttl">商品カテゴリー１月間総売上​</dt>
+            <dt class="p-salesTarget__left-dttl" data-table-title="good_category_1">商品カテゴリー１月間総売上​</dt>
             <dd class="p-salesTarget__list">
               <div class="p-salesTarget__item">１）売上目標​</div>
               <div class="p-salesTarget__item">２）売上実績​</div>
@@ -505,10 +517,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年1月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="1" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="1" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="1" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="1" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -521,10 +533,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年2月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="2" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="2" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="2" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="2" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -537,10 +549,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年3月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="3" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="3" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="3" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="3" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -553,10 +565,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年4月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="4" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="4" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="4" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="4" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -569,10 +581,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年5月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="5" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="5" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="5" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="5" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -585,10 +597,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年6月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="6" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="6" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="6" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="6" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -601,10 +613,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年7月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="7" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="7" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="7" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="7" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -617,10 +629,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年8月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="8" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="8" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="8" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="8" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -633,10 +645,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年9月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="9" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="9" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="9" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="9" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -649,10 +661,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年10月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="10" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="10" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="10" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="10" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -665,10 +677,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年11月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="11" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="11" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="11" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="11" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -681,10 +693,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年12月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="12" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="12" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="12" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_1" data-month="12" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -698,11 +710,11 @@
            </div>
         </div>
 
-        <!-- 4段目 -->
+        <!-- 4段目(商品カテゴリ2) -->
         <div class="p-salesTarget__wrap">
           <!-- 左側 項目-->
           <dl class="p-salesTarget__def">
-            <dt class="p-salesTarget__left-dttl">商品カテゴリー２月間総売上​</dt>
+            <dt class="p-salesTarget__left-dttl" data-table-title="good_category_2">商品カテゴリー２月間総売上​</dt>
             <dd class="p-salesTarget__list">
               <div class="p-salesTarget__item">１）売上目標​</div>
               <div class="p-salesTarget__item">２）売上実績​</div>
@@ -725,10 +737,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年1月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="1" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="1" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="1" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="1" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -741,10 +753,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年2月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="2" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="2" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="2" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="2" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -757,10 +769,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年3月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="3" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="3" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="3" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="3" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -773,10 +785,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年4月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="4" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="4" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="4" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="4" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -789,10 +801,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年5月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="5" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="5" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="5" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="5" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -805,10 +817,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年6月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="6" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="6" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="6" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="6" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -821,10 +833,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年7月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="7" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="7" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="7" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="7" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -837,10 +849,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年8月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="8" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="8" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="8" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="8" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -853,10 +865,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年9月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="9" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="9" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="9" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="9" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -869,10 +881,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年10月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="10" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="10" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="10" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="10" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -885,10 +897,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年11月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="11" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="11" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="11" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="11" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -901,10 +913,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年12月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="12" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="12" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="12" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_2" data-month="12" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -918,11 +930,11 @@
            </div>
         </div>
 
-        <!-- 5段目 -->
+        <!-- 5段目(商品カテゴリ3) -->
         <div class="p-salesTarget__wrap">
           <!-- 左側 項目-->
           <dl class="p-salesTarget__def">
-            <dt class="p-salesTarget__left-dttl">商品カテゴリー３月間総売上​</dt>
+            <dt class="p-salesTarget__left-dttl" data-table-title="good_category_3">商品カテゴリー３月間総売上​</dt>
             <dd class="p-salesTarget__list">
               <div class="p-salesTarget__item">１）売上目標​</div>
               <div class="p-salesTarget__item">２）売上実績​</div>
@@ -945,10 +957,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年1月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="1" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="1" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="1" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="1" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -961,10 +973,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年2月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="2" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="2" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="2" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="2" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -977,10 +989,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年3月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="3" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="3" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="3" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="3" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -993,10 +1005,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年4月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="4" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="4" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="4" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="4" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1009,10 +1021,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年5月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="5" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="5" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="5" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="5" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1025,10 +1037,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年6月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="6" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="6" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="6" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="6" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1041,10 +1053,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年7月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="7" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="7" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="7" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="7" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1057,10 +1069,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年8月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="8" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="8" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="8" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="8" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1073,10 +1085,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年9月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="9" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="9" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="9" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="9" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1089,10 +1101,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年10月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="10" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="10" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="10" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="10" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1105,10 +1117,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年11月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="11" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="11" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="11" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="11" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1121,10 +1133,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年12月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="12" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="12" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="12" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_3" data-month="12" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1138,11 +1150,11 @@
            </div>
         </div>
 
-        <!-- 6段目 -->
+        <!-- 6段目(商品カテゴリ4) -->
         <div class="p-salesTarget__wrap">
           <!-- 左側 項目-->
           <dl class="p-salesTarget__def">
-            <dt class="p-salesTarget__left-dttl">商品カテゴリー４月間総売上​</dt>
+            <dt class="p-salesTarget__left-dttl" data-table-title="good_category_4">商品カテゴリー４月間総売上​</dt>
             <dd class="p-salesTarget__list">
               <div class="p-salesTarget__item">１）売上目標​</div>
               <div class="p-salesTarget__item">２）売上実績​</div>
@@ -1165,10 +1177,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年1月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="1" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="1" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="1" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="1" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1181,10 +1193,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年2月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="2" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="2" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="2" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="2" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1197,10 +1209,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年3月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="3" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="3" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="3" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="3" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1213,10 +1225,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年4月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="4" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="4" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="4" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="4" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1229,10 +1241,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年5月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="5" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="5" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="5" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="5" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1245,10 +1257,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年6月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="6" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="6" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="6" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="6" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1261,10 +1273,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年7月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="7" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="7" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="7" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="7" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1277,10 +1289,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年8月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="8" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="8" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="8" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="8" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1293,10 +1305,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年9月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="9" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="9" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="9" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="9" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1309,10 +1321,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年10月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="10" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="10" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="10" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="10" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1325,10 +1337,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年11月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="11" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="11" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="11" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="11" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1341,10 +1353,10 @@
                     <dt class="p-salesTarget__right-dttl">2025年12月​</dt>
                     <dd class="p-salesTarget__right-desc">
                       <ul class="p-salesTarget__right-list">
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
-                        <li class="p-salesTarget__item p-salesTarget__right-item">100%</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="12" data-row="target">-</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="12" data-row="result">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="12" data-row="diff">0</li>
+                        <li class="p-salesTarget__item p-salesTarget__right-item" data-table="good_category_4" data-month="12" data-row="achievement_rate">-</li>
                         {{-- <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">15000,000</li>
                         <li class="p-salesTarget__item p-salesTarget__right-item">100%</li> --}}
@@ -1477,27 +1489,29 @@
       fileInput.addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
-          const fileName = file.name;
-          fileNameDisplay.innerHTML = `
-            <span>${fileName}</span>
-            <img src="../images/icon/closeButton.svg" width="15px" height="15px" alt="削除" class="pointer delete-button">
-          `;
-          if (uploadedFiles === 0) {
-            registerButton.removeAttribute('disabled');
-          }
-          uploadedFiles++;
+          const uploadForm = document.getElementById('csv-upload-form');
+          uploadForm.submit();
+          // const fileName = file.name;
+          // fileNameDisplay.innerHTML = `
+          //   <span>${fileName}</span>
+          //   <img src="../images/icon/closeButton.svg" width="15px" height="15px" alt="削除" class="pointer delete-button">
+          // `;
+          // if (uploadedFiles === 0) {
+          //   registerButton.removeAttribute('disabled');
+          // }
+          // uploadedFiles++;
 
-          const deleteButton = fileNameDisplay.querySelector('.delete-button');
-          deleteButton.addEventListener('click', function() {
+          // const deleteButton = fileNameDisplay.querySelector('.delete-button');
+          // deleteButton.addEventListener('click', function() {
             fileInput.value = '';
             fileNameDisplay.innerHTML = '';
             uploadedFiles--;
             if (uploadedFiles === 0) {
               registerButton.setAttribute('disabled', '');
             }
-          });
+          // });
         } else {
-          fileNameDisplay.innerHTML = '';
+          //fileNameDisplay.innerHTML = '';
         }
       });
     }
@@ -1551,6 +1565,57 @@
     // 初期状態でボタンの状態を更新
     updateButtons();
   });
+
+  // --- データロードとテーブル更新 ---
+  const loadUrl = "{{ route('manage.monthly_sales_targets.load_tables') }}";
+
+
+  // テーブルを更新する関数
+  const updateTables = (data, year) => {
+    // 各テーブルの列見出しの年を更新
+    const tableHeaders = document.querySelectorAll('.p-salesTarget__right-dttl');
+    tableHeaders.forEach(header => {
+      // e.g. "2025年1月" -> "1月"
+      const monthText = header.textContent.trim().split('年')[1];
+      if (monthText) {
+        header.textContent = `${year}年${monthText}`;
+      }
+    });
+  };
+
+  // データを非同期でロードする関数
+  const loadTableData = async (year) => {
+    try {
+      const data = await apiRequest.get(loadUrl, { year: year });
+      updateTables(data, year);
+    } catch (error) {
+      console.error('Failed to load table data:', error);
+      // エラー発生時にユーザーに通知する処理などをここに追加できます
+    }
+  };
+
+  // 年ページャーのクリックイベントに処理をフック
+  const yearItems = document.querySelectorAll('.c-pager__year-item');
+  yearItems.forEach(item => {
+    item.addEventListener('click', function() {
+      // yearList.jsによって --selected クラスが付与された後で実行されるように少し遅延させる
+      setTimeout(() => {
+        const selectedYearEl = document.querySelector('.c-pager__year-item.--selected');
+        if (selectedYearEl) {
+          const selectedYear = selectedYearEl.textContent;
+          loadTableData(selectedYear);
+        }
+      }, 10);
+    });
+  });
+
+  // 初期表示時のデータロード
+  const initialSelectedYearEl = document.querySelector('.c-pager__year-item.--selected');
+  if (initialSelectedYearEl) {
+    const initialYear = initialSelectedYearEl.textContent;
+    loadTableData(initialYear);
+  }
+
 });
   </script>
 @endpush
