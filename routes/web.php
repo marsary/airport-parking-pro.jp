@@ -89,6 +89,8 @@ Route::prefix('manage')->name('manage.')->group(function () {
 
         Route::get('/settings/daily_update', [\App\Http\Controllers\Manage\Settings\DailyUpdateController::class, 'index'])->name('daily_update');
         Route::get('/settings/monthly_sales_targets', [\App\Http\Controllers\Manage\Settings\MonthlySalesTargetsController::class, 'index'])->name('monthly_sales_targets');
+        Route::post('/settings/monthly_sales_targets/upload', [\App\Http\Controllers\Manage\Settings\MonthlySalesTargetsController::class, 'upload'])->name('monthly_sales_targets.upload');
+        Route::get('/settings/monthly_sales_targets/load_tables', [\App\Http\Controllers\Manage\Settings\MonthlySalesTargetsController::class, 'loadTables'])->name('monthly_sales_targets.load_tables');
     });
 
 });
