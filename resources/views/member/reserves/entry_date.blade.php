@@ -216,9 +216,11 @@
         </dd>
       </dl> --}}
     </div>
-
+<!-- 新規　これで囲む -->
+<div class="p-input-user-total-parking-charges">
+<!-- 下に代理店コードが入るかも -->
     <!-- 駐車料金合計 -->
-    <div class="u-border--all u-border--radius p-input-user-total-parking-charges">
+    <div class="u-border--all u-border--radius u-pt2 u-pb2">
       <p class="u-font--24 text-center u-font--medium">駐車料金合計</p>
       <div class="p-input-user-total-parking-charges__inner">
         <div class="p-input-user-total-parking-charges__head">
@@ -270,7 +272,7 @@
         <div class="u-mt3 u-pt3 u-border--top p-input-user-total-parking-charges__detail-total">
           <div id="tax_label">消費税(10%)</div>
           <div id="tax"></div>
-          <div>駐車料金合計</div>
+          <div>駐車料金(普通)合計</div>
           <div id="total"></div>
         </div>
 
@@ -278,6 +280,7 @@
 
       <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
     </div><!-- /.p-input-user-total-parking-charges -->
+  </div>
 
   </form>
 
@@ -299,16 +302,17 @@
     position: relative;
     display: flex;
     align-items: center;
+    padding: 0 30px;
   }
 
   .prev_button {
     position: absolute;
-    left: -30px;
+    left: 0px;
   }
 
   .next_button {
     position: absolute;
-    right: -30px;
+    right: 0px;
   }
 
 
