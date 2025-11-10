@@ -49,6 +49,72 @@ class MonthlySalesTargetResultsService
     }
 
     /**
+     * ダウンロードCSVデータの作成
+     *
+     * @return array<array<string, mixed>>
+     */
+    public function generateCsvData(): array
+    {
+        // 1年分の売上目標と実績をまとめて取得
+        $monthlyTargets = $this->getMonthlyTargetsForYear();
+        $csvData = [];
+
+        $orders = [
+            'total_sales' => MonthlySalesTarget::TOTAL_SALES_ORDER,
+            'parking_fee' => MonthlySalesTarget::PARKING_FEE,
+            'good_category_1' => 3,
+            'good_category_2' => 4,
+            'good_category_3' => 5,
+            'good_category_4' => 6,
+        ];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $targetMonthStr = $this->year . str_pad($month, 2, '0', STR_PAD_LEFT);
+
+            $targets = $monthlyTargets->where('target_month', $targetMonthStr);
+            if($targets->isEmpty()) {
+                continue;
+            }
+
+            $row = ['事業所名' => myOffice()->name, '対象年月' => "{$this->year}" . str_pad($month, 2, '0', STR_PAD_LEFT)];
+
+            foreach ($orders as $key => $order) {
+                $target = $targets->where('order', $order)->first();
+                switch ($key) {
+                    case 'total_sales':
+                        $row['総売上目標'] = $target?->sales_target ?? '';
+                        break;
+                    case 'parking_fee':
+                        $row['駐車料金売上目標'] = $target?->sales_target ?? '';
+                        break;
+                    case 'good_category_1':
+                        $row['商品カテゴリー1名称'] = $target?->goodCategory?->name ?? '';
+                        $row['商品カテゴリー1売上目標'] = $target?->sales_target ?? '';
+                        break;
+                    case 'good_category_2':
+                        $row['商品カテゴリー2名称'] = $target?->goodCategory?->name ?? '';
+                        $row['商品カテゴリー2売上目標'] = $target?->sales_target ?? '';
+                        break;
+                    case 'good_category_3':
+                        $row['商品カテゴリー3名称'] = $target?->goodCategory?->name ?? '';
+                        $row['商品カテゴリー3売上目標'] = $target?->sales_target ?? '';
+                        break;
+                    case 'good_category_4':
+                        $row['商品カテゴリー4名称'] = $target?->goodCategory?->name ?? '';
+                        $row['商品カテゴリー4売上目標'] = $target?->sales_target ?? '';
+                        break;
+                    default:
+                        break;
+                }
+            }
+            $csvData[] = $row;
+        }
+
+        $csvData['year'] = $this->year;
+        return $csvData;
+    }
+
+    /**
      * 指定されたorderのテーブルデータを構築
      *
      * @param int $order
