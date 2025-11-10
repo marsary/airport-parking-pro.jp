@@ -40,10 +40,10 @@
             </div>
           @endforeach
         </div>
-        <div class="l-flex--center l-grid--gap1 u-mt3">
+        <!-- <div class="l-flex--center l-grid--gap1 u-mt3">
           <button type="button" class="c-button__submit--gray modal_optionClose" onclick="closeOptionModal({{$modalId}})">閉じる</button>
           <button type="button" id="modal_add_{{$modalId}}" onclick="addOptions({{$modalId}}); closeOptionModal({{$modalId}});" class="c-button__submit--green">追加</button>
-        </div>
+        </div> -->
       </div>
     </div>
         <div class="l-flex--center l-grid--gap1 u-mt3">

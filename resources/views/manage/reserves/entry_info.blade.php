@@ -44,6 +44,14 @@
             <input type="text" id="name" name="name" value="{{old('name', $reserve->name)}}" class="c-form-input--w100">
           </div>
           <div>
+            <label for="name">ふりがな</label>
+            <input type="text" id="name" name="name" value="{{old('name', $reserve->name)}}" class="c-form-input--w100">
+          </div>
+          <div>
+            <label for="zip">電話番号</label>
+            <input type="text" id="zip" name="zip" value="{{old('zip', $reserve->zip)}}">
+          </div>
+           <div>
             <label for="zip">郵便番号</label>
             <input type="text" id="zip" name="zip" value="{{old('zip', $reserve->zip)}}">
           </div>

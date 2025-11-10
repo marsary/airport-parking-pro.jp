@@ -12,7 +12,30 @@
     <!-- 詳細情報入力 -->
     <div class="p-user-input-auto-output__wrap l-flex--item-end">
       <!-- 入力エリア -->
-      <div class="l-grid--col2-auto l-grid--cgap2">
+      <!-- ===============================================================
+      ↓追加↓
+      =============================================================== -->
+      <!-- 過去に利用した車両を参照する -->
+      <div>
+        <label for="past_vehicle">過去に利用した車両を参照する</label>
+        <div class="c-form-select-color">
+          <select name="past_vehicle" id="past_vehicle">
+            <optgroup>
+              <!-- 文字数制限をつけてください　20文字 -->
+              <option value="トヨタ　クラウン　1234　黒">
+                トヨタトヨタトヨタ　クラウンクラウンクラウンクラウンクラウンクラウン　1234　黒
+              </option>
+              <option value="">
+                新規入力
+              </option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <!-- ===============================================================
+      ↑追加↑
+      =============================================================== -->
+      <div class="l-grid--col2 l-grid--cgap2">
         <div>
           <label for="car_maker_id">メーカー</label>
           <!-- 車メーカーのselect -->
@@ -72,7 +95,7 @@
           <label for="car_color_id">到着便航空会社</label>
           <div class="c-form-select-color">
             <select id="airline_id" name="airline_id">
-              <option value="選択してください" disabled>選択してください</option>
+              <!-- <option value="選択してください" disabled>選択してください</option> -->
               @foreach ($airlines as $airline)
                 <option value="{{ $airline->id }}"
                   {{old('airline_id', $reserve->airline_id)==$airline->id ? 'selected':''}}>
