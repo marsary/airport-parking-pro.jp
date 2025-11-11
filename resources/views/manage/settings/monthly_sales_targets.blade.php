@@ -9,12 +9,13 @@
       </ul>
 
       @include('include.messages.errors')
+      @include('include.messages.success')
 
       <div class="l-container__inner">
         <form action="" class="u-mb2">
           <div class="l-flex--end l-grid--gap1 upload c-button__csv--upload">
             {{-- <div class="c-button__register button_select">設定</div> --}}
-            <a href="" class="c-button__load link-white u-mt0">CSVダウンロード</a>
+            <a href="#" id="csvDownloadLink" class="c-button__load link-white u-mt0">CSVダウンロード</a>
             <button type="button" class="c-button__load --gray upload u-mt0 uploadButton">CSVアップロード</button>
             {{-- <input type="submit" value="CSV登録" class="c-button__register register u-mb0" disabled> --}}
           </div>
@@ -1569,6 +1570,11 @@
   // --- データロードとテーブル更新 ---
   const loadUrl = "{{ route('manage.monthly_sales_targets.load_tables') }}";
 
+  // 数値をフォーマットする関数
+  const formatNumber = (num) => {
+    if (typeof num !== 'number') return num;
+    return new Intl.NumberFormat('ja-JP').format(num);
+  };
 
   // テーブルを更新する関数
   const updateTables = (data, year) => {
@@ -1579,6 +1585,24 @@
       const monthText = header.textContent.trim().split('年')[1];
       if (monthText) {
         header.textContent = `${year}年${monthText}`;
+      }
+    });
+    // 各テーブルのデータを更新
+    Object.keys(data).forEach(tableKey => {
+      const tableData = data[tableKey];
+      for (let month = 1; month <= 12; month++) {
+        if (tableData.target[month] !== undefined) {
+          document.querySelector(`[data-table="${tableKey}"][data-month="${month}"][data-row="target"]`).textContent = formatNumber(tableData.target[month]);
+        }
+        if (tableData.result[month] !== undefined) {
+          document.querySelector(`[data-table="${tableKey}"][data-month="${month}"][data-row="result"]`).textContent = formatNumber(tableData.result[month]);
+        }
+        if (tableData.difference[month] !== undefined) {
+          document.querySelector(`[data-table="${tableKey}"][data-month="${month}"][data-row="diff"]`).textContent = formatNumber(tableData.difference[month]);
+        }
+        if (tableData.achievement_rate[month] !== undefined) {
+          document.querySelector(`[data-table="${tableKey}"][data-month="${month}"][data-row="achievement_rate"]`).textContent = tableData.achievement_rate[month];
+        }
       }
     });
   };
@@ -1614,6 +1638,21 @@
   if (initialSelectedYearEl) {
     const initialYear = initialSelectedYearEl.textContent;
     loadTableData(initialYear);
+  }
+
+  // --- CSVダウンロード ---
+  const downloadLink = document.getElementById('csvDownloadLink');
+  if (downloadLink) {
+    downloadLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      const selectedYearEl = document.querySelector('.c-pager__year-item.--selected');
+      if (selectedYearEl) {
+        const selectedYear = selectedYearEl.textContent.trim();
+        const downloadUrl = new URL("{{ route('manage.monthly_sales_targets.download') }}");
+        downloadUrl.searchParams.append('year', selectedYear);
+        window.location.href = downloadUrl.toString();
+      }
+    });
   }
 
 });
