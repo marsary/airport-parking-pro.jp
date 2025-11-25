@@ -12,113 +12,115 @@
     <!-- 詳細情報入力 -->
     <div class="p-user-input-auto-output__wrap l-flex--item-end">
       <!-- 入力エリア -->
-      <!-- ===============================================================
-      ↓追加↓
-      =============================================================== -->
-      <!-- 過去に利用した車両を参照する -->
       <div>
-        <label for="past_vehicle">過去に利用した車両を参照する</label>
-        <div class="c-form-select-color">
-          <select name="past_vehicle" id="past_vehicle">
-            <optgroup>
-              <!-- 文字数制限をつけてください　20文字 -->
-              <option value="トヨタ　クラウン　1234　黒">
-                トヨタトヨタトヨタ　クラウンクラウンクラウンクラウンクラウンクラウン　1234　黒
-              </option>
-              <option value="">
-                新規入力
-              </option>
-            </optgroup>
-          </select>
-        </div>
-      </div>
-      <!-- ===============================================================
-      ↑追加↑
-      =============================================================== -->
-      <div class="l-grid--col2 l-grid--cgap2">
+        <!-- ===============================================================
+        ↓追加↓
+        =============================================================== -->
+        <!-- 過去に利用した車両を参照する -->
         <div>
-          <label for="car_maker_id">メーカー</label>
-          <!-- 車メーカーのselect -->
-          <div class="c-form-select-color">
-            <select name="car_maker_id" id="car_maker_id">
-              @foreach ($carMakers as $carMaker)
-                <option value="{{ $carMaker->id }}"
-                  {{old('car_maker_id', $reserve->car_maker_id)==$carMaker->id ? 'selected':''}}>
-                  {{$carMaker->name }}
+            <label for="past_vehicle">過去に利用した車両を参照する</label>
+            <div class="c-form-select-color">
+            <select name="past_vehicle" id="past_vehicle">
+                <optgroup>
+                <!-- 文字数制限をつけてください　20文字 -->
+                <option value="トヨタ　クラウン　1234　黒">
+                    トヨタトヨタトヨタ　クラウンクラウンクラウンクラウンクラウンクラウン　1234　黒
                 </option>
-              @endforeach
-
-              {{--  <option value="トヨタ">トヨタ</option>
-              <option value="日産">日産</option>
-              <option value="フォルクスワーゲン">フォルクスワーゲン</option>
-              <option value="アウディ">メルセデス・ベンツ</option>  --}}
+                <option value="">
+                    新規入力
+                </option>
+                </optgroup>
             </select>
-          </div>
+            </div>
         </div>
-        <div>
-          <label for="car_id">車種</label>
-          <div class="c-form-select-color">
-            <select id="car_id" name="car_id">
-              @if (!empty(old('car_id', $reserve->car_id)))
-                <option value="選択してください" disabled>選択してください</option>
-                @foreach ($cars as $car)
-                  <option value="{{ $car->id }}"
-                    {{old('car_id', $reserve->car_id)==$car->id ? 'selected':''}}>
-                    {{$car->name }}
-                  </option>
+        <!-- ===============================================================
+        ↑追加↑
+        =============================================================== -->
+        <div class="l-grid--col2 l-grid--cgap2">
+            <div>
+            <label for="car_maker_id">メーカー</label>
+            <!-- 車メーカーのselect -->
+            <div class="c-form-select-color">
+                <select name="car_maker_id" id="car_maker_id">
+                @foreach ($carMakers as $carMaker)
+                    <option value="{{ $carMaker->id }}"
+                    {{old('car_maker_id', $reserve->car_maker_id)==$carMaker->id ? 'selected':''}}>
+                    {{$carMaker->name }}
+                    </option>
                 @endforeach
-              @else
-                <option value="" disabled></option>
-              @endif
-            </select>
-          </div>
-        </div>
-        <div>
-          <label for="car_color_id">色</label>
-          <div class="c-form-select-color">
-            <select id="car_color_id" name="car_color_id">
-              <option value="選択してください" disabled>選択してください</option>
-              @foreach ($carColors as $carColor)
-                <option value="{{ $carColor->id }}"
-                  {{old('car_color_id', $reserve->car_color_id)==$carColor->id ? 'selected':''}}>
-                  {{$carColor->name }}
-                </option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-        <div>
-          <label for="car_number">ナンバー（※4桁の数字）</label>
-          <input type="text" id="car_number" name="car_number" maxlength="4" minlength="4" class="u-w-full-wide" value="{{old('car_number', $reserve->car_number)}}">
-        </div>
-        <div>
-          <label for="car_color_id">到着便航空会社</label>
-          <div class="c-form-select-color">
-            <select id="airline_id" name="airline_id">
-              <!-- <option value="選択してください" disabled>選択してください</option> -->
-              @foreach ($airlines as $airline)
-                <option value="{{ $airline->id }}"
-                  {{old('airline_id', $reserve->airline_id)==$airline->id ? 'selected':''}}>
-                  {{$airline->name }}
-                </option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-        <div>
-          <label for="flight_no">到着便名（例：200,300）</label>
-          <input type="text" id="flight_no" name="flight_no" class="u-w-full-wide u-mb025" value="{{old('flight_no', $reserve->flight_no)}}">
-          <p id="flight_no_not_found" class="note u-font--sm text-left hidden"></p>
-        </div>
-        <div>
-          <label for="arrive_date">到着日</label>
-          <input type="hidden" id="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
-          <input type="date" id="arrive_date" name="arrive_date" class="u-w-full-wide u-mb025" value="{{old('arrive_date', $reserve->arrive_date ?  $reserve->arrive_date->format('Y-m-d'): $reserve->unload_date_plan?->format('Y-m-d'))}}">
-          <p class="c-label--lg arrival_flg hidden">到着日がお迎え日と異なる</p>
-        </div>
-        <div>
-          <label for="num_members">ご利用人数</label>
-          <input type="text" id="num_members" name="num_members" value="{{old('num_members', $reserve->num_members)}}">
+
+                {{--  <option value="トヨタ">トヨタ</option>
+                <option value="日産">日産</option>
+                <option value="フォルクスワーゲン">フォルクスワーゲン</option>
+                <option value="アウディ">メルセデス・ベンツ</option>  --}}
+                </select>
+            </div>
+            </div>
+            <div>
+            <label for="car_id">車種</label>
+            <div class="c-form-select-color">
+                <select id="car_id" name="car_id">
+                @if (!empty(old('car_id', $reserve->car_id)))
+                    <option value="選択してください" disabled>選択してください</option>
+                    @foreach ($cars as $car)
+                    <option value="{{ $car->id }}"
+                        {{old('car_id', $reserve->car_id)==$car->id ? 'selected':''}}>
+                        {{$car->name }}
+                    </option>
+                    @endforeach
+                @else
+                    <option value="" disabled></option>
+                @endif
+                </select>
+            </div>
+            </div>
+            <div>
+            <label for="car_color_id">色</label>
+            <div class="c-form-select-color">
+                <select id="car_color_id" name="car_color_id">
+                <option value="選択してください" disabled>選択してください</option>
+                @foreach ($carColors as $carColor)
+                    <option value="{{ $carColor->id }}"
+                    {{old('car_color_id', $reserve->car_color_id)==$carColor->id ? 'selected':''}}>
+                    {{$carColor->name }}
+                    </option>
+                @endforeach
+                </select>
+            </div>
+            </div>
+            <div>
+            <label for="car_number">ナンバー（※4桁の数字）</label>
+            <input type="text" id="car_number" name="car_number" maxlength="4" minlength="4" class="u-w-full-wide" value="{{old('car_number', $reserve->car_number)}}">
+            </div>
+            <div>
+            <label for="car_color_id">到着便航空会社</label>
+            <div class="c-form-select-color">
+                <select id="airline_id" name="airline_id">
+                <!-- <option value="選択してください" disabled>選択してください</option> -->
+                @foreach ($airlines as $airline)
+                    <option value="{{ $airline->id }}"
+                    {{old('airline_id', $reserve->airline_id)==$airline->id ? 'selected':''}}>
+                    {{$airline->name }}
+                    </option>
+                @endforeach
+                </select>
+            </div>
+            </div>
+            <div>
+            <label for="flight_no">到着便名（例：200,300）</label>
+            <input type="text" id="flight_no" name="flight_no" class="u-w-full-wide u-mb025" value="{{old('flight_no', $reserve->flight_no)}}">
+            <p id="flight_no_not_found" class="note u-font--sm text-left hidden"></p>
+            </div>
+            <div>
+            <label for="arrive_date">到着日</label>
+            <input type="hidden" id="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
+            <input type="date" id="arrive_date" name="arrive_date" class="u-w-full-wide u-mb025" value="{{old('arrive_date', $reserve->arrive_date ?  $reserve->arrive_date->format('Y-m-d'): $reserve->unload_date_plan?->format('Y-m-d'))}}">
+            <p class="c-label--lg arrival_flg hidden">到着日がお迎え日と異なる</p>
+            </div>
+            <div>
+            <label for="num_members">ご利用人数</label>
+            <input type="text" id="num_members" name="num_members" value="{{old('num_members', $reserve->num_members)}}">
+            </div>
         </div>
       </div><!-- 入力エリア -->
 
