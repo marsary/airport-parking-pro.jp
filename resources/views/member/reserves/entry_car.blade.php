@@ -13,9 +13,6 @@
 		<div class="p-user-input-auto-output__wrap l-flex--item-end">
 			<!-- 入力エリア -->
 			<div>
-				<!-- ===============================================================
-        ↓追加↓
-        =============================================================== -->
 				<!-- 過去に利用した車両を参照する -->
 				<div>
 					<label for="past_vehicle">過去に利用した車両を参照する</label>
@@ -33,9 +30,6 @@
 						</select>
 					</div>
 				</div>
-				<!-- ===============================================================
-        ↑追加↑
-        =============================================================== -->
 				<div class="l-grid--col2 l-grid--cgap2">
 					<div>
 						<label for="car_maker_id">メーカー</label>
@@ -50,9 +44,9 @@
 								@endforeach
 
 								{{-- <option value="トヨタ">トヨタ</option>
-								<option value="日産">日産</option>
-								<option value="フォルクスワーゲン">フォルクスワーゲン</option>
-								<option value="アウディ">メルセデス・ベンツ</option>  --}}
+              <option value="日産">日産</option>
+              <option value="フォルクスワーゲン">フォルクスワーゲン</option>
+              <option value="アウディ">メルセデス・ベンツ</option>  --}}
 							</select>
 						</div>
 					</div>
