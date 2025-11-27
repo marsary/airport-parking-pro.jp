@@ -105,41 +105,9 @@
                     <td>駐車料金（前払い）</td>
                     <td>{{$officeTable->parkingFeeInAdvance->count}}</td>
                     <td>{{$officeTable->parkingFeeInAdvance->amount}}</td>
-                    <td>{{number_format($officeTable->parkingFeeInAdvance->price)}}</td>
-                    <td>{{number_format($officeTable->parkingFeeInAdvance->priceExcludingTax)}}</td>
+                    <td class="text-right">{{number_format($officeTable->parkingFeeInAdvance->price)}}</td>
+                    <td class="text-right">{{number_format($officeTable->parkingFeeInAdvance->priceExcludingTax)}}</td>
                   </tr>
-                  {{--  <tr>
-                    <td></td>
-                    <td>駐車料金（後払い）</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>駐車料金（追加／返金）</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>770</td>
-                    <td>700</td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>一日利用（チケット）</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td></td>
-                    <td>一日利用（チケット以外）</td>
-                    <td></td>
-                    <td>4</td>
-                    <td>0</td>
-                    <td></td>
-                  </tr>  --}}
                   @isset($officeTable->goodsSales)
                     @foreach ($officeTable->goodsSales->rows as $row)
                       <tr>

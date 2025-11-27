@@ -21,6 +21,20 @@
             <span class="c-button-toggle__slider"></span>
           </form>
         </label>
+        <!-- カレンダーを追加 -->
+        <!-- 日付選択・デフォルトは本日 -->
+        <div class="p-inventoryTransactions-date">
+        <div class="c-button__prev--small"></div>
+        <!-- Calendar -->
+        <div class="p-inventoryTransactions-calendar__wrap">
+            <div class="p-inventoryTransactions-date__text">2023年12月25日(火)</div><!-- 本日の日付 -->
+            <!-- setting: calendar_inventory.js -->
+            <div class="p-inventoryTransactions-calendar">
+                <div id="calendar_dateSelect"></div>
+            </div>
+        </div>            
+        <div class="c-button__next--small"></div>
+        </div>
       </div>
       <ul class="l-table-list--scroll__tab">
         <li id="buttonOne" class="l-table-list--scroll__tab-item is-active" onclick="">入庫</li>

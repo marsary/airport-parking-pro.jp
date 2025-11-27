@@ -21,7 +21,7 @@
           <label for="password_confirm">もう一度入力してください</label>
           <input type="text" name="password_confirm" class="c-input__admin" />
         </div>
-        <input type="submit" value="更新" class="c-button__submit u-horizontal-auto" />
+        <input type="submit" value="更新" class="c-button__submit u-horizontal-auto u-w170" />
       </form>
       <a href="/user/n-5.php" class="c-button__submit u-w170 u-horizontal-auto">マイページに戻る</a>
     </div>

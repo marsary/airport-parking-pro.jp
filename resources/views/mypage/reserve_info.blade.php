@@ -7,13 +7,13 @@
         <h2 class="c-title__user--lv2">マイページ</h2>
         <div class="p-user-head__wrap">
           <a href="" class="p-user-head__item--reserve">
-            <img src="/assets/images/icon/icon-car.svg" alt="">新規予約はこちら
+            <img src="{{ asset('images/icon/icon-car.svg') }}" alt="">新規予約はこちら
           </a>
           <a href="https://www.sunparking.co.jp/guide/" target="_blank" class="p-user-head__item--access">
-            <img src="/assets/images/icon/icon-parking.svg" alt="">駐車場のアクセス
+            <img src="{{ asset('images/icon/icon-parking.svg') }}" alt="">駐車場のアクセス
           </a>
           <a href="mailto:" class="p-user-head__item--contact">
-            <img src="/assets/images/icon/icon-contact.svg" alt="">お問い合わせ
+            <img src="{{ asset('images/icon/icon-contact.svg') }}" alt="">お問い合わせ
           </a>
         </div>
 
