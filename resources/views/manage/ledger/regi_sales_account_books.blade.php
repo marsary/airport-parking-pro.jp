@@ -149,7 +149,7 @@
                         <a href="{{route('manage.deals.show', $row->dealId)}}" target="_blank">{{$row->dealId}}</a>
                     </td>
                     <td>{{$row->paymentTime->format("H:i")}}</td>
-                    <td>{{$row->memberName}}</td>
+                    <td class="l-table-print--name">{{$row->memberName}}</td>
                     <td>{{$row->isUpdated ? '修':''}}</td>
                     <td>{{$row->isUnloaded ? '帰':''}}</td>
                     <td>{{$row->officeName}}</td>
@@ -198,7 +198,7 @@
                       @endforeach
                     </td>
                     <td>{{number_format($row->totalPay)}}</td>
-                    <td>{{$row->userName}}</td>
+                    <td class="l-table-print--name">{{$row->userName}}</td>
                   </tr>
                 @endforeach
                 @if (isset($data['bottomLine']))

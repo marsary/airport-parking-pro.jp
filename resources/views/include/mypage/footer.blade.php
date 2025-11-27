@@ -15,7 +15,7 @@
     </div>
   </div>
   <p class="l-footer-user__copy">© 2025 AIRPORT PARKING PRO</p>
-  <button id="gototop" class="c-button__button"><img src="/assets/images/icon/chevron-up.svg" width="18px" height="10px" alt=""></button>
+  <button id="gototop" class="c-button__button"><img src="{{ asset('images/icon/chevron-up.svg') }}" width="18px" height="10px" alt=""></button>
 </footer>
 
 <script>

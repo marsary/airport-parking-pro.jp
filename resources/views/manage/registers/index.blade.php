@@ -119,9 +119,9 @@
       <div class="l-modal__head">決済画面</div>
       <div id="modal_close" class="l-modal__close">×</div>
 
-      <form id="payment_submit_form" action="{{route('manage.registers.store', ['deal_id' => $dealId])}}" method="POST">
+      <form id="payment_submit_form" action="{{route('manage.registers.store', ['deal_id' => $dealId])}}" method="POST" class="l-modal__content p-register">
         @csrf
-        <div class="l-modal__content p-register">
+        <div>
           <p id="modal_deal_name" class="text-center u-mb1">やまだたろう 様</p>
           <div class="p-register__settlement">
 
