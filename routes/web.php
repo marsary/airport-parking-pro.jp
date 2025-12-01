@@ -92,6 +92,9 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::post('/settings/monthly_sales_targets/upload', [\App\Http\Controllers\Manage\Settings\MonthlySalesTargetsController::class, 'upload'])->name('monthly_sales_targets.upload');
         Route::get('/settings/monthly_sales_targets/download', [\App\Http\Controllers\Manage\Settings\MonthlySalesTargetsController::class, 'download'])->name('monthly_sales_targets.download');
         Route::get('/settings/monthly_sales_targets/load_tables', [\App\Http\Controllers\Manage\Settings\MonthlySalesTargetsController::class, 'loadTables'])->name('monthly_sales_targets.load_tables');
+
+
+        Route::get('/label', [\App\Http\Controllers\Manage\TopController::class, 'label'])->name('label');
     });
 
 });
