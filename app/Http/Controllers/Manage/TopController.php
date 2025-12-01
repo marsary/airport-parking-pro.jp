@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Manage\Controller;
+use App\Models\Deal;
 use Illuminate\Http\Request;
 
 class TopController extends Controller
@@ -67,4 +68,33 @@ class TopController extends Controller
     {
         return view('manage.marketing.index');
     }
+
+    public function label()
+    {
+        $deal = Deal::first();
+
+        $data = [
+            // 受付番号
+            'receipt_code' => $deal->receipt_code,
+            // 受付者名
+            'member_name' => $deal->kana,
+            // 到着日（到着便マスタから
+            'arrive_date' => $deal->arrivalFlight?->arrive_date?->format('Y/m/d'),
+            // 到着時間（到着便マスタから
+            'arrive_time' => $deal->arrivalFlight?->arrive_time? \Carbon\Carbon::parse($deal->arrivalFlight->arrive_time)->format('H:i') : '',
+            // 到着便名（到着便マスタから）
+            'arrival_flight_name' => $deal->arrivalFlight?->name,
+            // 出発空港コード
+            'dep_airport_code' => $deal->arrivalFlight?->depAirport?->code,
+            // 車両情報
+            'car_number' => $deal->memberCar?->number,
+            'car_name' => $deal->memberCar?->car?->name,
+            'car_color_name' => $deal->memberCar?->carColor?->name,
+            // 現在時刻
+            'print_date' => now()->format('Y/m/d H:i'),
+        ];
+
+        return view('manage.test.label', $data);
+    }
+
 }
