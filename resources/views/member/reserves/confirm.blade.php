@@ -141,18 +141,18 @@
       <tbody class="l-table-charge-detail__body">
         <tr>
           <th>駐車料金</th>
-          <td>{{number_format($reserve->pricePerDay())}}円</td>
-          <td>{{$reserve->num_days}}</td>
-          <td>{{number_format($reserve->price)}}円</td>
-          <td>({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
+          <td class="u-font-nowrap">{{number_format($reserve->pricePerDay())}}円</td>
+          <td class="--quantity">{{$reserve->num_days}}</td>
+          <td class="u-font-nowrap">{{number_format($reserve->price)}}円</td>
+          <td class="--tax">({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
         </tr>
         @foreach ($reserve->dealGoodData as $dealGood)
           <tr>
             <th>{{$dealGood['name']}}</th>
-            <td>{{number_format($dealGood['price'])}}円</td>
-            <td>{{$dealGood['num']}}</td>
-            <td>{{number_format($dealGood['total_price'])}}円</td>
-            <td>({{ $dealGood['tax_type_label'] }})</td>
+            <td class="u-font-nowrap">1,000円</td>{{number_format($dealGood['price'])}}円</td>
+            <td class="--quantity">1</td>{{$dealGood['num']}}</td>
+            <td class="u-font-nowrap">{{number_format($dealGood['total_price'])}}円</td>
+            <td class="--tax">({{ $dealGood['tax_type_label'] }})</td>
           </tr>
         @endforeach
         {{--  <tr>

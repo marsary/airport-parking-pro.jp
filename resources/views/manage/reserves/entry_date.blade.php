@@ -312,16 +312,17 @@
         position: relative;
         display: flex;
         align-items: center;
+        padding: 0 30px;
     }
 
     .prev_button {
         position: absolute;
-        left: -30px;
+        left: 0;
     }
 
     .next_button {
         position: absolute;
-        right: -30px;
+        right: 0;
     }
 
   {{--  単数月用  --}}
