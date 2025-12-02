@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Manage\Controller;
 use App\Models\Deal;
 use Illuminate\Http\Request;
+use Mpdf\Mpdf;
+use Illuminate\Support\Facades\File;
 
 class TopController extends Controller
 {
@@ -94,7 +96,43 @@ class TopController extends Controller
             'print_date' => now()->format('Y/m/d H:i'),
         ];
 
+        // return view('manage.test.label', $data);
+
+        $html = view('manage.test.label', $data)->render();
+
+        $mpdf = new Mpdf();
+
+        $mpdf->WriteHTML($html);
+
+        $storagePath = storage_path('app/print');
+
+        $filename = 'print.pdf';
+        $filePath = $storagePath . '/' . $filename;
+
+        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
+
+        $this->executePrintCommand($filePath);
+
         return view('manage.test.label', $data);
     }
 
+
+    private function executePrintCommand(string $pdfPath)
+    {
+        $printerName = 'NEC MultiCoder 500L3';
+        $driverName = 'NEC MultiCoder 500L3';
+        $portName = 'USB001';
+        $acroReadPath = 'C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe';
+
+        $command = sprintf(
+            '"%s" /h /t "%s" "%s" "%s" "%s"',
+            $acroReadPath,
+            $pdfPath,
+            $printerName,
+            $driverName,
+            $portName
+        );
+
+        shell_exec($command);
+    }
 }
