@@ -98,19 +98,33 @@ class TopController extends Controller
 
         // return view('manage.test.label', $data);
 
+        // Blade を HTML に変換
         $html = view('manage.test.label', $data)->render();
 
-        $mpdf = new Mpdf();
+        // mPDF インスタンス作成
+        $mpdf = new Mpdf([
+            'format' => [80, 48], // [幅mm, 高さmm] 例：48mm x 80mmラベル
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+            'margin_left' => 0,
+            'margin_right' => 0,
+        ]);
 
+        // HTML → PDF
         $mpdf->WriteHTML($html);
 
+        // 保存先
         $storagePath = storage_path('app/print');
+        if (!File::isDirectory($storagePath)) {
+            File::makeDirectory($storagePath, 0755, true);
+        }
 
-        $filename = 'print.pdf';
+        $filename = 'print_' . time() . '.pdf';
         $filePath = $storagePath . '/' . $filename;
-
+        // 保存
         $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
 
+        // 自動印刷コマンドの実行
         $this->executePrintCommand($filePath);
 
         return view('manage.test.label', $data);
@@ -119,11 +133,14 @@ class TopController extends Controller
 
     private function executePrintCommand(string $pdfPath)
     {
-        $printerName = 'NEC MultiCoder 500L3';
-        $driverName = 'NEC MultiCoder 500L3';
-        $portName = 'USB001';
-        $acroReadPath = 'C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe';
+        // --- 環境に合わせて以下の値を設定 ---
+        $printerName = 'NEC MultiCoder 500L3'; // Windowsの「デバイスとプリンター」で設定したプリンター名
+        $driverName = 'NEC MultiCoder 500L3'; // プリンタードライバ名 (通常はプリンター名と同じ)
+        $portName = 'USB001';             // プリンターのポート名（環境によって異なる）
+        $acroReadPath = 'C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe'; // Adobe Readerのフルパス
 
+        // ------------------------------------------------
+        // 印刷コマンドの組み立て
         $command = sprintf(
             '"%s" /h /t "%s" "%s" "%s" "%s"',
             $acroReadPath,
@@ -133,6 +150,10 @@ class TopController extends Controller
             $portName
         );
 
+        // コマンド実行
         shell_exec($command);
+
+        // 印刷コマンド実行後、すぐにPDFファイルを削除すると、印刷処理が間に合わないため
+        // 削除は別の仕組み（CleanupOldPdfs を console.php で定期実行）で行う
     }
 }
