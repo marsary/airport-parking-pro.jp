@@ -31,4 +31,13 @@ return [
         ],
     ],
 
+    'printers' => [
+        'label_printer' => [
+            'printerName' => env('LABEL_PRINTER_NAME'),
+            'driverName' => env('LABEL_DRIVER_NAME'),
+            'portName' => env('LABEL_PORT_NAME'),
+            'acroReadPath' => env('LABEL_ACRO_READ_PATH'),
+        ]
+    ],
+
 ];
