@@ -73,30 +73,14 @@ class TopController extends Controller
 
     public function label()
     {
-        $deal = Deal::first();
+        $data = $this->getPrintData();
 
-        $data = [
-            // 受付番号
-            'receipt_code' => $deal->receipt_code,
-            // 受付者名
-            'member_name' => $deal->kana,
-            // 到着日（到着便マスタから
-            'arrive_date' => $deal->arrivalFlight?->arrive_date?->format('Y/m/d'),
-            // 到着時間（到着便マスタから
-            'arrive_time' => $deal->arrivalFlight?->arrive_time? \Carbon\Carbon::parse($deal->arrivalFlight->arrive_time)->format('H:i') : '',
-            // 到着便名（到着便マスタから）
-            'arrival_flight_name' => $deal->arrivalFlight?->name,
-            // 出発空港コード
-            'dep_airport_code' => $deal->arrivalFlight?->depAirport?->code,
-            // 車両情報
-            'car_number' => $deal->memberCar?->number,
-            'car_name' => $deal->memberCar?->car?->name,
-            'car_color_name' => $deal->memberCar?->carColor?->name,
-            // 現在時刻
-            'print_date' => now()->format('Y/m/d H:i'),
-        ];
+        return view('manage.test.label', $data);
+    }
 
-        // return view('manage.test.label', $data);
+    public function print()
+    {
+        $data = $this->getPrintData();
 
         // Blade を HTML に変換
         $html = view('manage.test.label', $data)->render();
@@ -127,17 +111,43 @@ class TopController extends Controller
         // 自動印刷コマンドの実行
         $this->executePrintCommand($filePath);
 
-        return view('manage.test.label', $data);
+        return redirect()->route("manage.label");
     }
 
+    private function getPrintData()
+    {
+        $deal = Deal::first();
+
+        $data = [
+            // 受付番号
+            'receipt_code' => $deal->receipt_code,
+            // 受付者名
+            'member_name' => $deal->kana,
+            // 到着日（到着便マスタから
+            'arrive_date' => $deal->arrivalFlight?->arrive_date?->format('Y/m/d'),
+            // 到着時間（到着便マスタから
+            'arrive_time' => $deal->arrivalFlight?->arrive_time? \Carbon\Carbon::parse($deal->arrivalFlight->arrive_time)->format('H:i') : '',
+            // 到着便名（到着便マスタから）
+            'arrival_flight_name' => $deal->arrivalFlight?->name,
+            // 出発空港コード
+            'dep_airport_code' => $deal->arrivalFlight?->depAirport?->code,
+            // 車両情報
+            'car_number' => $deal->memberCar?->number,
+            'car_name' => $deal->memberCar?->car?->name,
+            'car_color_name' => $deal->memberCar?->carColor?->name,
+            // 現在時刻
+            'print_date' => now()->format('Y/m/d H:i'),
+        ];
+        return $data;
+    }
 
     private function executePrintCommand(string $pdfPath)
     {
         // --- 環境に合わせて以下の値を設定 ---
-        $printerName = 'NEC MultiCoder 500L3'; // Windowsの「デバイスとプリンター」で設定したプリンター名
-        $driverName = 'NEC MultiCoder 500L3'; // プリンタードライバ名 (通常はプリンター名と同じ)
-        $portName = 'USB001';             // プリンターのポート名（環境によって異なる）
-        $acroReadPath = 'C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe'; // Adobe Readerのフルパス
+        $printerName = config("services.printers.label_printer.printerName"); // Windowsの「デバイスとプリンター」で設定したプリンター名
+        $driverName = config("services.printers.label_printer.driverName"); // プリンタードライバ名 (通常はプリンター名と同じ)
+        $portName = config("services.printers.label_printer.portName");             // プリンターのポート名（環境によって異なる）
+        $acroReadPath = config("services.printers.label_printer.acroReadPath"); // Adobe Readerのフルパス
 
         // ------------------------------------------------
         // 印刷コマンドの組み立て
