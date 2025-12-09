@@ -95,6 +95,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
 
 
         Route::get('/label', [\App\Http\Controllers\Manage\TopController::class, 'label'])->name('label');
+        Route::post('/label', [\App\Http\Controllers\Manage\TopController::class, 'print'])->name('label.print');
     });
 
 });
