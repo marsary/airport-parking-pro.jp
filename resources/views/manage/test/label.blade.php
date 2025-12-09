@@ -16,13 +16,7 @@
     <!-- Optional - CSS SVG Icons (Font Awesome) -->
     <link rel="stylesheet" type='text/css' href="{{ asset('css/app.css') }}">
     <title>ラベル印刷プレビュー</title>
-    {{--  <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+    <style>
         body {
             font-family: SJIS;
             background-color: #f0f0f0;
@@ -31,154 +25,6 @@
             justify-content: center; /* 横方向中央 */
             align-items: center;     /* 縦方向中央 */
             height: 100vh;
-        }
-
-        .preview-container {
-            background: white;
-            padding: 20px;
-            max-width: 900px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .print-buttons {
-            display: flex;
-            justify-content: center;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .print-buttons button {
-            margin: 0 10px;
-            font-weight: bolder !important;
-            color:#333;
-        }
-
-        /* ラベル本体 - プレビューは横長表示 */
-        .label {
-            width: 80mm;
-            height: 48mm;
-            border: 1px solid #333;
-            background: white;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-
-        /* 印刷時は90度回転 */
-        @media print {
-            body {
-                background: white;
-                margin: 0;
-                padding: 0;
-                width: 48mm;
-                height: 80mm;
-            }
-            .preview-container {
-                box-shadow: none;
-                padding: 0;
-                transform: rotate(-90deg);
-                width: 80mm;
-                height: 48mm;
-            }
-
-            .print-buttons {
-                display: none;
-            }
-
-            .label {
-                border: none;
-                margin: 0;
-            }
-
-            @page {
-                size: 48mm 80mm;
-                margin: 0;
-            }
-        }
-
-        /* レイアウト: 左側と右側に分割 */
-        .label-content {
-            display: flex;
-            height: 100%;
-            padding: 5mm;
-            padding-top: 8mm;
-        }
-
-        .logo-section {
-            width:10mm;
-        }
-
-        /* 左側: 予約情報エリア */
-        .info-section {
-            flex: 1;
-            padding-right: 3mm;
-            /*border-right: 1px solid #ccc;*/
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            font-size: 6pt;
-            line-height: 1.3;
-        }
-
-        .info-section .info-line {
-            margin-bottom: 1mm;
-        }
-
-        .info-section .label-text {
-            font-size: 7pt;
-        }
-
-        /* 右側: 表と日付エリア */
-        .table-section {
-            width: 30mm;
-            padding-left: 3mm;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        /* 4×4の表 */
-        .grid-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 2mm;
-        }
-
-        .grid-table td {
-            width: 25%;
-            height: 6mm;
-            border: 1px solid #333;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        /* 印刷日付 */
-        .print-date {
-            text-align: center;
-            font-size: 7pt;
-        }
-
-    </style>  --}}
-    <style>
-        body {
-            font-family: SJIS;
-            display: flex;
-            justify-content: center; /* 横方向中央 */
-            align-items: center;     /* 縦方向中央 */
-            background: white;
-            margin: 0;
-            padding: 0;
-            width: 80mm;
-            height: 48mm;
-        }
-        .preview-container {
-            box-shadow: none;
-            padding: 0;
-            width: 80mm;
-            height: 48mm;
-        }
-
-        .print-buttons {
-            display: none;
         }
 
         .label {
@@ -240,12 +86,59 @@
             text-align: center;
             font-size: 7pt;
         }
+
+        .preview-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .print-buttons {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .print-buttons button {
+            margin: 0 10px;
+            font-weight: bolder !important;
+            color:#333;
+        }
+
+        @media print {
+            body {
+                font-family: SJIS;
+                display: flex;
+                justify-content: center; /* 横方向中央 */
+                align-items: center;     /* 縦方向中央 */
+                background: white;
+                margin: 0;
+                padding: 0;
+                width: 80mm;
+                height: 48mm;
+            }
+            .preview-container {
+                box-shadow: none;
+                background-color: inherit;
+                padding: 0;
+                width: 80mm;
+                height: 48mm;
+            }
+            .print-buttons {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="preview-container">
         <div class="print-buttons">
-            <button class="c-button--green pointer hover" onclick="window.print()">印刷</button>
+            <form action="{{route('manage.label.print')}}" method="POST">
+                @csrf
+                @method("POST")
+                <button class="c-button--green pointer hover" type="submit">印刷</button>
+            </form>
             <button class="c-button--gray pointer hover" onclick="window.history.back()">キャンセル</button>
         </div>
 
