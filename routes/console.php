@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\CalcDailyInventory;
+use App\Console\Commands\CleanupOldPdfs;
 use App\Console\Commands\DailyUpdate;
 use App\Console\Commands\SaveDailySalesResults;
 use App\Console\Commands\SaveAgencyRecords;
@@ -22,3 +23,6 @@ Schedule::command(DailyUpdate::class)->dailyAt('2:00');
 Schedule::command(CalcDailyInventory::class)->dailyAt('2:00');
 Schedule::command(SaveAgencyRecords::class)->dailyAt('2:00');
 Schedule::command(SaveDailySalesResults::class)->dailyAt('2:00');
+
+// PDF削除コマンド
+Schedule::command(CleanupOldPdfs::class)->dailyAt('2:00');
