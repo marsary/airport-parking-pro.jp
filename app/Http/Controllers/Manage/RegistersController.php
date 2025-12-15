@@ -6,17 +6,22 @@ use App\Enums\DealStatus;
 use App\Enums\PaymentMethod\AdjustmentType;
 use App\Enums\PaymentMethod\DiscountType;
 use App\Enums\PaymentMethodType;
+use App\Exceptions\PrinterPrintException;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\RegisterStoreRequest;
+use App\Jobs\ProcessPrintJob;
 use App\Models\Coupon;
 use App\Models\Deal;
 use App\Models\Good;
 use App\Models\GoodCategory;
+use App\Models\Payment;
 use App\Models\PaymentDetail;
 use App\Models\PaymentMethod;
 use App\Services\Deal\DealGoodsService;
 use App\Services\Deal\DealService;
 use App\Services\Deal\PaymentService;
+use App\Services\Printers\LabelPrintable;
+use App\Services\Printers\ReceiptPrintable;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,8 +66,8 @@ class RegistersController extends Controller
     public function store(RegisterStoreRequest $request)
     {
         try {
-            DB::transaction(function () use($request) {
-                $service = new PaymentService($request->input('deal_id'), $request->all());
+            $service = new PaymentService($request->input('deal_id'), $request->all());
+            DB::transaction(function () use($service) {
                 $service->save();
 
                 // ステータス更新 入庫済み
@@ -72,12 +77,16 @@ class RegistersController extends Controller
                 $service->deal->overdue = false; // 延長フラグをリセット
                 $service->deal->save();
             });
+            $this->printAll($service->deal, $service->payment);
+        } catch (PrinterPrintException $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return redirect(route('manage.deals.show', [$request->deal_id]))->with('failure', '決済処理は完了しましたが、ラベル・領収書印刷処理に失敗しました。印刷処理をやり直してください。');
         } catch (\Throwable $th) {
             Log::error('エラー内容：' . $th->getMessage());
             return redirect()->back()->with('failure', '決済処理に失敗しました。決済手続きをやり直してください。');
         }
         // return redirect(route('manage.receipts.show', [$request->deal_id]));
-        return redirect(route('manage.deals.show', [$request->deal_id]));
+        return redirect(route('manage.deals.show', [$request->deal_id]))->with('success', '決済処理を完了し、印刷ジョブを開始しました。');
     }
 
     /**
@@ -173,5 +182,27 @@ class RegistersController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function printAll(Deal $deal, Payment $payment)
+    {
+        try {
+            // プリンタ接続情報を設定
+            // 領収書とラベル、2つの設定を用意
+            $labelPrinterConfig = config("services.printers.label_printer"); // ラベルプリンタ
+            // $labelPrinterConfig = config("services.printers.receipt_printer"); // debug用
+
+            $receiptPrinterConfig = config("services.printers.receipt_printer");
+
+            // 印刷物（Printable）のインスタンスを作成
+            $labelPrintable = new LabelPrintable($deal);
+            $receiptPrintable = new ReceiptPrintable($deal, $payment);
+            // 印刷処理をキューに投入
+            ProcessPrintJob::dispatch($labelPrinterConfig, $labelPrintable);
+            // ProcessPrintJob::dispatch($receiptPrinterConfig, $receiptPrintable);
+
+        } catch (\Throwable $th) {
+            throw new PrinterPrintException();
+        }
     }
 }
