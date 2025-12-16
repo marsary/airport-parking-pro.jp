@@ -128,6 +128,11 @@
             .print-buttons {
                 display: none;
             }
+            .label-content {
+                display: flex;
+                justify-content: center; /* 横方向中央 */
+                align-items: center;     /* 縦方向中央 */
+            }
         }
     </style>
 </head>
