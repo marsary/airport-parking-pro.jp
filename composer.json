@@ -10,7 +10,8 @@
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
         "mpdf/mpdf": "^8.2",
-        "simplesoftwareio/simple-qrcode": "4.2.0"
+        "simplesoftwareio/simple-qrcode": "4.2.0",
+        "spiritix/php-chrome-html2pdf": "^1.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -64,6 +65,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "oat-sa/composer-npm-bridge": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }

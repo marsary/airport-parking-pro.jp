@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73c23c1edb2a72ac4bbed1bdae9bfa6a",
+    "content-hash": "1a10b96ae06c836d3eb8803d48a0b491",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3075,6 +3075,73 @@
             "time": "2024-03-06T16:17:14+00:00"
         },
         {
+            "name": "oat-sa/composer-npm-bridge",
+            "version": "v0.4.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oat-sa/composer-npm-bridge.git",
+                "reference": "1fb3a0a92e2be03e5cf46bd91f654a97fc27a2e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oat-sa/composer-npm-bridge/zipball/1fb3a0a92e2be03e5cf46bd91f654a97fc27a2e1",
+                "reference": "1fb3a0a92e2be03e5cf46bd91f654a97fc27a2e1",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0 || ^2.0",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "composer/composer": "dev-master",
+                "eloquent/phony-phpunit": "^1",
+                "errors/exceptions": "^0.2",
+                "phpunit/phpunit": "^5"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Eloquent\\Composer\\NpmBridge\\NpmBridgePlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Eloquent\\Composer\\NpmBridge\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erin Millard",
+                    "email": "ezzatron@gmail.com",
+                    "homepage": "http://ezzatron.com/",
+                    "role": "original author"
+                },
+                {
+                    "name": "OAT SA",
+                    "email": "contact@taotesting.com",
+                    "homepage": "https://taotestingg.com",
+                    "role": "forkers"
+                }
+            ],
+            "description": "NPM integration for Composer packages.",
+            "homepage": "https://github.com/oat-sa/composer-npm-bridge",
+            "keywords": [
+                "Bridge",
+                "composer",
+                "composer-plugin",
+                "integration",
+                "npm",
+                "package",
+                "plugin"
+            ],
+            "support": {
+                "source": "https://github.com/oat-sa/composer-npm-bridge/tree/м0.4.6"
+            },
+            "time": "2025-02-07T15:40:08+00:00"
+        },
+        {
             "name": "paragonie/random_compat",
             "version": "v9.99.100",
             "source": {
@@ -4159,6 +4226,64 @@
                 "source": "https://github.com/SimpleSoftwareIO/simple-qrcode/tree/4.2.0"
             },
             "time": "2021-02-08T20:43:55+00:00"
+        },
+        {
+            "name": "spiritix/php-chrome-html2pdf",
+            "version": "v1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spiritix/php-chrome-html2pdf.git",
+                "reference": "dda238f909c390df3d9e58bc1eb00e9ab667407a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spiritix/php-chrome-html2pdf/zipball/dda238f909c390df3d9e58bc1eb00e9ab667407a",
+                "reference": "dda238f909c390df3d9e58bc1eb00e9ab667407a",
+                "shasum": ""
+            },
+            "require": {
+                "oat-sa/composer-npm-bridge": "^0.4",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "npm-bridge": {
+                    "timeout": 3600
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spiritix\\Html2Pdf\\": "src/Spiritix/Html2Pdf/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Isler",
+                    "email": "mi@matthias-isler.ch"
+                }
+            ],
+            "description": "A PHP library for converting HTML to PDF using Google Chrome",
+            "keywords": [
+                "chrome",
+                "headless",
+                "html",
+                "html2pdf",
+                "pdf",
+                "php",
+                "puppeteer"
+            ],
+            "support": {
+                "issues": "https://github.com/spiritix/php-chrome-html2pdf/issues",
+                "source": "https://github.com/spiritix/php-chrome-html2pdf/tree/v1.8.1"
+            },
+            "time": "2024-09-05T08:45:40+00:00"
         },
         {
             "name": "symfony/clock",
