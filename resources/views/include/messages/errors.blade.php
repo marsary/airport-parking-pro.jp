@@ -6,7 +6,7 @@
   </div>
 @endif
 {{--  バリデーションエラー  --}}
-@if (count($errors) > 0)
+@if (isset($errors) && count($errors) > 0)
   <div class="alert">
     <span class="closebtn">&times;</span>
     <strong>入力エラー!</strong>
