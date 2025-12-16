@@ -36,8 +36,14 @@ return [
             'printerName' => env('LABEL_PRINTER_NAME'),
             'driverName' => env('LABEL_DRIVER_NAME'),
             'portName' => env('LABEL_PORT_NAME'),
-            'acroReadPath' => env('LABEL_ACRO_READ_PATH'),
-        ]
+            'pdfReaderPath' => env('LABEL_PDF_READ_PATH'),
+        ],
+        'receipt_printer' => [
+            'printerName' => env('RECEIPT_PRINTER_NAME'),
+            'driverName' => env('RECEIPT_DRIVER_NAME'),
+            'portName' => env('RECEIPT_PORT_NAME'),
+            'pdfReaderPath' => env('RECEIPT_PDF_READ_PATH'),
+        ],
     ],
 
 ];

@@ -3,6 +3,9 @@ namespace App\Services\Printers;
 
 use \Illuminate\Support\Facades\File;
 use Mpdf\Mpdf;
+use Spiritix\Html2Pdf\Converter;
+use Spiritix\Html2Pdf\Input\StringInput;
+use Spiritix\Html2Pdf\Output\FileOutput;
 
 class PrinterService
 {
@@ -46,6 +49,19 @@ class PrinterService
         return $filePath;
     }
 
+    private function savePdfWithPupeteer(AbstractPrintable $printable,string $html,string $filePath)
+    {
+        $input = new StringInput();
+        $input->setHtml($html);
+
+        $converter = new Converter($input, new FileOutput());
+
+        $converter->setOptions($printable->getConfig());
+        /** @var FileOutput $output */
+        $output = $converter->convert();
+        $output->store($filePath);
+    }
+
     private function savePdfWithMPdf(AbstractPrintable $printable,string $html,string $filePath)
     {
         $printable->setConfig([
@@ -69,14 +85,25 @@ class PrinterService
     private function executePrintCommand(string $pdfPath)
     {
         // 印刷コマンドの組み立てと実行
+        // SumatraPDF
         $command = sprintf(
-            '"%s" /h /t "%s" "%s" "%s" "%s"',
+            'cmd /c ""%s" -print-to "%s" "%s""',
             $this->pdfReaderPath,
-            $pdfPath,
             $this->printerName,
-            $this->driverName,
-            $this->portName
+            $pdfPath
         );
+
+        // 印刷設定を指定する場合
+        // -print-settings "paper=Custom.48x80mm,orientation=portrait,fit"
+
+        // | 設定                      | 説明      |
+        // | ----------------------- | ------- |
+        // | `fit`                   | 用紙にフィット |
+        // | `noscale`               | 等倍      |
+        // | `orientation=portrait`  | 縦       |
+        // | `orientation=landscape` | 横       |
+        // | `paper=A4`              | A4      |
+        // | `paper=Custom.48x80mm`  | 感熱ラベル   |
 
         shell_exec($command);
     }
