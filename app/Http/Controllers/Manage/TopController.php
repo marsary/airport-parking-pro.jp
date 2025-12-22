@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Manage;
 
+use App\Exceptions\PrinterPrintException;
 use App\Http\Controllers\Manage\Controller;
+use App\Jobs\ProcessPrintJob;
 use App\Models\Deal;
+use App\Services\Printers\LabelPrintable;
 use Illuminate\Http\Request;
-use Mpdf\Mpdf;
-use Illuminate\Support\Facades\File;
 
 class TopController extends Controller
 {
@@ -73,97 +74,34 @@ class TopController extends Controller
 
     public function label()
     {
-        $data = $this->getPrintData();
+        $deal = Deal::first();
+        // 印刷物（Printable）のインスタンスを作成
+        $labelPrintable = new LabelPrintable($deal);
+
+        $data = $labelPrintable->getData();
 
         return view('manage.test.label', $data);
     }
 
     public function print()
     {
-        $data = $this->getPrintData();
+        try {
+            // プリンタ接続情報を設定
+            // 領収書とラベル、2つの設定を用意
+            // $labelPrinterConfig = config("services.printers.label_printer"); // ラベルプリンタ
+            $labelPrinterConfig = config("services.printers.receipt_printer"); // debug用
 
-        // Blade を HTML に変換
-        $html = view('manage.test.label', $data)->render();
+            $deal = Deal::first();
 
-        // mPDF インスタンス作成
-        $mpdf = new Mpdf([
-            'format' => [80, 48], // [幅mm, 高さmm] 例：48mm x 80mmラベル
-            'margin_top' => 0,
-            'margin_bottom' => 0,
-            'margin_left' => 0,
-            'margin_right' => 0,
-        ]);
+            // 印刷物（Printable）のインスタンスを作成
+            $labelPrintable = new LabelPrintable($deal);
+            // 印刷処理をキューに投入
+            ProcessPrintJob::dispatch($labelPrinterConfig, $labelPrintable);
 
-        // HTML → PDF
-        $mpdf->WriteHTML($html);
-
-        // 保存先
-        $storagePath = storage_path('app/print');
-        if (!File::isDirectory($storagePath)) {
-            File::makeDirectory($storagePath, 0755, true);
+        } catch (\Throwable $th) {
+            throw new PrinterPrintException();
         }
 
-        $filename = 'print_' . time() . '.pdf';
-        $filePath = $storagePath . '/' . $filename;
-        // 保存
-        $mpdf->Output($filePath, \Mpdf\Output\Destination::FILE);
-
-        // 自動印刷コマンドの実行
-        $this->executePrintCommand($filePath);
-
         return redirect()->route("manage.label");
-    }
-
-    private function getPrintData()
-    {
-        $deal = Deal::first();
-
-        $data = [
-            // 受付番号
-            'receipt_code' => $deal->receipt_code,
-            // 受付者名
-            'member_name' => $deal->kana,
-            // 到着日（到着便マスタから
-            'arrive_date' => $deal->arrivalFlight?->arrive_date?->format('Y/m/d'),
-            // 到着時間（到着便マスタから
-            'arrive_time' => $deal->arrivalFlight?->arrive_time? \Carbon\Carbon::parse($deal->arrivalFlight->arrive_time)->format('H:i') : '',
-            // 到着便名（到着便マスタから）
-            'arrival_flight_name' => $deal->arrivalFlight?->name,
-            // 出発空港コード
-            'dep_airport_code' => $deal->arrivalFlight?->depAirport?->code,
-            // 車両情報
-            'car_number' => $deal->memberCar?->number,
-            'car_name' => $deal->memberCar?->car?->name,
-            'car_color_name' => $deal->memberCar?->carColor?->name,
-            // 現在時刻
-            'print_date' => now()->format('Y/m/d H:i'),
-        ];
-        return $data;
-    }
-
-    private function executePrintCommand(string $pdfPath)
-    {
-        // --- 環境に合わせて以下の値を設定 ---
-        $printerName = config("services.printers.label_printer.printerName"); // Windowsの「デバイスとプリンター」で設定したプリンター名
-        $driverName = config("services.printers.label_printer.driverName"); // プリンタードライバ名 (通常はプリンター名と同じ)
-        $portName = config("services.printers.label_printer.portName");             // プリンターのポート名（環境によって異なる）
-        $acroReadPath = config("services.printers.label_printer.acroReadPath"); // Adobe Readerのフルパス
-
-        // ------------------------------------------------
-        // 印刷コマンドの組み立て
-        $command = sprintf(
-            '"%s" /h /t "%s" "%s" "%s" "%s"',
-            $acroReadPath,
-            $pdfPath,
-            $printerName,
-            $driverName,
-            $portName
-        );
-
-        // コマンド実行
-        shell_exec($command);
-
-        // 印刷コマンド実行後、すぐにPDFファイルを削除すると、印刷処理が間に合わないため
-        // 削除は別の仕組み（CleanupOldPdfs を console.php で定期実行）で行う
     }
 }
