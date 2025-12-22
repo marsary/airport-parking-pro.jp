@@ -694,7 +694,7 @@
         // オプションデータをAPIに送信
         const json = await apiRequest.put(BASE_PATH + "/manage/deals/" + dealId + "/update_goods", {
           'dealGoods': dealGoods,
-          'total_price': parseInt(totalInput.value),
+          'total_price': parseInt(subTotalInput.value) + parseInt(reducedSubTotalInput.value) + parseInt(taxExemptInput.value),
           'total_tax': parseInt(reducedTaxInput.value) + parseInt(taxInput.value),
           'tax_free': parseInt(taxExemptInput.value),
         });
