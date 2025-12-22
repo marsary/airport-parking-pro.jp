@@ -11,7 +11,12 @@ class ReceiptPrintable extends AbstractPrintable
     public $payment;
     protected array $defaultConfig = [
         'format' => 'A4',
+        // 'format' => [210, 297], // 210×297mm
         // ... 領収書用のマージンなど ...
+        // 'margin_top' => 0,
+        // 'margin_bottom' => 0,
+        // 'margin_left' => 5,
+        // 'margin_right' => 5,
     ];
 
     public function __construct(Deal $deal, Payment $payment)
