@@ -184,6 +184,15 @@ class RegistersController extends Controller
         //
     }
 
+    /**
+     * 領収書とラベルをまとめて印刷処理
+     * キューに投入
+     *
+     * @param Deal $deal
+     * @param Payment $payment
+     * @return void
+     * @throws PrinterPrintException
+     */
     private function printAll(Deal $deal, Payment $payment)
     {
         try {
@@ -195,11 +204,18 @@ class RegistersController extends Controller
             $receiptPrinterConfig = config("services.printers.receipt_printer");
 
             // 印刷物（Printable）のインスタンスを作成
-            $labelPrintable = new LabelPrintable($deal);
+            $labelPrintable = new LabelPrintable($deal, [
+                // mPDF用に上書き設定
+                'format' => [80, 48], // [幅mm, 高さmm] 例：48mm x 80mmラベル
+                'margin_top' => 0,
+                'margin_bottom' => 0,
+                'margin_left' => 0,
+                'margin_right' => 0,
+            ]);
             $receiptPrintable = new ReceiptPrintable($deal, $payment);
             // 印刷処理をキューに投入
             ProcessPrintJob::dispatch($labelPrinterConfig, $labelPrintable);
-            // ProcessPrintJob::dispatch($receiptPrinterConfig, $receiptPrintable);
+            ProcessPrintJob::dispatch($receiptPrinterConfig, $receiptPrintable, 'puppeteer');
 
         } catch (\Throwable $th) {
             throw new PrinterPrintException();
