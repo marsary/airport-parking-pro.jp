@@ -14,13 +14,15 @@ class PrinterService
     protected string $driverName;
     protected string $portName;
     protected string $pdfReaderPath;
+    protected string $library;
 
-    public function __construct(array $connectionConfig)
+    public function __construct(array $connectionConfig, string $library = 'mpdf')
     {
         // プリンタ接続情報を外部から設定
         $this->printerName = $connectionConfig['printerName'];
         $this->driverName = $connectionConfig['driverName'];
         $this->portName = $connectionConfig['portName'];
+        $this->library = $library;
         $this->pdfReaderPath = $connectionConfig['pdfReaderPath'];
     }
 
@@ -41,7 +43,11 @@ class PrinterService
         // // HTML → PDF
         $html = $printable->render();
 
-        $this->savePdfWithMPdf($printable, $html, $filePath);
+        if ($this->library === 'mpdf') {
+            $this->savePdfWithMPdf($printable, $html, $filePath);
+        } else {
+            $this->savePdfWithPupeteer($printable, $html, $filePath);
+        }
 
         // 自動印刷コマンドの実行
         $this->executePrintCommand($filePath);
@@ -64,13 +70,6 @@ class PrinterService
 
     private function savePdfWithMPdf(AbstractPrintable $printable,string $html,string $filePath)
     {
-        $printable->setConfig([
-            'format' => [80, 48], // [幅mm, 高さmm] 例：48mm x 80mmラベル
-            'margin_top' => 0,
-            'margin_bottom' => 0,
-            'margin_left' => 0,
-            'margin_right' => 0,
-        ]);
         // 1. Mpdfインスタンス作成
         $mpdf = new Mpdf($printable->getConfig());
 
