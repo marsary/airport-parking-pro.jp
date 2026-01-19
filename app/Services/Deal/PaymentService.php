@@ -22,7 +22,7 @@ class PaymentService
 
 
     /** @var Payment */
-    private $payment;
+    public $payment;
 
     /** @var CashRegister */
     private $register;
@@ -46,6 +46,7 @@ class PaymentService
 
     private function createPayment()
     {
+        $cashEnter = $this->calcCashEnter();
         $this->payment = $this->deal->payment()->create([
             'payment_code' => Str::random(10),
             'payment_date' => Carbon::now(),
@@ -67,9 +68,10 @@ class PaymentService
             // 値引き・調整は含めず？
             'demand_price' => $this->deal->total_price + $this->deal->total_tax,
             'total_pay' => $this->data['totalAmount'], // 支払合計金額
-            'cash_enter' => $this->data['totalPay'], // レジ入金額
+            'cash_enter' => $cashEnter, // レジ入金額
+            // 'cash_enter' => $this->data[PaymentMethodType::CASH->symbol()], // レジ入金額
             'cash_change' => $this->data['totalChange'], // レジ釣銭額
-            'cash_add' => $this->data['totalPay'] - $this->data['totalChange'], // レジ追加金額
+            'cash_add' => $cashEnter - $this->data['totalChange'], // レジ追加金額
             'created_by' => Auth::id(),
             'updated_by' => Auth::id(),
         ]);
@@ -77,6 +79,17 @@ class PaymentService
         $this->createPaymentGoods();
         // 決済支払い方法
         $this->createPaymentDetails();
+    }
+
+    private function calcCashEnter()
+    {
+        $cashEnter = $this->data['totalPay'];
+        // 売掛控除
+        if(isset($this->data[PaymentMethodType::ACCOUNTS_RECEIVABLE->symbol()])) {
+            $cashEnter -= $this->data[PaymentMethodType::ACCOUNTS_RECEIVABLE->symbol()];
+        }
+
+        return $cashEnter;
     }
 
     private function createPaymentGoods()
@@ -180,6 +193,7 @@ class PaymentService
 
     private function updatePayment()
     {
+        $cashEnter = $this->calcCashEnter();
         $this->payment->fill([
             'payment_date' => Carbon::now(),
             'cash_register_id' => $this->register->id,
@@ -196,9 +210,10 @@ class PaymentService
             // 値引き・調整は含めず？
             'demand_price' => $this->deal->total_price + $this->deal->total_tax,
             'total_pay' => $this->data['totalAmount'], // 支払合計金額
-            'cash_enter' => $this->data['totalPay'], // レジ入金額
+            'cash_enter' => $cashEnter, // レジ入金額
+            // 'cash_enter' => $this->data[PaymentMethodType::CASH->symbol()], // レジ入金額
             'cash_change' => $this->data['totalChange'], // レジ釣銭額
-            'cash_add' => $this->data['totalPay'] - $this->data['totalChange'], // レジ追加金額
+            'cash_add' => $cashEnter - $this->data['totalChange'], // レジ追加金額
             'updated_by' => Auth::id(),
         ])->save();
 
