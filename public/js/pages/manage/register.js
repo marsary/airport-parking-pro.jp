@@ -21,6 +21,7 @@ window.addEventListener('DOMContentLoaded', function() {
     const paymentMethodTravelInput = document.getElementById('paymentMethod_travel');
     const paymentMethodVoucherInput = document.getElementById('paymentMethod_voucher');
     const paymentMethodOtherInput = document.getElementById('paymentMethod_other');
+    const paymentMethodAccountsReceivableInput = document.getElementById('paymentMethod_accounts_receivable');
     const enterButton = document.getElementById('enterButton');
     const paymentSubmitButton = document.getElementById('paymentSubmitButton');
     const paymentSubmitForm = document.getElementById('payment_submit_form');
@@ -142,6 +143,9 @@ window.addEventListener('DOMContentLoaded', function() {
         })
         paymentMethodOtherInput.addEventListener('change', () => {
             initpaymentMethodInput(paymentMethodOtherInput,paymentData, PaymentMethodTypes.others,paymentMethodOtherInput.options[paymentMethodOtherInput.selectedIndex].text)
+        })
+        paymentMethodAccountsReceivableInput.addEventListener('click', () => {
+            initpaymentMethodInput(paymentMethodAccountsReceivableInput,paymentData, PaymentMethodTypes.accountsReceivable,'accountsReceivable')
         })
     }
 
@@ -357,6 +361,8 @@ class PaymentData {
     voucher = {}
     // その他
     others = {}
+    // 売掛
+    accountsReceivable
 
     // 支払方法のうちリスト形式のデータ
     listPaymentTypes = [
@@ -475,7 +481,7 @@ class PaymentData {
         this.adjustTax();
 
         this.totalAmount = (parseInt(this.subtotal) || 0) + (parseInt(this.tax) || 0) - this.discountTotal() + this.adjustmentTotal();
-        this.totalPay = (parseInt(this.cash) || 0) + (parseInt(this.giftCertificates) || 0)
+        this.totalPay = (parseInt(this.cash) || 0) + (parseInt(this.giftCertificates) || 0) + (parseInt(this.accountsReceivable) || 0)
         for(const paymentType of this.listPaymentTypes) {
             Object.keys(this[paymentType]).forEach(key => {
                 const value = this[paymentType][key];
@@ -602,6 +608,10 @@ class PaymentData {
         this.#handleListFormakeReceivedItems(items, this.voucher)
         // その他
         this.#handleListFormakeReceivedItems(items, this.others)
+        // 売掛
+        if(this.accountsReceivable != null) {
+            items.push(this.makeItemContainerWithRemoveButton('accountsReceivable', '売掛', this.accountsReceivable))
+        }
 
         return items;
     }
@@ -739,6 +749,7 @@ class PaymentData {
             electronicMoney: this.electronicMoney,
             qrCode: this.qrCode,
             giftCertificates: this.giftCertificates ?? '',
+            accountsReceivable: this.accountsReceivable ?? '',
             travelAssistance: this.travelAssistance,
             voucher: this.voucher,
             others: this.others,
@@ -816,6 +827,7 @@ const PaymentMethodTypes = Object.freeze({
     travelAssistance:'travelAssistance',
     voucher:'voucher',
     others:'others',
+    accountsReceivable:'accountsReceivable',
 });
 
 function getPaymentMethodTypeFromId(id) {
@@ -842,6 +854,8 @@ function getPaymentMethodTypeFromId(id) {
             return PaymentMethodTypes.voucher;
         case 'paymentMethod_other':
             return PaymentMethodTypes.others;
+        case 'paymentMethod_accounts_receivable':
+            return PaymentMethodTypes.accountsReceivable;
         default:
             break;
     }
