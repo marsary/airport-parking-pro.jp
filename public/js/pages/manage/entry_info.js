@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const searchBtn = document.getElementById('search_btn');
   const telInput = document.querySelector('input[name=tel]')
+  const telInput2 = document.getElementById('tel2');
   const kanaInput = document.querySelector('input[name=kana]')
+  const kanaInput2 = document.getElementById('kana2');
   const nameInput = document.querySelector('input[name=name]')
   const zipInput = document.querySelector('input[name=zip]')
   const emailInput = document.querySelector('input[name=email]')
@@ -112,6 +114,8 @@ $('#car_id').on('change', function(e) {
 
       if(!init) {
         nameInput.value = json.data.member.name
+        kanaInput2.value = json.data.member.kana
+        telInput2.value = json.data.member.tel
         zipInput.value = json.data.member.zip
         emailInput.value = json.data.member.email
       }
