@@ -42,7 +42,6 @@ class RegiSalesAccountBooksService
             $row->dealTotalPrice = $payment->deal->total_price;
             $row->cashEnter = $payment->cash_enter;
             $row->cashChange = $payment->cash_change;
-            $row->totalPay = $payment->total_pay;
 
             $this->setPaymentMethodPrices($payment, $row);
 
@@ -90,6 +89,8 @@ class RegiSalesAccountBooksService
         $credits = [];
         $coupons = [];
         $others = (new RegiSalesAccountBooksRow)->others;
+        // 支払い合計金額
+        $totalPay = $payment->total_pay;
 
         foreach ($payment->paymentDetails as $paymentDetail) {
             /** @var PaymentDetail $paymentDetail */
@@ -100,6 +101,10 @@ class RegiSalesAccountBooksService
 
             switch($paymentMethodType)
             {
+                case PaymentMethodType::ACCOUNTS_RECEIVABLE:
+                    // 売掛金額を支払い金額から控除
+                    $totalPay -= $paymentDetail->total_price;
+                    break;
                 case PaymentMethodType::CASH:
                     $cash += $paymentDetail->total_price;
                     break;
@@ -132,6 +137,7 @@ class RegiSalesAccountBooksService
         $row->credits = $credits;
         $row->coupons = $coupons;
         $row->others = $others;
+        $row->totalPay = $totalPay;
     }
 
     private function fetchData(Request $request)
@@ -236,7 +242,7 @@ class RegiSalesAccountBooksRow
         // 調整
         "調整" => 0,
     ];
-    // 合計
+    // 売掛控除後合計
     public $totalPay = 0;
     // 担当
     public $userName;
@@ -263,7 +269,7 @@ class RegiSalesBottomLineRow
     public $coupons = 0;
     // 他
     public $others = 0;
-    // 合計
+    // 売掛控除後合計
     public $totalPay = 0;
 
     public function sumUp(RegiSalesAccountBooksRow $row)
