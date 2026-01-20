@@ -157,6 +157,7 @@ class PaymentSummaryRepository implements PaymentSummaryRepositoryInterface
         $cashData = Payment::where('payments.office_id', $officeId)
             ->where('payment_date', '>=', $startDate)
             ->where('payment_date', '<=', $endDate)
+            ->where('payments.cash_change', '>', 0)
             ->join('deals', 'deals.id', '=', 'payments.deal_id')
             ->select('deals.agency_id', DB::raw('count(*) as count'), DB::raw('SUM(payments.cash_change) as price'))
             ->groupBy('deals.agency_id')
