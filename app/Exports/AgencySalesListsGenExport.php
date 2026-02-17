@@ -5,8 +5,9 @@ use App\Models\AgencyRecord;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromGenerator;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
-class AgencySalesListsGenExport implements FromGenerator
+class AgencySalesListsGenExport implements FromGenerator, WithCustomCsvSettings
 {
     use Exportable;
 
@@ -20,8 +21,16 @@ class AgencySalesListsGenExport implements FromGenerator
         $this->agencyRecords = $agencyRecords;
     }
 
+    public function getCsvSettings(): array
+    {
+         return [
+            'output_encoding' => 'SJIS',
+        ];
+    }
+
     public function generator(): \Generator
     {
+        /** @var Collection $agencyRecords */
         foreach ($this->agencyRecords as $agencyId => $agencyRecords) {
             // ---- 代理店ヘッダー行 ----
             yield [
