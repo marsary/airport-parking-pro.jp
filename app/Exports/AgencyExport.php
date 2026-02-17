@@ -33,7 +33,6 @@ class AgencyExport implements FromQuery, WithHeadings, WithMapping, WithColumnFo
          return [
             'output_encoding' => 'SJIS',
         ];
-
     }
 
     public function query()

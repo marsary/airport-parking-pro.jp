@@ -19,7 +19,6 @@ use App\Models\CashRegister;
 use App\Models\Deal;
 use App\Models\GoodCategory;
 use App\Models\Office;
-use App\Services\Ledger\AgencySalesListsDownloadService;
 use App\Services\Ledger\RegiChecklistsService;
 use App\Services\Ledger\RegiPaymentSummariesService;
 use App\Services\Ledger\RegiSalesAccountBooksService;
@@ -236,7 +235,7 @@ class LedgerController extends Controller
             ->orderBy('deal_id', 'asc')
             ->get()->groupBy('agency_id')->all();
 
-        /** @var AgencyExport $export */
+        /** @var AgencySalesListsGenExport $export */
         $export = new AgencySalesListsGenExport($agencyRecords);
 
         $fileName = 'agency_sales_account_list.csv';
@@ -399,7 +398,7 @@ class LedgerController extends Controller
             ->all();
 
 
-        /** @var AgencyExport $export */
+        /** @var AgencyRecordsGenExport $export */
         $export = new AgencyRecordsGenExport($grouped, $offices, $endDate);
 
         $fileName = 'agency_past_record.csv';
