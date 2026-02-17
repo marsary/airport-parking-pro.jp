@@ -5,10 +5,11 @@ namespace App\Exports;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class MonthlySalesTargetsExport implements FromArray, WithHeadings, WithMapping
+class MonthlySalesTargetsExport implements FromArray, WithHeadings, WithMapping, WithCustomCsvSettings
 {
     use Exportable;
 
@@ -24,6 +25,13 @@ class MonthlySalesTargetsExport implements FromArray, WithHeadings, WithMapping
         // csvDataからyear要素を削除し、テーブルデータのみにする
         unset($csvData['year']);
         $this->csvData = $csvData;
+    }
+
+    public function getCsvSettings(): array
+    {
+         return [
+            'output_encoding' => 'SJIS',
+        ];
     }
 
     /**
