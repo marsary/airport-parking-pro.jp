@@ -6,8 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromGenerator;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 
-class AgencyRecordsGenExport implements FromGenerator
+class AgencyRecordsGenExport implements FromGenerator, WithCustomCsvSettings
 {
     use Exportable;
 
@@ -25,6 +26,13 @@ class AgencyRecordsGenExport implements FromGenerator
         $this->agencyRecords = $agencyRecords;
         $this->offices = $offices;
         $this->targetDate = $targetDate;
+    }
+
+    public function getCsvSettings(): array
+    {
+         return [
+            'output_encoding' => 'SJIS',
+        ];
     }
 
     public function generator(): \Generator
