@@ -6,6 +6,17 @@
   <!-- パンくず -->
   <ul class="l-wrap__breadcrumb l-breadcrumb">
     <li class="l-breadcrumb__list">レジTOP</li>
+    <li class="" style="margin-left: 5rem; font-size:smaller; color:gray;">
+        <!-- 日付  -->
+        <div id="entry_date_section" style="display:none; align-items:center; gap:15px;">
+            <label for="entry_date">日時戻し基準日</label>
+            <div>
+                <input type="date" id="entry_date" name="entry_date" required placeholder="例) 2021/01/01" value="" max="{{date('Y-m-d')}}" autocomplete="off" class="c-form-input" style="margin-bottom:0;">
+            </div>
+        </div>
+
+
+    </li>
   </ul>
 
   @include('include.messages.errors')
@@ -415,6 +426,8 @@
   let dealGoods = {};
   let optionItemSection = null;
 
+  let entryDateSection;
+  let entryDateInput;
   let reducedSubTotalDisp;
   let reducedTaxDisp;
   let subTotalDisp;
@@ -655,6 +668,8 @@
 
   window.addEventListener('DOMContentLoaded', function() {
     const BASE_PATH = document.getElementById('base_path').value;
+    entryDateSection = document.getElementById('entry_date_section');
+    entryDateInput = document.getElementById('entry_date');
     optionItemSection = document.getElementById('optionItem');
     reducedSubTotalDisp = document.getElementById('reduced_subTotal');
     reducedTaxDisp = document.getElementById('reduced_tax');
@@ -743,6 +758,58 @@
 
 
     }
+
+    entryDateInput.addEventListener('change', async function() {
+      if(dealId == null) {
+        return;
+      }
+
+      // 取引IDをAPIに送信
+      const json = await apiRequest.put(BASE_PATH + "/manage/registers/" + dealId + "/recalc_deal_prices", {
+        'entry_date': entryDateInput.value
+      })
+
+      console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
+      if(json.success){
+        optionInfosSavedInput.value = 0;
+        deal = json.data.deal
+        goodIds = [];
+        goodNums = {};
+        if(isObject(json.data.dealGoods)) {
+          dealGoods = json.data.dealGoods
+        }
+        Object.keys(dealGoods).map(goodId => {
+          goodIds.push(parseInt(goodId));
+          goodNums[goodId] = Number(dealGoods[goodId].num);
+        })
+
+        // dealGoods
+        // 6	取引商品データの名前を表示する
+        // 9	上記商品の数量を表示する
+        // 10	上記商品の総額を表示する
+        updateOptionList()
+        updateModalOptions()
+        // totalPrices
+        // 12	対象予約の商品のうち、税区分が8％の商品の総額を表示する
+        reducedSubTotalDisp.textContent = formatCurrency(json.data.totalPrices.eightPercentAmountExcludingTax,null,' 円');
+        reducedSubTotalInput.value = json.data.totalPrices.eightPercentAmountExcludingTax;
+        // 13	上記商品の消費税を表示する
+        reducedTaxDisp.textContent = formatCurrency(json.data.totalPrices.eightPercentTax,null,' 円');
+        reducedTaxInput.value = json.data.totalPrices.eightPercentTax;
+        // 14	対象予約の商品のうち、税区分が10％の商品の総額を表示する
+        subTotalDisp.textContent = formatCurrency(json.data.totalPrices.tenPercentAmountExcludingTax,null,' 円');
+        subTotalInput.value = json.data.totalPrices.tenPercentAmountExcludingTax;
+        // 15	上記商品の消費税を表示する
+        taxDisp.textContent = formatCurrency(json.data.totalPrices.tenPercentTax,null,' 円');
+        taxInput.value = json.data.totalPrices.tenPercentTax;
+        // 16	対象予約の商品のうち、税区分が税無しの商品の総額を表示する
+        taxExemptDisp.textContent = formatCurrency(json.data.totalPrices.NoTaxAmount,null,' 円');
+        taxExemptInput.value = json.data.totalPrices.NoTaxAmount;
+        // 17	対象予約の総額を表示する
+        totalDisp.textContent = formatCurrency(json.data.totalPrices.totalAmount,null,' 円');
+        totalInput.value = json.data.totalPrices.totalAmount;
+      }
+    })
 
     // オプション情報表示
     async function dispOptionTable() {
