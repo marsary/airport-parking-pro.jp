@@ -19,6 +19,7 @@ use App\Models\PaymentDetail;
 use App\Models\PaymentMethod;
 use App\Services\Deal\DealGoodsService;
 use App\Services\Deal\DealService;
+use App\Services\Deal\ExtraPaymentManager;
 use App\Services\Deal\PaymentService;
 use App\Services\Printers\LabelPrintable;
 use App\Services\Printers\ReceiptPrintable;
@@ -156,6 +157,39 @@ class RegistersController extends Controller
                 'appliedCoupons' => !empty($appliedCoupons) ? $appliedCoupons:null,
                 'appliedDiscounts' =>  !empty($appliedDiscounts) ? $appliedDiscounts:null,
                 'appliedAdjustments' =>  !empty($appliedAdjustments) ? $appliedAdjustments:null,
+            ],
+         ]);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function recalcDealPrices(Request $request, string $id)
+    {
+        $deal = Deal::findOrFail($id);
+        $manager = new ExtraPaymentManager($deal);
+
+        try {
+            DB::transaction(function () use($manager, $request) {
+                $manager->recalcDealPricesOnRewindDate($request->input('entry_date'), false);
+                session()->put('rewind_deal', $manager->deal);
+            });
+        } catch (\Throwable $th) {
+            Log::error('エラー内容：' . $th->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => '取引商品の更新に失敗しました。',
+             ]);
+        }
+
+        $service = new DealGoodsService($manager->deal);
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'deal' => $manager->deal,
+                'dealGoods' => getKeyMapCollection($manager->deal->dealGoods, 'good_id'),
+                'totalPrices' => $service->sumTotals(),
             ],
          ]);
     }
