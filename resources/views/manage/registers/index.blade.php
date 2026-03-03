@@ -738,7 +738,10 @@
 
     async function loadCouponOptions() {
       try {
-        const json = await apiRequest.get(BASE_PATH + "/coupons/coupons_for_register/?deal_id=" + dealId)
+        const json = await apiRequest.get(BASE_PATH + "/coupons/coupons_for_register", {
+            deal_id: dealId,
+            entry_date: entryDateInput.value,
+        })
         console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
         if(json.success){
           while (couponSelect.options.length > 1) couponSelect.remove(1);
@@ -880,6 +883,13 @@
         // 17	対象予約の総額を表示する
         totalDisp.textContent = formatCurrency(json.data.totalPrices.totalAmount,null,' 円');
         totalInput.value = json.data.totalPrices.totalAmount;
+
+        const unloadDate = deal.unload_date ? luxon.DateTime.fromISO(deal.unload_date) : null;
+        const unloadDatePlan = deal.unload_date_plan ? luxon.DateTime.fromISO(deal.unload_date_plan) : null;
+        if(unloadDate || unloadDatePlan < luxon.DateTime.now().startOf('day')) {
+            entryDateInput.value = deal.unload_date ? luxon.DateTime.fromISO(deal.unload_date).toISODate() : luxon.DateTime.now().toFormat("yyyy-MM-dd");
+            entryDateSection.style.display = 'flex';
+        }
       }
     }
 
