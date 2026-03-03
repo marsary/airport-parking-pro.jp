@@ -13,6 +13,7 @@ use Carbon\Carbon;
 class ExtraPaymentManager
 {
     public $deal;
+    public $today;
     public $needPayment = false;
     public $pendingDays;
     public $additionalCharge;
@@ -20,6 +21,11 @@ class ExtraPaymentManager
     function __construct(Deal $deal)
     {
         $this->deal = $deal;
+        $sysDate = SystemDate::latest()->first();
+        if(!$sysDate) {
+            throw new \Exception('システム日付が設定されていません。');
+        }
+        $this->today = $sysDate->system_date->copy();
     }
 
     public function calcPayment()
@@ -99,6 +105,79 @@ class ExtraPaymentManager
                 'overdue' => true,
             ]);
             $this->deal->save();
+        }
+    }
+
+    public function recalcDealPricesOnRewindDate($pastDate, $shouldSave = true)
+    {
+        if(!in_array($this->deal->status, [DealStatus::LOADED->value, DealStatus::UNLOADED->value]) || $pastDate >= $this->today) {
+            return;
+        }
+        if(! $pastDate instanceof Carbon) {
+            $pastDate = Carbon::parse($pastDate);
+        }
+        // 追加精算あるかチェック
+        $table = PriceTable::getPriceTable($this->deal->load_date, $this->deal->unload_date_plan, [], $this->deal->agency_id);
+
+        if($this->deal->overdue || $this->deal->unload_date_plan < $this->today) {
+            // 追加精算処理済み
+
+            // 取引ステイタスが出庫済みでない場合：
+            // 出庫済みで、出庫日が $pastDate とは異なる場合：
+            if(
+                $this->deal->status == DealStatus::LOADED->value ||
+                $this->deal->status == DealStatus::UNLOADED->value && $this->deal->unload_date != $pastDate
+            ) {
+                // 出庫予定日～基準日の期間を計算
+                if($pastDate <= $this->deal->unload_date_plan) {
+                    $this->pendingDays = 0;
+                    $this->additionalCharge = 0;
+                } else {
+                    $this->pendingDays = (int) ceil($pastDate->diffInDays($this->deal->unload_date_plan, true));
+                    // 追加料金を計算
+                    $this->additionalCharge = PriceTable::calcAdditionalCharge(
+                        $this->deal->load_date,
+                        $this->deal->unload_date_plan,
+                        $this->pendingDays,
+                        $pastDate,
+                        $this->deal->agency_id
+                    );
+                }
+                if($this->deal->unload_date != $pastDate) {
+                    // 出庫日が基準日と異なる場合は、出庫日を基準日に変更する
+                    $this->deal->unload_date = $pastDate;
+                    $this->deal->status = DealStatus::UNLOADED->value;
+                }
+            }
+
+            if($this->additionalCharge > 0) {
+                // 追加精算あり
+                $this->needPayment = true;
+            } else {
+                $this->needPayment = false;
+            }
+
+            // 取引の料金情報を更新
+            // 追加料金を加えた料金を再計算してセットする
+            $price = $table->discountedSubTotal + $this->additionalCharge;
+            $tax = $table->tax + roundTax($table->taxType->rate() * $this->additionalCharge);
+            [
+                'total_price' => $total_price,
+                'total_tax' => $total_tax,
+            ] = $this->handleGoodPrices($price, $tax);
+            $this->deal->fill([
+                'price' => $price,
+                'tax' => $tax,
+                'num_days' => $table->numDays + $this->pendingDays,
+                'total_price' => $total_price,
+                'total_tax' => $total_tax,
+                'overdue' => $this->pendingDays > 0,
+            ]);
+
+            if($shouldSave) {
+                $this->deal->save();
+            }
+
         }
     }
 
