@@ -24,6 +24,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
         Route::put('deals/{deal}/defer_payment', [\App\Http\Controllers\Manage\DealsController::class, 'deferPayment'])->name('deals.defer_payment');
         Route::resource('deals', \App\Http\Controllers\Manage\DealsController::class);
         Route::resource('registers', \App\Http\Controllers\Manage\RegistersController::class);
+        Route::put('/registers/{deal}/recalc_deal_prices', [\App\Http\Controllers\Manage\RegistersController::class, 'recalcDealPrices'])->name('registers.recalc_deal_prices');
 
         Route::get('/receipts/{deal}', [\App\Http\Controllers\Manage\ReceiptController::class, 'show'])->name('receipts.show');
         Route::put('/receipts/{deal}/update_register', [\App\Http\Controllers\Manage\ReceiptController::class, 'updateRegister'])->name('receipts.update_register');
