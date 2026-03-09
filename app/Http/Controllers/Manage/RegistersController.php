@@ -68,6 +68,15 @@ class RegistersController extends Controller
     {
         try {
             $service = new PaymentService($request->input('deal_id'), $request->all());
+
+            $rewindDeal = session()->get('rewind_deal');
+            if($rewindDeal and $rewindDeal->id === $service->deal->id) {
+                // 取引情報を更新してからセッションから削除
+                $rewindDeal->load('dealGoods');
+                $service->deal = $rewindDeal;
+                session()->forget('rewind_deal');
+            }
+
             DB::transaction(function () use($service) {
                 $service->save();
 
