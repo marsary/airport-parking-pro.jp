@@ -34,26 +34,27 @@ class ExtraPaymentManager
             $this->needPayment = false;
             return;
         }
+        // $sysDate = SystemDate::latest()->first();
+        // if(!$sysDate) {
+        //     $today = Carbon::today();
+        // } else {
+        //     $today = $sysDate->system_date->copy();
+        // }
         // 追加精算あるかチェック
-        $sysDate = SystemDate::latest()->first();
-        if(!$sysDate) {
-            $today = Carbon::today();
-        } else {
-            $today = $sysDate->system_date->copy();
-        }
+        $table = PriceTable::getPriceTable($this->deal->load_date, $this->deal->unload_date_plan, [], $this->deal->agency_id);
 
         // 出庫予定を過ぎているのに取引ステイタスが出庫済みでない場合：
-        if($this->deal->unload_date_plan < $today && $this->deal->status != DealStatus::UNLOADED->value) {
+        if($this->deal->unload_date_plan < $this->today && $this->deal->status != DealStatus::UNLOADED->value) {
             // 追加精算あり
             $this->needPayment = true;
             // 出庫予定日～本日の期間を計算
-            $this->pendingDays = (int) ceil($today->diffInDays($this->deal->unload_date_plan, true));
+            $this->pendingDays = (int) ceil($this->today->diffInDays($this->deal->unload_date_plan, true));
             // 追加料金を計算
             $this->additionalCharge = PriceTable::calcAdditionalCharge(
                 $this->deal->load_date,
                 $this->deal->unload_date_plan,
                 $this->pendingDays,
-                $today,
+                $this->today,
                 $this->deal->agency_id
             );
         }
@@ -64,27 +65,27 @@ class ExtraPaymentManager
         if($this->deal->status != DealStatus::LOADED->value) {
             return;
         }
-        // 追加精算あるかチェック
-        $sysDate = SystemDate::latest()->first();
-        if(!$sysDate) {
-            throw new \Exception('システム日付が設定されていません。');
-        }
-        $today = $sysDate->system_date->copy();
+        // $sysDate = SystemDate::latest()->first();
+        // if(!$sysDate) {
+        //     throw new \Exception('システム日付が設定されていません。');
+        // }
+        // $today = $sysDate->system_date->copy();
 
+        // 追加精算あるかチェック
         $table = PriceTable::getPriceTable($this->deal->load_date, $this->deal->unload_date_plan, [], $this->deal->agency_id);
 
         // 出庫予定を過ぎているのに取引ステイタスが出庫済みでない場合：
-        if(($this->deal->overdue || $this->deal->unload_date_plan < $today) && $this->deal->status != DealStatus::UNLOADED->value) {
+        if(($this->deal->overdue || $this->deal->unload_date_plan < $this->today) && $this->deal->status != DealStatus::UNLOADED->value) {
             // 追加精算あり
             $this->needPayment = true;
             // 出庫予定日～本日の期間を計算
-            $this->pendingDays = (int) ceil($today->diffInDays($this->deal->unload_date_plan, true));
+            $this->pendingDays = (int) ceil($this->today->diffInDays($this->deal->unload_date_plan, true));
             // 追加料金を計算
             $this->additionalCharge = PriceTable::calcAdditionalCharge(
                 $this->deal->load_date,
                 $this->deal->unload_date_plan,
                 $this->pendingDays,
-                $today,
+                $this->today,
                 $this->deal->agency_id
             );
 
@@ -104,6 +105,7 @@ class ExtraPaymentManager
                 'total_tax' => $total_tax,
                 'overdue' => true,
             ]);
+
             $this->deal->save();
         }
     }
