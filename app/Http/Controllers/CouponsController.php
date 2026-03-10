@@ -14,7 +14,7 @@ class CouponsController extends Controller
 {
     public function couponsForRegister(Request $request)
     {
-        $today = Carbon::today();
+        $today = $request->input('entry_date') ? Carbon::parse($request->input('entry_date')) : Carbon::today();
         $query = Coupon::whereDate('start_date','<=', $today->toDateString())
             ->whereDate('end_date','>', $today->toDateString())
             ->where('office_id', config('const.commons.office_id'))
