@@ -35,6 +35,12 @@ class RegistersController extends Controller
      */
     public function index(Request $request)
     {
+        $rewindDeal = session()->get('rewind_deal');
+        if($rewindDeal and $rewindDeal->id == $request->input('deal_id')) {
+            // セッションから削除
+            session()->forget('rewind_deal');
+        }
+
         $goodCategories = GoodCategory::with('goods')->get();
         $goods = Good::all();
         $today = Carbon::today();
