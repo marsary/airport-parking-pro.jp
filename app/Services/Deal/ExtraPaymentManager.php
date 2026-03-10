@@ -34,12 +34,6 @@ class ExtraPaymentManager
             $this->needPayment = false;
             return;
         }
-        // $sysDate = SystemDate::latest()->first();
-        // if(!$sysDate) {
-        //     $today = Carbon::today();
-        // } else {
-        //     $today = $sysDate->system_date->copy();
-        // }
         // 追加精算あるかチェック
         $table = PriceTable::getPriceTable($this->deal->load_date, $this->deal->unload_date_plan, [], $this->deal->agency_id);
 
@@ -57,6 +51,12 @@ class ExtraPaymentManager
                 $this->today,
                 $this->deal->agency_id
             );
+            // 追加料金を加えた料金と現在の支払額の差額を計算する
+            $price = $table->discountedSubTotal + $this->additionalCharge;
+            // $tax = $table->tax + roundTax($table->taxType->rate() * $this->additionalCharge);
+            $paidPrice = $this->deal->payment ? $this->deal->payment->price : 0;
+
+            $this->additionalCharge = max(0, $price - $paidPrice);
         }
     }
 
@@ -65,11 +65,6 @@ class ExtraPaymentManager
         if($this->deal->status != DealStatus::LOADED->value) {
             return;
         }
-        // $sysDate = SystemDate::latest()->first();
-        // if(!$sysDate) {
-        //     throw new \Exception('システム日付が設定されていません。');
-        // }
-        // $today = $sysDate->system_date->copy();
 
         // 追加精算あるかチェック
         $table = PriceTable::getPriceTable($this->deal->load_date, $this->deal->unload_date_plan, [], $this->deal->agency_id);
