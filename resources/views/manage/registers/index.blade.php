@@ -1,3 +1,6 @@
+@php
+    $isParking = $dealId && $transactionType == \App\Enums\TransactionType::PARKING->value;
+@endphp
 <!-- F-0 -->
 @extends('layouts.manage.authenticated')
 
@@ -6,6 +9,8 @@
   <!-- パンくず -->
   <ul class="l-wrap__breadcrumb l-breadcrumb">
     <li class="l-breadcrumb__list">レジTOP</li>
+
+    @if($isParking)
     <li class="" style="margin-left: 5rem; font-size:smaller; color:gray;">
         <!-- 日付  -->
         <div id="entry_date_section" style="display:none; align-items:center; gap:15px;">
@@ -17,6 +22,7 @@
 
 
     </li>
+    @endif
   </ul>
 
   @include('include.messages.errors')
@@ -24,7 +30,9 @@
   <div class="l-container__inner">
     <div class="l-grid--col2 l-grid--gap2">
       <div>
-        <ul class="l-grid--col2 l-grid--gap1 u-pb2 u-mb2 u-border--bottom">
+        <ul class="l-grid--col2 l-grid--gap1 u-pb2 u-mb2 u-border--bottom
+            {{$isParking ? '' : 'hidden'}}
+        ">
           <li class="c-button__select--h90">
             <a id="to_deals_show" href="#" class="p-index__link">ご予約情報</a>
           </li>
