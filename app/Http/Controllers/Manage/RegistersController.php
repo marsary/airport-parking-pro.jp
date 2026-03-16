@@ -6,6 +6,7 @@ use App\Enums\DealStatus;
 use App\Enums\PaymentMethod\AdjustmentType;
 use App\Enums\PaymentMethod\DiscountType;
 use App\Enums\PaymentMethodType;
+use App\Enums\TransactionType;
 use App\Exceptions\PrinterPrintException;
 use App\Http\Controllers\Manage\Controller;
 use App\Http\Requests\Manage\RegisterStoreRequest;
@@ -40,6 +41,14 @@ class RegistersController extends Controller
             // セッションから削除
             session()->forget('rewind_deal');
         }
+        $transactionType = TransactionType::PURCHASE_ONLY->value;
+
+        if( $request->input('deal_id')) {
+            $deal = Deal::where('id', $request->input('deal_id'))->select('id', 'transaction_type')->first();
+            if($deal && $deal->transaction_type != TransactionType::PURCHASE_ONLY->value) {
+                $transactionType = $deal->transaction_type;
+            }
+        }
 
         $goodCategories = GoodCategory::with('goods')->get();
         $goods = Good::all();
@@ -55,6 +64,7 @@ class RegistersController extends Controller
             'coupons' => $coupons,
             'paymentMethodCategoryMap' => PaymentMethod::getIdNameMapGroupedByCategory(),
             'dealId' => $request->input('deal_id'),
+            'transactionType' => $transactionType,
             'getDiscountTypeMap' => PaymentDetail::getDiscountTypeMap(),
         ]);
     }
