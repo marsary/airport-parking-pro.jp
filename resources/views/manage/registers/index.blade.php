@@ -36,12 +36,10 @@
           <li class="c-button__select--h90">
             <a id="to_deals_show" href="#" class="p-index__link">ご予約情報</a>
           </li>
-          <li class="c-button__select--h90">
+          <li class="c-button__select--h90 hidden">
             <a id="to_members_show" href="#" class="p-index__link">顧客情報</a>
-
           </li>
         </ul>
-
         <!-- select ボタン -->
         <div class="p-input-user-option__select--input">
           @foreach ($goodCategories as $goodCategory)
@@ -692,7 +690,7 @@
     taxExemptInput = document.getElementById('taxExemptInput');
     totalInput = document.getElementById('totalInput');
     toDealsShowLink = document.getElementById('to_deals_show');
-    toMembersShowLink = document.getElementById('to_members_show');
+    // toMembersShowLink = document.getElementById('to_members_show');
     const optionInfosSavedInput = document.getElementById('optionInfosSaved');
     const originalTotalChangeInput = document.getElementById('originalTotalChange');
     const originalTotalPayInput = document.getElementById('originalTotalPay');
@@ -748,7 +746,7 @@
       try {
         const json = await apiRequest.get(BASE_PATH + "/coupons/coupons_for_register", {
             deal_id: dealId,
-            entry_date: entryDateInput.value,
+            entry_date: entryDateInput?.value,
         })
         console.log(json); // `data.json()` の呼び出しで解釈された JSON データ
         if(json.success){
@@ -770,7 +768,7 @@
 
     }
 
-    entryDateInput.addEventListener('change', async function() {
+    entryDateInput?.addEventListener('change', async function() {
       if(dealId == null) {
         return;
       }
@@ -863,8 +861,10 @@
           goodNums[goodId] = Number(dealGoods[goodId].num);
         })
 
-        toDealsShowLink.href = BASE_PATH + "/manage/deals/" + deal.id
-        toMembersShowLink.href = BASE_PATH + "/manage/members/" + deal.member_id
+        if(toDealsShowLink) {
+            toDealsShowLink.href = BASE_PATH + "/manage/deals/" + deal.id
+        }
+        // toMembersShowLink.href = BASE_PATH + "/manage/members/" + deal.member_id
 
         // dealGoods
         // 6	取引商品データの名前を表示する
@@ -894,7 +894,7 @@
 
         const unloadDate = deal.unload_date ? luxon.DateTime.fromISO(deal.unload_date) : null;
         const unloadDatePlan = deal.unload_date_plan ? luxon.DateTime.fromISO(deal.unload_date_plan) : null;
-        if(unloadDate || unloadDatePlan < luxon.DateTime.now().startOf('day')) {
+        if(entryDateInput && (unloadDate || unloadDatePlan < luxon.DateTime.now().startOf('day'))) {
             entryDateInput.value = deal.unload_date ? luxon.DateTime.fromISO(deal.unload_date).toISODate() : luxon.DateTime.now().toFormat("yyyy-MM-dd");
             entryDateSection.style.display = 'flex';
         }
