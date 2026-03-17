@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Manage;
 
 use App\Enums\DealStatus;
-use App\Enums\PaymentMethod\AdjustmentType;
-use App\Enums\PaymentMethod\DiscountType;
 use App\Enums\PaymentMethodType;
 use App\Enums\TransactionType;
 use App\Exceptions\PrinterPrintException;
@@ -192,10 +190,15 @@ class RegistersController extends Controller
      */
     public function recalcDealPrices(Request $request, string $id)
     {
-        $deal = Deal::findOrFail($id);
-        $manager = new ExtraPaymentManager($deal);
 
         try {
+            $deal = Deal::findOrFail($id);
+
+            if($deal->transaction_type == TransactionType::PURCHASE_ONLY->value) {
+                throw new \Exception('商品購入のみでは、日時戻しはできません。');
+            }
+
+            $manager = new ExtraPaymentManager($deal);
             DB::transaction(function () use($manager, $request) {
                 $manager->recalcDealPricesOnRewindDate($request->input('entry_date'), false);
                 session()->put('rewind_deal', $manager->deal);
@@ -204,7 +207,7 @@ class RegistersController extends Controller
             Log::error('エラー内容：' . $th->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => '取引商品の更新に失敗しました。',
+                'message' => '取引商品の更新に失敗しました。' . $th->getMessage(),
              ]);
         }
 
