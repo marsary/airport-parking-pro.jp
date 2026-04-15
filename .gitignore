@@ -26,5 +26,4 @@ docker-compose.yml
 /docker/*
 .dockerignore
 .env.example
-vite.config.js
 /docs/*
