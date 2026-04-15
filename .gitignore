@@ -25,5 +25,5 @@ Dockerfile
 docker-compose.yml
 /docker/*
 .dockerignore
-.env.example
 /docs/*
+*bakMito
