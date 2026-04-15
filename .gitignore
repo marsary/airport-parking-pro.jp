@@ -19,3 +19,11 @@ yarn-error.log
 /.idea
 /.vscode
 /stubs
+
+# 三登ローカル作成ファイル
+Dockerfile
+docker-compose.yml
+/docker/*
+.dockerignore
+/docs/*
+*.bakMito
