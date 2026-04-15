@@ -26,4 +26,4 @@ docker-compose.yml
 /docker/*
 .dockerignore
 /docs/*
-*bakMito
+*.bakMito
