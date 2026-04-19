@@ -6,10 +6,12 @@
 
   <!-- 予約情報 -->
   <h1 class="l-header-userReservation__title">受付入力</h1>
-  <div class="l-header-userReservation__info">
-    <div>利用日：2024/2/1(木)〜2024/2/4(日)</div>
-    <div>利用料金：4,500円</div>
-  </div>
+  @if ($reserve)
+    <div class="l-header-userReservation__info">
+      <div>利用日：{{$reserve->load_date?->isoFormat('YYYY/MM/DD(ddd)')}}〜{{$reserve->unload_date_plan?->isoFormat('YYYY/MM/DD(ddd)')}}</div>
+      <div>利用料金：{{number_format($reserve->price)}}円</div>
+    </div>
+  @endif
 </header>
 
 <!-- マイページ等利用日・利用料金が非表示の場合レイアウトが崩れないようにするための調整が必要 -->
