@@ -9,46 +9,34 @@
     @csrf
     <div class="p-user-input-auto-output__wrap u-mb3 u-pb3 u-border--bottom-green">
       <!-- select ボタン -->
-      <div class="p-input-user-option__select--input">
-        {{--  <div class="c-button__select button_select">洗車</div>  --}}
-        <!-- オプションをクリックしたら出てくるmodal -->
-        @foreach ($goodCategories as $goodCategory)
-          <div class="c-button__select button_select" onclick="openOptionModal({{$goodCategory->id}})">{{$goodCategory->name}}</div>
-          @include('include.option.option', [
-            'modalId' => $goodCategory->id,
-            'goods' => $goodCategory->goods,
-            'goodCategory' => $goodCategory,
-            ]
-          )
-        @endforeach
-
-        {{--  <div class="c-button__select button_select">メンテナンス</div>
-        <div class="c-button__select button_select">保険</div>
-        <div class="c-button__select button_select">回数券</div>
-        <div class="c-button__select button_select">物販</div>
-        <div class="c-button__select button_select">その他</div>  --}}
+      <!-- お客様選択予約　ラジオボタン -->
+      <!-- 旅行保険への加入を検討していますか？ -->
+      <div class="p-user-input-optionSelect__wrap">
+        <p class="">旅行保険への加入を検討していますか？</p>
+        <div class="p-user-input-optionSelect__radio">
+          <label for="insurance_yes">
+            <input type="radio" id="insurance_yes" name="insurance" value="yes" class="c-button__radio--input">加入する
+          </label>
+          <label for="insurance_no">
+            <input type="radio" id="insurance_no" name="insurance" value="no" class="c-button__radio--input">加入しない
+          </label>
+        </div>
       </div>
-
-      <!-- オプション選択項目自動出力 -->
-      <div class="p-user-input-auto-output__right u-pl1" id="checked-option-list">
-        @if ($reserve->good_ids)
-          @foreach ($reserve->good_ids as $good_id)
-            @php
-              $good = $goodsMap[$good_id];
-            @endphp
-            <div class="c-button__remove item-container remove_good">
-              <img src="{{ asset('images/icon/removeButton.svg') }}" value="{{$good->id}}" width="16" height="16">
-              {{$good->name}} ¥{{number_format($good->price)}}
-            </div>
-          @endforeach
-        @endif
-        {{--  <div class="c-button__remove item-container"><img src="{{ asset('images/icon/removeButton.svg') }}" width="16" height="16" class="button_remove">手洗いWAX洗車 ¥2,500</div>
-        <div class="c-button__remove item-container"><img src="{{ asset('images/icon/removeButton.svg') }}" width="16" height="16" class="button_remove">iPhone充電ケーブル ¥1,200</div>  --}}
+      <div class="p-user-input-optionSelect__wrap u-mb0">
+        <!-- 洗車を検討いますか？ -->
+        <p class="">洗車を検討していますか？</p>
+        <div class="p-user-input-optionSelect__radio">
+          <label for="carwash_yes">
+            <input type="radio" id="carwash_yes" name="carwash" value="yes" class="c-button__radio--input">検討する
+          </label>
+          <label for="carwash_no">
+            <input type="radio" id="carwash_no" name="carwash" value="no" class="c-button__radio--input">検討しない
+          </label>
+        </div>
       </div>
-      <input type="hidden" id="good_ids" name="good_ids" value="{{old('good_ids', implode(',', $reserve->good_ids))}}">
     </div>
 
-    <div class="p-user-input-auto-output__wrap u-mb4">
+    {{-- <div class="p-user-input-auto-output__wrap u-mb4">
       <div class="l-flex--start l-flex--item-end l-grid--gap05">
         <div>
           <label for="coupon_code">割引クーポン</label>
@@ -72,7 +60,7 @@
         @endif
       </div>
       <input type="hidden" id="coupon_ids" name="coupon_ids" value="{{old('coupon_ids', implode(',', $reserve->coupon_ids))}}">
-    </div>
+    </div> --}}
 
     <!-- pager -->
     <div class="c-button-group__form u-mt3">

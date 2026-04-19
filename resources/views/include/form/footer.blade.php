@@ -1,112 +1,42 @@
-  <!-- footer -->
-  <footer id="footer" class="footer">
-
-    <div class="footer__wrap">
-      <ul class="footer-nav">
-        <li class="footer-nav__item"><a href="/ag/">TOP</a></li>
-        <li class="footer-nav__item"><a href="/">サンパーキングについて</a></li>
-        <li class="footer-nav__item"><a href="/">当サイトのセキュリティについて</a></li>
-        <li class="footer-nav__item"><a href="/">免責約款</a></li>
-        <li class="footer-nav__item"><a href="/">お問い合わせ</a></li>
-        <li class="footer-nav__item"><a href="/">予約フォーム</a></li>
-        <li class="footer-nav__item"><a href="/">Cookieの設定</a></li>
-        <li class="footer-nav__item"><a href="/">サイトポリシー・プライバシーポリシー</a></li>
-        <li class="footer-nav__item"><a href="/">特定商取引法に基づく表記</a></li>
-      </ul>
-
-      <p class="copyright">Copyright © Sunport Co., Ltd. All rights reserved.</p>
+<footer class="l-footer-user" id="footer">
+  <div class="l-footer-user__inner">
+    <div>
+      <figure class="l-footer-user__logo">
+        <img src="/assets/images/svg/logo.svg" width="100%" alt="logo">
+      </figure>
+      株式会社サン・ポート<br>
+      〒286-0121 千葉県成田市駒井野 134<br>
+      TEL : 0476-33-1155 FAX : 0476-33-1198<br>
+      ［営業時間］5：00～22：30
     </div>
+    <div class="l-flex l-flex--item-start l-flex--center--md l-grid--gap1 u-font--white">
+      <a href="https://www.sunparking.co.jp/guide/" target="_blank" class="c-button-user__footer--access">駐車場へのアクセス</a>
+      <a href="mailto:" class="c-button-user__footer--contact">お問い合わせ</a>
+    </div>
+  </div>
+  <p class="l-footer-user__copy">© 2025 Sunport Co., Ltd.</p>
+  <button id="gototop" class="c-button__button"><img src="/assets/images/icon/chevron-up.svg" width="18px" height="10px" alt=""></button>
+</footer>
 
-    <!-- Go To Top Button -->
-    <button id="scroll-to-top-btn">PAGE<br />TOP</button>
+<script>
+  const footer = document.getElementById('footer');
+  const gototopButton = document.getElementById('gototop');
 
-  </footer>
-
-  <!-- 固定ボタン -->
-  <ul class="button-fixed">
-    <li class="button-fixed__item --orange"><a href="/" target="_blank" rel="noreferrer noopener">料金確認</a></li>
-    <li class="button-fixed__item --purple"><a href="/" target="_blank" rel="noreferrer noopener">お問い合わせ</a></li>
-  </ul>
-
-  <!-- Go To Top Button -->
-  <script>
-    //ボタン
-    const scroll_to_top_btn = document.querySelector('#scroll-to-top-btn');
-
-    //クリックイベントを追加
-    scroll_to_top_btn.addEventListener('click', scroll_to_top);
-
-    function scroll_to_top() {
-      window.scroll({
-        top: 0,
-        behavior: 'smooth'
-      });
-    };
-  </script>
-
-  <!-- コンテンツに内容がない時、footerを下部固定 -->
-  <script>
-    new function() {
-
-      var footerId = "footer";
-      //メイン
-      function footerFixed() {
-        //ドキュメントの高さ
-        var dh = document.getElementsByTagName("body")[0].clientHeight;
-        //フッターのtopからの位置
-        document.getElementById(footerId).style.top = "0px";
-        var ft = document.getElementById(footerId).offsetTop;
-        //フッターの高さ
-        var fh = document.getElementById(footerId).offsetHeight;
-        //ウィンドウの高さ
-        if (window.innerHeight) {
-          var wh = window.innerHeight;
-        } else if (document.documentElement && document.documentElement.clientHeight != 0) {
-          var wh = document.documentElement.clientHeight;
-        }
-        if (ft + fh < wh) {
-          document.getElementById(footerId).style.position = "relative";
-          document.getElementById(footerId).style.top = (wh - fh - ft - 1) + "px";
-        }
-      }
-
-      //文字サイズ
-      function checkFontSize(func) {
-
-        //判定要素の追加	
-        var e = document.createElement("div");
-        var s = document.createTextNode("S");
-        e.appendChild(s);
-        e.style.visibility = "hidden"
-        e.style.position = "absolute"
-        e.style.top = "0"
-        document.body.appendChild(e);
-        var defHeight = e.offsetHeight;
-
-        //判定関数
-        function checkBoxSize() {
-          if (defHeight != e.offsetHeight) {
-            func();
-            defHeight = e.offsetHeight;
-          }
-        }
-        setInterval(checkBoxSize, 1000)
-      }
-
-      //イベントリスナー
-      function addEvent(elm, listener, fn) {
-        try {
-          elm.addEventListener(listener, fn, false);
-        } catch (e) {
-          elm.attachEvent("on" + listener, fn);
-        }
-      }
-
-      addEvent(window, "load", footerFixed);
-      addEvent(window, "load", function() {
-        checkFontSize(footerFixed);
-      });
-      addEvent(window, "resize", footerFixed);
-
+  window.addEventListener('scroll', function() {
+    const footerTop = footer.offsetTop;
+    const scrollPosition = window.scrollY + window.innerHeight;
+    if (scrollPosition >= footerTop) {
+      gototopButton.classList.add('in-footer');
+    } else {
+      gototopButton.classList.remove('in-footer');
     }
-  </script>
+  });
+
+  // ボタンクリックでページトップに戻る
+  gototopButton.addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
