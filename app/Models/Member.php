@@ -22,6 +22,9 @@ class Member extends Authenticatable
     protected $fillable = [
         'office_id',
         'status',
+        'member_code',
+        'soc_member_id',
+        'soc_member_flg',
         'member_type_id',
         'name',
         'kana',

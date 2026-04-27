@@ -61,6 +61,8 @@ class Deal extends Model
         'reception_memo',
         'remarks',
         'remind_mail_sent_flg',
+        'sync_flg',
+        'synced_at',
         'created_by',
         'updated_by',
     ];
@@ -82,6 +84,7 @@ class Deal extends Model
             'visit_date_plan' => 'date',
             'unload_date_plan' => 'date',
             'unload_date' => 'date',
+            'synced_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
