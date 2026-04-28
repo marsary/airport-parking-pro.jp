@@ -46,4 +46,8 @@ return [
         ],
     ],
 
+    'internal_api' => [
+        'token' => env('INTERNAL_API_TOKEN'),
+    ],
+
 ];
