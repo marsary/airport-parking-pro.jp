@@ -6,11 +6,12 @@
 
 namespace App\CmsModels;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class DscTicketTbl
- * 
+ *
  * @property int $dt_id
  * @property string $name
  * @property int $price
@@ -26,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DscTicketTbl extends Model
 {
+    use HasFactory;
+
 	protected $connection = 'pgsql';
 	protected $table = 'dsc_ticket_tbl';
 	protected $primaryKey = 'dt_id';
@@ -42,6 +45,7 @@ class DscTicketTbl extends Model
 	];
 
 	protected $fillable = [
+        'dt_id',
 		'name',
 		'price',
 		'days',

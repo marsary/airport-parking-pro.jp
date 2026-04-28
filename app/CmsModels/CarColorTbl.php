@@ -6,11 +6,12 @@
 
 namespace App\CmsModels;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class CarColorTbl
- * 
+ *
  * @property int $car_col_id
  * @property string $name
  * @property int $sort
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CarColorTbl extends Model
 {
+    use HasFactory;
+
 	protected $connection = 'pgsql';
 	protected $table = 'car_color_tbl';
 	protected $primaryKey = 'car_col_id';
@@ -37,6 +40,7 @@ class CarColorTbl extends Model
 	];
 
 	protected $fillable = [
+        'car_col_id',
 		'name',
 		'sort',
 		'del_flg',

@@ -6,11 +6,12 @@
 
 namespace App\CmsModels;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class CarTbl
- * 
+ *
  * @property int $car_maker_id
  * @property int $car_id
  * @property string $name
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CarTbl extends Model
 {
+    use HasFactory;
 	protected $connection = 'pgsql';
 	protected $table = 'car_tbl';
 	protected $primaryKey = 'car_id';
@@ -45,6 +47,7 @@ class CarTbl extends Model
 
 	protected $fillable = [
 		'car_maker_id',
+        'car_id',
 		'name',
 		'name_k',
 		'type',

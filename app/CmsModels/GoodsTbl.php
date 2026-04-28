@@ -7,11 +7,12 @@
 namespace App\CmsModels;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class GoodsTbl
- * 
+ *
  * @property int $o_id
  * @property int $g_id
  * @property int $g_id_old
@@ -42,6 +43,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class GoodsTbl extends Model
 {
+    use HasFactory;
+
 	protected $connection = 'pgsql';
 	protected $table = 'goods_tbl';
 	protected $primaryKey = 'g_id';
@@ -74,6 +77,7 @@ class GoodsTbl extends Model
 
 	protected $fillable = [
 		'o_id',
+        'g_id',
 		'g_id_old',
 		'name',
 		'name2',
