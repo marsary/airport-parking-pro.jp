@@ -160,3 +160,4 @@ require __DIR__.'/auth.php';
 require __DIR__.'/manage_auth.php';
 require __DIR__.'/member_auth.php';
 require __DIR__.'/form_auth.php';
+require __DIR__.'/api.php';
