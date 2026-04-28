@@ -13,7 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'guest' => \App\Http\Middleware\OnlyGuestAllowedMiddleware::class
+            'guest' => \App\Http\Middleware\OnlyGuestAllowedMiddleware::class,
+            'api.token' => \App\Http\Middleware\ApiTokenAuth::class,
         ]);
 
         $middleware->redirectGuestsTo(function(Request $request) {
