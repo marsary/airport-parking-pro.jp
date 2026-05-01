@@ -18,6 +18,7 @@ class DealController extends Controller
     public function getDealsForSync(SyncDealService $syncDealService)
     {
         $deals = Deal::where('sync_flg', false)
+            ->with(['agency', 'member', 'payment.paymentDetails', 'dealGoods.good', 'memberCar.car', 'arrivalFlight.airline', 'arrivalFlight.depAirport'])
             ->get();
 
         $syncData = $syncDealService->setDeals($deals)->getSortedDataForSync();
