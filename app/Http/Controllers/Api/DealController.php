@@ -39,13 +39,29 @@ class DealController extends Controller
     {
 
         try {
+            $validated = $request->validate([
+                'rsvs' => 'required|array',
+                'rsvs.*.rsv_id1' => 'required|integer',
+                'rsvs.*.sync_flg' => 'required|integer',
+                'rsvs.*.u_id' => 'nullable|integer',
+                'rsvs.*.member_flg' => 'nullable|boolean',
+            ]);
+
             $service = app(AfterSyncService::class);
-            $service->updateAfterSync($request['rsvs']);
+            $service->updateAfterSync($validated['rsvs']);
 
             return response()->json([
                 'status' => 'success',
+                'message' => $service->syncCount . ' 件の取引を同期済みとしてマークしました。',
+                'results' => $service->results,
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'バリデーションエラーが発生しました。',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
