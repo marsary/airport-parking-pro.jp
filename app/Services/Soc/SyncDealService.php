@@ -3,9 +3,14 @@ namespace App\Services\Soc;
 
 use App\CmsModels\CarColorTbl;
 use App\CmsModels\CarTbl;
+use App\CmsModels\DscTicketTbl;
 use App\CmsModels\GoodsTbl;
 use App\Enums\CarSize;
+use App\Enums\Cms\SocOfficeId;
+use App\Enums\Cms\SocSalesType;
+use App\Enums\Cms\SocTaxType;
 use App\Enums\DealStatus;
+use App\Enums\TaxType;
 use App\Models\Deal;
 use Carbon\Carbon;
 use ErrorException;
@@ -55,13 +60,20 @@ class SyncDealService
 
         // 変換処理時にID存在確認を実施する。
         // 送信フィールド	DBカラム		不存在時
+        // office_id エラー発生、全体処理をスキップ、エラーログ
+        $this->checkOfficeIdExists($deal->office_id);
         // car_id	member_cars.car_id		エラー発生、全体処理をスキップ、エラーログ
         $this->checkModelIdExists($syncDealRecord, CarTbl::class, 'car_id', true, $deal->memberCar->car_id);
         // car_col_id	member_cars.car_color_id		スキップ
         $this->checkModelIdExists($syncDealRecord, CarColorTbl::class, 'car_col_id', false, $deal->memberCar->car_color_id);
+        // dt_id	deals.payments.payment_details.coupon_id		スキップ
+        $this->checkModelIdExists($syncDealRecord, DscTicketTbl::class, 'dt_id', false, $syncDealRecord->getAppliedCoupon()?->coupon_id);
         foreach ($deal->dealGoods as $dealGood) {
             // goods.g_id	deal_goods.good_id		エラー発生、全体処理をスキップ、エラーログ
             $this->checkModelIdExists($syncDealRecord, GoodsTbl::class, 'g_id', true, $dealGood->good->id);
+            // goods.tax_type	全て内税なので、確認不要
+            // goods.sales_type	deal_goods.goods.good_categories		スキップ
+            $this->checkSalesTypeExists($syncDealRecord, $dealGood->id, $dealGood->good->good_category_id);
         }
 
         // 代理店コードの変換
@@ -95,11 +107,38 @@ class SyncDealService
 
         return true;
     }
+
+    private function checkSalesTypeExists(SyncDealRecord $syncDealRecord, int $deailGoodId, ?int $salesTypeId)
+    {
+        if(!$salesTypeId) {
+            return;
+        }
+        $salesType = SocSalesType::tryFrom($salesTypeId);
+        if(!$salesType) {
+            $errorMessage = '売上区分に、ID' . $salesTypeId . ' が存在しません。';
+            Log::info($errorMessage . '値がないものとして処理を続行します。');
+            return false;
+        }
+        $syncDealRecord->salesTypes[$deailGoodId] = $salesTypeId;
+        return true;
+    }
+
+    private function checkOfficeIdExists(int $officeId)
+    {
+        $office = SocOfficeId::tryFrom($officeId);
+        if(!$office) {
+            $errorMessage = '事業所IDに、ID' . $officeId . ' が存在しません。';
+            throw new ErrorException($errorMessage . 'この取引の同期処理をスキップします。');
+        }
+        return true;
+    }
+
 }
 
 class SyncDealRecord
 {
     public $deal;
+    public $appliedCoupon;
     public $agId1;
     public $agId2;
     public $salesTypes = [];
@@ -116,12 +155,16 @@ class SyncDealRecord
     {
         $goods = [];
         foreach ($this->deal->dealGoods as $dealGood) {
+            $salesTypeId = $this->salesTypes[$dealGood->id] ?? null;
+
             $goods[] = [
                 'g_id' => $dealGood->good_id,
                 'price' => $dealGood->good->price, // 1個あたり税抜単価
                 'num' => $dealGood->num,
             ];
         }
+
+        $couponDetail = $this->getAppliedCoupon();
 
         return [
             'ambiguous_flg' => null, // あいまいフラグ（1で強制確認）
@@ -160,13 +203,45 @@ class SyncDealRecord
             'user_num' => $this->deal->num_members, // 利用人数
             'lsize_flg' => $this->deal->memberCar->car->size_type == CarSize::LARGE->value, // Lサイズフラグ
             'dsc_rate' => $this->deal->dsc_rate, // 割引率
+            'dt_id' => $this->dt_id, // 割引券ID
+            'dt_price' => $couponDetail? $this->calcCouponPriceWithTax($couponDetail->total_price) : null, // 割引券による割引額（税込み）
             'days' => $this->deal->num_days, // 日数。保留分は含まない。 ParkingProでは、保留分を都度更新するが、新規登録のみ対象のため問題ない
             'price' => $this->deal->price, // 利用料金（率割引後，税抜き）
             'price_tax' => $this->deal->tax, // 利用料金消費税
             'cancel_flg' => $this->deal->status == DealStatus::CANCEL->value, // キャンセルフラグ
 
             'goods' => $goods, // オプション商品
+
+            // 未実装
+            'prepaid_state' => null, // 事前決済ステータス（2:与信完了等）
+            'prepaid2_pay' => null, // 事前決済金額
+            'prepaid2_jcb' => null, // 事前決済JCBフラグ
+            'trans_note' => null, // 備考（鍵・洗車・マイル等を結合）
+            //
         ];
+    }
+
+    public function getAppliedCoupon()
+    {
+        if($this->appliedCoupon) {
+            return  $this->appliedCoupon;
+        }
+
+        $appliedCoupons = collect([]);
+        if($this->deal->payment?->paymentDetails) {
+            foreach ($this->deal->payment->paymentDetails as $paymentDetail) {
+                if($paymentDetail->coupon()->exists()) {
+                    $appliedCoupons->push($paymentDetail);
+                }
+            }
+        }
+        // 要素が２以上ならばエラーにする
+        if($appliedCoupons->count() > 1) {
+            throw new ErrorException('本APIでは、複数クーポン使用には対応していません。Deal ID:' . $this->deal->id);
+        }
+
+
+        return $this->appliedCoupon = $appliedCoupons->first();
     }
 
     private function formatTime($time)
@@ -185,5 +260,11 @@ class SyncDealRecord
         }
 
         return $date->format("Y-m-d");
+    }
+
+    private function calcCouponPriceWithTax(int $price)
+    {
+        // クーポンは常に10％消費税
+        return roundTax(TaxType::TEN_PERCENT->rate() * $price) + $price;
     }
 }
