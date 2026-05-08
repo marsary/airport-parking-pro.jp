@@ -8,8 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiTokenAuth
 {
-    private $allowedIps = ['localhost', '127.0.0.1'];
-
     /**
      * Handle an incoming request.
      *
@@ -19,7 +17,9 @@ class ApiTokenAuth
     {
         $token = $request->bearerToken();
 
-        if (!in_array($request->ip(), $this->allowedIps)) {
+        // allowed_ips が指定されている場合のみ ipアドレスをチェックする。
+        $ips = config('services.internal_api.allowed_ips');
+        if (!empty($ips) && !in_array($request->ip(), $ips)) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
         // envで管理する場合
