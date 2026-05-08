@@ -46,4 +46,9 @@ return [
         ],
     ],
 
+    'internal_api' => [
+        'token' => env('INTERNAL_API_TOKEN'),
+        'allowed_ips' => array_filter(explode(',', env('INTERNAL_API_ALLOWED_IPS', ''))),
+    ],
+
 ];
