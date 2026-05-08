@@ -25,6 +25,7 @@ class DealController extends Controller
 
         return response()->json([
             'status' => 'success',
+            'count' => count($syncData),
             'data' => $syncData
         ]);
     }
@@ -65,6 +66,8 @@ class DealController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
+                'message' => '更新中にエラーが発生しました。',
+                'error' => $e->getMessage()
             ], 500);
         }
     }
