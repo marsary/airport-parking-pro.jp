@@ -25,7 +25,7 @@ class DealFactory extends Factory
         $member = \App\Models\Member::has('memberCars')->inRandomOrder()->first();
         $price = fake()->randomNumber(5);
         return [
-            'member_id' => $member->id,
+            'member_id' => $member?->id,
             'office_id' => \App\Models\Office::first(),
             'reserve_code' => Str::random(10),
             'receipt_code' => Str::random(10),
