@@ -7,7 +7,7 @@
 <div class="p-user-input__inner--sm">
   <form action="{{route('form.reserves.option_select')}}" method="POST">
     @csrf
-    <div class="p-user-input-auto-output__wrap u-mb3 u-pb3 u-border--bottom-green">
+    <div class="p-user-input-auto-output__wrap u-mb3 u-pb3 u-border--bottom-green" style="display: block;width: 100%;padding: 10px;margin-bottom: 20px;">
       <!-- select ボタン -->
       <!-- お客様選択予約　ラジオボタン -->
       <!-- 旅行保険への加入を検討していますか？ -->
@@ -66,8 +66,8 @@
     <div class="c-button-group__form u-mt3">
       <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.entry_car')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">内容確認へ進む</button>
-      <button type="button" class="c-button__pagination--next">事前決済に進む</button>
-      <img src="{{ asset('images/card_5brand.png') }}" height="16">
+      {{-- <button type="button" class="c-button__pagination--next">事前決済に進む</button> --}}
+      {{-- <img src="{{ asset('images/card_5brand.png') }}" height="16"> --}}
     </div>
   </form>
 </div>
