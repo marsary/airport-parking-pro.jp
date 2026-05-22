@@ -12,18 +12,18 @@
     <div class="c-title__table">予約情報</div>
     <table class="l-table-confirm">
       <tr>
-        <th>予約コード</th>
+        {{-- <th>予約コード</th>
         <td>{{$reserve->reserve_code}}</td>
         <th>受付コード</th>
-        <td>1234567890</td>
+        <td>1234567890</td> --}}
         <th>予約日時</th>
-        <td>{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
+        <td colspan="2">{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
         <th>予約経路</th>
-        <td>{{$agency?->name}}{{--公式HP--}}</td>
+        <td colspan="2">{{$agency?->name}}{{--公式HP--}}</td>
       </tr>
       <tr>
         <th>入庫日時</th>
-        <td>{{$reserve->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $reserve->load_time}}</td>
+        <td colspan="2">{{$reserve->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $reserve->load_time}}</td>
         <th>出庫予定日</th>
         <td>{{$reserve->unload_date_plan->isoFormat('YYYY/M/D(ddd)')}}</td>
         <th>利用日数</th>
@@ -65,9 +65,9 @@
         <td>{{$reserve->tel}}{{--090-1234-5678--}}</td>
         <!-- 以下2つは桁数次第ではレイアウトが崩れる分けてもよいかも -->
         <th>Mail</th>
-        <td>{{$reserve->email}}</td>
-        <th>LINE ID</th>
-        <td>{{$reserve->member?->line_id}}{{--sun123--}}</td>
+        <td colspan="2">{{$reserve->email}}</td>
+        {{-- <th>LINE ID</th>
+        <td>{{$reserve->member?->line_id}}{{--sun123--}}</td> --}}
       </tr>
     </table>
 
@@ -180,8 +180,8 @@
     </table>
 
     <div class="l-table-charge-detail--second">
-      <div>消費税8%</div>
-      <div>{{number_format($reserve->total_tax_8)}}円</div>
+      {{-- <div>消費税8%</div>
+      <div>{{number_format($reserve->total_tax_8)}}円</div> --}}
       <div></div>
       <div>消費税10%</div>
       <div>{{number_format($reserve->total_tax_10)}}円</div>
