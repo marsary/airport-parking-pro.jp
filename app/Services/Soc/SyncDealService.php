@@ -82,6 +82,12 @@ class SyncDealService
 
     private function convAgentIds(SyncDealRecord $syncDealRecord)
     {
+        // SOCでは、ag_id1, ag_id2 の組み合わせで構成。新システムでは agents.id のみ
+        // 代理店コードは固定になる
+        // 以下を固定で設定
+        // ag_id1：6033
+        // ag_id2：71  もしかしたら、ag_id2は72になるかも
+        // この代理店は、「サンホームページ(公式HPWEB割)」
         $syncDealRecord->agId1 = self::AG_ID1;
         $syncDealRecord->agId2 = self::AG_ID2;
     }
@@ -160,6 +166,10 @@ class SyncDealRecord
             $goods[] = [
                 'g_id' => $dealGood->good_id,
                 'price' => $dealGood->good->price, // 1個あたり税抜単価
+                'price_tax' => $dealGood->good->tax, // 1個あたり消費税
+                'total_price' => $dealGood->total_price + $dealGood->total_tax, // 単価（税込）× 数量
+                'tax_type' => SocTaxType::MY_TAX_TYPE_IN->value,  // 全て内税
+                'sales_type' => $salesTypeId, // 売上区分
                 'num' => $dealGood->num,
             ];
         }
@@ -208,6 +218,7 @@ class SyncDealRecord
             'days' => $this->deal->num_days, // 日数。保留分は含まない。 ParkingProでは、保留分を都度更新するが、新規登録のみ対象のため問題ない
             'price' => $this->deal->price, // 利用料金（率割引後，税抜き）
             'price_tax' => $this->deal->tax, // 利用料金消費税
+            'total_pay' => $this->deal->payment?->total_pay, // 支払合計金額（税込み）
             'cancel_flg' => $this->deal->status == DealStatus::CANCEL->value, // キャンセルフラグ
 
             'goods' => $goods, // オプション商品

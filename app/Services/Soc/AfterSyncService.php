@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Log;
 
 class AfterSyncService
 {
-    public $syncCount;
-    public $results = [];
+    public int $syncCount;
+    public array $results = [];
 
     function __construct()
     {
@@ -35,6 +35,12 @@ class AfterSyncService
 
             } catch (\Exception $e) {
                 Log::error('エラー内容：' . $e->getMessage());
+                $this->results[] = [
+                    'rsv_id1' => $row['rsv_id1'],
+                    'syncStatus' => $row,
+                    'dealUpdated' => false,
+                    'memberUpdated' => false,
+                ];
             }
 
         }
