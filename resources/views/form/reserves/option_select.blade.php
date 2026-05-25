@@ -17,7 +17,7 @@
           <input type="radio" id="insurance_yes" name="insurance" value="yes" class="c-button__radio--input">加入する
         </label>
         <label for="insurance_no">
-          <input type="radio" id="insurance_no" name="insurance" value="no" class="c-button__radio--input">加入しない
+          <input type="radio" id="insurance_no" name="insurance" value="no" class="c-button__radio--input" checked>加入しない
         </label>
       </div>
     </div>
@@ -29,7 +29,7 @@
           <input type="radio" id="carwash_yes" name="carwash" value="yes" class="c-button__radio--input">検討する
         </label>
         <label for="carwash_no">
-          <input type="radio" id="carwash_no" name="carwash" value="no" class="c-button__radio--input">検討しない
+          <input type="radio" id="carwash_no" name="carwash" value="no" class="c-button__radio--input" checked>検討しない
         </label>
       </div>
     </div>

@@ -196,7 +196,7 @@
     <!--  -->
     <div class="c-button-group__form u-mt3">
     <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.option_select')}}';" class="c-button__pagination--return">前のページに戻る</button>  
-      <button type="submit" class="c-button__pagination--next">お会計へ</button>
+      <button type="submit" class="c-button__pagination--next">予約を完了する</button>
     </div>
   </form>
 </div><!-- ./p-user-input__inner -->
