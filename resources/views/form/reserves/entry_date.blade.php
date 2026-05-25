@@ -212,7 +212,7 @@
       <ul class="p-reserve-selectedTime--detail__wrap" id="load_time_section">
         @for ($hour = 5; $hour <= 20; $hour++)
           @foreach (['00', '15', '30', '45'] as $minute)
-            @if ($hour == 20 %% $minute == '15')
+            @if ($hour == 20 && $minute == '15')
                 @break
             @endif
             <li class="c-calendar-available-time__detail">
