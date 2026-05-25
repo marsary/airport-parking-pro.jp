@@ -210,7 +210,7 @@
     <dt class="c-calendar__heading">時間</dt>
     <dd>
       <ul class="p-reserve-selectedTime--detail__wrap" id="load_time_section">
-        @for ($hour = 5; $hour <= 20; $hour++)
+        @for ($hour = 5; $hour < 20; $hour++)
           @foreach (['00', '15', '30', '45'] as $minute)
             <li class="c-calendar-available-time__detail">
               <div class="p-reserve-selectedTime__bg time_label_cell" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
@@ -239,20 +239,17 @@
             <p class="u-font--24 text-center u-font--medium">駐車料金合計</p>
             <div class="p-input-user-total-parking-charges__inner">
                 <div class="p-input-user-total-parking-charges__head">
-                <div>入庫日</div>
-                <div>:</div>
-                <div id="disp_load_date"></div>
-                <div>入庫時間</div>
-                <div>:</div>
-                <div <!--id="disp_load_time"-->></div>
-                <div>出庫日</div>
-                <div>:</div>
-                <div id="disp_unload_date_plan"></div>
-                <div>利用日数</div>
-                <div>:</div>
-                <div id="disp_num_days"></div>
+                    <div>入庫日</div>
+                    <div>:</div>
+                    <div id="disp_load_date"></div>
+                    <div>出庫日</div>
+                    <div>:</div>
+                    <div id="disp_unload_date_plan"></div>
+                    <div>利用日数</div>
+                    <div>:</div>
+                    <div id="disp_num_days"></div>
                 </div>
-                
+
                 <input type="hidden" name="load_date" value="{{old('load_date', $reserve->load_date)}}">
                 <input type="hidden" name="load_time" value="{{old('load_time', $reserve->load_time)}}">
                 <input type="hidden" name="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
