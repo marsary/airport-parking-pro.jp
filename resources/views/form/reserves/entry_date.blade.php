@@ -6,11 +6,11 @@
 <div class="p-user-input__inner u-mt3">
     <form action="{{route('form.reserves.entry_date')}}" method="POST">
         @csrf
-        {{-- <!-- 代理店コード -->
-        <div class="p-reserve__wrap">
+        <!-- 代理店コード -->
+        <div class="p-reserve__wrap" style="display:none;">
             <label for="agency_code" class="u-d-none">代理店コード</label>
             <input type="text" id="agency_code" class="u-w-full-wide" name="agency_code" value="{{old('agency_code', $reserve->agency_code)}}" />
-        </div> --}}
+        </div>
 
         <!-- カレンダー選択 -->
         <div class="p-reserve__wrap">
@@ -210,7 +210,7 @@
     <dt class="c-calendar__heading">時間</dt>
     <dd>
       <ul class="p-reserve-selectedTime--detail__wrap" id="load_time_section">
-        @for ($hour = 5; $hour < 20; $hour++)
+        @for ($hour = 5; $hour <= 20; $hour++)
           @foreach (['00', '15', '30', '45'] as $minute)
             <li class="c-calendar-available-time__detail">
               <div class="p-reserve-selectedTime__bg time_label_cell" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
@@ -242,6 +242,9 @@
                     <div>入庫日</div>
                     <div>:</div>
                     <div id="disp_load_date"></div>
+                    <div>入庫時間</div>
+                    <div>:</div>
+                    <div id="disp_load_time"></div>
                     <div>出庫日</div>
                     <div>:</div>
                     <div id="disp_unload_date_plan"></div>
@@ -249,7 +252,6 @@
                     <div>:</div>
                     <div id="disp_num_days"></div>
                 </div>
-
                 <input type="hidden" name="load_date" value="{{old('load_date', $reserve->load_date)}}">
                 <input type="hidden" name="load_time" value="{{old('load_time', $reserve->load_time)}}">
                 <input type="hidden" name="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
