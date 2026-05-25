@@ -6,15 +6,20 @@
 <div class="p-user-input__inner u-mt3">
     <form action="{{route('form.reserves.entry_date')}}" method="POST">
         @csrf
-        <!-- 代理店コード -->
+        {{-- <!-- 代理店コード -->
         <div class="p-reserve__wrap">
             <label for="agency_code" class="u-d-none">代理店コード</label>
             <input type="text" id="agency_code" class="u-w-full-wide" name="agency_code" value="{{old('agency_code', $reserve->agency_code)}}" />
-        </div>
+        </div> --}}
 
         <!-- カレンダー選択 -->
         <div class="p-reserve__wrap">
             <p class="text-center u-mb2 u-font--medium">入庫日を指定してください</p>
+            <!-- ここから追加 -->
+            <div class="l-flex--end u-mt1 u-mb1 u-font--sm u-font--medium">
+                <span class="c-calendar__available-icon--blue">青</span> ＝空車、<span class="c-calendar__available-icon--yellow">黄</span>＝残りわずか、<span class="c-calendar__available-icon--red">赤</span>＝満車
+            </div>
+            <!-- 追加ここまで -->
             <div>
                 <div class="c-title__calendar" id="left_calendar1_title"></div>
             </div>
@@ -31,6 +36,11 @@
 
         <div class="p-reserve__wrap">
             <p class="text-center u-mb2  u-font--medium">出庫日を指定してください</p>
+            <!-- ここから追加 -->
+            <div class="l-flex--end u-mt1 u-mb1 u-font--sm u-font--medium">
+                <span class="c-calendar__available-icon--blue">青</span> ＝空車、<span class="c-calendar__available-icon--yellow">黄</span>＝残りわずか、<span class="c-calendar__available-icon--red">赤</span>＝満車
+            </div>
+            <!-- 追加ここまで -->
             <div>
                 <div class="c-title__calendar" id="left_calendar2_title"></div>
             </div>
@@ -47,7 +57,12 @@
 
         <div class="p-reserve__wrap">
             <p class="text-center u-mb2 u-font--medium">入庫予定時間を指定してください</p>
-            <div class="c-title__calendar u-mb1" id="load_timetable_title">0000年0月</div>
+            <!-- ここから追加 -->
+            <div class="l-flex--end u-mt1 u-mb1 u-font--sm u-font--medium">
+                <span class="c-calendar__available-icon--blue">青</span> ＝空車、<span class="c-calendar__available-icon--yellow">黄</span>＝残りわずか、<span class="c-calendar__available-icon--red">赤</span>＝満車
+            </div>
+            <!-- 追加ここまで -->
+            <div class="c-title__calendar u-mb1" id="load_timetable_title"></div>
             {{-- <div class="u-mb2 l-grid--col2 l-grid--gap1 p-reserve-selectedTime" id="load_time_section">
                 <dl>
                     <dt class="c-calendar__heading">午前</dt>

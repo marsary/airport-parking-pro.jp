@@ -3,7 +3,7 @@
 
 @section('content')
 @include('include.reserve.header_information')
-@include('include.step', ['step' => "entry"])
+@include('include.step', ['step' => "vehicle-info"])
 @include('include.messages.errors')
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->

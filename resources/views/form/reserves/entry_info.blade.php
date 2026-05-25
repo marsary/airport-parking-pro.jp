@@ -3,7 +3,7 @@
 
 @section('content')
 @include('include.reserve.header_information')
-@include('include.step', ['step' => "entry"])
+@include('include.step', ['step' => "user-info"])
 @include('include.messages.errors')
 <div class="p-user-input__inner--sm">
   <!-- 受付入力 -->
@@ -35,16 +35,17 @@
         <label for="email">メールアドレス※</label>
         <input type="email" id="email" name="email" class="u-w-full-wide" value="{{old('email', $reserve->email)}}">
       </div>
-      <div>
+      {{-- <div>
         <label for="receipt_address">領収書の名前</label>
         <input type="text" id="receipt_address" name="receipt_address" class="u-w-full-wide" value="{{old('receipt_address', $reserve->receipt_address)}}">
-      </div>
+      </div> --}}
     </div>
 
     <label for="note">備考</label>
     <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">
+      <button type="button" class="c-button__pagination--return">日付選択に戻る</button>
       <button type="button" onclick="submit();" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>

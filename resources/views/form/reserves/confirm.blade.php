@@ -182,7 +182,7 @@
     <div class="l-table-charge-detail--second">
       {{-- <div>消費税8%</div>
       <div>{{number_format($reserve->total_tax_8)}}円</div> --}}
-      <div></div>
+      {{-- <div></div> --}}
       <div>消費税10%</div>
       <div>{{number_format($reserve->total_tax_10)}}円</div>
       <div></div>
