@@ -210,7 +210,7 @@
     <dt class="c-calendar__heading">時間</dt>
     <dd>
       <ul class="p-reserve-selectedTime--detail__wrap" id="load_time_section">
-        @for ($hour = 5; $hour < 20; $hour++)
+        @for ($hour = 5; $hour <= 20; $hour++)
           @foreach (['00', '15', '30', '45'] as $minute)
             <li class="c-calendar-available-time__detail">
               <div class="p-reserve-selectedTime__bg time_label_cell" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
@@ -244,7 +244,7 @@
                 <div id="disp_load_date"></div>
                 <div>入庫時間</div>
                 <div>:</div>
-                <div id="disp_load_time"></div>
+                <div <!--id="disp_load_time"-->></div>
                 <div>出庫日</div>
                 <div>:</div>
                 <div id="disp_unload_date_plan"></div>
