@@ -67,7 +67,7 @@
         <th>Mail</th>
         <td colspan="2">{{$reserve->email}}</td>
         {{-- <th>LINE ID</th>
-        <td>{{$reserve->member?->line_id}}{{--sun123--}}</td> --}}
+        <td>{{$reserve->member?->line_id}}</td> --}}
       </tr>
     </table>
 
