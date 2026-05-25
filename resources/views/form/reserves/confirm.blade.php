@@ -17,13 +17,13 @@
         <th>受付コード</th>
         <td>1234567890</td> --}}
         <th>予約日時</th>
-        <td colspan="2">{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
+        <td >{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
         <th>予約経路</th>
-        <td colspan="2">{{$agency?->name}}{{--公式HP--}}</td>
+        <td colspan="3">{{$agency?->name}}{{--公式HP--}}</td>
       </tr>
       <tr>
         <th>入庫日時</th>
-        <td colspan="2">{{$reserve->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $reserve->load_time}}</td>
+        <td>{{$reserve->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $reserve->load_time}}</td>
         <th>出庫予定日</th>
         <td>{{$reserve->unload_date_plan->isoFormat('YYYY/M/D(ddd)')}}</td>
         <th>利用日数</th>
@@ -35,8 +35,8 @@
     <div class="c-title__table">顧客情報</div>
     <table class="l-table-confirm">
       <tr>
-        <th>顧客コード</th>
-        <td>{{$reserve->member?->member_code}}</td>
+        {{-- <th>顧客コード</th>
+        <td>{{$reserve->member?->member_code}}</td> --}}
         <th>お客様氏名</th>
         <td>{{$reserve->name}}</td>
         <th>ふりがな</th>
@@ -65,7 +65,7 @@
         <td>{{$reserve->tel}}{{--090-1234-5678--}}</td>
         <!-- 以下2つは桁数次第ではレイアウトが崩れる分けてもよいかも -->
         <th>Mail</th>
-        <td colspan="2">{{$reserve->email}}</td>
+        <td>{{$reserve->email}}</td>
         {{-- <th>LINE ID</th>
         <td>{{$reserve->member?->line_id}}</td> --}}
       </tr>
@@ -109,16 +109,16 @@
         <td>{{$car->name}}</td>
         <th>車番</th>
         <td>{{$reserve->car_number}}</td>
-        <th>色</th>
-        <td>{{$carColor->name}}</td>
       </tr>
       <tr>
+        <th>色</th>
+        <td>{{$carColor->name}}</td>
         <th>区分</th>
         <td>{{$car->size_label}}</td>
         <th>人数</th>
         <td>{{$reserve->num_members ?? 1}}名</td>
-        <th>車両取扱</th>
-        <td colspan="3">{{$reserve->carCautions}}</td>
+        {{-- <th>車両取扱</th>
+        <td colspan="3">{{$reserve->carCautions}}</td> --}}
       </tr>
       <tr>
         <th>備考</th>
