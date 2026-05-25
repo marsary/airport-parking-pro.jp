@@ -212,6 +212,9 @@
       <ul class="p-reserve-selectedTime--detail__wrap" id="load_time_section">
         @for ($hour = 5; $hour <= 20; $hour++)
           @foreach (['00', '15', '30', '45'] as $minute)
+            @if ($hour == 20 %% $minute == '15')
+                @break
+            @endif
             <li class="c-calendar-available-time__detail">
               <div class="p-reserve-selectedTime__bg time_label_cell" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
               <div class="p-reserve-selectedTime__bg c-calendar__available-icon time_vacancy" data-time="{{ $hour }}:{{ $minute }}">
