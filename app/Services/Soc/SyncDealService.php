@@ -61,20 +61,20 @@ class SyncDealService
         // 変換処理時にID存在確認を実施する。
         // 送信フィールド	DBカラム		不存在時
         // office_id エラー発生、全体処理をスキップ、エラーログ
-        // $this->checkOfficeIdExists($deal->office_id);
-        // // car_id	member_cars.car_id		エラー発生、全体処理をスキップ、エラーログ
-        // $this->checkModelIdExists($syncDealRecord, CarTbl::class, 'car_id', true, $deal->memberCar->car_id);
-        // // car_col_id	member_cars.car_color_id		スキップ
-        // $this->checkModelIdExists($syncDealRecord, CarColorTbl::class, 'car_col_id', false, $deal->memberCar->car_color_id);
-        // // dt_id	deals.payments.payment_details.coupon_id		スキップ
-        // $this->checkModelIdExists($syncDealRecord, DscTicketTbl::class, 'dt_id', false, $syncDealRecord->getAppliedCoupon()?->coupon_id);
-        // foreach ($deal->dealGoods as $dealGood) {
-        //     // goods.g_id	deal_goods.good_id		エラー発生、全体処理をスキップ、エラーログ
-        //     $this->checkModelIdExists($syncDealRecord, GoodsTbl::class, 'g_id', true, $dealGood->good->id);
-        //     // goods.tax_type	全て内税なので、確認不要
-        //     // goods.sales_type	deal_goods.goods.good_categories		スキップ
-        //     $this->checkSalesTypeExists($syncDealRecord, $dealGood->id, $dealGood->good->good_category_id);
-        // }
+        $this->checkOfficeIdExists($deal->office_id);
+        // car_id	member_cars.car_id		エラー発生、全体処理をスキップ、エラーログ
+        $this->checkModelIdExists($syncDealRecord, CarTbl::class, 'car_id', true, $deal->memberCar->car_id);
+        // car_col_id	member_cars.car_color_id		スキップ
+        $this->checkModelIdExists($syncDealRecord, CarColorTbl::class, 'car_col_id', false, $deal->memberCar->car_color_id);
+        // dt_id	deals.payments.payment_details.coupon_id		スキップ
+        $this->checkModelIdExists($syncDealRecord, DscTicketTbl::class, 'dt_id', false, $syncDealRecord->getAppliedCoupon()?->coupon_id);
+        foreach ($deal->dealGoods as $dealGood) {
+            // goods.g_id	deal_goods.good_id		エラー発生、全体処理をスキップ、エラーログ
+            $this->checkModelIdExists($syncDealRecord, GoodsTbl::class, 'g_id', true, $dealGood->good->id);
+            // goods.tax_type	全て内税なので、確認不要
+            // goods.sales_type	deal_goods.goods.good_categories		スキップ
+            $this->checkSalesTypeExists($syncDealRecord, $dealGood->id, $dealGood->good->good_category_id);
+        }
 
         // 代理店コードの変換
         $this->convAgentIds($syncDealRecord);
