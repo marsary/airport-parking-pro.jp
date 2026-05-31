@@ -35,7 +35,7 @@
 </p>
 
 <p>駐車料金：
-{{ $deal->loadDateTime() }}
+1 台 {{ $deal->total_price }} 円（税込 {{ $deal->total_price + $deal->total_tax }} 円）
 </p>
 
 <p>支払方法：
@@ -45,7 +45,7 @@
 <p>------------------------------------</p>
 
 <p>利用料金：
-{{ $deal->loadDateTime() }}
+{{ $deal->total_price }} 円（税込 {{ $deal->total_price + $deal->total_tax }} 円）
 </p>
 
 <p>※オプション（洗車、旅行保険など）料金は含みません。</p>

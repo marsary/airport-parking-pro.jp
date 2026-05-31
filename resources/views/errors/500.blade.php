@@ -8,7 +8,7 @@
     <p class="p-error-page__text">しばらく経ってから再試行してください</p>
     <div class="p-error-page__actions">
     <!-- リンクは必要に応じて変更 -->
-      <a href="{{ url('/') }}" class="p-error-page__button p-error-page__button--primary">トップへ戻る</a>
+      <a href="{{ url('/form/reserves/entry_date') }}" class="p-error-page__button p-error-page__button--primary">トップへ戻る</a>
     </div>
   </div>
 </section>
