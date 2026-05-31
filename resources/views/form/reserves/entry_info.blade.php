@@ -12,11 +12,11 @@
     <!-- 基本情報 -->
     <div class="l-flex l-grid--gap1">
       <div class="u-w-full-wide">
-        <label for="name">氏名※</label>
+        <label for="name">氏名※（入力例：成田　太郎）　間にスペースを入れてください。</label>
         <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}">
       </div>
       <div>
-        <label for="kana">ふりがな※</label>
+        <label for="kana">ふりがな※（入力例：なりた　たろう）　間にスペースを入れてください。</label>
         <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}">
       </div>
     </div>
@@ -45,7 +45,7 @@
     <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">
-      <button type="button" class="c-button__pagination--return">日付選択に戻る</button>
+      <button type="button" class="c-button__pagination--return">入出庫日の選択に戻る</button>
       <button type="button" onclick="submit();" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>
