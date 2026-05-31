@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       tableNumDaysElem.textContent = json.data.table.numDays  + '日間';
       subTotalElem.textContent = formatCurrency(json.data.table.subTotal, '￥');
-      taxLabelElem.textContent = json.data.table.taxLabel;
+      taxLabelElem.textContent = '消費税(' + json.data.table.taxLabel + ')';
 
       taxElem.textContent = formatCurrency(json.data.table.tax, '￥');
       totalElem.textContent = formatCurrency(json.data.table.total, '￥', '(税込)');
