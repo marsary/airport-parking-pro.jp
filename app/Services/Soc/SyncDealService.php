@@ -49,6 +49,7 @@ class SyncDealService
                 Log::error('エラー内容：' . $th->getMessage());
             }
         }
+            error_log(json_encode($syncData)."\n",3,"../storage/logs/test.log");
 
         return $syncData;
     }
