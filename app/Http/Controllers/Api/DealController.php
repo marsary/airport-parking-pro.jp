@@ -43,6 +43,7 @@ class DealController extends Controller
      */
     public function updateAfterSync(Request $request)
     {
+            error_log('request'."\n",3,"../storage/logs/test.log");
 
         try {
             $validated = $request->validate([
