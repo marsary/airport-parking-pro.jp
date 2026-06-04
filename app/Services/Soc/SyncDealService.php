@@ -40,7 +40,7 @@ class SyncDealService
             try {
                DB::transaction(function () use($syncDealRecord, &$syncData) {
             error_log("transaction\n",3,"../storage/logs/test.log");
-            error_log(json_encode($syncData)."\n",3,"../storage/logs/test.log");
+            error_log(json_encode($syncDealRecord)."\n",3,"../storage/logs/test.log");
                     /** @var SyncDealRecord $syncDealRecord */
                     $this->convertToCmsData($syncDealRecord);
             error_log("SyncDealRecord\n",3,"../storage/logs/test.log");
