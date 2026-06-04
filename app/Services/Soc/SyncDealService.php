@@ -38,25 +38,17 @@ class SyncDealService
         $syncData = [];
         foreach ($this->syncDealRecords as $syncDealRecord) {
             try {
-               DB::transaction(function () use($syncDealRecord, &$syncData) {
-            error_log("transaction\n",3,"../storage/logs/test.log");
-            error_log(json_encode($syncDealRecord)."\n",3,"../storage/logs/test.log");
+                DB::transaction(function () use($syncDealRecord, &$syncData) {
                     /** @var SyncDealRecord $syncDealRecord */
                     $this->convertToCmsData($syncDealRecord);
-            error_log("SyncDealRecord\n",3,"../storage/logs/test.log");
-            error_log($syncDealRecord->format()."\n",3,"../storage/logs/test.log");
 
                     $syncData[$syncDealRecord->deal->id] = $syncDealRecord->format();
-            error_log("代理店コードの変換\n",3,"../storage/logs/test.log");
-            error_log(json_encode($syncData[$syncDealRecord->deal->id])."\n",3,"../storage/logs/test.log");
-            error_log(json_encode($syncData)."\n",3,"../storage/logs/test.log");
                 });
 
             } catch (\Throwable $th) {
                 Log::error('エラー内容：' . $th->getMessage());
             }
         }
-            error_log(json_encode($syncData)."\n",3,"../storage/logs/test.log");
 
         return $syncData;
     }
@@ -181,8 +173,6 @@ class SyncDealRecord
                 'num' => $dealGood->num,
             ];
         }
-            error_log("format\n",3,"../storage/logs/test.log");
-            error_log(json_encode($goods)."\n",3,"../storage/logs/test.log");
 
         $couponDetail = $this->getAppliedCoupon();
 
@@ -193,7 +183,7 @@ class SyncDealRecord
             'group_type' => 0, // 0:非グループ固定 (0:非グループ, 1:代表, 2:メンバー)
             'rsv_id_group' => null , // グループID NULL固定
             'o_id' => $this->deal->office_id, // 事業所ID（1:成田, 2:レッド等）
-            'member_flg' => $this->deal->member->soc_member_flg, // 会員フラグ
+            'soc_member_flg' => $this->deal->member->soc_member_flg, // 会員フラグ
             'u_id' => $this->deal->member->soc_member_id, // 顧客ID（member_id）
             'rsv_date' => $this->deal->reserve_date, // 予約受付日時
             'name' => $this->deal->name, // 漢字氏名（全角スペース変換済）
@@ -261,8 +251,6 @@ class SyncDealRecord
             throw new ErrorException('本APIでは、複数クーポン使用には対応していません。Deal ID:' . $this->deal->id);
         }
 
-            error_log("getAppliedCoupon\n",3,"../storage/logs/test.log");
-            error_log(json_encode($appliedCoupons)."\n",3,"../storage/logs/test.log");
 
         return $this->appliedCoupon = $appliedCoupons->first();
     }
