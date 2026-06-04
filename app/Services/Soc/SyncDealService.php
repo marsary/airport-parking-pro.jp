@@ -180,6 +180,10 @@ class SyncDealRecord
         if(isset($this->deal->member->soc_member_flg)) {
             $soc_member_flg = $this->deal->member->soc_member_flg;
         }
+        $soc_member_id = 0;
+        if(isset($this->deal->member->soc_member_id)) {
+            $soc_member_id = $this->deal->member->soc_member_id;
+        }
 
         return [
             'ambiguous_flg' => null, // あいまいフラグ（1で強制確認）
@@ -189,7 +193,7 @@ class SyncDealRecord
             'rsv_id_group' => null , // グループID NULL固定
             'o_id' => $this->deal->office_id, // 事業所ID（1:成田, 2:レッド等）
             'member_flg' => $soc_member_flg, // 会員フラグ
-            'u_id' => $this->deal->member->soc_member_id, // 顧客ID（member_id）
+            'u_id' => $soc_member_id, // 顧客ID（member_id）
             'rsv_date' => $this->deal->reserve_date, // 予約受付日時
             'name' => $this->deal->name, // 漢字氏名（全角スペース変換済）
             'name_k' => $this->deal->kana, // カナ氏名（全角スペース変換済）
