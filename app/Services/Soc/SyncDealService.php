@@ -178,7 +178,7 @@ class SyncDealRecord
 
         $soc_member_flg = 0;
         if(isset($this->deal->member->soc_member_flg)) {
-            $soc_member_flg = $this->deal->member->soc_member_flg
+            $soc_member_flg = $this->deal->member->soc_member_flg;
         }
 
         return [
