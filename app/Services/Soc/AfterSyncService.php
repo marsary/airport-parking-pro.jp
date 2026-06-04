@@ -19,7 +19,6 @@ class AfterSyncService
 
     public function updateAfterSync(array $dealData)
     {
-            error_log('updateAfterSync'."\n",3,"../storage/logs/test.log");
         foreach($dealData as $row) {
             try {
                 $service = $this;
@@ -50,7 +49,6 @@ class AfterSyncService
     private function updateDb(array $sanitized)
     {
         $deal = Deal::findOrFail($sanitized['id']);
-            error_log('updateDb'."\n",3,"../storage/logs/test.log");
 
         $result =[
             'id' => $deal->id,
@@ -69,10 +67,7 @@ class AfterSyncService
         }
 
         if($sanitized['soc_member_id'] || $sanitized['soc_member_flg']) {
-            error_log('soc_member_flg'."\n",3,"../storage/logs/test.log");
-            error_log($sanitized['soc_member_flg']."\n",3,"../storage/logs/test.log");
             $member= $deal->member;
-            error_log(json_encode($member)."\n",3,"../storage/logs/test.log");
             if($sanitized['soc_member_id']) {
                 $member->soc_member_id = $sanitized['soc_member_id'];
             }
@@ -90,7 +85,7 @@ class AfterSyncService
         // 会員フラグ (member_flg)：
         // MY_USER_FLG_MEM_FIXED または MY_USER_FLG_SUN_MEM の場合のみ値を受け入れる
         // それ以外（例えば 0 に戻そうとする操作など）は認めず、一律 0 として処理
-        $memberFlg = (int)$row['soc_member_flg'];
+        $memberFlg = (int)$row['member_flg'];
 
         if (	$memberFlg != SocMemberFlg::MY_USER_FLG_MEM_FIXED->value
             &&	$memberFlg != SocMemberFlg::MY_USER_FLG_SUN_MEM->value

@@ -27,7 +27,6 @@ class DealController extends Controller
             ->get();
 
         $syncData = $syncDealService->setDeals($deals)->getSortedDataForSync();
-            error_log(json_encode($syncData)."\n",3,"../storage/logs/test.log");
 
         return response()->json([
             'status' => 'success',
@@ -44,7 +43,6 @@ class DealController extends Controller
      */
     public function updateAfterSync(Request $request)
     {
-            error_log('request'."\n",3,"../storage/logs/test.log");
 
         try {
             $validated = $request->validate([
@@ -52,7 +50,7 @@ class DealController extends Controller
                 'rsvs.*.rsv_id1' => 'required|integer',
                 'rsvs.*.sync_flg' => 'required|integer',
                 'rsvs.*.u_id' => 'nullable|integer',
-                'rsvs.*.soc_member_flg' => 'nullable|boolean',
+                'rsvs.*.member_flg' => 'nullable|boolean',
             ]);
 
             $service = app(AfterSyncService::class);
