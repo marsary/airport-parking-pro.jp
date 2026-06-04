@@ -181,6 +181,8 @@ class SyncDealRecord
                 'num' => $dealGood->num,
             ];
         }
+            error_log("format\n",3,"../storage/logs/test.log");
+            error_log(json_encode($goods)."\n",3,"../storage/logs/test.log");
 
         $couponDetail = $this->getAppliedCoupon();
 
@@ -259,6 +261,8 @@ class SyncDealRecord
             throw new ErrorException('本APIでは、複数クーポン使用には対応していません。Deal ID:' . $this->deal->id);
         }
 
+            error_log("getAppliedCoupon\n",3,"../storage/logs/test.log");
+            error_log(json_encode($appliedCoupons)."\n",3,"../storage/logs/test.log");
 
         return $this->appliedCoupon = $appliedCoupons->first();
     }
