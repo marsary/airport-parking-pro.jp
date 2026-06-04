@@ -19,6 +19,7 @@ class AfterSyncService
 
     public function updateAfterSync(array $dealData)
     {
+            error_log('updateAfterSync'."\n",3,"../storage/logs/test.log");
         foreach($dealData as $row) {
             try {
                 $service = $this;
