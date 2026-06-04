@@ -43,6 +43,9 @@ class SyncDealService
                     $this->convertToCmsData($syncDealRecord);
 
                     $syncData[$syncDealRecord->deal->id] = $syncDealRecord->format();
+            error_log("代理店コードの変換\n",3,"../storage/logs/test.log");
+            error_log(json_encode($syncData[$syncDealRecord->deal->id])."\n",3,"../storage/logs/test.log");
+            error_log(json_encode($syncData)."\n",3,"../storage/logs/test.log");
                 });
 
             } catch (\Throwable $th) {
@@ -56,8 +59,6 @@ class SyncDealService
 
     private function convertToCmsData(SyncDealRecord $syncDealRecord)
     {
-            error_log("convertToCmsData\n",3,"../storage/logs/test.log");
-            error_log(json_encode($syncDealRecord)."\n",3,"../storage/logs/test.log");
         // 取得データを必要に応じてCMS のマスタデータに変換する
         $deal = $syncDealRecord->deal;
 
@@ -79,9 +80,7 @@ class SyncDealService
             $this->checkSalesTypeExists($syncDealRecord, $dealGood->id, $dealGood->good->good_category_id);
         }
 
-            error_log("代理店コードの変換\n",3,"../storage/logs/test.log");
-            error_log(json_encode($syncDealRecord)."\n",3,"../storage/logs/test.log");
-         // 代理店コードの変換
+        // 代理店コードの変換
         $this->convAgentIds($syncDealRecord);
     }
 
