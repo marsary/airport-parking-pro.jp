@@ -175,7 +175,9 @@ class SyncDealRecord
         }
 
         $couponDetail = $this->getAppliedCoupon();
-error_log(json_encode($this->deal)."\n",3,"../storage/logs/test.log");
+error_log(json_encode($this->deal->member)."\n",3,"../storage/logs/test.log");
+error_log("soc_member_flg\n",3,"../storage/logs/test.log");
+
 error_log($this->deal->member->soc_member_flg."\n",3,"../storage/logs/test.log");
 
         return [
