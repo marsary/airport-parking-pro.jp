@@ -18,7 +18,6 @@ class DealController extends Controller
      */
     public function getDealsForSync(SyncDealService $syncDealService)
     {
-            error_log('getDealsForSync'."\n",3,"../storage/logs/test.log");
         DB::listen(function ($query) {
             logger($query->sql, $query->bindings);
         });
@@ -28,6 +27,7 @@ class DealController extends Controller
             ->get();
 
         $syncData = $syncDealService->setDeals($deals)->getSortedDataForSync();
+            error_log(json_encode($syncData)."\n",3,"../storage/logs/test.log");
 
         return response()->json([
             'status' => 'success',
