@@ -44,7 +44,7 @@ class SyncDealService
                     /** @var SyncDealRecord $syncDealRecord */
                     $this->convertToCmsData($syncDealRecord);
             error_log("SyncDealRecord\n",3,"../storage/logs/test.log");
-            error_log(json_encode($syncData)."\n",3,"../storage/logs/test.log");
+            error_log($syncDealRecord->format()."\n",3,"../storage/logs/test.log");
 
                     $syncData[$syncDealRecord->deal->id] = $syncDealRecord->format();
             error_log("代理店コードの変換\n",3,"../storage/logs/test.log");
