@@ -52,7 +52,7 @@ class DealController extends Controller
                 'rsvs.*.rsv_id1' => 'required|integer',
                 'rsvs.*.sync_flg' => 'required|integer',
                 'rsvs.*.u_id' => 'nullable|integer',
-                'rsvs.*.member_flg' => 'nullable|boolean',
+                'rsvs.*.soc_member_flg' => 'nullable|boolean',
             ]);
 
             $service = app(AfterSyncService::class);

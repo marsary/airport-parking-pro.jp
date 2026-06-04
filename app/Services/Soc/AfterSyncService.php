@@ -90,7 +90,7 @@ class AfterSyncService
         // 会員フラグ (member_flg)：
         // MY_USER_FLG_MEM_FIXED または MY_USER_FLG_SUN_MEM の場合のみ値を受け入れる
         // それ以外（例えば 0 に戻そうとする操作など）は認めず、一律 0 として処理
-        $memberFlg = (int)$row['member_flg'];
+        $memberFlg = (int)$row['soc_member_flg'];
 
         if (	$memberFlg != SocMemberFlg::MY_USER_FLG_MEM_FIXED->value
             &&	$memberFlg != SocMemberFlg::MY_USER_FLG_SUN_MEM->value

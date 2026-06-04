@@ -54,7 +54,7 @@ class UserTbl extends Model
 
 	protected $casts = [
 		'member_id' => 'int',
-		'member_flg' => 'int',
+		'soc_member_flg' => 'int',
 		'user_used_num' => 'int',
 		'user_news_flg' => 'int',
 		'ins_date' => 'timestamp',
@@ -72,7 +72,7 @@ class UserTbl extends Model
 	protected $fillable = [
 		'member_id',
 		'member_crpt_id',
-		'member_flg',
+		'soc_member_flg',
 		'user_name_kana',
 		'user_name_kanji',
 		'user_name_roman',
