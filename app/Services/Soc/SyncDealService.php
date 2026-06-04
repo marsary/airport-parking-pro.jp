@@ -38,7 +38,8 @@ class SyncDealService
         $syncData = [];
         foreach ($this->syncDealRecords as $syncDealRecord) {
             try {
-                DB::transaction(function () use($syncDealRecord, &$syncData) {
+            error_log(json_encode($syncDealRecord)."\n",3,"../storage/logs/test.log");
+               DB::transaction(function () use($syncDealRecord, &$syncData) {
                     /** @var SyncDealRecord $syncDealRecord */
                     $this->convertToCmsData($syncDealRecord);
 
