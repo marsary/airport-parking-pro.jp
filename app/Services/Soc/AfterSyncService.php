@@ -49,6 +49,7 @@ class AfterSyncService
     private function updateDb(array $sanitized)
     {
         $deal = Deal::findOrFail($sanitized['id']);
+            error_log('updateDb'."\n",3,"../storage/logs/test.log");
 
         $result =[
             'id' => $deal->id,
