@@ -184,6 +184,14 @@ class SyncDealRecord
         if(isset($this->deal->member->soc_member_id)) {
             $soc_member_id = $this->deal->member->soc_member_id;
         }
+        $address1 = 0;
+        if(isset($this->deal->member->address1)) {
+            $address1 = $this->deal->member->address1;
+        }
+        $address2 = 0;
+        if(isset($this->deal->member->address2)) {
+            $address2 = $this->deal->member->address2;
+        }
 
         return [
             'ambiguous_flg' => null, // あいまいフラグ（1で強制確認）
@@ -198,8 +206,8 @@ class SyncDealRecord
             'name' => $this->deal->name, // 漢字氏名（全角スペース変換済）
             'name_k' => $this->deal->kana, // カナ氏名（全角スペース変換済）
             'zip' => $this->deal->zip, //
-            'addr1' => $this->deal->member->address1, //
-            'addr2' => $this->deal->member->address2, //
+            'addr1' => $address1, //
+            'addr2' => $address2, //
             'tel' => $this->deal->tel, //
             'tel_mb' => null, //
             'email' => $this->deal->email, //
