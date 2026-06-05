@@ -292,7 +292,7 @@
                 <div class="u-mt3 u-pt3 u-border--top p-input-user-total-parking-charges__detail-total">
                     <div id="tax_label">消費税(10%)</div>
                     <div id="tax"></div>
-                    <div>駐車料金合計</div>
+                    <div>駐車料金(普通)合計</div>
                     <div id="total"></div>
                 </div>
 

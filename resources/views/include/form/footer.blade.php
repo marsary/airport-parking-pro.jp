@@ -11,7 +11,7 @@
     </div>
     <div class="l-flex l-flex--item-start l-flex--center--md l-grid--gap1 u-font--white">
       <a href="https://www.sunparking.co.jp/guide/" target="_blank" class="c-button-user__footer--access">駐車場へのアクセス</a>
-      <a href="mailto:" class="c-button-user__footer--contact">お問い合わせ</a>
+      <a href="https://www.sunparking.co.jp/support/" class="c-button-user__footer--contact">お問い合わせ</a>
     </div>
   </div>
   <p class="l-footer-user__copy">© 2025 Sunport Co., Ltd.</p>

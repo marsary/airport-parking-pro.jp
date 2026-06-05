@@ -30,7 +30,7 @@ class DealCreatedThankyouMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '予約登録ありがとうございます',
+            subject: 'サンパーキング 成田店｜ご予約完了のお知らせ｜予約番号：'.$this->deal->reserve_code,
         );
     }
 
