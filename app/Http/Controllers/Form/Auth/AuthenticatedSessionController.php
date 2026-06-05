@@ -16,7 +16,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('form.auth.login');
+        $reserve = session()->get('reserve');
+        return view('form.auth.login', [
+            'reserve' => $reserve
+        ]);
     }
 
     /**
@@ -28,7 +31,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if(Auth::guard('web')->check()) {
+        // セッションに予約情報がある場合は情報入力画面へ、ない場合は日付選択画面へ
+        if($request->session()->has('reserve')) {
             return redirect()->route('form.reserves.entry_info');
         }
         return redirect()->route('form.reserves.entry_date');
