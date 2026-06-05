@@ -68,11 +68,7 @@ class AfterSyncService
 
         if($sanitized['soc_member_id'] || $sanitized['soc_member_flg']) {
             $member= $deal->member;
-            if($sanitized['soc_member_id']) {
-                error_log(json_encode($member)."\n",3,"../storage/logs/test.log");
-
-error_log($member->soc_member_id."\n",3,"../storage/logs/test.log");
-error_log($sanitized['soc_member_id']."\n",3,"../storage/logs/test.log");
+            if($sanitized['soc_member_id'] && $member) {
                 $member->soc_member_id = $sanitized['soc_member_id'];
             }
             if($sanitized['soc_member_flg']) {
