@@ -76,11 +76,9 @@ class NewPasswordController extends Controller
     protected function redirectToReservePage($request, $status)
     {
         Auth::guard('members')->attempt(['email' => $request->email, 'password' => $request->password]);
-        if(Auth::guard('web')->check()) {
+        if($request->session()->has('reserve')) {
             return redirect()->route('form.reserves.entry_info')->with('status', __($status));
         }
         return redirect()->route('form.reserves.entry_date')->with('status', __($status));
     }
 }
-
-
