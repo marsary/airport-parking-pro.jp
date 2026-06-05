@@ -49,10 +49,9 @@ class ReservesController extends Controller
 
     public function entryDate(Request $request)
     {
-        session()->forget('reserve');
         $reserve = $this->getReserveForm();
         if($request->has('register_user')) {
-            $reserve->registerMember = true;
+            $reserve->registerMember = (bool) $request->input('register_user');
             session()->put('reserve', $reserve);
         }
 
@@ -74,7 +73,7 @@ class ReservesController extends Controller
         ]);
         session()->put('reserve', $reserve);
 
-        if(Auth::guard('web')->check()) {
+        if(!Auth::guard('members')->check() && $reserve->registerMember === null) {
             return redirect()->route('form.login');
         }
         return redirect()->route('form.reserves.entry_info');
