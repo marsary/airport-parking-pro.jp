@@ -17,7 +17,7 @@
     <p class="text-center u-font--bold u-mb2 u-font--18">サン予約センター<br>TEL.0476-33-1123<br>［受付時間］9:00〜18:00</p>
     <!-- 画面を閉じる -->
     <button class="c-button__select button_select c-button" onclick="closeOrRedirect()">画面を閉じる</button>
-    <img class="p-user-input-complete__image" src="{{ asset('reserve/airplane_thankspage.png') }}" width="100%" height="auto" alt="空港の画像" class="is-block u-horizontal-auto">
+    <img class="p-user-input-complete__image" src="{{ asset('images/reserve/airplane_thankspage.png') }}" width="100%" height="auto" alt="空港の画像" class="is-block u-horizontal-auto">
     <div class="p-user-input-complete__after"></div>
   </div>
 

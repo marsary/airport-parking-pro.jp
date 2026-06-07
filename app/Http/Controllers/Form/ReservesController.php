@@ -235,17 +235,18 @@ class ReservesController extends Controller
         try {
             DB::transaction(function () use($reserve, $service, &$status){
                 $service->store();
-                if($service->reserve->registerMember) { // 登録後にパスワード設定するメールを送信
-                    $status = $this->sendPasswordResetLink($service->deal->email, 'members.complete', true);
-                    if($status != Password::RESET_LINK_SENT) {
-                        throw new ResetLinkSentException();
-                    }
-                }
+                // 現状SOCにデータを送る場合は、パスワード設定は行わない
+                // if($service->reserve->registerMember) { // 登録後にパスワード設定するメールを送信
+                //     $status = $this->sendPasswordResetLink($service->deal->email, 'members.complete', true);
+                //     if($status != Password::RESET_LINK_SENT) {
+                //         throw new ResetLinkSentException();
+                //     }
+                // }
                 // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
                 Mail::to(myOffice()->email)->send(new DealCreatedAdminMail($service->deal));
-                if(!$reserve->registerMember) {
+                // if(!$reserve->registerMember) {
                     Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
-                }
+                // }
             });
         } catch (ResetLinkSentException $th) {
             Log::error('エラー内容：' . $th->getMessage());
