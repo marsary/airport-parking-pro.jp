@@ -31,10 +31,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // 以下ログインはスキップ 
         // セッションに予約情報がある場合は情報入力画面へ、ない場合は日付選択画面へ
-        if($request->session()->has('reserve')) {
-            return redirect()->route('form.reserves.entry_info');
-        }
+        // if($request->session()->has('reserve')) {
+        //     return redirect()->route('form.reserves.entry_info');
+        // }
+        
         return redirect()->route('form.reserves.entry_date');
     }
 
