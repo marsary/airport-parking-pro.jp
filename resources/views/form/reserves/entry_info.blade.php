@@ -41,7 +41,7 @@
       </div> --}}
     </div>
 
-    <label for="note">備考</label>
+    <label for="note">備考※領収書の宛名が必要な場合はこちらに記入ください</label>
     <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">
