@@ -18,6 +18,7 @@ class FormCalendarController extends Controller
         $endDate = Carbon::parse($params['end']);
 
 
+        $minDate = $this->getMinDate();
         $maxDate = $minDate->copy()->addMonths(config('const.commons.reserve_cal_month_periods'))->subDay();
 
         $checker = new ParkingLimitDateChecker($startDate, $endDate);
@@ -78,6 +79,7 @@ class FormCalendarController extends Controller
         $startDate = Carbon::parse($params['start']);
         $endDate = Carbon::parse($params['end']);
 
+        $minDate = $this->getMinDate();
 
         $checker = new ParkingLimitDateChecker($startDate, $endDate);
         $eventData = [];
@@ -99,5 +101,20 @@ class FormCalendarController extends Controller
         }
 
         return response()->json($eventData);
+    }
+
+
+    public function getMinDate(): Carbon
+    {
+        $todayLimitTime = Carbon::today()->setTime(23, 0, 0);
+        $minDate = Carbon::now()->lt($todayLimitTime) ? Carbon::tomorrow() : Carbon::tomorrow()->addDay();
+
+        // 指定日以降のみ予約可能とする制限を追加
+        $limitDate = Carbon::parse(config('const.commons.reservable_start_date'));
+        if ($minDate->lt($limitDate)) {
+            $minDate = $limitDate;
+        }
+
+        return $minDate;
     }
 }
