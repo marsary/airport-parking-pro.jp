@@ -13,6 +13,8 @@
         </div>
 
         <!-- カレンダー選択 -->
+        <input type="hidden" id="reservable_start_date" value="{{ config('const.commons.reservable_start_date') }}">
+        <input type="hidden" id="reserve_cal_month_periods" value="{{config('const.commons.reserve_cal_month_periods')}}">
         <div class="p-reserve__wrap">
             <p class="text-center u-mb2 u-font--medium">入庫日を指定してください</p>
             <!-- ここから追加 -->
@@ -34,7 +36,7 @@
             </div>
         </div>
 
-        <div class="p-reserve__wrap">
+        <div class="p-reserve__wrap" id="unload_date_section">
             <p class="text-center u-mb2  u-font--medium">出庫日を指定してください</p>
             <!-- ここから追加 -->
             <div class="l-flex--end u-mt1 u-mb1 u-font--sm u-font--medium">
@@ -55,7 +57,7 @@
             </div>
         </div>
 
-        <div class="p-reserve__wrap">
+        <div class="p-reserve__wrap" id="load_time_section_wrap">
             <p class="text-center u-mb2 u-font--medium">入庫予定時間を指定してください</p>
             <!-- ここから追加 -->
             <div class="l-flex--end u-mt1 u-mb1 u-font--sm u-font--medium">
@@ -311,7 +313,7 @@
 <!-- 表示非表示ボタン -->
 <script src="{{ asset('js/close_button_toggle.js') }}"></script>
 <script src="{{ asset('js/index.global.min.js') }}"></script>
-<script src="{{ asset('js/commons/entry_date.js') }}"></script>
+<script src="{{ asset('js/pages/form/entry_date.js') }}"></script>
 <script>
 </script>
 @endpush
