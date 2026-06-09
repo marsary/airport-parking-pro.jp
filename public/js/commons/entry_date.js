@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const dispNumDaysElem = document.getElementById('disp_num_days');
   const dispLoadDateElem = document.getElementById('disp_load_date');
+  const dispLoadTimeElem = document.getElementById('disp_load_time');
   const dispUnloadDateElem = document.getElementById('disp_unload_date_plan');
 
   const timeLabelCells = Array.from(document.getElementsByClassName('time_label_cell'));
@@ -329,6 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
   })
   loadTimeInput.addEventListener('change', function() {
     updateSelectedDateTime()
+    updateDispLoadTime()
   })
   unloadDateInput.addEventListener('change', function() {
     updateDispUnloadDate();
@@ -365,6 +367,15 @@ document.addEventListener('DOMContentLoaded', function () {
     dispLoadDateElem.textContent = loadDate.toFormat(`M/dd`) + '(' + loadDate.weekdayShort + ')';
     loadTimetableTitle.textContent = loadDate.toFormat('yyyy年M月d日');
 
+  }
+
+  function updateDispLoadTime() {
+    if(loadTimeInput === null) return;
+    if(loadTimeInput.value == '' || loadTimeInput.value.includes(':') == false) {
+      dispLoadTimeElem.textContent = ''
+      return
+    }
+    dispLoadTimeElem.textContent = loadTimeInput.value;
   }
 
   function updateDispUnloadDate() {
@@ -459,6 +470,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 初期表示
   updateDispLoadDate()
+  updateDispLoadTime()
   updateDispUnloadDate()
   calcNumDays()
   updateSelectedDateTime()
