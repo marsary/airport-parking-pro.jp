@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Form;
 
-use App\Exceptions\ResetLinkSentException;
-use App\Http\Controllers\Auth\Traits\NewPassword;
+// use App\Exceptions\ResetLinkSentException;
+// use App\Http\Controllers\Auth\Traits\NewPassword;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Member\Forms\ReserveForm;
 use App\Http\Requests\Member\EntryCarRequest;
-use App\Http\Requests\Member\EntryDateRequest;
-use App\Http\Requests\Member\EntryInfoRequest;
-use App\Http\Requests\Member\OptionSelectRequest;
-use App\Mail\DealCreatedAdminMail;
+use App\Http\Requests\Form\EntryDateRequest;
+use App\Http\Requests\Form\EntryInfoRequest;
 use App\Mail\DealCreatedThankyouMail;
 use App\Models\Agency;
 use App\Models\Airline;
@@ -32,13 +30,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
+// use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Mailer\Exception\TransportException;
 
 class ReservesController extends Controller
 {
-    use NewPassword;
+    // use NewPassword;
 
     /**
      * Display a listing of the resource.
@@ -50,13 +48,13 @@ class ReservesController extends Controller
     public function entryDate(Request $request)
     {
         $reserve = $this->getReserveForm();
-        if($request->has('register_user')) {
-            $reserve->registerMember = (bool) $request->input('register_user');
-            session()->put('reserve', $reserve);
-        }
+        // if($request->has('register_user')) {
+        //     $reserve->registerMember = (bool) $request->input('register_user');
+        //     session()->put('reserve', $reserve);
+        // }
 
         return view('form.reserves.entry_date', [
-            'reserve' => $reserve
+            'reserve' => $reserve,
         ]);
     }
 
@@ -73,9 +71,9 @@ class ReservesController extends Controller
         ]);
         session()->put('reserve', $reserve);
 
-        if(!Auth::guard('members')->check() && $reserve->registerMember === null) {
-            return redirect()->route('form.login');
-        }
+        // if(!Auth::guard('members')->check() && $reserve->registerMember === null) {
+        //     return redirect()->route('form.login');
+        // }
         return redirect()->route('form.reserves.entry_info');
     }
 
