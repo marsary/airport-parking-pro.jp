@@ -28,7 +28,7 @@ class EntryDateRequest extends FormRequest
             'agency_id' => 'nullable|int',
             'load_date' => 'required|date',
             'load_time' => 'required|date_format:G:i',
-            'unload_date_plan' => 'required|date|after:load_date',
+            'unload_date_plan' => 'required|date|after_or_equal:load_date',
             'unload_time_plan' => 'nullable|date_format:H:i',
             'num_days' => 'required|int',
         ];
