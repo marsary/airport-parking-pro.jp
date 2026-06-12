@@ -80,10 +80,10 @@ class ReservesController extends Controller
     public function entryInfo(Request $request)
     {
         $reserve = $this->getReserveForm();
-        if($request->has('register_user')) {
-            $reserve->registerMember = true;
-            session()->put('reserve', $reserve);
-        }
+        // if($request->has('register_user')) {
+        //     $reserve->registerMember = (bool) $request->input('register_user');
+        //     session()->put('reserve', $reserve);
+        // }
 
         return view('form.reserves.entry_info', [
             'reserve' => $reserve
@@ -95,10 +95,16 @@ class ReservesController extends Controller
         $reserve = $this->getReserveForm();
         $reserve->fill($request->all());
 
-        if(!Auth::guard('members')->check() && Member::where('email', $request->email)->exists()) {
-            $validator = Validator::make($request->all(), []);
-            $validator->errors()->add('email', 'そのEmailアドレスはすでに登録済みです。');
-            return back()->withInput()->withErrors($validator);
+        $memberExists = Member::where('email', $request->email)->exists();
+
+        // if(!Auth::guard('members')->check() && $memberExists) {
+        //     $validator = Validator::make($request->all(), []);
+        //     $validator->errors()->add('email', 'そのEmailアドレスはすでに登録済みです。');
+        //     return back()->withInput()->withErrors($validator);
+        // }
+        if($memberExists && !$reserve->member) {
+            $member = Member::where('email', $request->email)->first();
+            $reserve->setMember($member);
         }
 
         if($reserve->registerMember) {
