@@ -102,6 +102,20 @@ document.addEventListener('DOMContentLoaded', function () {
   const now = luxon.DateTime.now();
   // 設定ファイルから取得した予約開始可能日を使用
   const displayStartDate = luxon.DateTime.fromISO(document.getElementById('reservable_start_date').value);
+  let minSelectableDate = now.startOf('day').plus({ days: 1 });
+
+  // 23時以降なら翌日扱い
+  if (now.hour >= 23) {
+    minSelectableDate = minSelectableDate.plus({ days: 1 });
+  }
+
+  const validStartDate = minSelectableDate > displayStartDate
+    ? minSelectableDate
+    : displayStartDate;
+
+  // 選択できる日付は5か月先までになります。
+  const validEndDate = validStartDate.plus({ months: reserveCalMonthPeriods });
+
 
 
   var calendar1 = new FullCalendar.Calendar(calendarEl1, {
@@ -114,6 +128,11 @@ document.addEventListener('DOMContentLoaded', function () {
     //   }
     // },
     // multiMonthTitleFormat: {},//{ month: 'numeric', year: 'numeric' },
+    // 表示・選択可能範囲
+    validRange: {
+        start: displayStartDate.toISODate(),
+        end: validEndDate.toISODate(), // endは排他的
+    },
     firstDay:1,
     showNonCurrentDates:false,
     headerToolbar: false,
@@ -218,6 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
     //   }
     // },
     // multiMonthTitleFormat: {},//{ month: 'numeric', year: 'numeric' },
+    validRange: {
+        start: displayStartDate.toISODate(),
+    },
     firstDay:1,
     showNonCurrentDates:false,
     headerToolbar: false,
