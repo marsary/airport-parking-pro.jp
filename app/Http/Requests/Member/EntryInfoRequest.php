@@ -24,7 +24,7 @@ class EntryInfoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'	=> 'required',
+            'name'	=> 'nullable',
             'kana'	=> 'required',
             'tel'	=> ['required','max:15', new PhoneRule],
             'zip'	=> ['nullable','max:8', new ZipcodeRule],
