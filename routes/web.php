@@ -115,6 +115,11 @@ Route::prefix('form')->name('form.')->group(function () {
     Route::get('reserves/complete', [\App\Http\Controllers\Form\ReservesController::class, 'complete'])->name('reserves.complete');
     Route::resource('reserves', \App\Http\Controllers\Form\ReservesController::class);
 
+    Route::get('calendar/load_dates', [\App\Http\Controllers\Forms\FormCalendarController::class, 'loadDates'])->name('calendar.load_dates');
+    Route::get('calendar/unload_dates', [\App\Http\Controllers\Forms\FormCalendarController::class, 'unloadDates'])->name('calendar.unload_dates');
+    Route::get('calendar/load_hours', [\App\Http\Controllers\Forms\FormCalendarController::class, 'loadHours'])->name('calendar.load_hours');
+
+
 });
 
 // マイページ用のルーティング
