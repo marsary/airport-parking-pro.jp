@@ -45,7 +45,7 @@
     <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">
-      <button type="button" class="c-button__pagination--return">入出庫日の選択に戻る</button>
+      <button type="button" class="c-button__pagination--return" onclick="location.href='{{route('form.reserves.entry_date')}}';">入出庫日の選択に戻る</button>
       <button type="button" onclick="submit();" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>
