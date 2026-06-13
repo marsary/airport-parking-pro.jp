@@ -217,8 +217,8 @@
             @if ($hour == 20 && $minute == '15')
                 @break
             @endif
-            <li class="c-calendar-available-time__detail time_label_cell">
-              <div class="p-reserve-selectedTime__bg" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
+            <li class="c-calendar-available-time__detail">
+              <div class="p-reserve-selectedTime__bg time_label_cell" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
               <div class="p-reserve-selectedTime__bg c-calendar__available-icon time_vacancy" data-time="{{ $hour }}:{{ $minute }}">
                 {{--
                      - 予約可能画像: <img src="{{ asset('images/svg/calendar_available.svg') }}">
@@ -236,7 +236,7 @@
 </div>
   <!-- 変更ここまで 2025/6/23 -->
 
-        <div class="l-grid--col3 l-grid--gap2" id="load_time_section"></div>
+            <div class="l-grid--col3 l-grid--gap2" id="load_time_section"></div>
         <div class="p-input-user-total-parking-charges">
         <!-- 駐車料金合計 -->
         <div class="u-border--all u-border--radius u-pt2 u-pb2">
@@ -301,7 +301,7 @@
 
             <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
         </div><!-- /.p-input-user-total-parking-charges -->
-
+</div>
 </form>
 </div>
 </div>
@@ -313,22 +313,7 @@
 <script src="{{ asset('js/close_button_toggle.js') }}"></script>
 <script src="{{ asset('js/index.global.min.js') }}"></script>
 <script src="{{ asset('js/pages/form/entry_date.js') }}"></script>
-<!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
-// input, selectのみEnterで次の入力欄に移動。textareaは除外。
-const inputs = document.querySelectorAll('input, select');
-
-inputs.forEach((input, index) => {
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault(); // 改行やSubmitを防止
-      // 次の要素が存在すればフォーカスを移動
-      if (inputs[index + 1]) {
-        inputs[index + 1].focus();
-      }
-    }
-  });
-});
 </script>
 @endpush
 @push('css')
@@ -475,11 +460,6 @@ inputs.forEach((input, index) => {
         cursor: pointer;
     }
 
-    /* .day_selected,
-    .time_selected {
-        border-color: rgb(167, 207, 249) !important;
-        background-color: rgb(167, 207, 249) !important;
-    } */
    /* 日付のボーダー */
     td.fc-daygrid-day {
         border: 1px solid #ddd;
@@ -499,7 +479,7 @@ inputs.forEach((input, index) => {
 
     /* 選択された日付・時間 */
     td.day_selected,
-    .time_selected .p-reserve-selectedTime__bg:not(.time_vacancy) {
+    .time_selected {
         border-color: rgb(0, 95, 204) !important;
         background-color: rgb(2, 117, 255)!important;
         font-weight: bold;
