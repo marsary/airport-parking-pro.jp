@@ -14,10 +14,10 @@
         <p>万が一の時にも安心、安全な旅行保険への加入を<br />ご希望されていますか？</p>
         <div class="p-user-input-optionSelect__radio">
           <label for="insurance_yes">
-            <input type="radio" id="insurance_yes" name="insurance" value="yes" class="c-button__radio--input" required>希望する
+            <input type="radio" id="insurance_yes" name="insurance" value="yes" class="c-button__radio--input">希望する
           </label>
           <label for="insurance_no">
-            <input type="radio" id="insurance_no" name="insurance" value="no" class="c-button__radio--input" required>希望しない
+            <input type="radio" id="insurance_no" name="insurance" value="no" class="c-button__radio--input">希望しない
           </label>
         </div>
       </div>
@@ -26,10 +26,10 @@
         <p class="">当店自慢の洗車をご希望されていますか？</p>
         <div class="p-user-input-optionSelect__radio">
           <label for="carwash_yes">
-            <input type="radio" id="carwash_yes" name="carwash" value="yes" class="c-button__radio--input" required>希望する
+            <input type="radio" id="carwash_yes" name="carwash" value="yes" class="c-button__radio--input">希望する
           </label>
           <label for="carwash_no">
-            <input type="radio" id="carwash_no" name="carwash" value="no" class="c-button__radio--input" required>希望しない
+            <input type="radio" id="carwash_no" name="carwash" value="no" class="c-button__radio--input">希望しない
           </label>
         </div>
       </div>
