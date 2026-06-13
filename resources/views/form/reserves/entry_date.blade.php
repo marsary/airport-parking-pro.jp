@@ -65,108 +65,245 @@
             </div>
             <!-- 追加ここまで -->
             <div class="c-title__calendar u-mb1" id="load_timetable_title"></div>
+            {{-- <div class="u-mb2 l-grid--col2 l-grid--gap1 p-reserve-selectedTime" id="load_time_section">
+                <dl>
+                    <dt class="c-calendar__heading">午前</dt>
+                    <dd>
+                        <ul class="c-calendar-available-time__wrap">
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="0">0:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="0"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="1">1:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="1"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="2">2:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="2"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="3">3:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="3"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="4">4:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="4"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="5">5:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="5"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="6">6:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="6"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="7">7:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="7"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="8">8:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="8"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="9">9:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="9"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="10">10:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="10"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="11">11:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="11"></div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt class="c-calendar__heading">午後</dt>
+                    <dd>
+                        <ul class="c-calendar-available-time__wrap">
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="12">12:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="12"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="13">13:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="13"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="14">14:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="14"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="15">15:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="15"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="16">16:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="16"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="17">17:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="17"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="18">18:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="18"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="19">19:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="19"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="20">20:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="20"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="21">21:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="21"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="22">22:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="22"></div>
+                            </li>
+                            <li class="c-calendar-available-time">
+                                <div class="p-reserve-selectedTime__bg hour_label_cell" data-hour="23">23:00～</div>
+                                <div class="p-reserve-selectedTime__bg c-calendar__available-icon hour_vacancy" data-hour="23"></div>
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+            </div>
 
-            <!--
-                変更ここから 2025/6/23
-            -->
-            <!--
-                1時間おきの時間選択削除
-            -->
-            <dl class="p-reserve-selectedTime--detail">
+            <!-- 時間指定 -->
+            <dl class="p-reserve-selectedTime--detail" id="quarter_hour_section">
                 <dt class="c-calendar__heading">時間</dt>
                 <dd>
-                <ul class="p-reserve-selectedTime--detail__wrap" id="load_time_section">
-                    @for ($hour = 5; $hour <= 20; $hour++)
-                    @foreach (['00', '15', '30', '45'] as $minute)
-                        @if ($hour == 20 && $minute == '15')
-                            @break
-                        @endif
-                        <li class="c-calendar-available-time__detail time_label_cell">
-                        <div class="p-reserve-selectedTime__bg" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
-                        <div class="p-reserve-selectedTime__bg c-calendar__available-icon time_vacancy" data-time="{{ $hour }}:{{ $minute }}">
-                            {{--
-                                - 予約可能画像: <img src="{{ asset('images/svg/calendar_available.svg') }}">
-                                - 残数小画像（△）:  <img src="{{ asset('images/svg/calendar_some-available.svg') }}">
-                                - 予約不可画像: <img src="{{ asset('images/svg/calendar_none.svg') }}">
-                            --}}
-                            <img src="{{ asset('images/svg/calendar_available.svg') }}">
-                        </div>
+                    <ul class="c-calendar-available-time__wrap">
+                        <li class="c-calendar-available-time__detail">
+                            <div class="p-reserve-selectedTime__bg quarter_hour_label_cell" data-min="00" data-time="19:00">19:00～</div>
+                            <div class="p-reserve-selectedTime__bg c-calendar__available-icon quarter_hour_vacancy" data-min="00"></div>
                         </li>
-                    @endforeach
-                    @endfor
-                </ul>
+                        <li class="c-calendar-available-time__detail">
+                            <div class="p-reserve-selectedTime__bg quarter_hour_label_cell" data-min="15" data-time="19:15">19:15～</div>
+                            <div class="p-reserve-selectedTime__bg c-calendar__available-icon quarter_hour_vacancy" data-min="15"></div>
+                        </li>
+                        <li class="c-calendar-available-time__detail">
+                            <div class="p-reserve-selectedTime__bg quarter_hour_label_cell" data-min="30" data-time="19:30">19:30～</div>
+                            <div class="p-reserve-selectedTime__bg c-calendar__available-icon quarter_hour_vacancy" data-min="30"></div>
+                        </li>
+                        <li class="c-calendar-available-time__detail">
+                            <div class="p-reserve-selectedTime__bg quarter_hour_label_cell" data-min="45" data-time="19:45">19:45～</div>
+                            <div class="p-reserve-selectedTime__bg c-calendar__available-icon quarter_hour_vacancy" data-min="45"></div>
+                        </li>
+                    </ul>
                 </dd>
-            </dl>
-        </div>
-        <!-- 変更ここまで 2025/6/23 -->
+            </dl> --}}
+  <!--
+    変更ここから 2025/6/23
+  -->
+  <!--
+    1時間おきの時間選択削除
+  -->
+  <dl class="p-reserve-selectedTime--detail">
+    <dt class="c-calendar__heading">時間</dt>
+    <dd>
+      <ul class="p-reserve-selectedTime--detail__wrap" id="load_time_section">
+        @for ($hour = 5; $hour <= 20; $hour++)
+          @foreach (['00', '15', '30', '45'] as $minute)
+            @if ($hour == 20 && $minute == '15')
+                @break
+            @endif
+            <li class="c-calendar-available-time__detail time_label_cell">
+              <div class="p-reserve-selectedTime__bg" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
+              <div class="p-reserve-selectedTime__bg c-calendar__available-icon time_vacancy" data-time="{{ $hour }}:{{ $minute }}">
+                {{--
+                     - 予約可能画像: <img src="{{ asset('images/svg/calendar_available.svg') }}">
+                     - 残数小画像（△）:  <img src="{{ asset('images/svg/calendar_some-available.svg') }}">
+                     - 予約不可画像: <img src="{{ asset('images/svg/calendar_none.svg') }}">
+                --}}
+                <img src="{{ asset('images/svg/calendar_available.svg') }}">
+              </div>
+            </li>
+          @endforeach
+        @endfor
+      </ul>
+    </dd>
+  </dl>
+</div>
+  <!-- 変更ここまで 2025/6/23 -->
 
         <div class="l-grid--col3 l-grid--gap2" id="load_time_section"></div>
         <div class="p-input-user-total-parking-charges">
-            <!-- 駐車料金合計 -->
-            <div class="u-border--all u-border--radius u-pt2 u-pb2">
-                <p class="u-font--24 text-center u-font--medium">駐車料金合計</p>
-                <div class="p-input-user-total-parking-charges__inner">
-                    <div class="p-input-user-total-parking-charges__head">
-                        <div>入庫日</div>
-                        <div>:</div>
-                        <div id="disp_load_date"></div>
-                        <div>入庫時間</div>
-                        <div>:</div>
-                        <div id="disp_load_time"></div>
-                        <div>出庫日</div>
-                        <div>:</div>
-                        <div id="disp_unload_date_plan"></div>
-                        <div>利用日数</div>
-                        <div>:</div>
-                        <div id="disp_num_days"></div>
+        <!-- 駐車料金合計 -->
+        <div class="u-border--all u-border--radius u-pt2 u-pb2">
+            <p class="u-font--24 text-center u-font--medium">駐車料金合計</p>
+            <div class="p-input-user-total-parking-charges__inner">
+                <div class="p-input-user-total-parking-charges__head">
+                    <div>入庫日</div>
+                    <div>:</div>
+                    <div id="disp_load_date"></div>
+                    <div>入庫時間</div>
+                    <div>:</div>
+                    <div id="disp_load_time"></div>
+                    <div>出庫日</div>
+                    <div>:</div>
+                    <div id="disp_unload_date_plan"></div>
+                    <div>利用日数</div>
+                    <div>:</div>
+                    <div id="disp_num_days"></div>
+                </div>
+                <input type="hidden" name="load_date" value="{{old('load_date', $reserve->load_date)}}">
+                <input type="hidden" name="load_time" value="{{old('load_time', $reserve->load_time)}}">
+                <input type="hidden" name="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
+                <input type="hidden" name="unload_time_plan" value="{{old('unload_time_plan', $reserve->unload_time_plan)}}">
+                <input type="hidden" name="num_days" value="{{old('num_days', $reserve->num_days)}}">
+
+                <button type="button" id="open_button" class="c-label__light-deep-gray--lg is-block u-horizontal-auto u-mb1">内訳を表示</button>
+
+                <div class="is-none p-input-user-total-parking-charges__detail" id="toggle_element">
+                    <div class="p-input-user-total-parking-charges__detail-title">
+                        <div>駐車料金明細（税抜）</div>
+                        <div type="button" class="p-input-user-total-parking-charges__detail-close-button" id="close_button"><img src="{{ asset('images/icon/closeButton.svg') }}" width="15" height="15" /></div>
                     </div>
-                    <input type="hidden" name="load_date" value="{{old('load_date', $reserve->load_date)}}">
-                    <input type="hidden" name="load_time" value="{{old('load_time', $reserve->load_time)}}">
-                    <input type="hidden" name="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
-                    <input type="hidden" name="unload_time_plan" value="{{old('unload_time_plan', $reserve->unload_time_plan)}}">
-                    <input type="hidden" name="num_days" value="{{old('num_days', $reserve->num_days)}}">
-
-                    <button type="button" id="open_button" class="c-label__light-deep-gray--lg is-block u-horizontal-auto u-mb1">内訳を表示</button>
-
-                    <div class="is-none p-input-user-total-parking-charges__detail" id="toggle_element">
-                        <div class="p-input-user-total-parking-charges__detail-title">
-                            <div>駐車料金明細（税抜）</div>
-                            <div type="button" class="p-input-user-total-parking-charges__detail-close-button" id="close_button"><img src="{{ asset('images/icon/closeButton.svg') }}" width="15" height="15" /></div>
-                        </div>
-                        <div id="price_rows" class="p-input-user-total-parking-charges__detail-list">
-                            {{-- <div>10/10(水)</div>
-                <div>¥1,000</div>
-                <div>10/11(木)</div>
-                <div>¥1,000</div>
-                <div>10/12(金)</div>
-                <div>¥1,500</div>
-                <div>10/13(土)</div>
-                <div>¥2,000</div>
-                <div>10/14(日)</div>
-                <div>¥2,000</div>
-                <div>10/15(月)</div>
-                <div>¥300</div>  --}}
-                        </div>
-                        <div class="p-input-user-total-parking-charges__detail-total">
-                            <div id="num_days"></div>
-                            <div id="sub_total"></div>
-                        </div>
+                    <div id="price_rows" class="p-input-user-total-parking-charges__detail-list">
+                        {{-- <div>10/10(水)</div>
+            <div>¥1,000</div>
+            <div>10/11(木)</div>
+            <div>¥1,000</div>
+            <div>10/12(金)</div>
+            <div>¥1,500</div>
+            <div>10/13(土)</div>
+            <div>¥2,000</div>
+            <div>10/14(日)</div>
+            <div>¥2,000</div>
+            <div>10/15(月)</div>
+            <div>¥300</div>  --}}
                     </div>
-
-                    <!-- 料金明細 -->
-                    <div class="u-mt3 u-pt3 u-border--top p-input-user-total-parking-charges__detail-total">
-                        <div id="tax_label">消費税(10%)</div>
-                        <div id="tax"></div>
-                        <div>駐車料金(普通)合計</div>
-                        <div id="total"></div>
+                    <div class="p-input-user-total-parking-charges__detail-total">
+                        <div id="num_days"></div>
+                        <div id="sub_total"></div>
                     </div>
+                </div>
 
-                </div><!-- /.p-input-user-total-parking-charges__inner -->
+                <!-- 料金明細 -->
+                <div class="u-mt3 u-pt3 u-border--top p-input-user-total-parking-charges__detail-total">
+                    <div id="tax_label">消費税(10%)</div>
+                    <div id="tax"></div>
+                    <div>駐車料金(普通)合計</div>
+                    <div id="total"></div>
+                </div>
 
-                <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
-            </div><!-- /.p-input-user-total-parking-charges -->
-        </div>
-    </form>
+            </div><!-- /.p-input-user-total-parking-charges__inner -->
+
+            <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
+        </div><!-- /.p-input-user-total-parking-charges -->
+
+</form>
+</div>
 </div>
 
 
