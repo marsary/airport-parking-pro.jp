@@ -41,6 +41,7 @@ class OptionSelectRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        error_log("prepareForValidation\n",3,"../storage/logs/test.log");
         $good_ids = [];
         if(!empty($this->good_ids)) {
             $good_ids = explode(',', $this->good_ids);
