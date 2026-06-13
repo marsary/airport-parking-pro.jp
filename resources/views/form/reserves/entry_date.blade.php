@@ -218,7 +218,7 @@
                 @break
             @endif
             <li class="c-calendar-available-time__detail time_label_cell">
-            <div class="p-reserve-selectedTime__bg time_label_cell" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
+              <div class="p-reserve-selectedTime__bg" data-time="{{ $hour }}:{{ $minute }}">{{ $hour }}:{{ $minute }}～</div>
               <div class="p-reserve-selectedTime__bg c-calendar__available-icon time_vacancy" data-time="{{ $hour }}:{{ $minute }}">
                 {{--
                      - 予約可能画像: <img src="{{ asset('images/svg/calendar_available.svg') }}">
@@ -315,20 +315,6 @@
 <script src="{{ asset('js/pages/form/entry_date.js') }}"></script>
 <!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
-// input, selectのみEnterで次の入力欄に移動。textareaは除外。
-const inputs = document.querySelectorAll('input, select');
-
-inputs.forEach((input, index) => {
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault(); // 改行やSubmitを防止
-      // 次の要素が存在すればフォーカスを移動
-      if (inputs[index + 1]) {
-        inputs[index + 1].focus();
-      }
-    }
-  });
-});
 </script>
 @endpush
 @push('css')
