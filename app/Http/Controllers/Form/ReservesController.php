@@ -10,6 +10,7 @@ use App\Http\Requests\Member\EntryCarRequest;
 use App\Http\Requests\Form\EntryDateRequest;
 use App\Http\Requests\Form\EntryInfoRequest;
 use App\Http\Requests\Form\OptionSelectRequest;
+use App\Mail\DealCreatedAdminMail;
 use App\Mail\DealCreatedThankyouMail;
 use App\Models\Agency;
 use App\Models\Airline;
