@@ -11,7 +11,8 @@ class OptionSelectRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {
+    {error_log("authorize\n",3,"../storage/logs/test.log");
+
         return true;
     }
 
@@ -22,6 +23,7 @@ class OptionSelectRequest extends FormRequest
      */
     public function rules(): array
     {
+        error_log("rules\n",3,"../storage/logs/test.log");
         return [
             'good_ids' => 'nullable|array',
             'good_ids.*' => 'int',
@@ -39,6 +41,7 @@ class OptionSelectRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        error_log("prepareForValidation\n",3,"../storage/logs/test.log");
         $good_ids = [];
         if(!empty($this->good_ids)) {
             $good_ids = explode(',', $this->good_ids);
