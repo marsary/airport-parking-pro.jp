@@ -178,7 +178,12 @@ class ReservesController extends Controller
 
     public function postOptionSelect(OptionSelectRequest $request)
     {
+error_log("postOptionSelect\n",3,"../storage/logs/test.log");
+        error_log(json_encode($request)."\n",3,"../storage/logs/test.log");
         $reserve = $this->getReserveForm();
+error_log("reserve\n",3,"../storage/logs/test.log");
+         error_log(json_encode($reserve)."\n",3,"../storage/logs/test.log");
+       
         $reserve->fill($request->all());
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.confirm');
