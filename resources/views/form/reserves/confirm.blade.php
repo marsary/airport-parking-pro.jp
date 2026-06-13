@@ -11,16 +11,16 @@
     @csrf
     <div class="c-title__table">予約情報</div>
     <table class="l-table-confirm">
-      <tr>
+      {{-- <tr> --}}
         {{-- <th>予約コード</th>
         <td>{{$reserve->reserve_code}}</td>
         <th>受付コード</th>
         <td>1234567890</td> --}}
-        <th>予約日時</th>
-        <td >{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td>
-        <th>予約経路</th>
-        <td colspan="3">{{$agency?->name}}{{--公式HP--}}</td>
-      </tr>
+        {{-- <th>予約日時</th> --}}
+        {{-- <td >{{$reserve->reserve_date->isoFormat('YYYY/M/D(ddd) H:m')}}</td> --}}
+        {{-- <th>予約経路</th> --}}
+        {{-- <td colspan="3">{{$agency?->name}}{{--公式HP--}}{{-- </td> --}}
+      {{-- </tr> --}}
       <tr>
         <th>入庫日時</th>
         <td>{{$reserve->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $reserve->load_time}}</td>
@@ -38,15 +38,15 @@
         {{-- <th>顧客コード</th>
         <td>{{$reserve->member?->member_code}}</td> --}}
         <th>お客様氏名</th>
-        <td>{{$reserve->name}}</td>
+        <td colspan="3">{{$reserve->name}}</td>
         <th>ふりがな</th>
-        <td>{{$reserve->kana}}</td>
-        <th>利用回数</th>
+        <td colspan="3">{{$reserve->kana}}</td>
+        {{-- <th>利用回数</th>
         <td>
           @if (isset($reserve->member?->used_num))
             {{$reserve->member?->used_num}}回
           @endif
-        </td>
+        </td> --}}
       </tr>
       {{-- <tr>
         @for ($i = 0; $i < 4; $i++)
@@ -81,21 +81,21 @@
         <td>{{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}}</td>
         <th>到着便</th>
         <td>{{$arrivalFlight?->flight_no}}{{--NH205--}}</td>
-        <th>航空会社</th>
-        <td>{{$arrivalFlight?->airline->name}}{{--ANA--}}</td>
       </tr>
       <tr>
+        <th>航空会社</th>
+        <td>{{$arrivalFlight?->airline->name}}{{--ANA--}}</td>
         <th>出発空港</th>
         <td>{{$arrivalFlight?->depAirport->name}}{{--LAX--}}</td>
         <th>到着空港</th>
         <td>{{$arrivalFlight?->arrAirport->name}}{{--NRT--}}</td>
-        <th>到着ターミナル</th>
+        {{-- <th>到着ターミナル</th>
         <td>{{$arrivalFlight?->terminal_id}}</td>
         <td colspan="2" class="--mark">
           @if ($reserve->arrival_flg)
             <div class="c-label--lg">到着日とお迎え日が異なる</div>
           @endif
-        </td>
+        </td> --}}
       </tr>
     </table>
 
@@ -104,17 +104,17 @@
     <table class="l-table-confirm">
       <tr>
         <th>メーカー</th>
-        <td>{{$carMaker->name}}</td>
+        <td colspan="2">{{$carMaker->name}}</td>
         <th>車種</th>
-        <td>{{$car->name}}</td>
-        <th>車番</th>
-        <td>{{$reserve->car_number}}</td>
+        <td colspan="2">{{$car->name}}</td>
       </tr>
       <tr>
+        <th>車番</th>
+        <td>{{$reserve->car_number}}</td>
         <th>色</th>
         <td>{{$carColor->name}}</td>
-        <th>区分</th>
-        <td>{{$car->size_label}}</td>
+        {{-- <th>区分</th>
+        <td>{{$car->size_label}}</td> --}}
         <th>人数</th>
         <td>{{$reserve->num_members ?? 1}}名</td>
         {{-- <th>車両取扱</th>

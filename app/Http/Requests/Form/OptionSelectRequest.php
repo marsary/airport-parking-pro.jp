@@ -11,8 +11,7 @@ class OptionSelectRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {error_log("authorize\n",3,"../storage/logs/test.log");
-
+    {
         return true;
     }
 
@@ -23,7 +22,6 @@ class OptionSelectRequest extends FormRequest
      */
     public function rules(): array
     {
-        error_log("rules\n",3,"../storage/logs/test.log");
         return [
             'good_ids' => 'nullable|array',
             'good_ids.*' => 'int',
