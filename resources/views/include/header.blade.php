@@ -5,7 +5,7 @@
   <!-- logo -->
   <div class="l-header-logo">
     <div class="l-header-logo__inner">
-      <img src="{{ asset('images/svg/logo.svg') }}" width="100%" alt="logo">
+      <img src="{{ asset('images/logo/logo.png') }}" width="100%" alt="logo">
       <p class="u-font--medium u-font--14">{{$office->name}}</p>
       <p class="l-header-logo--right">
         （事業再構築　R2128E00068000）

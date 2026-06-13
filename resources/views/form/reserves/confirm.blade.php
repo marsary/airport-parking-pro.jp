@@ -204,7 +204,22 @@
 
 @endsection
 @push("scripts")
+<!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
+// input, selectのみEnterで次の入力欄に移動。textareaは除外。
+const inputs = document.querySelectorAll('input, select');
+
+inputs.forEach((input, index) => {
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // 改行やSubmitを防止
+      // 次の要素が存在すればフォーカスを移動
+      if (inputs[index + 1]) {
+        inputs[index + 1].focus();
+      }
+    }
+  });
+});
 </script>
 @endpush
 @push('css')

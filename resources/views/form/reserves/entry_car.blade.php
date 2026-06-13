@@ -12,7 +12,7 @@
     <!-- 詳細情報入力 -->
     <div class="p-user-input-auto-output__wrap l-flex--item-end">
       <!-- 入力エリア -->
-      <div class="l-grid--col2-auto l-grid--cgap2">
+      <div class="l-grid--col2-auto l-grid--gap2 l-flex--column--md">
         <div>
           <label for="car_maker_id">メーカー</label>
           <!-- 車メーカーのselect -->
@@ -91,7 +91,7 @@
           <label for="arrive_date">到着日</label>
           <input type="hidden" id="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
           <input type="date" id="arrive_date" name="arrive_date" class="u-w-full-wide u-mb025" value="{{old('arrive_date', $reserve->arrive_date ?  $reserve->arrive_date->format('Y-m-d'): $reserve->unload_date_plan?->format('Y-m-d'))}}">
-          <p class="text-center arrival_flg hidden">到着日がお迎え日と異なる</p>
+          <p class="c-label--lg arrival_flg hidden">到着日がお迎え日と異なる</p>
         </div>
         <div>
           <label for="num_members">ご利用人数</label>
@@ -131,7 +131,22 @@
 <script src="{{ asset('js/select2.min.js') }}"></script>
 <script src="{{ asset('js/ja.js') }}"></script>
 <script src="{{ asset('js/pages/member/entry_car.js') }}"></script>
+<!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
+// input, selectのみEnterで次の入力欄に移動。textareaは除外。
+const inputs = document.querySelectorAll('input, select');
+
+inputs.forEach((input, index) => {
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // 改行やSubmitを防止
+      // 次の要素が存在すればフォーカスを移動
+      if (inputs[index + 1]) {
+        inputs[index + 1].focus();
+      }
+    }
+  });
+});
 </script>
 @endpush
 @push('css')

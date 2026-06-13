@@ -10,25 +10,27 @@
   <form action="{{route('form.reserves.post_entry_info')}}" method="POST">
     @csrf
     <!-- 基本情報 -->
-    <div class="l-flex l-grid--gap1">
+    <div class="l-flex l-grid--gap1 l-flex--column--md l-flex--items-start--md">
       <div class="u-w-full-wide">
         <label for="name">氏名※（入力例：成田　太郎）　間にスペースを入れてください。</label>
         <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}">
       </div>
-      <div>
+      <div class="u-w-full-wide">
         <label for="kana">ふりがな※（入力例：なりた　たろう）　間にスペースを入れてください。</label>
         <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}">
       </div>
     </div>
 
-    <div class="u-w-full-wide">
+    <div class="u-w-half">
       <label for="tel">携帯番号※</label>
       <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}">
     </div>
 
     <!-- 郵便番号・メールアドレス・領収書の名前・備考 -->
-    <label for="zip">郵便番号</label>
-    <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}">
+    <div class="u-w-half">
+      <label for="zip">郵便番号</label>
+      <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}">
+    </div>
 
     <div class="l-grid--col2 l-grid--gap1 l-flex--column--md">
       <div>
@@ -54,7 +56,22 @@
 
 @endsection
 @push("scripts")
+<!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
+// input, selectのみEnterで次の入力欄に移動。textareaは除外。
+const inputs = document.querySelectorAll('input, select');
+
+inputs.forEach((input, index) => {
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // 改行やSubmitを防止
+      // 次の要素が存在すればフォーカスを移動
+      if (inputs[index + 1]) {
+        inputs[index + 1].focus();
+      }
+    }
+  });
+});
 </script>
 @endpush
 @push('css')
