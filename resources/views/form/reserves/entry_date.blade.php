@@ -479,7 +479,7 @@
 
     /* 選択された日付・時間 */
     td.day_selected,
-    .time_selected {
+    .time_selected .p-reserve-selectedTime__bg:not(.time_vacancy) {
         border-color: rgb(0, 95, 204) !important;
         background-color: rgb(2, 117, 255)!important;
         font-weight: bold;

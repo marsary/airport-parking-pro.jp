@@ -11,7 +11,7 @@
       <!-- お客様選択予約　ラジオボタン -->
       <!-- 旅行保険への加入検討有無 -->
       <div class="p-user-input-optionSelect__wrap">
-        <p class="">万が一の時にも安心、安全な旅行保険への加入を<br />ご希望されていますか？</p>
+        <p>万が一の時にも安心、安全な旅行保険への加入を<br />ご希望されていますか？</p>
         <div class="p-user-input-optionSelect__radio">
           <label for="insurance_yes">
             <input type="radio" id="insurance_yes" name="insurance" value="yes" class="c-button__radio--input" required>希望する
