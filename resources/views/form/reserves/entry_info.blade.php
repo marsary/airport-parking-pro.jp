@@ -58,17 +58,30 @@
 @push("scripts")
 <!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
-// input, selectのみEnterで次の入力欄に移動。textareaは除外。
-const inputs = document.querySelectorAll('input, select');
-
-inputs.forEach((input, index) => {
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault(); // 改行やSubmitを防止
-      // 次の要素が存在すればフォーカスを移動
-      if (inputs[index + 1]) {
-        inputs[index + 1].focus();
+document.querySelectorAll('input').forEach(function(input) {
+  // input, selectのみEnterで次の入力欄に移動。textareaは除外。
+  const inputs = document.querySelectorAll('input, select');
+  input.addEventListener('keydown', function(event) {
+    // Enterキーが押された時の処理
+    if (event.key === 'Enter') {
+      // 【追加】日本語の変換中（確定のEnter）なら処理を抜ける
+      if (event.isComposing || event.keyCode === 229) {
+        return;
       }
+
+      event.preventDefault(); // フォームの誤送信を防ぐ場合
+
+      inputs.forEach((input, index) => {
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault(); // 改行やSubmitを防止
+            // 次の要素が存在すればフォーカスを移動
+            if (inputs[index + 1]) {
+              inputs[index + 1].focus();
+            }
+          }
+        });
+      });        
     }
   });
 });
