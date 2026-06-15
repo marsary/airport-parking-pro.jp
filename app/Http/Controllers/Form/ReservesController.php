@@ -21,7 +21,6 @@ use App\Models\Deal;
 use App\Models\Good;
 use App\Models\GoodCategory;
 use App\Models\Member;
-use App\Models\MemberCar;
 use App\Services\LabelTagManager;
 use App\Services\Member\ReserveService;
 use App\Services\PriceTable;
@@ -150,7 +149,7 @@ class ReservesController extends Controller
         $reserve->fill($request->all());
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
-        $reserve->visit_date_plan = $reserve->unload_date_plan;
+        // $reserve->visit_date_plan = $reserve->unload_date_plan;
 
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.option_select');
