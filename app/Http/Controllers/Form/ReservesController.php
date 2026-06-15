@@ -9,6 +9,8 @@ use App\Http\Controllers\Member\Forms\ReserveForm;
 use App\Http\Requests\Member\EntryCarRequest;
 use App\Http\Requests\Form\EntryDateRequest;
 use App\Http\Requests\Form\EntryInfoRequest;
+use App\Http\Requests\Form\OptionSelectRequest;
+use App\Mail\DealCreatedAdminMail;
 use App\Mail\DealCreatedThankyouMail;
 use App\Models\Agency;
 use App\Models\Airline;
@@ -177,7 +179,12 @@ class ReservesController extends Controller
 
     public function postOptionSelect(OptionSelectRequest $request)
     {
+error_log("postOptionSelect\n",3,"../storage/logs/test.log");
+        error_log(json_encode($request)."\n",3,"../storage/logs/test.log");
         $reserve = $this->getReserveForm();
+error_log("reserve\n",3,"../storage/logs/test.log");
+         error_log(json_encode($reserve)."\n",3,"../storage/logs/test.log");
+       
         $reserve->fill($request->all());
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.confirm');

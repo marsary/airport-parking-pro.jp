@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="p-user-input-header">
-  <h1 class="p-user-input-header__title">受付終了</h1>
+  <h1 class="p-user-input-header__title">入力完了</h1>
 </div>
 
 
@@ -30,7 +30,7 @@
     window.close(); // 画面を閉じる
     // もし画面が閉じられない場合は、トップページにリダイレクトする
     setTimeout(function() {
-      location.href = '/'; // または任意のURL
+      location.href = 'https://www.sunparking.co.jp/'; // または任意のURL
     }, 100);
   }
 </script>

@@ -2,8 +2,16 @@
     display: none;
 }
 .select2-container--default, .select2-container--default .select2-selection--single, .select2-selection__rendered {
-    height: 40px;
-    line-height: 40px !important;
+    height: auto;
+    line-height: 38px !important; /* 修正 */
+}
+/* 追加 */
+.select2-search--dropdown .select2-search__field {
+    padding: 4px 8px;
+    line-height: 32px;
+    margin-bottom: 0.25rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 .select2-container--default .select2-selection--single {
     border-top-right-radius: 0;

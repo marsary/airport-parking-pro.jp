@@ -12,7 +12,7 @@
     <!-- 詳細情報入力 -->
     <div class="p-user-input-auto-output__wrap l-flex--item-end">
       <!-- 入力エリア -->
-      <div class="l-grid--col2-auto l-grid--cgap2">
+      <div class="l-grid--col2-auto l-grid--gap2 l-flex--column--md">
         <div>
           <label for="car_maker_id">メーカー</label>
           <!-- 車メーカーのselect -->
@@ -138,6 +138,33 @@
 <script src="{{ asset('js/ja.js') }}"></script>
 <script src="{{ asset('js/pages/form/entry_car.js') }}"></script>
 <script>
+document.querySelectorAll('input').forEach(function(input) {
+  // input, selectのみEnterで次の入力欄に移動。textareaは除外。
+  const inputs = document.querySelectorAll('input, select');
+  input.addEventListener('keydown', function(event) {
+    // Enterキーが押された時の処理
+    if (event.key === 'Enter') {
+      // 【追加】日本語の変換中（確定のEnter）なら処理を抜ける
+      if (event.isComposing || event.keyCode === 229) {
+        return;
+      }
+
+      event.preventDefault(); // フォームの誤送信を防ぐ場合
+
+      inputs.forEach((input, index) => {
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault(); // 改行やSubmitを防止
+            // 次の要素が存在すればフォーカスを移動
+            if (inputs[index + 1]) {
+              inputs[index + 1].focus();
+            }
+          }
+        });
+      });
+    }
+  });
+});
 </script>
 @endpush
 @push('css')
