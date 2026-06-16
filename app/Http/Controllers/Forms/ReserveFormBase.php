@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 
 class ReserveFormBase extends StdObject
 {
-    public $registerMember;
+    public ?bool $registerMember = null;
 
     /** @var Member */
     public $member;
@@ -153,7 +153,7 @@ class ReserveFormBase extends StdObject
         ]);
     }
 
-    public function setMember(Member $member = null)
+    public function setMember(?Member $member = null)
     {
         if($member === null) {
             return;
@@ -169,7 +169,7 @@ class ReserveFormBase extends StdObject
             ->first();
 
         if($memberCar) {
-            $this->car_maker_id = $memberCar->car->carMaker->id;
+            $this->car_maker_id = $memberCar->car?->carMaker->id;
             $this->car_id = $memberCar->car_id;
             $this->car_color_id = $memberCar->car_color_id;
             $this->car_number = $memberCar->number;
