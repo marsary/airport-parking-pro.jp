@@ -7,18 +7,39 @@
 <div class="p-user-input__inner--sm">
   <form action="{{route('form.reserves.option_select')}}" method="POST">
     @csrf
-    <div class="p-user-input-auto-output__wrap u-mb3 u-pb3" style="display: block;width: 100%;padding: 10px;margin-bottom: 20px;">
-      <!-- お客様選択予約　ラジオボタン -->
-      <!-- 旅行保険への加入検討有無 -->
-      <div class="p-user-input-optionSelect__wrap">
-        <p>万が一の時にも安心、安全な旅行保険への加入を<br />ご希望されていますか？</p>
-        <div class="p-user-input-optionSelect__radio">
-          <label for="insurance_yes">
-            <input type="radio" id="insurance_yes" name="insurance" value="yes" class="c-button__radio--input" required>希望する
-          </label>
-          <label for="insurance_no">
-            <input type="radio" id="insurance_no" name="insurance" value="no" class="c-button__radio--input" required>希望しない
-          </label>
+    <div class="p-user-input-auto-output__wrap u-mb3 u-pb3 u-border--bottom-green" style="display: block;width: 100%;padding: 10px;margin-bottom: 20px;">
+    <!-- お客様選択予約　ラジオボタン -->
+    <!-- 旅行保険への加入検討有無 -->
+    <div class="p-user-input-optionSelect__wrap">
+      <p class="">万が一の時にも安心、安全な旅行保険への加入を検討していますか？</p>
+      <div class="p-user-input-optionSelect__radio">
+        <label for="insurance_yes">
+          <input type="radio" id="insurance_yes" name="insurance" value="1" class="c-button__radio--input" {{ old('insurance', $reserve->insurance) == 1 ? 'checked' : '' }}>加入する
+        </label>
+        <label for="insurance_no">
+          <input type="radio" id="insurance_no" name="insurance" value="0" class="c-button__radio--input" {{ old('insurance', $reserve->insurance) == 0 ? 'checked' : '' }}>加入しない
+        </label>
+      </div>
+    </div>
+    <div class="p-user-input-optionSelect__wrap u-mb0">
+      <!-- 当店自慢の洗車希望有無 -->
+      <p class="">当店自慢の洗車をご希望されていますか？</p>
+      <div class="p-user-input-optionSelect__radio">
+        <label for="carwash_yes">
+          <input type="radio" id="carwash_yes" name="carwash" value="1" class="c-button__radio--input" {{ old('carwash', $reserve->carwash) == 1 ? 'checked' : '' }}>検討する
+        </label>
+        <label for="carwash_no">
+          <input type="radio" id="carwash_no" name="carwash" value="0" class="c-button__radio--input" {{ old('carwash', $reserve->carwash) == 0 ? 'checked' : '' }}>検討しない
+        </label>
+      </div>
+    </div>
+
+    {{-- <div class="p-user-input-auto-output__wrap u-mb4">
+      <div class="l-flex--start l-flex--item-end l-grid--gap05">
+        <div>
+          <label for="coupon_code">割引クーポン</label>
+          <!-- クーポン -->
+          <input type="text" id="coupon_code" name="coupon_code" class="u-mb0" value="{{old('coupon_code', $reserve->coupon_code)}}">
         </div>
       </div>
       <div class="p-user-input-optionSelect__wrap u-mb0">
@@ -75,174 +96,7 @@
 
 @endsection
 @push("scripts")
-{{--  <script src="../js/modalOption.js"></script>  --}}
-{{--  <script src="{{ asset('js/removeButton.js') }}"></script>  --}}
 <script>
-  const goodsMap = @js($goodsMap);
-  let goodIds = @js($reserve->good_ids);
-  let couponIds = @js($reserve->coupon_ids);
-  const couponsMap = @js($couponsMap);
-  let checkedOptionList = null;
-  let couponInfoElem = null;
-  let goodIdsElem = null;
-  let couponIdsElem = null;
-  let couponCodeElem = null;
-  function openOptionModal(modalId) {
-    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
-    modalAreaOption.classList.add('is-active');
-  }
-  function closeOptionModal(modalId) {
-    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
-    modalAreaOption.classList.remove('is-active');
-  }
-
-
-  function updateOptionList()
-  {
-    removeAllChildNodes(checkedOptionList)
-    goodIds.forEach((goodId) => {
-      const good = goodsMap[goodId];
-      const div = document.createElement('div')
-      const img = document.createElement('img')
-      const span = document.createElement('span')
-      div.classList.add("button__remove","item-container", "remove_good")
-      // div.value = good.id
-      img.src = "{{ asset('images/icon/removeButton.svg') }}"
-      img.width = 16
-      img.height = 16
-      img.classList.add("button_remove")
-      img.value = goodId;
-      img.addEventListener('click', function() {
-        removeOption(img);
-      });
-
-      span.textContent = good?.name + formatCurrency(good?.price, ' ¥');
-      div.appendChild(img)
-      div.appendChild(span)
-      checkedOptionList.appendChild(div)
-    })
-
-    goodIdsElem.value = goodIds.join(',')
-  }
-
-  function updateCouponList() {
-    removeAllChildNodes(couponInfoElem)
-
-    couponIds.forEach((couponId) => {
-      const coupon = couponsMap[couponId];
-      const div = document.createElement('div')
-      const img = document.createElement('img')
-      const span = document.createElement('span')
-      div.classList.add("c-button__remove", "remove_coupon","item-container")
-      img.src = "{{ asset('images/icon/removeButton.svg') }}"
-      img.width = 16
-      img.height = 16
-      img.classList.add("coupon_remove")
-      img.value = couponId
-      img.addEventListener('click', function() {
-        removeCoupon(img);
-      });
-      span.textContent = coupon.name;
-      div.appendChild(img)
-      div.appendChild(span)
-      couponInfoElem.appendChild(div)
-    });
-    couponIdsElem.value = couponIds.join(',')
-
-  }
-
-  function addRemoveList(list, addingList, removingList = [])
-  {
-    list = Array.from(new Set([...list, ...addingList]));
-    return list.filter(x => !removingList.includes(x));
-  }
-
-  function addOptions(modalId) {
-    const modalAreaOption = document.getElementById('modalAreaOption' + modalId);
-    const checkBoxList = modalAreaOption.querySelectorAll('input[type="checkbox"]');
-
-    let addingIds = [];
-    let removingIds = [];
-    // オプション選択項目を更新する。
-    checkBoxList.forEach((checkbox) => {
-      const goodId = checkbox.value;
-      if(checkbox.checked) {
-        addingIds.push(goodId);
-      } else {
-        removingIds.push(goodId);
-      }
-    });
-
-    goodIds = addRemoveList(goodIds, addingIds, removingIds);
-    updateOptionList()
-  }
-
-  function addCoupon() {
-    const couponCode = couponCodeElem.value
-    if(couponCode == '') return;
-
-    const couponId = Object.keys(couponsMap).find((couponId) => couponsMap[couponId]?.code == couponCode);
-
-    if(couponId) {
-      couponIds = addRemoveList(couponIds, [couponId]);
-      updateCouponList()
-
-    } else {
-      alert("このクーポンコードは登録されていません！");
-      couponCodeElem.value = ''
-    }
-  }
-
-  function removeOption(btnElem) {
-    const removingId = btnElem.value
-    goodIds = addRemoveList(goodIds, [], [removingId]);
-    updateOptionList()
-
-    const parent = btnElem.closest('.item-container');
-    if (parent) {
-      parent.remove();
-    }
-    document.getElementById('modal_good_ids_' + removingId).checked = false;
-  }
-
-  function removeCoupon(btnElem) {
-    const removingId = btnElem.value
-    couponIds = addRemoveList(couponIds, [], [removingId]);
-    updateCouponList()
-
-    couponCodeElem.value = '';
-    const parent = btnElem.closest('.item-container');
-    if (parent) {
-      parent.remove();
-    }
-  }
-
-  window.addEventListener('DOMContentLoaded', function() {
-    checkedOptionList = document.getElementById('checked-option-list');
-    goodIdsElem = document.getElementById('good_ids');
-    couponIdsElem = document.getElementById('coupon_ids');
-    couponCodeElem = document.getElementById('coupon_code');
-    const couponCodeBtnElem = document.getElementById('coupon_code_btn');
-    couponInfoElem = document.getElementById('selected-coupon-info');
-    const removeCouponBtnElems = Array.from(document.getElementsByClassName('coupon_remove'));
-    const removeGoodBtnElems = Array.from(document.getElementsByClassName('button_remove'));
-
-    couponCodeBtnElem.addEventListener('click', function() {
-      addCoupon();
-    });
-
-    removeCouponBtnElems.forEach((btnElem) => btnElem.addEventListener('click', function() {
-      removeCoupon(btnElem);
-    }))
-
-    removeGoodBtnElems.forEach((btnElem) => btnElem.addEventListener('click', function() {
-      removeOption(btnElem);
-    }))
-
-    // 初期表示
-    updateOptionList()
-    updateCouponList()
-  })
 </script>
 <!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
@@ -269,7 +123,7 @@ document.querySelectorAll('input').forEach(function(input) {
             }
           }
         });
-      });        
+      });
     }
   });
 });
