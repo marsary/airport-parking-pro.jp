@@ -40,13 +40,13 @@
         <th>お客様氏名</th>
         <td colspan="3">{{$reserve->name}}</td>
         <th>ふりがな</th>
-        <td colspan="3">{{$reserve->kana}}</td>
-        {{-- <th>利用回数</th>
+        <td>{{$reserve->kana}}</td>
+        {{--  <th>利用回数</th>
         <td>
           @if (isset($reserve->member?->used_num))
             {{$reserve->member?->used_num}}回
           @endif
-        </td> --}}
+        </td>  --}}
       </tr>
       {{-- <tr>
         @for ($i = 0; $i < 4; $i++)
@@ -81,6 +81,7 @@
         <td>{{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}}</td>
         <th>到着便</th>
         <td>{{$arrivalFlight?->flight_no}}{{--NH205--}}</td>
+        <td colsan="2"></td>
       </tr>
       <tr>
         <th>航空会社</th>
@@ -89,13 +90,13 @@
         <td>{{$arrivalFlight?->depAirport->name}}{{--LAX--}}</td>
         <th>到着空港</th>
         <td>{{$arrivalFlight?->arrAirport->name}}{{--NRT--}}</td>
-        {{-- <th>到着ターミナル</th>
-        <td>{{$arrivalFlight?->terminal_id}}</td>
+        {{--  <th>到着ターミナル</th>
+        <td>{{$arrivalFlight?->terminal_id}}</td>  --}}
         <td colspan="2" class="--mark">
           @if ($reserve->arrival_flg)
             <div class="c-label--lg">到着日とお迎え日が異なる</div>
           @endif
-        </td> --}}
+        </td>
       </tr>
     </table>
 
@@ -106,17 +107,17 @@
         <th>メーカー</th>
         <td colspan="2">{{$carMaker->name}}</td>
         <th>車種</th>
-        <td colspan="2">{{$car->name}}</td>
+        <td colspan="2">{{$car?->name}}</td>
       </tr>
       <tr>
         <th>車番</th>
         <td>{{$reserve->car_number}}</td>
         <th>色</th>
-        <td>{{$carColor->name}}</td>
-        {{-- <th>区分</th>
-        <td>{{$car->size_label}}</td> --}}
+        <td>{{$carColor?->name}}</td>
+        {{--  <th>区分</th>
+        <td>{{$car->size_label}}</td>  --}}
         <th>人数</th>
-        <td>{{$reserve->num_members ?? 1}}名</td>
+        <td colspan="3">{{$reserve->num_members ?? 1}}名</td>
         {{-- <th>車両取扱</th>
         <td colspan="3">{{$reserve->carCautions}}</td> --}}
       </tr>
@@ -195,7 +196,7 @@
 
     <!--  -->
     <div class="c-button-group__form u-mt3">
-    <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.option_select')}}';" class="c-button__pagination--return">前のページに戻る</button>  
+    <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.option_select')}}';" class="c-button__pagination--return">前のページに戻る</button>
       <button type="submit" class="c-button__pagination--next">予約を完了する</button>
     </div>
   </form>
@@ -229,7 +230,7 @@ document.querySelectorAll('input').forEach(function(input) {
             }
           }
         });
-      });        
+      });
     }
   });
 });
