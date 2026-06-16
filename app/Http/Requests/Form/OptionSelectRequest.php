@@ -23,53 +23,16 @@ class OptionSelectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'good_ids' => 'nullable|array',
-            'good_ids.*' => 'int',
-            'modal_good_ids' => 'nullable|array',
-            'modal_good_ids.*' => 'int',
-            'good_nums' => 'nullable|array',
-            'good_nums.*' => 'int',
-            'modal_good_nums' => 'nullable|array',
-            'modal_good_nums.*' => 'int',
-            'coupon_ids' => 'nullable|array',
-            'coupon_ids.*' => 'int',
-            // 'coupon_code' => 'nullable|max:255'
+            'insurance' => 'required|in:1,0',
+            'carwash' => 'required|in:1,0',
         ];
-    }
-
-    protected function prepareForValidation()
-    {
-        error_log("prepareForValidation\n",3,"../storage/logs/test.log");
-        $good_ids = [];
-        if(!empty($this->good_ids)) {
-            $good_ids = explode(',', $this->good_ids);
-        }
-        $this->merge([
-            'good_ids' => $good_ids,
-        ]);
-        $good_nums = [];
-        if(!empty($this->good_nums)) {
-            $good_nums = json_decode($this->good_nums, true);
-        }
-        $this->merge([
-            'good_nums' => $good_nums,
-        ]);
-        $coupon_ids = [];
-        if(!empty($this->coupon_ids)) {
-            $coupon_ids = explode(',', $this->coupon_ids);
-        }
-        $this->merge([
-            'coupon_ids' => $coupon_ids,
-        ]);
     }
 
     public function attributes()
     {
         return [
-            'good_ids' => 'オプション選択',
-            'good_nums' => 'オプション数量',
-            'coupon_ids' => 'クーポン選択',
-            // 'coupon_code' => 'クーポンコード',
+            'insurance' => '旅行保険への加入',
+            'carwash' => '洗車希望',
         ];
     }
 }
