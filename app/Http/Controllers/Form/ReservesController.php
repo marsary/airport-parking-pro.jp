@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Form;
 // use App\Exceptions\ResetLinkSentException;
 // use App\Http\Controllers\Auth\Traits\NewPassword;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Member\Forms\ReserveForm;
+use App\Http\Controllers\Form\Forms\ReserveForm;
+use App\Http\Requests\Form\OptionSelectRequest;
 use App\Http\Requests\Member\EntryCarRequest;
 use App\Http\Requests\Form\EntryDateRequest;
 use App\Http\Requests\Form\EntryInfoRequest;
-use App\Http\Requests\Form\OptionSelectRequest;
 use App\Mail\DealCreatedAdminMail;
 use App\Mail\DealCreatedThankyouMail;
 use App\Models\Agency;
@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 // use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Validator;
+// use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Mailer\Exception\TransportException;
 
 class ReservesController extends Controller
@@ -161,19 +161,19 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
 
-        $goodCategories = GoodCategory::with('goods')->get();
-        $goods = Good::all();
-        $goodsMap = getKeyMapCollection($goods);
-        $coupons = Coupon::whereDate('start_date','<=', $reserve->load_date->toDateString())
-            ->whereDate('end_date','>', $reserve->load_date->toDateString())
-            ->get();
-        $couponsMap = getKeyMapCollection($coupons);
+        // $goodCategories = GoodCategory::with('goods')->get();
+        // $goods = Good::all();
+        // $goodsMap = getKeyMapCollection($goods);
+        // $coupons = Coupon::whereDate('start_date','<=', $reserve->load_date->toDateString())
+        //     ->whereDate('end_date','>', $reserve->load_date->toDateString())
+        //     ->get();
+        // $couponsMap = getKeyMapCollection($coupons);
 
         return view('form.reserves.option_select', [
             'reserve' => $reserve,
-            'goodCategories' => $goodCategories,
-            'goodsMap' => $goodsMap,
-            'couponsMap' => $couponsMap,
+            // 'goodCategories' => $goodCategories,
+            // 'goodsMap' => $goodsMap,
+            // 'couponsMap' => $couponsMap,
         ]);
     }
 
@@ -184,8 +184,9 @@ error_log("postOptionSelect\n",3,"../storage/logs/test.log");
         $reserve = $this->getReserveForm();
 error_log("reserve\n",3,"../storage/logs/test.log");
          error_log(json_encode($reserve)."\n",3,"../storage/logs/test.log");
-       
+
         $reserve->fill($request->all());
+        $reserve->setRemarkForOptionSelect();
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.confirm');
     }
@@ -226,6 +227,8 @@ error_log("reserve\n",3,"../storage/logs/test.log");
             $reserve = new ReserveForm();
             $member = Auth::guard('members')->user();
             $reserve->setMember($member);
+            // 会員情報は登録・更新する
+            $reserve->registerMember = true;
         } elseif (!$reserve->member && Auth::guard('members')->check()) {
             $member = Auth::guard('members')->user();
             $reserve->setMember($member);
