@@ -10,6 +10,8 @@ class MemberType extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const MEMBER_TYPE_NEW = 1;
+
     /**
      * The attributes that are mass assignable.
      *
