@@ -112,7 +112,7 @@ class ReserveService
         foreach ($this->reserve->car_caution_ids as $idx => $carCautionId) {
             CarCautionMemberCar::create([
                 'office_id' => config('const.commons.office_id'),
-                'member_id' => $this->reserve->member_id,
+                'member_id' => $this->reserve->member?->id,
                 'member_car_id' => $this->reserve->member_car_id,
                 'car_caution_id' => $carCautionId,
                 'sort' => $idx
@@ -123,7 +123,7 @@ class ReserveService
     private function createDeal()
     {
         $this->deal = Deal::create([
-            'member_id' => $this->reserve->member_id,
+            'member_id' => $this->reserve->member?->id,
             'office_id' => $this->reserve->office_id,
             'agency_id' => $this->reserve->agency_id,
             'status' => $this->reserve->status,
