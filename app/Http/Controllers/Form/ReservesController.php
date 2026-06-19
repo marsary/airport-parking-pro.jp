@@ -12,6 +12,7 @@ use App\Http\Requests\Form\EntryDateRequest;
 use App\Http\Requests\Form\EntryInfoRequest;
 use App\Mail\DealCreatedAdminMail;
 use App\Mail\DealCreatedThankyouMail;
+use App\Mail\DealCreatedWebAdminMail;
 use App\Models\Agency;
 use App\Models\Airline;
 use App\Models\ArrivalFlight;
@@ -24,7 +25,7 @@ use App\Models\Good;
 use App\Models\GoodCategory;
 use App\Models\Member;
 use App\Services\LabelTagManager;
-use App\Services\Member\ReserveService;
+use App\Services\Form\ReserveService;
 use App\Services\PriceTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -244,7 +245,7 @@ error_log("reserve\n",3,"../storage/logs/test.log");
     {
         $reserve = $this->getReserveForm();
         $service = new ReserveService($reserve);
-        $status = null;
+        // $status = null;
         try {
             DB::transaction(function () use($reserve, $service, &$status){
                 $service->store();
@@ -256,14 +257,14 @@ error_log("reserve\n",3,"../storage/logs/test.log");
                 //     }
                 // }
                 // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
-                Mail::to(myOffice()->email)->send(new DealCreatedAdminMail($service->deal));
+                Mail::to(myOffice()->email)->send(new DealCreatedWebAdminMail($service->deal));
                 // if(!$reserve->registerMember) {
                     Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
                 // }
             });
-        } catch (ResetLinkSentException $th) {
-            Log::error('エラー内容：' . $th->getMessage());
-            return redirect()->back()->with('failure', 'パスワード設定するメールの送信に失敗しました。正しいメールを入力してください。');
+        // } catch (ResetLinkSentException $th) {
+        //     Log::error('エラー内容：' . $th->getMessage());
+        //     return redirect()->back()->with('failure', 'パスワード設定するメールの送信に失敗しました。正しいメールを入力してください。');
         } catch (TransportException $th) {
             Log::error('エラー内容：' . $th->getMessage());
             return redirect()->back()->with('failure', '予約完了メールの送信に失敗しました。正しいメールを入力してください。');
