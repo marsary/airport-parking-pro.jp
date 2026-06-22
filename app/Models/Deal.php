@@ -55,6 +55,8 @@ class Deal extends Model
         'tax_free',
         'dep_flight_id',
         'arr_flight_id',
+        'flight_no',
+        'airline_id',
         'member_car_id',
         'receipt_address',
         'reserve_memo',
