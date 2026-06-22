@@ -163,6 +163,8 @@ class ReserveService
             'total_tax' => $this->reserve->total_tax,
             'tax_free' => 0,
             'arr_flight_id' => $this->reserve->arr_flight_id,
+            'flight_no' => $this->reserve->flight_no,
+            'airline_id' => $this->reserve->airline_id,
             'member_car_id' => $this->reserve->member_car_id,
             'receipt_address' => null,
             'reserve_memo' => null,
