@@ -80,12 +80,12 @@
         <th>到着予定時間</th>
         <td>{{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}}</td>
         <th>到着便</th>
-        <td>{{$arrivalFlight?->flight_no}}{{--NH205--}}</td>
+        <td>{{$arrivalFlight?->flight_no ?? $reserve->flight_no}}{{--NH205--}}</td>
         <td colsan="2"></td>
       </tr>
       <tr>
         <th>航空会社</th>
-        <td>{{$arrivalFlight?->airline->name}}{{--ANA--}}</td>
+        <td>{{$arrivalFlight?->airline->name ?? $airline->name}}{{--ANA--}}</td>
         <th>出発空港</th>
         <td>{{$arrivalFlight?->depAirport->name}}{{--LAX--}}</td>
         <th>到着空港</th>
@@ -105,7 +105,7 @@
     <table class="l-table-confirm">
       <tr>
         <th>メーカー</th>
-        <td colspan="2">{{$carMaker->name}}</td>
+        <td colspan="2">{{$carMaker?->name}}</td>
         <th>車種</th>
         <td colspan="2">{{$car?->name}}</td>
       </tr>
