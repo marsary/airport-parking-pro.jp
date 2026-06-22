@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Http\Requests\Form;
+
+use App\Rules\FlightNoDateRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class EntryCarRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'car_maker_id' => 'nullable',
+            'car_id' => 'nullable|exists:cars,id',
+            'car_color_id' => 'nullable|exists:car_colors,id',
+            'car_number' => 'nullable|numeric|digits_between:1,4',
+            'airline_id' => 'required_with:flight_no|nullable',
+            'flight_no' => 'nullable', // ['nullable', new FlightNoDateRule],
+            'arrive_date' => 'nullable|date',
+            'num_members' => 'nullable|numeric',
+        ];
+    }
+
+
+    public function attributes()
+    {
+        return [
+            'car_maker_id' => 'メーカー',
+            'car_id' => '車種',
+            'car_color_id' => '色',
+            'car_number' => 'ナンバー',
+            'airline_id' => '到着便航空会社',
+            'flight_no' => '到着便',
+            'arrive_date' => '到着日',
+            'num_members' => 'ご利用人数',
+        ];
+    }
+}
