@@ -13,6 +13,8 @@
         </div>
 
         <!-- カレンダー選択 -->
+        <input type="hidden" id="reservable_start_date" value="{{ config('const.commons.reservable_start_date') }}">
+        <input type="hidden" id="reserve_cal_month_periods" value="{{config('const.commons.reserve_cal_month_periods')}}">
         <div class="p-reserve__wrap">
             <p class="text-center u-mb2 u-font--medium u-font--lg">入庫日を指定してください</p>
             <!-- ここから追加 -->
@@ -34,7 +36,7 @@
             </div>
         </div>
 
-        <div class="p-reserve__wrap">
+        <div class="p-reserve__wrap" id="unload_date_section">
             <p class="text-center u-mb2  u-font--medium u-font--lg">出庫日を指定してください</p>
             <!-- ここから追加 -->
             <div class="l-flex--end u-mt1 u-mb1 u-font--sm u-font--medium">
@@ -55,7 +57,7 @@
             </div>
         </div>
 
-        <div class="p-reserve__wrap">
+        <div class="p-reserve__wrap" id="load_time_section_wrap">
             <p class="text-center u-mb2 u-font--medium u-font--lg">入庫予定時間を指定してください</p>
             <!-- ここから追加 -->
             <div class="l-flex--end u-mt1 u-mb1 u-font--sm u-font--medium">
@@ -234,77 +236,74 @@
 </div>
   <!-- 変更ここまで 2025/6/23 -->
 
-        <div class="l-grid--col3 l-grid--gap2" id="load_time_section"></div>
-
+            <div class="l-grid--col3 l-grid--gap2" id="load_time_section"></div>
         <div class="p-input-user-total-parking-charges">
-            <!-- 駐車料金合計 -->
-            <div class="u-border--all u-border--radius u-pt2 u-pb2">
-                <p class="u-font--24 text-center u-font--medium">駐車料金合計</p>
-                <div class="p-input-user-total-parking-charges__inner">
-                    <div class="p-input-user-total-parking-charges__head">
-                        <div>入庫日</div>
-                        <div>:</div>
-                        <div id="disp_load_date"></div>
-                        <div>入庫時間</div>
-                        <div>:</div>
-                        <div id="disp_load_time"></div>
-                        <div>出庫日</div>
-                        <div>:</div>
-                        <div id="disp_unload_date_plan"></div>
-                        <div>利用日数</div>
-                        <div>:</div>
-                        <div id="disp_num_days"></div>
+        <!-- 駐車料金合計 -->
+        <div class="u-border--all u-border--radius u-pt2 u-pb2">
+            <p class="u-font--24 text-center u-font--medium">駐車料金合計</p>
+            <div class="p-input-user-total-parking-charges__inner">
+                <div class="p-input-user-total-parking-charges__head">
+                    <div>入庫日</div>
+                    <div>:</div>
+                    <div id="disp_load_date"></div>
+                    <div>入庫時間</div>
+                    <div>:</div>
+                    <div id="disp_load_time"></div>
+                    <div>出庫日</div>
+                    <div>:</div>
+                    <div id="disp_unload_date_plan"></div>
+                    <div>利用日数</div>
+                    <div>:</div>
+                    <div id="disp_num_days"></div>
+                </div>
+                <input type="hidden" name="load_date" value="{{old('load_date', $reserve->load_date)}}">
+                <input type="hidden" name="load_time" value="{{old('load_time', $reserve->load_time)}}">
+                <input type="hidden" name="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
+                <input type="hidden" name="unload_time_plan" value="{{old('unload_time_plan', $reserve->unload_time_plan)}}">
+                <input type="hidden" name="num_days" value="{{old('num_days', $reserve->num_days)}}">
+
+                <button type="button" id="open_button" class="c-label__light-deep-gray--lg is-block u-horizontal-auto u-mb1">内訳を表示</button>
+
+                <div class="is-none p-input-user-total-parking-charges__detail" id="toggle_element">
+                    <div class="p-input-user-total-parking-charges__detail-title">
+                        <div>駐車料金明細（税抜）</div>
+                        <div type="button" class="p-input-user-total-parking-charges__detail-close-button" id="close_button"><img src="{{ asset('images/icon/closeButton.svg') }}" width="15" height="15" /></div>
                     </div>
-                    <input type="hidden" name="load_date" value="{{old('load_date', $reserve->load_date)}}">
-                    <input type="hidden" name="load_time" value="{{old('load_time', $reserve->load_time)}}">
-                    <input type="hidden" name="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
-                    <input type="hidden" name="unload_time_plan" value="{{old('unload_time_plan', $reserve->unload_time_plan)}}">
-                    <input type="hidden" name="num_days" value="{{old('num_days', $reserve->num_days)}}">
-
-                    <button type="button" id="open_button" class="c-label__light-deep-gray--lg is-block u-horizontal-auto u-mb1">内訳を表示</button>
-
-                    <div class="is-none p-input-user-total-parking-charges__detail" id="toggle_element">
-                        <div class="p-input-user-total-parking-charges__detail-title">
-                            <div>駐車料金明細（税抜）</div>
-                            <div type="button" class="p-input-user-total-parking-charges__detail-close-button" id="close_button"><img src="{{ asset('images/icon/closeButton.svg') }}" width="15" height="15" /></div>
-                        </div>
-                        <div id="price_rows" class="p-input-user-total-parking-charges__detail-list">
-                            {{-- <div>10/10(水)</div>
-                                <div>¥1,000</div>
-                                <div>10/11(木)</div>
-                                <div>¥1,000</div>
-                                <div>10/12(金)</div>
-                                <div>¥1,500</div>
-                                <div>10/13(土)</div>
-                                <div>¥2,000</div>
-                                <div>10/14(日)</div>
-                                <div>¥2,000</div>
-                                <div>10/15(月)</div>
-                                <div>¥300</div>  --}}
-                        </div>
-                        <div class="p-input-user-total-parking-charges__detail-total">
-                            <div id="num_days"></div>
-                            <div id="sub_total"></div>
-                        </div>
+                    <div id="price_rows" class="p-input-user-total-parking-charges__detail-list">
+                        {{-- <div>10/10(水)</div>
+            <div>¥1,000</div>
+            <div>10/11(木)</div>
+            <div>¥1,000</div>
+            <div>10/12(金)</div>
+            <div>¥1,500</div>
+            <div>10/13(土)</div>
+            <div>¥2,000</div>
+            <div>10/14(日)</div>
+            <div>¥2,000</div>
+            <div>10/15(月)</div>
+            <div>¥300</div>  --}}
                     </div>
-
-                    <!-- 料金明細 -->
-                    <div class="u-mt3 u-pt3 u-border--top p-input-user-total-parking-charges__detail-total">
-                        <div id="tax_label">消費税(10%)</div>
-                        <div id="tax"></div>
-                        <div>駐車料金合計</div>
-                        <div id="total"></div>
+                    <div class="p-input-user-total-parking-charges__detail-total">
+                        <div id="num_days"></div>
+                        <div id="sub_total"></div>
                     </div>
+                </div>
 
-                </div><!-- /.p-input-user-total-parking-charges__inner -->
+                <!-- 料金明細 -->
+                <div class="u-mt3 u-pt3 u-border--top p-input-user-total-parking-charges__detail-total">
+                    <div id="tax_label">消費税(10%)</div>
+                    <div id="tax"></div>
+                    <div>駐車料金(普通)合計</div>
+                    <div id="total"></div>
+                </div>
 
-                <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
-            </div><!-- /.p-input-user-total-parking-charges -->
-        </div>
+            </div><!-- /.p-input-user-total-parking-charges__inner -->
+
+            <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
+        </div><!-- /.p-input-user-total-parking-charges -->
+</div>
 </form>
 </div>
-
-
 </div>
 
 
@@ -313,7 +312,7 @@
 <!-- 表示非表示ボタン -->
 <script src="{{ asset('js/close_button_toggle.js') }}"></script>
 <script src="{{ asset('js/index.global.min.js') }}"></script>
-<script src="{{ asset('js/commons/entry_date.js') }}"></script>
+<script src="{{ asset('js/pages/form/entry_date.js') }}"></script>
 <script>
 </script>
 @endpush
@@ -480,7 +479,7 @@
 
     /* 選択された日付・時間 */
     td.day_selected,
-    .time_selected {
+    .time_selected .p-reserve-selectedTime__bg:not(.time_vacancy) {
         border-color: rgb(0, 95, 204) !important;
         background-color: rgb(2, 117, 255)!important;
         font-weight: bold;
