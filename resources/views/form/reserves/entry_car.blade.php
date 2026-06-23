@@ -18,6 +18,7 @@
           <!-- 車メーカーのselect -->
           <div class="c-form-select-color">
             <select name="car_maker_id" id="car_maker_id">
+              <option value="">選択してください</option>
               @foreach ($carMakers as $carMaker)
                 <option value="{{ $carMaker->id }}"
                   {{old('car_maker_id', $reserve->car_maker_id)==$carMaker->id ? 'selected':''}}>
