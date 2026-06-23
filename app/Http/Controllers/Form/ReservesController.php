@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\Form;
 
-// use App\Exceptions\ResetLinkSentException;
-// use App\Http\Controllers\Auth\Traits\NewPassword;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Form\Forms\ReserveForm;
 use App\Http\Requests\Form\OptionSelectRequest;
-use App\Http\Requests\Member\EntryCarRequest;
+use App\Http\Requests\Form\EntryCarRequest;
 use App\Http\Requests\Form\EntryDateRequest;
 use App\Http\Requests\Form\EntryInfoRequest;
-use App\Mail\DealCreatedAdminMail;
 use App\Mail\DealCreatedThankyouMail;
 use App\Mail\DealCreatedWebAdminMail;
 use App\Models\Agency;
@@ -19,10 +16,7 @@ use App\Models\ArrivalFlight;
 use App\Models\Car;
 use App\Models\CarColor;
 use App\Models\CarMaker;
-use App\Models\Coupon;
 use App\Models\Deal;
-use App\Models\Good;
-use App\Models\GoodCategory;
 use App\Models\Member;
 use App\Services\LabelTagManager;
 use App\Services\Form\ReserveService;
@@ -32,13 +26,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-// use Illuminate\Support\Facades\Password;
-// use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Mailer\Exception\TransportException;
 
 class ReservesController extends Controller
 {
-    // use NewPassword;
 
     /**
      * Display a listing of the resource.
@@ -50,10 +41,6 @@ class ReservesController extends Controller
     public function entryDate(Request $request)
     {
         $reserve = $this->getReserveForm();
-        // if($request->has('register_user')) {
-        //     $reserve->registerMember = (bool) $request->input('register_user');
-        //     session()->put('reserve', $reserve);
-        // }
 
         return view('form.reserves.entry_date', [
             'reserve' => $reserve,
@@ -73,19 +60,12 @@ class ReservesController extends Controller
         ]);
         session()->put('reserve', $reserve);
 
-        // if(!Auth::guard('members')->check() && $reserve->registerMember === null) {
-        //     return redirect()->route('form.login');
-        // }
         return redirect()->route('form.reserves.entry_info');
     }
 
     public function entryInfo(Request $request)
     {
         $reserve = $this->getReserveForm();
-        // if($request->has('register_user')) {
-        //     $reserve->registerMember = (bool) $request->input('register_user');
-        //     session()->put('reserve', $reserve);
-        // }
 
         return view('form.reserves.entry_info', [
             'reserve' => $reserve
@@ -99,11 +79,6 @@ class ReservesController extends Controller
 
         $memberExists = Member::where('email', $request->email)->exists();
 
-        // if(!Auth::guard('members')->check() && $memberExists) {
-        //     $validator = Validator::make($request->all(), []);
-        //     $validator->errors()->add('email', 'そのEmailアドレスはすでに登録済みです。');
-        //     return back()->withInput()->withErrors($validator);
-        // }
         if($memberExists && !$reserve->member) {
             $member = Member::where('email', $request->email)->first();
             $reserve->setMember($member);
@@ -146,13 +121,12 @@ class ReservesController extends Controller
                 ->where('flight_no', $request->flight_no)
                 ->where('arrive_date', $request->arrive_date)
                 ->first();
-            $reserve->arr_flight_id = $arrivalFlight->id;
+            $reserve->arr_flight_id = $arrivalFlight?->id;
         }
 
         $reserve->fill($request->all());
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
-        // $reserve->visit_date_plan = $reserve->unload_date_plan;
 
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.option_select');
@@ -162,29 +136,18 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
 
-        // $goodCategories = GoodCategory::with('goods')->get();
-        // $goods = Good::all();
-        // $goodsMap = getKeyMapCollection($goods);
-        // $coupons = Coupon::whereDate('start_date','<=', $reserve->load_date->toDateString())
-        //     ->whereDate('end_date','>', $reserve->load_date->toDateString())
-        //     ->get();
-        // $couponsMap = getKeyMapCollection($coupons);
-
         return view('form.reserves.option_select', [
             'reserve' => $reserve,
-            // 'goodCategories' => $goodCategories,
-            // 'goodsMap' => $goodsMap,
-            // 'couponsMap' => $couponsMap,
         ]);
     }
 
     public function postOptionSelect(OptionSelectRequest $request)
     {
-error_log("postOptionSelect\n",3,"../storage/logs/test.log");
-        error_log(json_encode($request)."\n",3,"../storage/logs/test.log");
+// error_log("postOptionSelect\n",3,"../storage/logs/test.log");
+        // error_log(json_encode($request)."\n",3,"../storage/logs/test.log");
         $reserve = $this->getReserveForm();
-error_log("reserve\n",3,"../storage/logs/test.log");
-         error_log(json_encode($reserve)."\n",3,"../storage/logs/test.log");
+// error_log("reserve\n",3,"../storage/logs/test.log");
+//          error_log(json_encode($reserve)."\n",3,"../storage/logs/test.log");
 
         $reserve->fill($request->all());
         $reserve->setRemarkForOptionSelect();
@@ -213,6 +176,7 @@ error_log("reserve\n",3,"../storage/logs/test.log");
         return view('form.reserves.confirm', [
             'reserve' => $reserve,
             'arrivalFlight' => $arrivalFlight,
+            'airline' => $reserve->airline_id ? Airline::find($reserve->airline_id): null,
             'carMaker' => $carMaker,
             'car' => $car,
             'carColor' => $carColor,
@@ -245,26 +209,17 @@ error_log("reserve\n",3,"../storage/logs/test.log");
     {
         $reserve = $this->getReserveForm();
         $service = new ReserveService($reserve);
-        // $status = null;
         try {
-            DB::transaction(function () use($reserve, $service, &$status){
+            DB::transaction(function () use($service){
                 $service->store();
                 // 現状SOCにデータを送る場合は、パスワード設定は行わない
-                // if($service->reserve->registerMember) { // 登録後にパスワード設定するメールを送信
-                //     $status = $this->sendPasswordResetLink($service->deal->email, 'members.complete', true);
-                //     if($status != Password::RESET_LINK_SENT) {
-                //         throw new ResetLinkSentException();
-                //     }
-                // }
                 // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
                 Mail::to(myOffice()->email)->send(new DealCreatedWebAdminMail($service->deal));
-                // if(!$reserve->registerMember) {
-                    Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
-                // }
+
+                Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
+
             });
-        // } catch (ResetLinkSentException $th) {
-        //     Log::error('エラー内容：' . $th->getMessage());
-        //     return redirect()->back()->with('failure', 'パスワード設定するメールの送信に失敗しました。正しいメールを入力してください。');
+
         } catch (TransportException $th) {
             Log::error('エラー内容：' . $th->getMessage());
             return redirect()->back()->with('failure', '予約完了メールの送信に失敗しました。正しいメールを入力してください。');
@@ -272,7 +227,6 @@ error_log("reserve\n",3,"../storage/logs/test.log");
             Log::error('エラー内容：' . $th->getMessage());
             return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
         }
-        //
         session()->forget('reserve');
 
         return redirect(route('form.reserves.complete', ['code' => (string) $service->deal->reserve_code]));
