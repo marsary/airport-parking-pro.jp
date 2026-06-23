@@ -181,6 +181,99 @@ class ReservesController extends Controller
         return redirect()->route('form.reserves.confirm');
     }
 
+    // TODO: デザイン確認用プレビュー（本番前に削除）
+    public function optionSelectPreview()
+    {
+        $reserve = new \App\Http\Controllers\Member\Forms\ReserveForm();
+        $reserve->load_date        = \Carbon\Carbon::now()->addDays(3);
+        $reserve->unload_date_plan = \Carbon\Carbon::now()->addDays(10);
+        $reserve->price            = 7000;
+        $reserve->good_ids         = [];
+        $reserve->coupon_ids       = [];
+        $reserve->coupon_code      = null;
+
+        $goods = Good::all();
+        $goodsMap = getKeyMapCollection($goods);
+
+        $coupons = Coupon::all();
+        $couponsMap = getKeyMapCollection($coupons);
+
+        return view('form.reserves.option_select', [
+            'reserve'     => $reserve,
+            'goodsMap'    => $goodsMap,
+            'couponsMap'  => $couponsMap,
+        ]);
+    }
+
+    // TODO: デザイン確認用プレビュー（本番前に削除）
+    public function confirmPreview()
+    {
+        $reserve = new \App\Http\Controllers\Member\Forms\ReserveForm();
+        $reserve->name             = '山田 太郎';
+        $reserve->kana             = 'やまだ たろう';
+        $reserve->zip              = '123-4567';
+        $reserve->tel              = '090-1234-5678';
+        $reserve->email            = 'sample@example.com';
+        $reserve->reserve_date     = \Carbon\Carbon::now();
+        $reserve->load_date        = \Carbon\Carbon::now()->addDays(3);
+        $reserve->load_time        = '10:00';
+        $reserve->unload_date_plan = \Carbon\Carbon::now()->addDays(10);
+        $reserve->arrive_date      = \Carbon\Carbon::now()->addDays(10);
+        $reserve->num_days         = 7;
+        $reserve->num_members      = 2;
+        $reserve->arrival_flg      = false;
+        $reserve->car_number       = '品川 330 あ 12-34';
+        $reserve->remarks          = 'サンプル備考欄';
+        $reserve->price            = 7000;
+        $reserve->tax              = 700;
+
+        // 利用回数（会員情報）
+        $mockMember = new \stdClass();
+        $mockMember->used_num = 3;
+        $reserve->member = $mockMember;
+
+        $reserve->handleGoodsAndTotals();
+
+        $carMaker = CarMaker::first() ?? (object)['name' => 'トヨタ'];
+        $car      = Car::first()     ?? (object)['name' => 'プリウス', 'size_label' => '普通車'];
+        $carColor = CarColor::first() ?? (object)['name' => 'ホワイト'];
+
+        // 予約経路
+        $agency = Agency::first() ?? (object)['name' => '公式HP'];
+
+        // 到着便情報
+        $arrivalFlight = ArrivalFlight::with('airline', 'depAirport', 'arrAirport')->first();
+        if (!$arrivalFlight) {
+            $arrivalFlight = (object)[
+                'arrive_time' => '14:30:00',
+                'flight_no'   => 'NH205',
+                'airline'     => (object)['name' => 'ANA'],
+                'depAirport'  => (object)['name' => 'ロサンゼルス（LAX）'],
+                'arrAirport'  => (object)['name' => '成田（NRT）'],
+                'terminal_id' => 1,
+            ];
+        }
+
+        return view('form.reserves.confirm', [
+            'reserve'       => $reserve,
+            'arrivalFlight' => $arrivalFlight,
+            'carMaker'      => $carMaker,
+            'car'           => $car,
+            'carColor'      => $carColor,
+            'agency'        => $agency,
+        ]);
+    }
+
+    // TODO: デザイン確認用プレビュー（本番前に削除）
+    public function completePreview()
+    {
+        return view('form.reserves.complete', [
+            'reserveCode' => 'PREVIEW-00001',
+            'deal'        => null,
+            'reserve'     => null,
+        ]);
+    }
+
     public function confirm()
     {
         $reserve = $this->getReserveForm();

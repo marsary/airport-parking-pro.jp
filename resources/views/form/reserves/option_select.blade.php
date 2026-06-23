@@ -7,17 +7,17 @@
 <div class="p-user-input__inner--sm">
   <form action="{{route('form.reserves.option_select')}}" method="POST">
     @csrf
-    <div class="p-user-input-auto-output__wrap u-mb3 u-pb3 u-border--bottom-green" style="display: block;width: 100%;padding: 10px;margin-bottom: 20px;">
+    <div class="p-user-input-auto-output__wrap u-mb3 u-pb3" style="display: block;width: 100%;padding: 10px;margin-bottom: 20px;">
     <!-- お客様選択予約　ラジオボタン -->
     <!-- 旅行保険への加入検討有無 -->
     <div class="p-user-input-optionSelect__wrap">
-      <p class="">万が一の時にも安心、安全な旅行保険への加入を検討していますか？</p>
+      <p>万が一の時にも安心、安全な旅行保険への加入を<br />ご希望されていますか？</p>
       <div class="p-user-input-optionSelect__radio">
         <label for="insurance_yes">
-          <input type="radio" id="insurance_yes" name="insurance" value="yes" class="c-button__radio--input">加入する
+          <input type="radio" id="insurance_yes" name="insurance" value="yes" class="c-button__radio--input" required>加入する
         </label>
         <label for="insurance_no">
-          <input type="radio" id="insurance_no" name="insurance" value="no" class="c-button__radio--input" checked>加入しない
+          <input type="radio" id="insurance_no" name="insurance" value="no" class="c-button__radio--input" required>加入しない
         </label>
       </div>
     </div>
@@ -26,10 +26,10 @@
       <p class="">当店自慢の洗車をご希望されていますか？</p>
       <div class="p-user-input-optionSelect__radio">
         <label for="carwash_yes">
-          <input type="radio" id="carwash_yes" name="carwash" value="yes" class="c-button__radio--input">検討する
+          <input type="radio" id="carwash_yes" name="carwash" value="yes" class="c-button__radio--input" required>検討する
         </label>
         <label for="carwash_no">
-          <input type="radio" id="carwash_no" name="carwash" value="no" class="c-button__radio--input" checked>検討しない
+          <input type="radio" id="carwash_no" name="carwash" value="no" class="c-button__radio--input" required>検討しない
         </label>
       </div>
     </div>
@@ -66,6 +66,7 @@
       <button type="submit" class="c-button__pagination--next">内容確認へ進む</button>
       {{-- <button type="button" class="c-button__pagination--next">事前決済に進む</button> --}}
       {{-- <img src="{{ asset('images/card_5brand.png') }}" height="16"> --}}
+    </div>
     </div>
   </form>
 </div>

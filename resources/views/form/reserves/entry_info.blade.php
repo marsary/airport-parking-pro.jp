@@ -10,25 +10,27 @@
   <form action="{{route('form.reserves.post_entry_info')}}" method="POST">
     @csrf
     <!-- 基本情報 -->
-    <div class="l-flex l-grid--gap1">
+    <div class="l-flex l-grid--gap1 l-flex--column--md l-flex--items-start--md">
       <div class="u-w-full-wide">
-        <label for="name">氏名※</label>
-        <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}">
+        <label for="name">氏名※<br class="is-none--md" /><span class="u-font--sm">（間にスペースを入れて下さい。例:成田　太郎）</span></label>
+        <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}" placeholder="成田　太郎">
       </div>
-      <div>
-        <label for="kana">ふりがな※</label>
-        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}">
+      <div class="u-w-full-wide">
+        <label for="kana">ふりがな※<br class="is-none--md" /><span class="u-font--sm">（間にスペースを入れて下さい。例:なりた　たろう）</span></label>
+        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}" placeholder="なりた　たろう">
       </div>
     </div>
 
-    <div class="u-w-full-wide">
+    <div class="u-w-half">
       <label for="tel">携帯番号※</label>
       <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}">
     </div>
 
     <!-- 郵便番号・メールアドレス・領収書の名前・備考 -->
-    <label for="zip">郵便番号</label>
-    <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}">
+    <div class="u-w-half">
+      <label for="zip">郵便番号</label>
+      <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}">
+    </div>
 
     <div class="l-grid--col2 l-grid--gap1 l-flex--column--md">
       <div>

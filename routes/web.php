@@ -112,6 +112,10 @@ Route::prefix('form')->name('form.')->group(function () {
     Route::post('reserves/entry_car', [\App\Http\Controllers\Form\ReservesController::class, 'postEntryCar'])->name('reserves.post_entry_car');
     Route::post('reserves/option_select', [\App\Http\Controllers\Form\ReservesController::class, 'postOptionSelect'])->name('reserves.post_option_select');
     Route::get('reserves/confirm', [\App\Http\Controllers\Form\ReservesController::class, 'confirm'])->name('reserves.confirm');
+    // TODO: デザイン確認用プレビュー（本番前に削除）
+    Route::get('reserves/option_select_preview', [\App\Http\Controllers\Form\ReservesController::class, 'optionSelectPreview'])->name('reserves.option_select_preview');
+    Route::get('reserves/confirm_preview', [\App\Http\Controllers\Form\ReservesController::class, 'confirmPreview'])->name('reserves.confirm_preview');
+    Route::get('reserves/complete_preview', [\App\Http\Controllers\Form\ReservesController::class, 'completePreview'])->name('reserves.complete_preview');
     Route::get('reserves/complete', [\App\Http\Controllers\Form\ReservesController::class, 'complete'])->name('reserves.complete');
     Route::resource('reserves', \App\Http\Controllers\Form\ReservesController::class);
 
@@ -160,3 +164,6 @@ require __DIR__.'/auth.php';
 require __DIR__.'/manage_auth.php';
 require __DIR__.'/member_auth.php';
 require __DIR__.'/form_auth.php';
+
+// TODO: デザイン確認用プレビュー（本番前に削除）
+Route::get('preview/error-500', fn() => view('errors.500'))->name('preview.error_500');

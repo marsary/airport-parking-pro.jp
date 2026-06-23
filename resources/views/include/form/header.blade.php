@@ -1,14 +1,14 @@
 <header class="l-header-user">
   <div class="l-header-user__left">
-    <img src="{{ asset('images/svg/logo.svg') }}" width="100%" alt="logo">
+    <img src="{{ asset('images/logo/logo.png') }}" width="100%" alt="logo">
     <p class="is-none--sm u-font--medium u-font--14 text-center">サンパーキング成田店</p>
   </div>
 
   <!-- 予約情報 -->
   <h1 class="l-header-userReservation__title">受付入力</h1>
-  @if ($reserve)
+  @if (isset($reserve) && $reserve)
     <div class="l-header-userReservation__info">
-      <div>利用日：{{$reserve->load_date?->isoFormat('YYYY/MM/DD(ddd)')}}〜{{$reserve->unload_date_plan?->isoFormat('YYYY/MM/DD(ddd)')}}</div>
+      <div>利用期間（利用日数）：{{$reserve->load_date?->isoFormat('YYYY/MM/DD(ddd)')}}〜{{$reserve->unload_date_plan?->isoFormat('YYYY/MM/DD(ddd)')}}</div>
       <div>利用料金：{{number_format($reserve->price)}}円</div>
     </div>
   @endif

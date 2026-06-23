@@ -104,17 +104,17 @@
     <table class="l-table-confirm">
       <tr>
         <th>メーカー</th>
-        <td>{{$carMaker->name}}</td>
+        <td>{{$carMaker?->name}}</td>
         <th>車種</th>
-        <td>{{$car->name}}</td>
+        <td>{{$car?->name}}</td>
         <th>車番</th>
         <td>{{$reserve->car_number}}</td>
       </tr>
       <tr>
         <th>色</th>
-        <td>{{$carColor->name}}</td>
+        <td>{{$carColor?->name}}</td>
         <th>区分</th>
-        <td>{{$car->size_label}}</td>
+        <td>{{$car?->size_label}}</td>
         <th>人数</th>
         <td>{{$reserve->num_members ?? 1}}名</td>
         {{-- <th>車両取扱</th>

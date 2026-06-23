@@ -3,7 +3,7 @@
 }
 .select2-container--default, .select2-container--default .select2-selection--single, .select2-selection__rendered {
     height: auto;
-    line-height: 40px !important;
+    line-height: 38px !important;
 }
 .select2-container--default .select2-selection--single {
     border-top-right-radius: 0;
@@ -14,4 +14,11 @@
 }
 .select2-container--default .select2-search--inline .select2-search__field {
     line-height: 1;
+}
+.select2-search--dropdown .select2-search__field {
+    padding: 4px 8px;
+    line-height: 32px;
+    margin-bottom: 0.25rem;
+    width: 100%;
+    box-sizing: border-box;
 }

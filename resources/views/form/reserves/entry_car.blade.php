@@ -12,7 +12,7 @@
     <!-- 詳細情報入力 -->
     <div class="p-user-input-auto-output__wrap l-flex--item-end">
       <!-- 入力エリア -->
-      <div class="l-grid--col2-auto l-grid--cgap2">
+      <div class="l-grid--col2-auto l-grid--gap2 l-flex--column--md">
         <div>
           <label for="car_maker_id">メーカー</label>
           <!-- 車メーカーのselect -->

@@ -2,7 +2,7 @@
   <div class="l-footer-user__inner">
     <div>
       <figure class="l-footer-user__logo">
-        <img src="{{ asset('images/svg/logo.svg') }}" width="100%" alt="logo">
+        <img src="{{ asset('images/logo/logo.png') }}" width="100%" alt="logo">
       </figure>
       株式会社サン・ポート<br>
       〒286-0121 千葉県成田市駒井野 134<br>

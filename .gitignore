@@ -19,3 +19,13 @@ yarn-error.log
 /.idea
 /.vscode
 /stubs
+
+# 三登追加
+docker-compose.override.yml
+docker-compose.yml
+Dockerfile
+docker/
+.dockerignore
+/public/scss
+gulpfile.js
+.claude/
