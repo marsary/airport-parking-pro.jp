@@ -11,6 +11,7 @@ use App\Enums\Cms\SocSalesType;
 use App\Enums\Cms\SocTaxType;
 use App\Enums\DealStatus;
 use App\Enums\TaxType;
+use App\Models\Airline;
 use App\Models\Deal;
 use Carbon\Carbon;
 use ErrorException;
@@ -177,19 +178,19 @@ class SyncDealRecord
         $couponDetail = $this->getAppliedCoupon();
 
         $soc_member_flg = 0;
-        if(isset($this->deal->member->soc_member_flg)) {
+        if(isset($this->deal->member?->soc_member_flg)) {
             $soc_member_flg = $this->deal->member->soc_member_flg;
         }
         $soc_member_id = 0;
-        if(isset($this->deal->member->soc_member_id)) {
+        if(isset($this->deal->member?->soc_member_id)) {
             $soc_member_id = $this->deal->member->soc_member_id;
         }
-        $address1 = 0;
-        if(isset($this->deal->member->address1)) {
+        $address1 = '';
+        if(isset($this->deal->member?->address1)) {
             $address1 = $this->deal->member->address1;
         }
-        $address2 = 0;
-        if(isset($this->deal->member->address2)) {
+        $address2 = '';
+        if(isset($this->deal->member?->address2)) {
             $address2 = $this->deal->member->address2;
         }
 
@@ -221,14 +222,14 @@ class SyncDealRecord
             'load_time' => $this->formatTime($this->deal->load_time), // 入庫時間
             'unload_date_plan' => $this->formatDate($this->deal->unload_date_plan), // 出庫予定日
             'unload_time_plan' => $this->formatTime($this->deal->unload_time_plan), // 出庫予定時間
-            'flt_corp_id' => $this->deal->arrivalFlight?->airline->code, // 航空会社コード
-            'flt_id' => $this->deal->arrivalFlight?->flight_no, // 便名
+            'flt_corp_id' => $this->getFlightCorpId($this->deal), // 航空会社コード
+            'flt_id' => $this->deal->arrivalFlight?->flight_no ?? $this->deal->flight_no, // 便名
             'flt_dpt_id' => $this->deal->arrivalFlight?->depAirport->code, // 出発地ID
             'car_id' => $this->car_id, // 車種ID
-            'car_number' => $this->deal->memberCar->number, // 車番（下4桁）
+            'car_number' => $this->deal->memberCar?->number, // 車番（下4桁）
             'car_col_id' => $this->car_col_id, // 色ID
             'user_num' => $this->deal->num_members, // 利用人数
-            'lsize_flg' => $this->deal->memberCar->car->size_type == CarSize::LARGE->value, // Lサイズフラグ
+            'lsize_flg' => $this->deal->memberCar?->car?->size_type == CarSize::LARGE->value, // Lサイズフラグ
             'dsc_rate' => $this->deal->dsc_rate, // 割引率
             'dt_id' => $this->dt_id, // 割引券ID
             'dt_price' => $couponDetail? $this->calcCouponPriceWithTax($couponDetail->total_price) : null, // 割引券による割引額（税込み）
@@ -294,5 +295,18 @@ class SyncDealRecord
     {
         // クーポンは常に10％消費税
         return roundTax(TaxType::TEN_PERCENT->rate() * $price) + $price;
+    }
+
+
+    private function getFlightCorpId(Deal $deal)
+    {
+        if(isset($deal->arrivalFlight?->airline)) {
+            return $deal->arrivalFlight->airline->code;
+        }
+        if(isset($deal->airline_id)) {
+            $airline = Airline::find($deal->airline_id);
+            return $airline?->code;
+        }
+        return null;
     }
 }
