@@ -2,10 +2,14 @@
 namespace App\Services\Soc;
 
 use App\Enums\Cms\SocMemberFlg;
+use App\Enums\GeneralStatus;
 use App\Models\Deal;
+use App\Models\Member;
+use App\Models\MemberType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class AfterSyncService
 {
@@ -67,11 +71,12 @@ class AfterSyncService
         }
 
         if($sanitized['soc_member_id'] || $sanitized['soc_member_flg']) {
-            $member= $deal->member;
+            // TODO 要確認：会員登録せずに予約した場合は、新規会員を作成しても良いか？
+            $member= $this->getOrNewMember($deal);
             if($sanitized['soc_member_id'] && $member) {
                 $member->soc_member_id = $sanitized['soc_member_id'];
             }
-            if($sanitized['soc_member_flg']) {
+            if($sanitized['soc_member_flg'] && $member) {
                 $member->soc_member_flg = $sanitized['soc_member_flg'];
             }
             $member->save();
@@ -100,5 +105,46 @@ class AfterSyncService
             'soc_member_flg' => $memberFlg,
         ];
 
+    }
+
+    protected function getOrNewMember(Deal $deal)
+    {
+        if($deal->member) {
+            return $deal->member;
+        }
+
+        // 会員情報新規作成
+        $member = Member::create([
+            'office_id' => config('const.commons.office_id'),
+            'status' => GeneralStatus::Enabled->value,
+            'member_code' => Str::ulid(),
+            'soc_member_id' => null,
+            'soc_member_flg' => false,
+            'member_type_id' => MemberType::MEMBER_TYPE_NEW,
+            'name' => $deal->name ?? '',
+            'kana' => $deal->kana,
+            'en_name' => null,
+            'zip' => $deal->zip,
+            'address1' => null,
+            'address2' => null,
+            'tel' => $deal->tel,
+            'email' => $deal->email,
+            'line_id' => null,
+            'line_account' => null,
+            'line_email' => null,
+            'image_url' => null,
+            'password' => null,
+            'remember_token' => null,
+            'used_num' => 1,
+            'memo' => null,
+            'created_by' => null,
+            'updated_by' => null,
+        ]);
+
+        $deal->fill([
+            'member_id' => $member->id,
+        ])->save();
+
+        return $member;
     }
 }
