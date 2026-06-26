@@ -33,7 +33,7 @@
           </div>
         </div>
         <div>
-          <label for="car_id">車種</label>
+          <label for="car_id">車種<span class="c-label--required">※必須</span></label>
           <div class="c-form-select-color">
             <select id="car_id" name="car_id">
               @if (!empty(old('car_id', $reserve->car_id)))
@@ -51,7 +51,7 @@
           </div>
         </div>
         <div>
-          <label for="car_color_id">色</label>
+          <label for="car_color_id">色<span class="c-label--required">※必須</span></label>
           <div class="c-form-select-color">
             <select id="car_color_id" name="car_color_id">
               <option value="選択してください" disabled>選択してください</option>
@@ -65,7 +65,7 @@
           </div>
         </div>
         <div>
-          <label for="car_number">ナンバー（※4桁の数字）</label>
+          <label for="car_number">ナンバー（※4桁の数字）<span class="c-label--required">※必須</span></label>
           <input type="text" id="car_number" name="car_number" maxlength="4" minlength="4" class="u-w-full-wide" value="{{old('car_number', $reserve->car_number)}}">
         </div>
         <div>

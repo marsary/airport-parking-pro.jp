@@ -12,29 +12,29 @@
     <!-- 基本情報 -->
     <div class="l-flex l-grid--gap1 l-flex--column--md l-flex--items-start--md">
       <div class="u-w-full-wide">
-        <label for="name">氏名※<br class="is-none--md" /><span class="u-font--sm">（間にスペースを入れて下さい。例:成田　太郎）</span></label>
-        <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}" placeholder="成田　太郎">
+        <label for="name">氏名<span class="c-label--required">※必須</span><br class="is-none--md" /><span class="u-font--sm">（間にスペースを入れて下さい。例:成田　太郎）</span></label><label for="name"></label>
+        <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}">
       </div>
       <div class="u-w-full-wide">
-        <label for="kana">ふりがな※<br class="is-none--md" /><span class="u-font--sm">（間にスペースを入れて下さい。例:なりた　たろう）</span></label>
-        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}" placeholder="なりた　たろう">
+        <label for="kana">ふりがな<span class="c-label--required">※必須</span><br class="is-none--md" /><span class="u-font--sm">（間にスペースを入れて下さい。例:なりた　たろう）</span></label>
+        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}">
       </div>
     </div>
 
     <div class="u-w-half">
-      <label for="tel">携帯番号※</label>
-      <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}">
+      <label for="tel">携帯番号<span class="c-label--required">※必須</span></label>
+      <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}" placeholder="090-1234-5678">
     </div>
 
     <!-- 郵便番号・メールアドレス・領収書の名前・備考 -->
     <div class="u-w-half">
-      <label for="zip">郵便番号</label>
-      <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}">
+      <label for="zip">郵便番号（ハイフンなし）</label>
+      <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}" placeholder="1110000" pattern="\d{7}" title="郵便番号は7桁の数字で入力してください。">
     </div>
 
     <div class="l-grid--col2 l-grid--gap1 l-flex--column--md">
       <div>
-        <label for="email">メールアドレス※</label>
+        <label for="email">メールアドレス<span class="c-label--required">※必須</span></label>
         <input type="email" id="email" name="email" class="u-w-full-wide" value="{{old('email', $reserve->email)}}">
       </div>
       {{-- <div>
@@ -43,11 +43,11 @@
       </div> --}}
     </div>
 
-    <label for="note">備考</label>
+    <label for="note">備考※領収書の宛名が必要な場合はこちらに記入ください</label>
     <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">
-      <button type="button" class="c-button__pagination--return">日付選択に戻る</button>
+      <button type="button" class="c-button__pagination--return" onclick="location.href='{{route('form.reserves.entry_date')}}';">入出庫日の選択に戻る</button>
       <button type="button" onclick="submit();" class="c-button__pagination--next">次へ進む</button>
     </div>
   </form>
@@ -56,7 +56,35 @@
 
 @endsection
 @push("scripts")
+<!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
+document.querySelectorAll('input').forEach(function(input) {
+  // input, selectのみEnterで次の入力欄に移動。textareaは除外。
+  const inputs = document.querySelectorAll('input, select');
+  input.addEventListener('keydown', function(event) {
+    // Enterキーが押された時の処理
+    if (event.key === 'Enter') {
+      // 【追加】日本語の変換中（確定のEnter）なら処理を抜ける
+      if (event.isComposing || event.keyCode === 229) {
+        return;
+      }
+
+      event.preventDefault(); // フォームの誤送信を防ぐ場合
+
+      inputs.forEach((input, index) => {
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault(); // 改行やSubmitを防止
+            // 次の要素が存在すればフォーカスを移動
+            if (inputs[index + 1]) {
+              inputs[index + 1].focus();
+            }
+          }
+        });
+      });        
+    }
+  });
+});
 </script>
 @endpush
 @push('css')

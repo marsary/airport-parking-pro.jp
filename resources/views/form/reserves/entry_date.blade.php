@@ -4,7 +4,11 @@
 @section('content')
 @include('include.messages.errors')
 <div class="p-user-input__inner u-mt3">
+    <ul class="p-reserve__wrap u-mb3 u-font--sm">
+      <li>●ご予約前には必ず『<a href="https://www.sunparking.co.jp/menseki/" target="_blank" rel="noopener" class="u-font--red">免責約款</a>』をご確認下さい。<br class="is-none--md">お申し込み頂いた時点で同意頂いたものとさせて頂きます。</li>
+    </ul>
     <form action="{{route('form.reserves.entry_date')}}" method="POST">
+    
         @csrf
         <!-- 代理店コード -->
         <div class="p-reserve__wrap" style="display:none;">
@@ -283,7 +287,7 @@
             <div>10/15(月)</div>
             <div>¥300</div>  --}}
                     </div>
-                    <div class="p-input-user-total-parking-charges__detail-total">
+                    <div class="p-input-user-total-parking-charges__detail-list-total">
                         <div id="num_days"></div>
                         <div id="sub_total"></div>
                     </div>
@@ -479,7 +483,7 @@
 
     /* 選択された日付・時間 */
     td.day_selected,
-    .time_selected .p-reserve-selectedTime__bg:not(.time_vacancy) {
+    .time_selected.p-reserve-selectedTime__bg:not(.time_vacancy) {
         border-color: rgb(0, 95, 204) !important;
         background-color: rgb(2, 117, 255)!important;
         font-weight: bold;
