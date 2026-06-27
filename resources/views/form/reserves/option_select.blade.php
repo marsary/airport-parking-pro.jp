@@ -24,7 +24,7 @@
       </div>
 
       <div class="p-user-input-optionSelect__wrap">
-      　<!-- ↓クラスが空なので整形 -->
+        <!-- ↓クラスが空なので整形 -->
         <p>当店自慢の洗車を希望しますか？</p>
         <div class="p-user-input-optionSelect__radio">
           <label for="carwash_yes">
