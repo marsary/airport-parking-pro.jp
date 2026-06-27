@@ -23,9 +23,9 @@
         </div>
       </div>
 
-      <div class="p-user-input-optionSelect__wrap">　<!--  u-mb0 トル -->
+      <div class="p-user-input-optionSelect__wrap">
       　<!-- ↓クラスが空なので整形 -->
-        <p>当店自慢の洗車を希望しますか？<br class="is-none--md"></p>
+        <p>当店自慢の洗車を希望しますか？</p>
         <div class="p-user-input-optionSelect__radio">
           <label for="carwash_yes">
             <input type="radio" id="carwash_yes" name="carwash" value="1" class="c-button__radio--input" {{ old('carwash', $reserve->carwash) == 1 ? 'checked' : '' }}>はい
