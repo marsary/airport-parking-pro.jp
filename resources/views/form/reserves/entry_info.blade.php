@@ -12,29 +12,29 @@
     <!-- 基本情報 -->
     <div class="l-flex l-grid--gap1 l-flex--column--md l-flex--items-start--md">
       <div class="u-w-full-wide">
-        <label for="name">氏名※（入力例：成田　太郎）　間にスペースを入れてください。</label>
+        <label for="name">氏名<span class="c-label--required">※必須</span><br class="is-none--md" /><span class="u-font--sm">（間にスペースを入れて下さい。例:成田　太郎）</span></label><label for="name"></label>
         <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}">
       </div>
       <div class="u-w-full-wide">
-        <label for="kana">ふりがな※（入力例：なりた　たろう）　間にスペースを入れてください。</label>
+        <label for="kana">ふりがな<span class="c-label--required">※必須</span><br class="is-none--md" /><span class="u-font--sm">（間にスペースを入れて下さい。例:なりた　たろう）</span></label>
         <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}">
       </div>
     </div>
 
     <div class="u-w-half">
-      <label for="tel">携帯番号※</label>
-      <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}">
+      <label for="tel">携帯番号<span class="c-label--required">※必須</span></label>
+      <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}" placeholder="090-1234-5678">
     </div>
 
     <!-- 郵便番号・メールアドレス・領収書の名前・備考 -->
     <div class="u-w-half">
-      <label for="zip">郵便番号</label>
-      <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}">
+      <label for="zip">郵便番号（ハイフンなし）</label>
+      <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}" placeholder="1110000" pattern="\d{7}" title="郵便番号は7桁の数字で入力してください。">
     </div>
-
+    
     <div class="l-grid--col2 l-grid--gap1 l-flex--column--md">
       <div>
-        <label for="email">メールアドレス※</label>
+        <label for="email">メールアドレス<span class="c-label--required">※必須</span></label>
         <input type="email" id="email" name="email" class="u-w-full-wide" value="{{old('email', $reserve->email)}}">
       </div>
       {{-- <div>
@@ -43,7 +43,7 @@
       </div> --}}
     </div>
 
-    <label for="note">備考※領収書の宛名が必要な場合はこちらに記入ください</label>
+    <label for="note">備考<span class="c-label--required">※必須</span>領収書の宛名が必要な場合はこちらに記入ください</label>
     <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">

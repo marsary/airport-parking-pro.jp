@@ -4,6 +4,12 @@
 @section('content')
 @include('include.messages.errors')
 <div class="p-user-input__inner u-mt3">
+    <!-- 以下を追加 -->
+    <ul class="p-reserve__wrap u-mb3 u-font--sm">
+      <li>●ご予約前には必ず『<a href="https://www.sunparking.co.jp/menseki/" target="_blank" rel="noopener" class="u-font--red">免責約款</a>』をご確認下さい。<br class="is-none--md">お申し込み頂いた時点で同意頂いたものとさせて頂きます。</li>
+    </ul>
+    <!-- ここまで -->
+
     <form action="{{route('form.reserves.entry_date')}}" method="POST">
         @csrf
         <!-- 代理店コード -->
@@ -270,18 +276,7 @@
                         <div type="button" class="p-input-user-total-parking-charges__detail-close-button" id="close_button"><img src="{{ asset('images/icon/closeButton.svg') }}" width="15" height="15" /></div>
                     </div>
                     <div id="price_rows" class="p-input-user-total-parking-charges__detail-list">
-                        {{-- <div>10/10(水)</div>
-            <div>¥1,000</div>
-            <div>10/11(木)</div>
-            <div>¥1,000</div>
-            <div>10/12(金)</div>
-            <div>¥1,500</div>
-            <div>10/13(土)</div>
-            <div>¥2,000</div>
-            <div>10/14(日)</div>
-            <div>¥2,000</div>
-            <div>10/15(月)</div>
-            <div>¥300</div>  --}}
+
                     </div>
                     <div class="p-input-user-total-parking-charges__detail-total">
                         <div id="num_days"></div>
@@ -296,7 +291,18 @@
                     <div>駐車料金(普通)合計</div>
                     <div id="total"></div>
                 </div>
-
+                <div class="u-mt3 u-border--top p-input-user-total-parking-charges__detail-total">
+                    <div>駐車料金合計</div>
+                    <div id="total"></div>
+                    <div>シーズン料金</div>
+                    <div>2,200</div>
+                </div>
+                <div class="u-border--top p-input-user-total-parking-charges__detail-total">
+                    <div>合計</div>
+                    <div id="total"></div>
+                    <div id="tax_label">内消費税(10%)</div>
+                    <div id="tax">¥99,999</div>
+                </div>
             </div><!-- /.p-input-user-total-parking-charges__inner -->
 
             <button type="submit" class="c-button__submit u-horizontal-auto">予約に進む</button>
@@ -479,7 +485,7 @@
 
     /* 選択された日付・時間 */
     td.day_selected,
-    .time_selected .p-reserve-selectedTime__bg:not(.time_vacancy) {
+    .time_selected.p-reserve-selectedTime__bg {
         border-color: rgb(0, 95, 204) !important;
         background-color: rgb(2, 117, 255)!important;
         font-weight: bold;

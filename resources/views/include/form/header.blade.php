@@ -8,8 +8,8 @@
   <h1 class="l-header-userReservation__title">受付入力</h1>
   @if (isset($reserve))
     <div class="l-header-userReservation__info">
-      <div>利用期間（利用日数）：{{$reserve->load_date?->isoFormat('YYYY/MM/DD(ddd)')}}〜{{$reserve->unload_date_plan?->isoFormat('YYYY/MM/DD(ddd)')}}</div>
-      <div>利用料金：{{number_format($reserve->price)}}円</div>
+      <div>利用期間（利用日数）：<br>{{$reserve->load_date?->isoFormat('YYYY/MM/DD(ddd)')}}〜{{$reserve->unload_date_plan?->isoFormat('YYYY/MM/DD(ddd)')}}</div>
+      <div>利用料金（税込）：{{number_format($reserve->price)}}円</div>
     </div>
   @endif
 </header>

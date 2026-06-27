@@ -23,3 +23,9 @@
 .select2-container--default .select2-search--inline .select2-search__field {
     line-height: 1;
 }
+.select2-container--default,
+.select2-container--default .select2-selection--single,
+.select2-selection__rendered {
+    height: auto;
+    line-height: 38px !important;
+}
