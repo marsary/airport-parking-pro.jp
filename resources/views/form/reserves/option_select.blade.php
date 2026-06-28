@@ -12,7 +12,7 @@
       <!-- 旅行保険への加入検討有無 -->
       <div class="p-user-input-optionSelect__wrap">
       <!-- ↓クラスが空なので整形 -->
-        <p>万が一の時にも安心、安全な<br class="is-none--md">旅行保険への加入を検討していますか？</p>
+        <p>万が一の時にも安心、安全な旅行保険への加入を<br class="is-none--md">希望しますか？</p>
         <div class="p-user-input-optionSelect__radio">
           <label for="insurance_yes">
             <input type="radio" id="insurance_yes" name="insurance" value="1" class="c-button__radio--input" {{ old('insurance', $reserve->insurance) == 1 ? 'checked' : '' }}>はい
