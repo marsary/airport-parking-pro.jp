@@ -85,7 +85,7 @@
       </tr>
       <tr>
         <th>航空会社</th>
-        <td>{{$arrivalFlight?->airline->name ?? $airline->name}}{{--ANA--}}</td>
+        <td>{{$arrivalFlight?->airline->name ?? ($airline->name ?? '')}}{{--ANA--}}</td>
         <th>出発空港</th>
         <td>{{$arrivalFlight?->depAirport->name}}{{--LAX--}}</td>
         <th>到着空港</th>
@@ -150,27 +150,6 @@
             <td>({{ $dealGood['tax_type_label'] }})</td>
           </tr>
         @endforeach
-        {{--  <tr>
-          <th>駐車料金</th>
-          <td>1,000円</td>
-          <td>1</td>
-          <td>5,000円</td>
-          <td>(税別10%)</td>
-        </tr>
-        <tr>
-          <th>​WAX洗車（オプション料金）</th>
-          <td>2,500円</td>
-          <td>2</td>
-          <td>2,500円</td>
-          <td>(税別10%)</td>
-        </tr>
-        <tr>
-          <th>​海外旅行保険（オプション料金）​</th>
-          <td>3,800円</td>
-          <td>3</td>
-          <td>3,800円</td>
-          <td>(対象外)</td>
-        </tr>  --}}
       </tbody>
     </table>
 
