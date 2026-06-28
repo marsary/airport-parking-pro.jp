@@ -92,6 +92,19 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   }
 
+  timeVacancyCells.forEach(cellElem => {
+    cellElem.addEventListener('click', function(){
+      removeTimeSelected()
+      cellElem.classList.add("time_selected");
+      loadTimeInput.value = cellElem.dataset.time;
+      loadTimeInput.dispatchEvent(new Event('change'));
+    })
+  });
+  function removeTimeSelected() {
+    Array.from(loadTimeSectionElem.getElementsByClassName('time_selected')).forEach(elem => {
+      elem.classList.remove("time_selected")
+    })
+  }
 
   var calendarEl1 = document.getElementById('calendar1');
   var calendar1 = new FullCalendar.Calendar(calendarEl1, {

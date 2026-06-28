@@ -99,6 +99,20 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   }
 
+  timeVacancyCells.forEach(cellElem => {
+    cellElem.addEventListener('click', function(){
+      removeTimeSelected()
+      cellElem.classList.add("time_selected");
+      loadTimeInput.value = cellElem.dataset.time;
+      loadTimeInput.dispatchEvent(new Event('change'));
+    })
+  });
+  function removeTimeSelected() {
+    Array.from(loadTimeSectionElem.getElementsByClassName('time_selected')).forEach(elem => {
+      elem.classList.remove("time_selected")
+    })
+  }
+
   const now = luxon.DateTime.now();
   // 設定ファイルから取得した予約開始可能日を使用
   const displayStartDate = luxon.DateTime.fromISO(document.getElementById('reservable_start_date').value);
