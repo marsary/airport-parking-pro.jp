@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const taxLabelElem = document.getElementById('tax_label');
   const taxElem = document.getElementById('tax');
   const totalElem = document.getElementById('total');
+  const totalCopyElem = document.getElementById('total_copy');
+  const seasonPriceElem = document.getElementById('season_price');
+  const grandTotalElem = document.getElementById('grand_total');
+  const taxSumElem = document.getElementById('tax_sum');
   const openBtnElem = document.getElementById('open_button');
 
   const agencyCodeInput = document.querySelector('input[name=agency_code]')
@@ -70,6 +74,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       taxElem.textContent = formatCurrency(json.data.table.tax, '￥');
       totalElem.textContent = formatCurrency(json.data.table.total, '￥', '(税込)');
+      totalCopyElem.textContent = formatCurrency(json.data.table.total, '￥');
+      // シーズン料金は税込み
+      const seasonPriceTaxIncluded = json.data.season.season_price + json.data.season.season_price_tax;
+      seasonPriceElem.textContent = formatCurrency(seasonPriceTaxIncluded, '￥');
+      grandTotalElem.textContent = formatCurrency(json.data.table.total + seasonPriceTaxIncluded, '￥');
+      taxSumElem.textContent = formatCurrency(json.data.table.tax + json.data.season.season_price_tax, '￥');
 
       // 料金明細表
       removeAllChildNodes(priceRowsElem)
