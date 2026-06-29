@@ -89,6 +89,12 @@ class ReserveFormBase extends StdObject
 
     public $tax_free;
 
+    // シーズン料金
+    public $season_price = 0;
+    public $season_price_tax = 0;
+
+
+
     protected $cast = [
         'load_date' => 'date',
         'unload_date_plan' => 'date',
@@ -264,7 +270,7 @@ class ReserveFormBase extends StdObject
 
     public function totalCharge()
     {
-        return $this->total_price + $this->total_tax;
+        return $this->total_price + $this->total_tax + $this->season_price + $this->season_price_tax;
     }
 
     public function pricePerDay()
