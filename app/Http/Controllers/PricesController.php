@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\PriceTable;
+use App\Services\Settings\SeasonPriceSettingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,10 +18,13 @@ class PricesController extends Controller
 
         $agencyId = DB::table('agencies')->where('code', $agencyCode)->first()?->id;
         $table = PriceTable::getPriceTable($loadDate, $unloadDate, $couponIds, $agencyId);
-
+        $seasonPriceData = SeasonPriceSettingService::getSeasonPrice($loadDate, $unloadDate);
         return response()->json([
             'success' => true,
-            'data' => ['table' => $table],
+            'data' => [
+                'table' => $table,
+                'season' => $seasonPriceData,
+            ],
          ]);
     }
 }
