@@ -293,15 +293,15 @@
                 </div>
                 <div class="u-mt3 u-border--top p-input-user-total-parking-charges__detail-total">
                     <div>駐車料金合計</div>
-                    <div id="total"></div>
+                    <div id="total_copy"></div>
                     <div>シーズン料金</div>
-                    <div>2,200</div>
+                    <div id="season_price"></div>
                 </div>
                 <div class="u-border--top p-input-user-total-parking-charges__detail-total">
                     <div>合計</div>
-                    <div id="total"></div>
+                    <div id="grand_total"></div>
                     <div id="tax_label">内消費税(10%)</div>
-                    <div id="tax">¥99,999</div>
+                    <div id="tax_sum"></div>
                 </div>
             </div><!-- /.p-input-user-total-parking-charges__inner -->
 
