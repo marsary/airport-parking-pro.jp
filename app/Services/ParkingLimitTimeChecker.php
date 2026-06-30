@@ -75,12 +75,16 @@ class ParkingLimitTimeChecker
                     $hourVacant = LimitOverStatus::FULL;
                 }
             }
-        } else {
+        } elseif ($this->defaultLimit) {
             foreach ($hourCounts as $qurterHour => $count) {
                 $qurterResults[$qurterHour] = $this->defaultLimit->isLimitOver(limitType:ParkingLimit::LOAD_TIME_LIMIT, countByQuarterhour:$count);
                 if($qurterResults[$qurterHour] == LimitOverStatus::FULL) {
                     $hourVacant = LimitOverStatus::FULL;
                 }
+            }
+        } else {
+            foreach ($hourCounts as $qurterHour => $count) {
+                $qurterResults[$qurterHour] = LimitOverStatus::VACANT;
             }
         }
 
