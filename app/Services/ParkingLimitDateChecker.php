@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Enums\DealStatus;
+use App\Enums\LimitOverStatus;
 use App\Models\Deal;
 use App\Models\ParkingLimit;
 use Carbon\Carbon;
@@ -112,8 +113,11 @@ class ParkingLimitDateChecker
         if($dateLimit) {
             return $dateLimit->isLimitOver(ParkingLimit::LOAD_LIMIT, $this->parkingNum, $counts['load_count']);
         }
+        if($this->defaultLimit) {
+            return $this->defaultLimit->isLimitOver(ParkingLimit::LOAD_LIMIT, $this->parkingNum, $counts['load_count']);
+        }
+        return LimitOverStatus::VACANT;
 
-        return $this->defaultLimit->isLimitOver(ParkingLimit::LOAD_LIMIT, $this->parkingNum, $counts['load_count']);
     }
 
 
@@ -137,7 +141,9 @@ class ParkingLimitDateChecker
         if($dateLimit) {
             return $dateLimit->isLimitOver(limitType:ParkingLimit::UNLOAD_LIMIT, unloadCount:$counts['unload_count']);
         }
-
-        return $this->defaultLimit->isLimitOver(limitType:ParkingLimit::UNLOAD_LIMIT, unloadCount:$counts['unload_count']);
+        if($this->defaultLimit) {
+            return $this->defaultLimit->isLimitOver(limitType:ParkingLimit::UNLOAD_LIMIT, unloadCount:$counts['unload_count']);
+        }
+        return LimitOverStatus::VACANT;
     }
 }
