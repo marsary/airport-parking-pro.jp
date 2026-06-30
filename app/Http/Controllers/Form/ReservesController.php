@@ -21,6 +21,7 @@ use App\Models\Member;
 use App\Services\LabelTagManager;
 use App\Services\Form\ReserveService;
 use App\Services\PriceTable;
+use App\Services\Settings\SeasonPriceSettingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -53,10 +54,13 @@ class ReservesController extends Controller
         $reserve->fill($request->all());
 
         $table = PriceTable::getPriceTable($reserve->load_date, $reserve->unload_date_plan, [], $reserve->agency_id);
+        $seasonPriceData = SeasonPriceSettingService::getSeasonPrice($reserve->load_date, $reserve->unload_date_plan);
         $reserve->fill([
             'price' => $table->subTotal,
             'tax' => $table->tax,
             'num_days' => $table->numDays,
+            'season_price' => $seasonPriceData['season_price'],
+            'season_price_tax' => $seasonPriceData['season_price_tax'],
         ]);
         session()->put('reserve', $reserve);
 
