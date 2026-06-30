@@ -10,8 +10,9 @@ use Illuminate\Support\Str;
 
 class ReserveForm extends ReserveFormBase
 {
-    public bool $insurance = false;
-    public bool $carwash = false;
+    public bool $insurance = true;
+    public bool $carwash = true;
+    public bool $newsletter = true;
 
 
     function __construct()
@@ -71,18 +72,23 @@ class ReserveForm extends ReserveFormBase
 
     public function setRemarkForOptionSelect()
     {
-        $this->remarks = str_replace('旅行保険の加入検討。', '', $this->remarks);
-        $this->remarks = str_replace('洗車を検討。', '', $this->remarks);
+        $optionValues = ['H', 'W', 'メ希'];
+        $remarkParts = preg_split('/\s+/u', trim((string) $this->remarks));
+        $filteredRemarkParts = array_values(array_filter($remarkParts, static fn ($part) => !in_array($part, $optionValues, true)));
+        $this->remarks = implode(' ', $filteredRemarkParts);
 
         $optionSelectData = [];
         if($this->insurance) {
-            $optionSelectData[] = '旅行保険の加入検討。';
+            $optionSelectData[] = 'H';
         }
         if($this->carwash) {
-            $optionSelectData[] = '洗車を検討。';
+            $optionSelectData[] = 'W';
+        }
+        if($this->newsletter) {
+            $optionSelectData[] = 'メ希';
         }
         if(!empty($optionSelectData)) {
-            $this->remarks .= implode('', $optionSelectData);
+            $this->remarks .= ' ' . implode(' ', $optionSelectData);
         }
     }
 }
