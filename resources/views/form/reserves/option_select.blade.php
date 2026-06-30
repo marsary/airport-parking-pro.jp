@@ -40,10 +40,10 @@
         <p>お得な情報などが届く<br class="is-none--md">メルマガを希望しますか？</p>
         <div class="p-user-input-optionSelect__radio">
           <label for="newsletter_yes">
-            <input type="radio" id="newsletter_yes" name="newsletter" value="yes" class="c-button__radio--input" checked>はい
+            <input type="radio" id="newsletter_yes" name="newsletter" value="1" class="c-button__radio--input"  {{ old('newsletter', $reserve->newsletter) == 1 ? 'checked' : '' }}>はい
           </label>
           <label for="newsletter_no">
-            <input type="radio" id="newsletter_no" name="newsletter" value="no" class="c-button__radio--input">いいえ
+            <input type="radio" id="newsletter_no" name="newsletter" value="0" class="c-button__radio--input"  {{ old('newsletter', $reserve->newsletter) == 0 ? 'checked' : '' }}>いいえ
           </label>
         </div>
       </div>
