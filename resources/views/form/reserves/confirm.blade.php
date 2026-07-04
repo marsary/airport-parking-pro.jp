@@ -190,6 +190,13 @@
           <td class="u-font-nowrap">{{number_format($reserve->price)}}円</td>
           <td class="--tax">({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
         </tr>
+        @if (!empty($reserve->season_price))
+          <tr>
+            <th>駐車料金</th>
+            <td class="u-font-nowrap">{{number_format($reserve->season_price)}}円</td>
+            <td class="--tax">({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
+          </tr>
+        @endif
         @foreach ($reserve->dealGoodData as $dealGood)
           <tr>
             <th>{{$dealGood['name']}}</th>
