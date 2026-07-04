@@ -268,7 +268,7 @@
                 <input type="hidden" name="unload_time_plan" value="{{old('unload_time_plan', $reserve->unload_time_plan)}}">
                 <input type="hidden" name="num_days" value="{{old('num_days', $reserve->num_days)}}">
 
-                <button type="button" id="open_button" class="c-label__light-deep-gray--lg is-block u-horizontal-auto u-mb1">内訳を表示</button>
+                <button type="button" id="open_button" class="c-label__light-deep-gray--lg is-block u-horizontal-auto u-mb1" style="display:none;">内訳を表示</button>
 
                 <div class="is-none p-input-user-total-parking-charges__detail" id="toggle_element">
                     <div class="p-input-user-total-parking-charges__detail-title">
