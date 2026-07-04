@@ -43,8 +43,8 @@
       </div> --}}
     </div>
 
-    <label for="note">備考※領収書の宛名が必要な場合はこちらに記入ください</label>
-    <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide">{{old('remarks', $reserve->remarks)}}</textarea>
+    <label for="note" style="display:none;">備考※領収書の宛名が必要な場合はこちらに記入ください</label>
+    <textarea name="remarks" id="remarks" cols="50" rows="3" class="u-w-full-wide" style="display:none;">{{old('remarks', $reserve->remarks)}}</textarea>
 
     <div class="l-flex--center l-grid--gap1 u-mt3">
       <button type="button" class="c-button__pagination--return" onclick="location.href='{{route('form.reserves.entry_date')}}';">入出庫日の選択に戻る</button>

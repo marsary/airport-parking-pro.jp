@@ -87,7 +87,7 @@
         <th class="l-table-confirm__col-key">郵便番号</th>
         <td class="l-table-confirm__col-val">{{$reserve->zip}}{{--111-0000--}}</td>
       </tr>
-      <tr>
+      <tr style="display:none;">
         <th class="l-table-confirm__col-key">備考</th>
         <td class="l-table-confirm__value l-table-confirm__value--long" colspan="3">{{$reserve->remarks}}</td>
       </tr>
