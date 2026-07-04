@@ -12,7 +12,7 @@
       <div>利用料金（税込）：{{number_format($reserve->price + $reserve->tax)}}円</div>
     </div>
   @endif
-</header>disp_num_days
+</header>
 
 <!-- マイページ等利用日・利用料金が非表示の場合レイアウトが崩れないようにするための調整が必要 -->
 <!-- 上記の作業は、名ページに何を表示するか決定後作業 -->
