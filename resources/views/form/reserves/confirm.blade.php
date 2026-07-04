@@ -204,14 +204,14 @@
       <div>{{number_format($reserve->total_tax_8)}}円</div> --}}
       {{-- <div></div> --}}
       <div class="l-table-charge-detail--second__head">合計金額</div>
-      <div class="u-font--lg u-font--medium">{{number_format($reserve->total_price)}} <span>円</span></div>
-      <div class="--tax">（税抜）</div>
+      <div class="u-font--lg u-font--medium l-grid--colspan2">{{number_format($reserve->totalCharge())}} <span>円</span></div>
+      <div class="u-font--normal">（税込）</div>
       <div>内消費税</div>
       <div>{{number_format($reserve->total_tax_10)}}円</div>
       <div></div>
-      <div class="u-font--lg u-font--medium l-grid--colspan2" style="display:none;">{{number_format($reserve->totalCharge())}} <span>円</span></div>
-      <div class="u-font--normal" style="display:none;">（税込）</div>
       <div style="display:none;"></div>
+      <div class="u-font--lg u-font--medium" style="display:none;">{{number_format($reserve->total_price)}} <span>円</span></div>
+      <div class="--tax" style="display:none;">（税抜）</div>
     </div>
 
     <!--  -->
