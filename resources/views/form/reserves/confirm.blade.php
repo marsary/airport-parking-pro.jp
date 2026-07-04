@@ -10,7 +10,15 @@
   <form action="{{route('form.reserves.store')}}" method="POST">
     @csrf
     <div class="c-title__table">予約情報</div>
-    <table class="l-table-confirm">
+    <table class="l-table-confirm l-table-confirm--stable l-table-confirm--3pairs">
+      <colgroup>
+      <col class="l-table-confirm__col-key">
+      <col class="l-table-confirm__col-val">
+      <col class="l-table-confirm__col-key">
+      <col class="l-table-confirm__col-val">
+      <col class="l-table-confirm__col-key">
+      <col class="l-table-confirm__col-val">
+      </colgroup>
       {{-- <tr> --}}
         {{-- <th>予約コード</th>
         <td>{{$reserve->reserve_code}}</td>
@@ -22,25 +30,31 @@
         {{-- <td colspan="3">{{$agency?->name}}{{--公式HP--}}{{-- </td> --}}
       {{-- </tr> --}}
       <tr>
-        <th>入庫日時</th>
-        <td>{{$reserve->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $reserve->load_time}}</td>
-        <th>出庫予定日</th>
-        <td>{{$reserve->unload_date_plan->isoFormat('YYYY/M/D(ddd)')}}</td>
-        <th>利用日数</th>
-        <td>{{$reserve->num_days}}日</td>
+        <th class="l-table-confirm__col-key">入庫日時</th>
+        <td class="l-table-confirm__col-val">{{$reserve->load_date->isoFormat('YYYY/M/D(ddd)') . ' ' . $reserve->load_time}}</td>
+        <th class="l-table-confirm__col-key">出庫予定日</th>
+        <td class="l-table-confirm__col-val">{{$reserve->unload_date_plan->isoFormat('YYYY/M/D(ddd)')}}</td>
+        <th class="l-table-confirm__col-key">利用日数</th>
+        <td class="l-table-confirm__col-val">{{$reserve->num_days}}日</td>
       </tr>
     </table>
 
     <!-- 顧客情報 -->
     <div class="c-title__table">顧客情報</div>
-    <table class="l-table-confirm">
+    <table class="l-table-confirm l-table-confirm--stable"">
+      <colgroup>
+      <col class="l-table-confirm__col-key">
+      <col class="l-table-confirm__col-val">
+      <col class="l-table-confirm__col-key">
+      <col class="l-table-confirm__col-val">
+      </colgroup>
       <tr>
         {{-- <th>顧客コード</th>
         <td>{{$reserve->member?->member_code}}</td> --}}
-        <th>お客様氏名</th>
-        <td colspan="3">{{$reserve->name}}</td>
-        <th>ふりがな</th>
-        <td>{{$reserve->kana}}</td>
+        <th class="l-table-confirm__col-key">お客様氏名</th>
+        <td class="l-table-confirm__col-val">{{$reserve->name}}</td>
+        <th class="l-table-confirm__col-key">ふりがな</th>
+        <td class="l-table-confirm__col-val">{{$reserve->kana}}</td>
         {{--  <th>利用回数</th>
         <td>
           @if (isset($reserve->member?->used_num))
@@ -59,71 +73,104 @@
         @endfor
       </tr> --}}
       <tr>
-        <th>郵便番号</th>
-        <td>{{$reserve->zip}}{{--111-0000--}}</td>
-        <th>電話番号</th>
-        <td>{{$reserve->tel}}{{--090-1234-5678--}}</td>
+        <th class="l-table-confirm__col-key">携帯番号</th>
+        <td class="l-table-confirm__col-val">{{$reserve->tel}}{{--090-1234-5678--}}</td>
         <!-- 以下2つは桁数次第ではレイアウトが崩れる分けてもよいかも -->
-        <th>Mail</th>
-        <td>{{$reserve->email}}</td>
+        <th class="l-table-confirm__col-key">Mail</th>
+        <td class="l-table-confirm__value l-table-confirm__value--long">{{$reserve->email}}</td>
         {{-- <th>LINE ID</th>
         <td>{{$reserve->member?->line_id}}</td> --}}
       </tr>
-    </table>
-
-    <!-- 到着予定 -->
-    <div class="c-title__table">到着予定</div>
-    <table class="l-table-confirm">
       <tr>
-        <th>到着予定日</th>
-        <td>{{$reserve->arrive_date?->isoFormat('YYYY/M/D(ddd)')}}</td>
-        <th>到着予定時間</th>
-        <td>{{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}}</td>
-        <th>到着便</th>
-        <td>{{$arrivalFlight?->flight_no ?? $reserve->flight_no}}{{--NH205--}}</td>
-        <td colsan="2"></td>
+        <th class="l-table-confirm__col-key">人数</th>
+        <td class="l-table-confirm__col-val">{{$reserve->num_members ?? 1}}名</td>
+        <th class="l-table-confirm__col-key">郵便番号</th>
+        <td class="l-table-confirm__col-val">{{$reserve->zip}}{{--111-0000--}}</td>
       </tr>
       <tr>
-        <th>航空会社</th>
-        <td>{{$arrivalFlight?->airline->name ?? ($airline->name ?? '')}}{{--ANA--}}</td>
-        <th>出発空港</th>
-        <td>{{$arrivalFlight?->depAirport->name}}{{--LAX--}}</td>
-        <th>到着空港</th>
-        <td>{{$arrivalFlight?->arrAirport->name}}{{--NRT--}}</td>
-        {{--  <th>到着ターミナル</th>
-        <td>{{$arrivalFlight?->terminal_id}}</td>  --}}
-        <td colspan="2" class="--mark">
-          @if ($reserve->arrival_flg)
-            <div class="c-label--lg">到着日とお迎え日が異なる</div>
-          @endif
-        </td>
+        <th class="l-table-confirm__col-key">備考</th>
+        <td class="l-table-confirm__value l-table-confirm__value--long" colspan="3">{{$reserve->remarks}}</td>
       </tr>
     </table>
 
     <!-- 車両情報 -->
     <div class="c-title__table">車両情報</div>
-    <table class="l-table-confirm">
+    <table class="l-table-confirm l-table-confirm--stable">
+      <colgroup>
+        <col class="l-table-confirm__col-key">
+        <col class="l-table-confirm__col-val">
+        <col class="l-table-confirm__col-key">
+        <col class="l-table-confirm__col-val">
+      </colgroup>
       <tr>
-        <th>メーカー</th>
+        <th class="l-table-confirm__col-key">メーカー</th>
         <td colspan="2">{{$carMaker?->name}}</td>
-        <th>車種</th>
+        <th class="l-table-confirm__col-key">車種</th>
         <td colspan="2">{{$car?->name}}</td>
       </tr>
       <tr>
-        <th>車番</th>
-        <td>{{$reserve->car_number}}</td>
-        <th>色</th>
-        <td>{{$carColor?->name}}</td>
+        <th class="l-table-confirm__col-key">車番</th>
+        <td class="l-table-confirm__col-val">{{$reserve->car_number}}</td>
+        <th class="l-table-confirm__col-key">色</th>
+        <td class="l-table-confirm__col-val">{{$carColor?->name}}</td>
         {{--  <th>区分</th>
         <td>{{$car->size_label}}</td>  --}}
-        <th>人数</th>
-        <td colspan="3">{{$reserve->num_members ?? 1}}名</td>
         {{-- <th>車両取扱</th>
         <td colspan="3">{{$reserve->carCautions}}</td> --}}
       </tr>
+    </table>
+
+    <!-- 到着予定 -->
+    <div class="c-title__table">
+      到着予定
+      @if ($reserve->arrival_flg)
+        <!-- 到着日とお迎え日が異なる場合に表示 -->
+        <div class="--mark c-label--lg">到着日とお迎え日が異なる</div>
+      @endif
+    </div>
+    <table class="l-table-confirm l-table-confirm--stable">
+      <colgroup>
+        <col class="l-table-confirm__col-key">
+        <col class="l-table-confirm__col-val">
+        <col class="l-table-confirm__col-key">
+        <col class="l-table-confirm__col-val">
+      </colgroup>
       <tr>
-        <th>備考</th>
-        <td>{{$reserve->remarks}}</td>
+        <th class="l-table-confirm__col-key">到着予定日</th>
+        <td class="l-table-confirm__col-val">{{$reserve->arrive_date?->isoFormat('YYYY/M/D(ddd)')}}</td>
+        <th class="l-table-confirm__col-key">到着予定時間</th>
+        <td class="l-table-confirm__col-val">{{$arrivalFlight?->arrive_time ? \Carbon\Carbon::parse($arrivalFlight->arrive_time)->format('H:i') : ''}}</td>
+      </tr>
+      <tr>
+        <th class="l-table-confirm__col-key">航空会社</th>
+        <td class="l-table-confirm__col-val">{{$arrivalFlight?->airline->name ?? ($airline->name ?? '')}}{{--ANA--}}</td>
+        <th class="l-table-confirm__col-key">到着便</th>
+        <td class="l-table-confirm__col-val">{{$arrivalFlight?->flight_no ?? $reserve->flight_no}}{{--NH205--}}</td>
+      </tr>
+      <tr>
+        <th class="l-table-confirm__col-key">出発空港</th>
+        <td class="l-table-confirm__col-val">{{$arrivalFlight?->depAirport->name}}{{--LAX--}}</td>
+        <th class="l-table-confirm__col-key">到着空港</th>
+        <td class="l-table-confirm__col-val">{{$arrivalFlight?->arrAirport->name}}{{--NRT--}}</td>
+        {{--  <th>到着ターミナル</th>
+        <td>{{$arrivalFlight?->terminal_id}}</td>  --}}
+      </tr>
+    </table>
+
+    <!-- オプション選択 -->
+    <div class="c-title__table">オプション選択</div>
+    <table class="l-table-confirm l-table-confirm--stable">
+      <colgroup>
+        <col class="l-table-confirm__col-key">
+        <col class="l-table-confirm__col-val">
+        <col class="l-table-confirm__col-key">
+        <col class="l-table-confirm__col-val">
+      </colgroup>
+      <tr>
+        <th class="l-table-confirm__col-key">旅行保険の加入</th>
+        <td class="l-table-confirm__col-val">はい</td>
+        <th class="l-table-confirm__col-key">メルマガ希望</th>
+        <td class="l-table-confirm__col-val">希望する</td>
       </tr>
     </table>
 
@@ -140,31 +187,31 @@
       <tbody class="l-table-charge-detail__body">
         <tr>
           <th>駐車料金</th>
-          <td>{{number_format($reserve->price)}}円</td>
-          <td>({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
+          <td class="u-font-nowrap">{{number_format($reserve->price)}}円</td>
+          <td class="--tax">({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
         </tr>
         @foreach ($reserve->dealGoodData as $dealGood)
           <tr>
             <th>{{$dealGood['name']}}</th>
-            <td>{{number_format($dealGood['total_price'])}}円</td>
-            <td>({{ $dealGood['tax_type_label'] }})</td>
+            <td class="u-font-nowrap">{{number_format($dealGood['total_price'])}}円</td>
+            <td class="--tax">({{ $dealGood['tax_type_label'] }})</td>
           </tr>
         @endforeach
       </tbody>
     </table>
-
     <div class="l-table-charge-detail--second">
       {{-- <div>消費税8%</div>
       <div>{{number_format($reserve->total_tax_8)}}円</div> --}}
       {{-- <div></div> --}}
-      <div>消費税10%</div>
+      <div class="l-table-charge-detail--second__head">合計金額</div>
+      <div class="u-font--lg u-font--medium">{{number_format($reserve->total_price)}} <span>円</span></div>
+      <div class="--tax">（税抜）</div>
+      <div>内消費税</div>
       <div>{{number_format($reserve->total_tax_10)}}円</div>
       <div></div>
-      <div colspan="2" class="text-right">合計金額</div>
-      <div class="u-font--lg u-font--medium">{{number_format($reserve->total_price)}} <span>円</span></div>
-      <div class="u-font--normal">（税抜）</div>
-      <div class="u-font--lg u-font--medium l-grid--colspan2">{{number_format($reserve->totalCharge())}} <span>円</span></div>
-      <div class="u-font--normal">（税込）</div>
+      <div class="u-font--lg u-font--medium l-grid--colspan2" style="display:none;">{{number_format($reserve->totalCharge())}} <span>円</span></div>
+      <div class="u-font--normal" style="display:none;">（税込）</div>
+      <div style="display:none;"></div>
     </div>
 
     <!--  -->

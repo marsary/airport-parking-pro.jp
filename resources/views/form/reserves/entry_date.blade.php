@@ -278,7 +278,7 @@
                     <div id="price_rows" class="p-input-user-total-parking-charges__detail-list">
 
                     </div>
-                    <div class="p-input-user-total-parking-charges__detail-total">
+                    <div class="p-input-user-total-parking-charges__detail-list-total">
                         <div id="num_days"></div>
                         <div id="sub_total"></div>
                     </div>
