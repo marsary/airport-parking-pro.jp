@@ -9,7 +9,7 @@
   @if (isset($reserve))
     <div class="l-header-userReservation__info">
       <div>利用期間（利用日数）：<br>{{$reserve->load_date?->isoFormat('YYYY/MM/DD(ddd)')}}〜{{$reserve->unload_date_plan?->isoFormat('YYYY/MM/DD(ddd)')}}（{{number_format($reserve->num_days)}}日間）</div>
-      <div>利用料金（税込）：{{number_format($reserve->price + $reserve->tax)}}円</div>
+      <div>利用料金（税込）：{{number_format($reserve->price + $reserve->tax + $reserve->season_price + $reserve->season_price_tax)}}円</div>
     </div>
   @endif
 </header>
