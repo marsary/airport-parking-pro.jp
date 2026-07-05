@@ -28,7 +28,7 @@
         <p>当店自慢の洗車を希望しますか？</p>
         <div class="p-user-input-optionSelect__radio">
           <label for="carwash_yes">
-            <input type="radio" id="carwash_yes" name="carwash" value="1" class="c-button__radio--input" {{ @checked(old('carwash', 0) == 1 ? 'checked' : '' )}}>はい
+            <input type="radio" id="carwash_yes" name="carwash" value="1" class="c-button__radio--input" {{ old('carwash', 0) == 1 ? 'checked' : '' }}>はい
           </label>
           <label for="carwash_no">
             <input type="radio" id="carwash_no" name="carwash" value="0" class="c-button__radio--input" {{ @checked(old('carwash', 0) == 0) ? 'checked' : '' }}>いいえ
