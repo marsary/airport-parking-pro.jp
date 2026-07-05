@@ -150,7 +150,7 @@ class Deal extends Model
         return $this->hasMany(CarCautionMemberCar::class, 'member_car_id', 'member_car_id');
     }
 
-    public function loadDateTime($format = "Y/m/d")
+    public function loadDateTime($format = "Y/m/d(ddd)")
     {
         $datetimeStr = $this->load_date?->format($format);
         if(!isBlank($this->load_time)) {

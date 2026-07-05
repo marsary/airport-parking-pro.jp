@@ -13,23 +13,23 @@
     <div class="c-form__admin--col2 l-flex--items-start--md">
       <div class="u-w-full-wide">
         <label for="name">氏名<span class="c-label--required">※必須</span><br class="is-none--md" /><span class="u-font--xs">（間にスペースを入れて下さい。例:空港　太郎）</span></label><label for="name"></label>
-        <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}">
+        <input type="text" id="name" name="name" class="u-w-full-wide" value="{{old('name', $reserve->name)}}" placeholder="空港　太郎">
       </div>
       <div class="u-w-full-wide">
         <label for="kana">ふりがな<span class="c-label--required">※必須</span><br class="is-none--md" /><span class="u-font--xs">（間にスペースを入れて下さい。例:くうこう　たろう）</span></label>
-        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}">
+        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}" placeholder="くうこう　たろう）">
       </div>
     </div>
 
     <div class="c-form__admin--half">
       <label for="tel">携帯番号<span class="c-label--required">※必須</span></label>
-      <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}" placeholder="090-1234-5678">
+      <input type="tel" id="tel" name="tel" class="u-w-full-wide" value="{{old('tel', $reserve->tel)}}" placeholder="000-1234-5678">
     </div>
 
     <!-- 郵便番号・メールアドレス・領収書の名前・備考 -->
     <div class="c-form__admin--half">
       <label for="zip">郵便番号（ハイフンなし）</label>
-      <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}" placeholder="1110000" pattern="\d{7}" title="郵便番号は7桁の数字で入力してください。">
+      <input type="text" id="zip" name="zip" class="u-w-full-wide" value="{{old('zip', $reserve->zip)}}" placeholder="0000000" pattern="\d{7}" title="郵便番号は7桁の数字で入力してください。">
     </div>
     
     <div class="c-form__admin--col2 l-flex--items-start--mdd">

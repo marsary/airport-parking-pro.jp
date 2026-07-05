@@ -19,7 +19,7 @@
 </p>
 
 <p>予約日：
-{{ $deal->reserve_date?->format('Y/m/d') }}
+{{ $deal->reserve_date?->format('Y/m/d(ddd)') }}
 </p>
 
 <p>入庫予定：
@@ -27,15 +27,11 @@
 </p>
 
 <p>出庫予定：
-{{ $deal->unload_date_plan?->format("Y/m/d") }}
-</p>
-
-<p>出庫予定：
-{{ $deal->unload_date_plan?->format("Y/m/d") }}
+{{ $deal->unload_date_plan?->format("Y/m/d(ddd)") }}
 </p>
 
 <p>駐車料金：
-1 台 {{ $deal->total_price }} 円（税込 {{ $deal->total_price + $deal->total_tax }} 円）
+{{ $deal->total_price }} 円（税込 {{ $deal->total_price + $deal->total_tax }} 円）
 </p>
 
 <p>支払方法：
@@ -44,13 +40,20 @@
 
 <p>------------------------------------</p>
 
-<p>利用料金：
-{{ $deal->total_price }} 円（税込 {{ $deal->total_price + $deal->total_tax }} 円）
+<p>合計金額：
+{{ $deal->total_price + $deal->total_tax }} 円（税込）
 </p>
+
+<p>内消費税：
+{{ $deal->total_tax }} 円（10％）
+</p>
+
+
+<p>支払方法： 入庫時にお支払い</p>
 
 <p>※オプション（洗車、旅行保険など）料金は含みません。</p>
 
-<p>=======================<br>
+<p>=================================================<br>
     スタッフ一同、<br>
     {{ $deal->name }}様の<br>
     お越しをお待ちしています。<br>

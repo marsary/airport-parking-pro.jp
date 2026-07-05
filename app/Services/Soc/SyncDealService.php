@@ -23,7 +23,7 @@ class SyncDealService
 {
     protected array $syncDealRecords = [];
     protected const AG_ID1 = 6033;
-    protected const AG_ID2 = 71;
+    protected const AG_ID2 = 500;
 
     public function setDeals(Collection $deals): self
     {
