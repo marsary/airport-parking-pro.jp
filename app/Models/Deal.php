@@ -53,6 +53,8 @@ class Deal extends Model
         'total_price',
         'total_tax',
         'tax_free',
+        'season_price',
+        'season_price_tax',
         'dep_flight_id',
         'arr_flight_id',
         'flight_no',
