@@ -41,7 +41,7 @@
 
     <!-- 顧客情報 -->
     <div class="c-title__table">顧客情報</div>
-    <table class="l-table-confirm l-table-confirm--stable"">
+    <table class="l-table-confirm l-table-confirm--stable">
       <colgroup>
       <col class="l-table-confirm__col-key">
       <col class="l-table-confirm__col-val">
@@ -163,14 +163,37 @@
       <colgroup>
         <col class="l-table-confirm__col-key">
         <col class="l-table-confirm__col-val">
+        <col class="l-table-confirm__col-key" style="display:none;">
+        <col class="l-table-confirm__col-val" style="display:none;">
+        <col class="l-table-confirm__col-val">
         <col class="l-table-confirm__col-key">
         <col class="l-table-confirm__col-val">
       </colgroup>
       <tr>
         <th class="l-table-confirm__col-key">旅行保険の加入</th>
-        <td class="l-table-confirm__col-val">はい</td>
+        <td class="l-table-confirm__col-val">
+          @if ($reserve->insurance)
+            はい
+          @else
+            いいえ
+          @endif
+        </td>
+        <th class="l-table-confirm__col-key" style="display:none;">洗車を希望</th>
+        <td class="l-table-confirm__col-val" style="display:none;">
+          @if ($reserve->carwash)
+            希望する
+          @else
+            希望しない
+          @endif
+        </td>
         <th class="l-table-confirm__col-key">メルマガ希望</th>
-        <td class="l-table-confirm__col-val">希望する</td>
+        <td class="l-table-confirm__col-val">
+          @if ($reserve->newsletter)
+            希望する
+          @else
+            希望しない
+          @endif
+        </td>
       </tr>
     </table>
 
@@ -187,15 +210,15 @@
       <tbody class="l-table-charge-detail__body">
         <tr>
           <th>駐車料金</th>
-          <td class="u-font-nowrap">{{number_format($reserve->price)}}円</td>
+          <td class="u-font-nowrap">{{number_format($reserve->price + $reserve->tax)}}円</td>
           <td class="--tax">({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
         </tr>
         @if (!empty($reserve->season_price))
-          <tr>
-            <th>シーズン料金</th>
-            <td class="u-font-nowrap">{{number_format($reserve->season_price)}}円</td>
-            <td class="--tax">({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
-          </tr>
+        <tr>
+          <th>シーズン料金</th>
+          <td class="u-font-nowrap">{{number_format($reserve->season_price + $reserve->season_price_tax)}}円</td>
+          <td class="--tax">({{ $reserve->getTaxTypeLabel(\App\Enums\TaxType::TEN_PERCENT->value) }})</td>
+        </tr>
         @endif
         @foreach ($reserve->dealGoodData as $dealGood)
           <tr>
@@ -214,7 +237,7 @@
       <div class="u-font--lg u-font--medium l-grid--colspan2">{{number_format($reserve->totalCharge())}} <span>円</span></div>
       <div class="u-font--normal" >（税込）</div>
       <div>内消費税</div>
-      <div>{{number_format($reserve->total_tax_10)}}円</div>
+      <div>{{number_format($reserve->total_tax_10 + $reserve->season_price_tax)}}円</div>
       <div></div>
       <div style="display:none;"></div>
       <div class="u-font--lg u-font--medium" style="display:none;">{{number_format($reserve->total_price)}} <span>円</span></div>
