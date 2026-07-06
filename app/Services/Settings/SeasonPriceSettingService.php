@@ -17,10 +17,16 @@ class SeasonPriceSettingService
             $unloadDate = Carbon::parse($unloadDate);
         }
 
-        $seasonPriceSum = (int) SeasonPriceSetting::where('office_id', config('const.commons.form_office_id'))
+        $seasonPriceSum = SeasonPriceSetting::where('office_id', config('const.commons.form_office_id'))
             ->whereDate('target_date', $loadDate->toDateString())
-            ->sum('season_price') ?? 0;
+            ->first()?->season_price;
 
+        if($seasonPriceSum === null) {
+            return [
+                'season_price' => null,
+                'season_price_tax' => null,
+            ];
+        }
 
         $seasonPriceTax = roundTax((float) $taxType->rate() * $seasonPriceSum);
 
