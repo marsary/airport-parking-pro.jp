@@ -79,7 +79,6 @@ class ReservesController extends Controller
     public function postEntryInfo(EntryInfoRequest $request)
     {
         $reserve = $this->getReserveForm();
-        $reserve->fill($request->all());
 
         $memberExists = Member::where('email', $request->email)->exists();
 
@@ -87,6 +86,7 @@ class ReservesController extends Controller
             $member = Member::where('email', $request->email)->first();
             $reserve->setMember($member);
         }
+        $reserve->fill($request->all());
 
         if($reserve->registerMember) {
             $reserve->fillMember();
@@ -154,7 +154,6 @@ class ReservesController extends Controller
 //          error_log(json_encode($reserve)."\n",3,"../storage/logs/test.log");
 
         $reserve->fill($request->all());
-        $reserve->setRemarkForOptionSelect();
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.confirm');
     }
