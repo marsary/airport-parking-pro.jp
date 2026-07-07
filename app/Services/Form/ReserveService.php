@@ -5,29 +5,26 @@ use App\Enums\DealStatus;
 use App\Enums\GeneralStatus;
 use App\Enums\PaymentTiming;
 use App\Enums\TransactionType;
-use App\Http\Controllers\Forms\ReserveFormBase;
-use App\Http\Controllers\Manage\Forms\ManageReserveForm;
+use App\Http\Controllers\Form\Forms\ReserveForm;
 use App\Models\Agency;
-use App\Models\CarCautionMemberCar;
 use App\Models\Deal;
-use App\Models\DealGood;
 use App\Models\Member;
 use App\Models\MemberCar;
 use App\Models\MemberType;
+use Carbon\Carbon;
 use ErrorException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class ReserveService
 {
-    /** @var ReserveFormBase */
+    /** @var ReserveForm */
     public $reserve;
 
     /** @var Deal */
     public $deal;
 
 
-    function __construct(ReserveFormBase $reserve)
+    function __construct(ReserveForm $reserve)
     {
         $this->reserve = $reserve;
     }
@@ -140,7 +137,7 @@ class ReserveService
             'status' => DealStatus::NOT_LOADED->value,
             'reserve_code' => $this->reserve->reserve_code,
             'receipt_code' => null, // この時点では受付コードはない
-            'reserve_date' => $this->reserve->reserve_date,
+            'reserve_date' => Carbon::now(),
             'load_date' => $this->reserve->load_date,
             'load_time' => $this->reserve->load_time,
             'visit_date_plan' =>null,
@@ -162,6 +159,8 @@ class ReserveService
             'total_price' => $this->reserve->total_price,
             'total_tax' => $this->reserve->total_tax,
             'tax_free' => 0,
+            'season_price' => $this->reserve->season_price,
+            'season_price_tax' => $this->reserve->season_price_tax,
             'arr_flight_id' => $this->reserve->arr_flight_id,
             'flight_no' => $this->reserve->flight_no,
             'airline_id' => $this->reserve->airline_id,
@@ -169,7 +168,7 @@ class ReserveService
             'receipt_address' => null,
             'reserve_memo' => null,
             'reception_memo' => null,
-            'remarks' => $this->reserve->remarks,
+            'remarks' => $this->setRemarkForOptionSelect($this->reserve->remarks, $this->reserve->insurance, $this->reserve->carwash, $this->reserve->newsletter),
             'remind_mail_sent_flg' => 0,
             'sync_flg' => 0,
             'synced_at' => null,
@@ -181,5 +180,30 @@ class ReserveService
         if(!empty($this->reserve->dealGoodData)) {
             throw new ErrorException('ウェブ予約ではオプション商品は選択できません。');
         }
+    }
+
+
+
+    public function setRemarkForOptionSelect(string|null $remarks, bool $insurance, bool $carwash, bool $newsletter): string
+    {
+        $optionValues = ['H', 'W', 'メ希'];
+        $remarkParts = preg_split('/\s+/u', trim((string) $remarks));
+        $filteredRemarkParts = array_values(array_filter($remarkParts, static fn ($part) => !in_array($part, $optionValues, true)));
+        $remarks = implode(' ', $filteredRemarkParts);
+
+        $optionSelectData = [];
+        if($insurance) {
+            $optionSelectData[] = 'H';
+        }
+        if($carwash) {
+            $optionSelectData[] = 'W';
+        }
+        if($newsletter) {
+            $optionSelectData[] = 'メ希';
+        }
+        if(!empty($optionSelectData)) {
+            $remarks .= ' ' . implode(' ', $optionSelectData);
+        }
+        return trim($remarks);
     }
 }
