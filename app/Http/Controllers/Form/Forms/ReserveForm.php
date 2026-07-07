@@ -19,7 +19,7 @@ class ReserveForm extends ReserveFormBase
     {
         $this->office_id = config('const.commons.form_office_id');
         $this->status = DealStatus::NOT_LOADED->value;
-        $this->reserve_date = Carbon::now();
+        $this->reserve_date = null;
         $this->reserve_code = Str::ulid();
     }
 
@@ -68,27 +68,5 @@ class ReserveForm extends ReserveFormBase
         parent::handleGoodsAndTotals();
 
         // TODO クーポンの処理
-    }
-
-    public function setRemarkForOptionSelect()
-    {
-        $optionValues = ['H', 'W', 'メ希'];
-        $remarkParts = preg_split('/\s+/u', trim((string) $this->remarks));
-        $filteredRemarkParts = array_values(array_filter($remarkParts, static fn ($part) => !in_array($part, $optionValues, true)));
-        $this->remarks = implode(' ', $filteredRemarkParts);
-
-        $optionSelectData = [];
-        if($this->insurance) {
-            $optionSelectData[] = 'H';
-        }
-        if($this->carwash) {
-            $optionSelectData[] = 'W';
-        }
-        if($this->newsletter) {
-            $optionSelectData[] = 'メ希';
-        }
-        if(!empty($optionSelectData)) {
-            $this->remarks .= ' ' . implode(' ', $optionSelectData);
-        }
     }
 }
