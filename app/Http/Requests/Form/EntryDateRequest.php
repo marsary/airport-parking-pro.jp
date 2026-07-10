@@ -26,9 +26,9 @@ class EntryDateRequest extends FormRequest
         return [
             'agency_code' => 'nullable|string|exists:agencies,code|max:100',
             'agency_id' => 'nullable|int',
-            'load_date' => 'required|date',
+            'load_date' => 'required|date|after:today',
             'load_time' => 'required|date_format:G:i',
-            'unload_date_plan' => 'required|date|after_or_equal:load_date',
+            'unload_date_plan' => 'required|date|after_or_equal:load_date|after:today',
             'unload_time_plan' => 'nullable|date_format:H:i',
             'num_days' => 'required|int',
         ];
@@ -43,7 +43,9 @@ class EntryDateRequest extends FormRequest
     {
         return [
             'load_date.required' => '入庫日が設定されていません。',
+            'load_date.after'  => '入庫日は今日以降の日付を設定してください。',
             'unload_date_plan.required'  => '出庫日が設定されていません。',
+            'unload_date_plan.after'  => '出庫日は今日以降の日付を設定してください。',
             'load_time.required'  => '入庫時間が設定されていません。',
             'unload_date_plan.after_or_equal'  => '出庫日は入庫日以降の日付を設定してください。',
         ];

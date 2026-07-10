@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     },
     eventClick: function(info) {
-      if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
+      if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full") || info.el.classList.contains("fc-event-today")) {
         return;
       }
       // alert(info.event.start);
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
       unloadDateSectionElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
     },
     dateClick: function(info) {
-      if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
+      if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full") || info.dayEl.classList.contains("fc-day-today")) {
         return;
       }
       // alert(info.date);
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     },
     eventClick: function(info) {
-      if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full")) {
+      if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full") || info.el.classList.contains("fc-event-today")) {
           return;
       }
     //   alert(info.event.start);
@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
       loadTimeSectionWrapElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
     },
     dateClick: function(info) {
-      if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full")) {
+      if(info.dayEl.classList.contains("fc-day-past") || info.dayEl.classList.contains("day_full") || info.dayEl.classList.contains("fc-day-today")) {
         return;
       }
       // alert(info.date);

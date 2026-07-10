@@ -19,7 +19,7 @@ class CalendarController extends Controller
         $checker = new ParkingLimitDateChecker($startDate, $endDate);
         $eventData = [];
         foreach ($checker->checkLoadDate() as $date => $limitOverStatus) {
-            if(Carbon::parse($date) < $today) {
+            if(Carbon::parse($date) <= $today) {
                 $eventTitle = '-';
             } else {
                 $eventTitle = $limitOverStatus->label();
@@ -73,7 +73,7 @@ class CalendarController extends Controller
         $checker = new ParkingLimitDateChecker($startDate, $endDate);
         $eventData = [];
         foreach ($checker->checkUnloadDate() as $date => $limitOverStatus) {
-            if(Carbon::parse($date) < $today) {
+            if(Carbon::parse($date) <= $today) {
                 $eventTitle = '-';
             } else {
                 $eventTitle = $limitOverStatus->label();
