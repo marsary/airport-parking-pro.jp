@@ -6,33 +6,33 @@
 <p>「サンパーキング 成田店」です。<br>
     ご予約ありがとうございます。<br>
     本メールは出庫日まで大切に保存ください。<br><br>
-    お客様のご予約番号は<br>
-    [{{ $deal->reserve_code }}]　になります。
 </p>
 
 <p>予約詳細は以下の通りです。<br>
     =================================================
 </p>
 
-<p>予約番号：
-{{ $deal->reserve_code }}
-</p>
-
 <p>予約日：
-{{ $deal->reserve_date?->format('Y/m/d(ddd)') }}
+{{ $deal->reserve_date?->isoFormat('YYYY/MM/DD(ddd)') }}
 </p>
 
 <p>入庫予定：
-{{ $deal->loadDateTime() }}
+{{ $deal->loadDateTimeISO() }}
 </p>
 
 <p>出庫予定：
-{{ $deal->unload_date_plan?->format("Y/m/d(ddd)") }}
+{{ $deal->unload_date_plan?->isoFormat("YYYY/MM/DD(ddd)") }}
 </p>
 
 <p>駐車料金：
-{{ $deal->total_price }} 円（税込 {{ $deal->total_price + $deal->total_tax }} 円）
+{{ number_format($deal->total_price + $deal->total_tax) }} 円（税込）
 </p>
+
+@if($deal->season_price)
+<p>シーズン料金：
+{{ number_format($deal->season_price + $deal->season_price_tax) }} 円（税込）
+</p>
+@endif
 
 <p>支払方法：
 入庫時にお支払い
@@ -41,13 +41,13 @@
 <p>------------------------------------</p>
 
 <p>合計金額：
-{{ $deal->total_price + $deal->total_tax }} 円（税込）
+{{ number_format($deal->total_price + $deal->total_tax + ($deal->season_price ?? 0) + ($deal->season_price_tax ?? 0)) }} 円（税込）
 </p>
 
 <p>内消費税：
-{{ $deal->total_tax }} 円（10％）
+{{ number_format($deal->total_tax + ($deal->season_price_tax ?? 0)) }} 円（10％）
 </p>
-
+<br />
 
 <p>支払方法： 入庫時にお支払い</p>
 
@@ -57,31 +57,27 @@
     スタッフ一同、<br>
     {{ $deal->name }}様の<br>
     お越しをお待ちしています。<br>
+=================================================
 </p>
 
-<p>【ご予約の確認・変更・キャンセル】<br>
-    ご予約の確認・変更・キャンセルはこちらから<br>
-    TEL：0476-33-1166<br>
-    ＊上記からの確認、変更。キャンセルはご入庫前日 23 時までとなります<br>
-</p>
-
-<p>【アクセス】
-    <a href= "https://goo.gl/maps/g7J2DC7xtiykyKmr7">https://goo.gl/maps/g7J2DC7xtiykyKmr7</a>
-</p>
-
-<p>■お問合せ■<br>
+<p>【お問い合わせ、ご予約の確認・変更・キャンセル】<br>
+    お問い合わせ、ご予約の確認・変更・キャンセルはこちらから<br>
     サン予約センター<br>
     TEL：0476-33-1123<br>
     E-mail：center@sunparking.co.jp<br>
     &lt;営業時間&gt; 9：00～18：00
 </p>
-
+<br />
+<p>【アクセス】
+    <a href= "https://goo.gl/maps/g7J2DC7xtiykyKmr7">https://goo.gl/maps/g7J2DC7xtiykyKmr7</a>
+</p>
+<br />
 <p>■当日のお問合せ■<br>
     サンパーキング成田店<br>
     TEL：0476-33-1166<br>
-    E-mail：center@sunparking.co.jp<br>
     &lt;営業時間&gt; 5：00～22：30（成田空港最終便到着まで対応）
 </p>
+<br />
 
 <p>★次回のご予約は LINE 公式アカウントからが<br>
     断然！便利でおトク！★<br>
