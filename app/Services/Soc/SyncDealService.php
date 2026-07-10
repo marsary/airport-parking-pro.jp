@@ -237,6 +237,8 @@ class SyncDealRecord
             'price' => $this->deal->price, // 利用料金（率割引後，税抜き）
             'price_tax' => $this->deal->tax, // 利用料金消費税
             'total_pay' => $this->deal->payment?->total_pay, // 支払合計金額（税込み）
+            'season_price' => $this->deal->season_price, // シーズン料金
+            'season_price_tax' => $this->deal->season_price_tax, // シーズン料金消費税
             'cancel_flg' => $this->deal->status == DealStatus::CANCEL->value, // キャンセルフラグ
 
             'goods' => $goods, // オプション商品
