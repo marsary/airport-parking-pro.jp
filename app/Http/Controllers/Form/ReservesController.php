@@ -192,7 +192,7 @@ class ReservesController extends Controller
     {
         $reserve = session()->get('reserve');
             error_log("reserve\n",3,"../storage/logs/test.log");
-error_log(json_decode($reserve)."\n",3,"../storage/logs/test.log");
+error_log($reserve."\n",3,"../storage/logs/test.log");
         if(!$reserve) {
             error_log("if\n",3,"../storage/logs/test.log");
             $reserve = new ReserveForm();
