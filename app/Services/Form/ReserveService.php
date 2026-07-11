@@ -48,7 +48,6 @@ class ReserveService
             $memberExists = Member::where('id', $this->reserve->member->id)->exists();
 
             if (!$memberExists) {
-            error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
             try{
                 $this->reserve->member->fill([
                     'id' => $this->reserve->member->id,
@@ -78,6 +77,7 @@ class ReserveService
                     'updated_by' => null,
                 ])->save();
                 } catch (\Exception $e) {
+            error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
     Log::error($e->getMessage());
     Log::error($e->getTraceAsString());
 }
