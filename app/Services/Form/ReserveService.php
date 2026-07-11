@@ -49,6 +49,7 @@ class ReserveService
 
             if (!$memberExists) {
             error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
+            try{
                 $this->reserve->member->fill([
                     'id' => $this->reserve->member->id,
                     'office_id' => config('const.commons.form_office_id'),
@@ -76,6 +77,10 @@ class ReserveService
                     'created_by' => null,
                     'updated_by' => null,
                 ])->save();
+                } catch (\Exception $e) {
+    Log::error($e->getMessage());
+    Log::error($e->getTraceAsString());
+}
 
             } else {
                 $member = Member::findOrFail($this->reserve->member->id);
