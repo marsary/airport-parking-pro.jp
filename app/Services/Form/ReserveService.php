@@ -43,57 +43,17 @@ class ReserveService
             throw new ErrorException("ウェブ予約では会員情報の登録は必須です。");
         }
         unset($this->reserve->member->tagMembers);
-            error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
         if(isset($this->reserve->member->id)) { //会員情報更新
-            $memberExists = Member::where('id', $this->reserve->member->id)->exists();
 
-            if (!$memberExists) {
-            try{
-                $this->reserve->member->fill([
-                    'id' => $this->reserve->member->id,
-                    'office_id' => config('const.commons.form_office_id'),
-                    'status' => GeneralStatus::Enabled->value,
-                    // 'member_code' => ,  // fillMember()で設定済み
-                    'soc_member_id' => null,
-                    'soc_member_flg' => false,
-                    'member_type_id' => MemberType::MEMBER_TYPE_NEW,
-                    //     'name' => $this->reserve->name, // fillMember()で設定済み
-                    //     'kana' => $this->reserve->kana, // fillMember()で設定済み
-                    'en_name' => null,
-                    //     'zip' => $this->reserve->zip, // fillMember()で設定済み
-                    'address1' => null,
-                    'address2' => null,
-                    //     'tel' => $this->reserve->tel, // fillMember()で設定済み
-                    //     'email' => $this->reserve->email, // fillMember()で設定済み
-                    'line_id' => null,
-                    'line_account' => null,
-                    'line_email' => null,
-                    'image_url' => null,
-                    'password' => null,
-                    'remember_token' => null,
-                    'used_num' => 1,
-                    'memo' => null,
-                    'created_by' => null,
-                    'updated_by' => null,
-                ])->save();
-                } catch (\Exception $e) {
-            error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
-    Log::error($e->getMessage());
-    Log::error($e->getTraceAsString());
-}
-
-            } else {
-                $member = Member::findOrFail($this->reserve->member->id);
-
-                return $member->fill([
-                    'name' => $this->reserve->name,
-                    'kana' => $this->reserve->kana,
-                    'zip' => $this->reserve->zip,
-                    'tel' => $this->reserve->tel,
-                    'email' => $this->reserve->email,
-                    'used_num' => 1 + $member->used_num,
-                ])->save();
-            }
+            return $member->fill([
+                'name' => $this->reserve->name,
+                'kana' => $this->reserve->kana,
+                'zip' => $this->reserve->zip,
+                'tel' => $this->reserve->tel,
+                'email' => $this->reserve->email,
+                'used_num' => 1 + $member->used_num,
+            ])->save();
+            
         } else { // 新規作成
              $this->reserve->member->fill([
                 'office_id' => config('const.commons.form_office_id'),
