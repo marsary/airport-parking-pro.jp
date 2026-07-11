@@ -48,7 +48,7 @@ class ReserveService
             $memberExists = Member::where('id', $this->reserve->member->id)->exists();
             error_log(json_decode($memberExists)."\n",3,"../storage/logs/test.log");
 
-            if (!isset($memberExists) && empty($memberExists)) {
+            if (!$memberExists) {
                 $this->reserve->member->fill([
                     'id' => $this->reserve->member->id,
                     'office_id' => config('const.commons.form_office_id'),
