@@ -191,13 +191,18 @@ class ReservesController extends Controller
     private function getReserveForm():ReserveForm
     {
         $reserve = session()->get('reserve');
+            error_log("reserve\n",3,"../storage/logs/test.log");
+error_log(json_decode($reserve)."\n",3,"../logs/test.log");
         if(!$reserve) {
+            error_log("if\n",3,"../storage/logs/test.log");
+            error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
             $reserve = new ReserveForm();
             $member = Auth::guard('members')->user();
             $reserve->setMember($member);
             // 会員情報は登録・更新する
             $reserve->registerMember = true;
         } elseif (!$reserve->member && Auth::guard('members')->check()) {
+            error_log("else\n",3,"../storage/logs/test.log");
             $member = Auth::guard('members')->user();
             $reserve->setMember($member);
         }
