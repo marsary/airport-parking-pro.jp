@@ -163,7 +163,7 @@ class ReservesController extends Controller
         $reserve = $this->getReserveForm();
         $reserve->handleGoodsAndTotals();
 
-        LabelTagManager::attachTagDataToMember($reserve->member);
+        // LabelTagManager::attachTagDataToMember($reserve->member);
         $arrivalFlight = null;
         if($reserve->flight_no && $reserve->arrive_date) {
             $arrivalFlight = ArrivalFlight::with('airline','depAirport','arrAirport')
