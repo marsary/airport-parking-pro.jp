@@ -43,7 +43,7 @@ class ReserveService
             throw new ErrorException("ウェブ予約では会員情報の登録は必須です。");
         }
         unset($this->reserve->member->tagMembers);
-            error_log(this->reserve->member->id."\n",3,"../storage/logs/test.log");
+            error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
         if(isset($this->reserve->member->id)) { //会員情報更新
             $memberExists = Member::where('id', $this->reserve->member->id)->exists();
             error_log(json_decode($memberExists)."\n",3,"../storage/logs/test.log");
