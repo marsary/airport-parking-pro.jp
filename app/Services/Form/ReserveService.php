@@ -44,6 +44,8 @@ class ReserveService
         }
         unset($this->reserve->member->tagMembers);
         if(isset($this->reserve->member->id)) { //会員情報更新
+        error_log("if\n",3,"../storage/logs/test.log");
+
             $member = Member::findOrFail($this->reserve->member->id);
 
             return $member->fill([
@@ -55,6 +57,7 @@ class ReserveService
                 'used_num' => 1 + $member->used_num,
             ])->save();
         } else { // 新規作成
+        error_log("else\n",3,"../storage/logs/test.log");
             $this->reserve->member->fill([
                 'office_id' => config('const.commons.form_office_id'),
                 'status' => GeneralStatus::Enabled->value,
