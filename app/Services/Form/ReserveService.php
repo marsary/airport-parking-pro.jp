@@ -46,11 +46,11 @@ class ReserveService
             error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
         if(isset($this->reserve->member->id)) { //会員情報更新
             $memberExists = Member::where('id', $this->reserve->member->id)->exists();
-            error_log(json_decode($memberExists)."\n",3,"../storage/logs/test.log");
 
             if (!$memberExists) {
             error_log($this->reserve->member->id."\n",3,"../storage/logs/test.log");
                 $this->reserve->member->fill([
+                    'id' => $this->reserve->member->id,
                     'office_id' => config('const.commons.form_office_id'),
                     'status' => GeneralStatus::Enabled->value,
                     // 'member_code' => ,  // fillMember()で設定済み
