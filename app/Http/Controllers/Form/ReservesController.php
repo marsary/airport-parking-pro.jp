@@ -99,10 +99,10 @@ class ReservesController extends Controller
     public function entryCar()
     {
         $reserve = $this->getReserveForm();
-        $carMakers = CarMaker::select('name', 'id')->get();
+        $carMakers = CarMaker::select('name', 'id')->orderBy('sort')->get();
         $cars = [];
         if(null != old('car_maker_id', $reserve->car_maker_id)) {
-            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->get();
+            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->orderBy('sort')->get();
         }
         $carColors = CarColor::select('name', 'id')->get();
         $airlines = Airline::select('name', 'id')->get();
