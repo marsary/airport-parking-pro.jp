@@ -44,6 +44,7 @@ class ReserveService
         }
         unset($this->reserve->member->tagMembers);
         if(isset($this->reserve->member->id)) { //会員情報更新
+            $member = Member::findOrFail($this->reserve->member->id);
 
             return $member->fill([
                 'name' => $this->reserve->name,
