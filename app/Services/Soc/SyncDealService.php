@@ -176,8 +176,18 @@ class SyncDealRecord
             ];
         }
 
-        error_log(json_encode($this->deal)."\n",3,"../storage/logs/test.log");
-
+        // シーズン料金対応
+        if (!empty($this->deal->season_price) && $this->deal->season_price > 0) {
+            $goods[] = [
+                'g_id' => 470,
+                'price' => $this->deal->season_price, // 1個あたり税抜単価
+                'price_tax' => $this->deal->season_price_tax, // 1個あたり消費税
+                'total_price' => $this->deal->season_price + $this->deal->season_price_tax, // 単価（税込）× 数量
+                'tax_type' => SocTaxType::MY_TAX_TYPE_IN->value,  // 全て内税
+                'sales_type' => $salesTypeId, // 売上区分
+                'num' => 1,
+            ];
+        }
 
         $couponDetail = $this->getAppliedCoupon();
 
