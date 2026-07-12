@@ -88,6 +88,7 @@ class SyncDealService
         // 以下を固定で設定
         // ag_id1：6033
         // ag_id2：71  もしかしたら、ag_id2は72になるかも
+        // 2026/07/12 現在ag_id2：500に固定
         // この代理店は、「サンホームページ(公式HPWEB割)」
         $syncDealRecord->agId1 = self::AG_ID1;
         $syncDealRecord->agId2 = self::AG_ID2;
@@ -174,6 +175,9 @@ class SyncDealRecord
                 'num' => $dealGood->num,
             ];
         }
+
+        error_log(json_encode($this->deal)."\n",3,"../storage/logs/test.log");
+
 
         $couponDetail = $this->getAppliedCoupon();
 
