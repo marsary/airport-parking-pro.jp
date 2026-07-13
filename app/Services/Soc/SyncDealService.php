@@ -24,6 +24,7 @@ class SyncDealService
     protected array $syncDealRecords = [];
     protected const AG_ID1 = 6033;
     protected const AG_ID2 = 500;
+    public const SEASON_PRICE_ID = 470;
 
     public function setDeals(Collection $deals): self
     {
@@ -179,12 +180,12 @@ class SyncDealRecord
         // シーズン料金対応
         if (!empty($this->deal->season_price) && $this->deal->season_price > 0) {
             $goods[] = [
-                'g_id' => 470,
+                'g_id' => SyncDealService::SEASON_PRICE_ID,
                 'price' => $this->deal->season_price, // 1個あたり税抜単価
                 'price_tax' => $this->deal->season_price_tax, // 1個あたり消費税
                 'total_price' => $this->deal->season_price + $this->deal->season_price_tax, // 単価（税込）× 数量
                 'tax_type' => SocTaxType::MY_TAX_TYPE_IN->value,  // 全て内税
-                'sales_type' => $salesTypeId, // 売上区分
+                'sales_type' => SocSalesType::MY_SALES_TYPE_PARK->value, // 売上区分
                 'num' => 1,
             ];
         }
@@ -251,8 +252,8 @@ class SyncDealRecord
             'price' => $this->deal->price, // 利用料金（率割引後，税抜き）
             'price_tax' => $this->deal->tax, // 利用料金消費税
             'total_pay' => $this->deal->payment?->total_pay, // 支払合計金額（税込み）
-            'season_price' => $this->deal->season_price, // シーズン料金
-            'season_price_tax' => $this->deal->season_price_tax, // シーズン料金消費税
+            // 'season_price' => $this->deal->season_price, // シーズン料金
+            // 'season_price_tax' => $this->deal->season_price_tax, // シーズン料金消費税
             'cancel_flg' => $this->deal->status == DealStatus::CANCEL->value, // キャンセルフラグ
 
             'goods' => $goods, // オプション商品
