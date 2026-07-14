@@ -294,8 +294,8 @@
                 <div class="u-mt3 u-border--top p-input-user-total-parking-charges__detail-total">
                     <div>駐車料金合計</div>
                     <div id="total_copy"></div>
-                    <div>シーズン料金</div>
-                    <div id="season_price"></div>
+                    <div id="season_price_label" class="hidden">シーズン料金</div>
+                    <div id="season_price" class="hidden"></div>
                 </div>
                 <div class="u-border--top p-input-user-total-parking-charges__detail-total">
                     <div>合計</div>
