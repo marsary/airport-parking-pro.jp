@@ -54,7 +54,7 @@ class ReserveService
                 'email' => $this->reserve->email,
                 'used_num' => 1 + $member->used_num,
             ])->save();
-            
+
         } else { // 新規作成
              $this->reserve->member->fill([
                 'office_id' => config('const.commons.form_office_id'),
@@ -167,9 +167,9 @@ class ReserveService
             'airline_id' => $this->reserve->airline_id,
             'member_car_id' => $this->reserve->member_car_id,
             'receipt_address' => null,
-            'reserve_memo' => null,
+            'reserve_memo' => $this->setReserveMemoForOptionSelect($this->reserve->reserve_memo, $this->reserve->insurance, $this->reserve->carwash, $this->reserve->newsletter),
             'reception_memo' => null,
-            'remarks' => $this->setRemarkForOptionSelect($this->reserve->remarks, $this->reserve->insurance, $this->reserve->carwash, $this->reserve->newsletter),
+            'remarks' => $this->reserve->remarks,
             'remind_mail_sent_flg' => 0,
             'sync_flg' => 0,
             'synced_at' => null,
@@ -185,12 +185,12 @@ class ReserveService
 
 
 
-    public function setRemarkForOptionSelect(string|null $remarks, bool $insurance, bool $carwash, bool $newsletter): string
+    public function setReserveMemoForOptionSelect(string|null $reserveMemo, bool $insurance, bool $carwash, bool $newsletter): string
     {
         $optionValues = ['H', 'W', 'メ希'];
-        $remarkParts = preg_split('/\s+/u', trim((string) $remarks));
-        $filteredRemarkParts = array_values(array_filter($remarkParts, static fn ($part) => !in_array($part, $optionValues, true)));
-        $remarks = implode(' ', $filteredRemarkParts);
+        $parts = preg_split('/\s+/u', trim((string) $reserveMemo));
+        $filteredParts = array_values(array_filter($parts, static fn ($part) => !in_array($part, $optionValues, true)));
+        $reserveMemo = implode(' ', $filteredParts);
 
         $optionSelectData = [];
         if($insurance) {
@@ -203,8 +203,8 @@ class ReserveService
             $optionSelectData[] = 'メ希';
         }
         if(!empty($optionSelectData)) {
-            $remarks .= ' ' . implode(' ', $optionSelectData);
+            $reserveMemo .= ' ' . implode(' ', $optionSelectData);
         }
-        return trim($remarks);
+        return trim($reserveMemo);
     }
 }
