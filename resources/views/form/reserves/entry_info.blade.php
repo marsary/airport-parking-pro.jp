@@ -17,7 +17,7 @@
       </div>
       <div class="u-w-full-wide">
         <label for="kana">ふりがな<span class="c-label--required">※必須</span><br class="is-none--md" /><span class="u-font--xs">（間にスペースを入れて下さい。例:くうこう　たろう）</span></label>
-        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}" placeholder="くうこう　たろう）">
+        <input type="text" id="kana" name="kana" class="u-w-full-wide" value="{{old('kana', $reserve->kana)}}" placeholder="くうこう　たろう">
       </div>
     </div>
 
