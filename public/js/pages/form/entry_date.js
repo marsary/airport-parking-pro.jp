@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const priceRowsElem = document.getElementById('price_rows');
   const tableNumDaysElem = document.getElementById('num_days');
   const subTotalElem = document.getElementById('sub_total');
-  const taxLabelElem = document.getElementById('tax_label');
-  const taxElem = document.getElementById('tax');
-  const totalElem = document.getElementById('total');
+//   const taxLabelElem = document.getElementById('tax_label');
+//   const taxElem = document.getElementById('tax');
+//   const totalElem = document.getElementById('total');
   const totalCopyElem = document.getElementById('total_copy');
   const seasonPriceLabelElem = document.getElementById('season_price_label');
   const seasonPriceElem = document.getElementById('season_price');
@@ -71,11 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
       tableNumDaysElem.textContent = json.data.table.numDays  + '日間';
       subTotalElem.textContent = formatCurrency(json.data.table.subTotal, '￥');
-      taxLabelElem.textContent = '消費税(' + json.data.table.taxLabel + ')';
+    //   taxLabelElem.textContent = '消費税(' + json.data.table.taxLabel + ')';
 
-      taxElem.textContent = formatCurrency(json.data.table.tax, '￥');
-      totalElem.textContent = formatCurrency(json.data.table.total, '￥', '(税込)');
-      totalCopyElem.textContent = formatCurrency(json.data.table.total, '￥');
+    //   taxElem.textContent = formatCurrency(json.data.table.tax, '￥');
+    //   totalElem.textContent = formatCurrency(json.data.table.total, '￥', '(税込)');
+      totalCopyElem.textContent = formatCurrency(json.data.table.total, '￥', ' (税込)');
       // シーズン料金は税込み
       const seasonPriceTaxIncluded = (json.data.season.season_price ?? 0) + (json.data.season.season_price_tax ?? 0);
       if(json.data.season.season_price == null) {
@@ -83,12 +83,12 @@ document.addEventListener('DOMContentLoaded', function () {
         seasonPriceLabelElem.classList.add('hidden');
         seasonPriceElem.classList.add('hidden');
       } else {
-          seasonPriceElem.textContent = formatCurrency(seasonPriceTaxIncluded, '￥');
+          seasonPriceElem.textContent = formatCurrency(seasonPriceTaxIncluded, '￥', ' (税込)');
           seasonPriceLabelElem.classList.remove('hidden');
           seasonPriceElem.classList.remove('hidden');
       }
 
-      grandTotalElem.textContent = formatCurrency(json.data.table.total + seasonPriceTaxIncluded, '￥');
+      grandTotalElem.textContent = formatCurrency(json.data.table.total + seasonPriceTaxIncluded, '￥', ' (税込)');
       taxSumElem.textContent = formatCurrency(json.data.table.tax + (json.data.season.season_price_tax ?? 0), '￥');
 
       // 料金明細表
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dispLoadDateElem.textContent = ''
         return
       }
-    dispLoadDateElem.textContent = loadDate.toFormat(`M/dd`) + '(' + loadDate.weekdayShort + ')';
+    dispLoadDateElem.textContent = loadDate.toFormat(`yyyy/M/dd`) + '(' + loadDate.weekdayShort + ')';
     loadTimetableTitle.textContent = loadDate.toFormat('yyyy年M月d日');
 
   }
@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dispUnloadDateElem.textContent = ''
         return
       }
-    dispUnloadDateElem.textContent = unloadDate.toFormat(`M/dd`) + '(' + unloadDate.weekdayShort + ')';
+    dispUnloadDateElem.textContent = unloadDate.toFormat(`yyyy/M/dd`) + '(' + unloadDate.weekdayShort + ')';
   }
 
   function updateDispNumDays() {
