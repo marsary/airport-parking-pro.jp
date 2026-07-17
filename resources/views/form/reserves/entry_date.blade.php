@@ -7,6 +7,7 @@
     <!-- 以下を追加 -->
     <ul class="p-reserve__wrap u-mb3 u-font--sm">
       <li>●ご予約前には必ず『<a href="https://www.sunparking.co.jp/menseki/" target="_blank" rel="noopener" class="u-font--red">免責約款</a>』をご確認下さい。<br class="is-none--md">お申し込み頂いた時点で同意頂いたものとさせて頂きます。</li>
+      <li>●ご利用当日のWEB予約はできません。サン予約センターまでお電話ください</li>
     </ul>
     <!-- ここまで -->
 
@@ -282,7 +283,7 @@
                         <div id="num_days"></div>
                         <div id="sub_total"></div>
                     </div>
-                </div>
+                {{-- </div> --}}
 
                 <!-- 料金明細 -->
                 {{--  <div class="u-mt3 u-pt3 u-border--top p-input-user-total-parking-charges__detail-total">
@@ -291,7 +292,7 @@
                     <div>駐車料金(普通)合計</div>
                     <div id="total"></div>
                 </div>  --}}
-                <div class="u-mt3 u-border--top p-input-user-total-parking-charges__detail-total">
+                {{-- <div class="u-mt3 u-border--top p-input-user-total-parking-charges__detail-total"> --}}
                     <div>駐車料金</div>
                     <div id="total_copy"></div>
                     <div id="season_price_label" class="hidden">シーズン料金</div>
