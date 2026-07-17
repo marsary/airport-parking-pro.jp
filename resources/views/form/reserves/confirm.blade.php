@@ -234,7 +234,7 @@
       <div>{{number_format($reserve->total_tax_8)}}円</div> --}}
       {{-- <div></div> --}}
       <div class="l-table-charge-detail--second__head">合計金額</div>
-      <div class="u-font--lg u-font--medium l-grid--colspan2">{{number_format($reserve->totalCharge())}} <span>円</span></div>
+      <div class="u-font--lg u-font--medium l-grid--colspan1">{{number_format($reserve->totalCharge())}} <span>円</span></div>
       <div class="u-font--normal" >（税込）</div>
       <div>内消費税</div>
       <div>{{number_format($reserve->total_tax_10 + $reserve->season_price_tax)}}円</div>
