@@ -283,7 +283,7 @@
                         <div id="num_days"></div>
                         <div id="sub_total"></div>
                     </div>
-                {{-- </div> --}}
+                </div>
 
                 <!-- 料金明細 -->
                 {{--  <div class="u-mt3 u-pt3 u-border--top p-input-user-total-parking-charges__detail-total">
@@ -292,13 +292,14 @@
                     <div>駐車料金(普通)合計</div>
                     <div id="total"></div>
                 </div>  --}}
+                <div class="u-border--top p-input-user-total-parking-charges__detail-total">
                 {{-- <div class="u-mt3 u-border--top p-input-user-total-parking-charges__detail-total"> --}}
                     <div>駐車料金</div>
                     <div id="total_copy"></div>
                     <div id="season_price_label" class="hidden">シーズン料金</div>
                     <div id="season_price" class="hidden"></div>
-                </div>
-                <div class="u-border--top p-input-user-total-parking-charges__detail-total">
+                {{-- </div>
+                <div class="u-border--top p-input-user-total-parking-charges__detail-total"> --}}
                     <div>合計</div>
                     <div id="grand_total"></div>
                     <div id="tax_label">内消費税(10%)</div>
