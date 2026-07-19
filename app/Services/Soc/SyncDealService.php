@@ -231,8 +231,8 @@ class SyncDealRecord
             'mailmag_flg' => null, // メルマガ希望
             'ag_id1' => $this->agId1, // SOC用代理店ID（メイン）
             'ag_id2' => $this->agId2, // SOC用代理店ID（枝番）
-            'visit_date_plan' => $this->formatDate($this->deal->visit_date_plan), // 来店予定日
-            'visit_time_plan' => $this->formatTime($this->deal->visit_time_plan), // 来店予定時間
+            'visit_date_plan' => $this->formatDate($this->deal->load_date), // 来店予定日
+            'visit_time_plan' => $this->formatTime($this->deal->load_time   ), // 来店予定時間
             'load_date' => $this->formatDate($this->deal->load_date), // 入庫日
             'load_time' => $this->formatTime($this->deal->load_time), // 入庫時間
             'unload_date_plan' => $this->formatDate($this->deal->unload_date_plan), // 出庫予定日

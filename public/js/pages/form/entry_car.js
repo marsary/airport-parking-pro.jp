@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const arrAirportNameElem = document.getElementById('arr_airport_name');
   const arriveTimeElem = document.getElementById('arrive_time');
   const unloadDateElem = document.getElementById('unload_date_plan');
+  const unloadTimeElem = document.getElementById('unload_time_plan');
 
   const carMakersElem = document.getElementById('car_maker_id');
   const carsElem = document.getElementById('car_id');
@@ -82,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const loadTime = luxon.DateTime.fromISO(json.data.arrivalFlight.arriveTime);
       if(loadTime.isValid) {
         arriveTimeElem.textContent = loadTime.toFormat("HH:mm")
+        unloadTimeElem.value = loadTime.toFormat("HH:mm")
       } else {
         arriveTimeElem.textContent = '';
       }
