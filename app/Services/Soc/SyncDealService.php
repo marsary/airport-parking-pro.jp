@@ -255,7 +255,6 @@ class SyncDealRecord
             // 'season_price' => $this->deal->season_price, // シーズン料金
             // 'season_price_tax' => $this->deal->season_price_tax, // シーズン料金消費税
             'cancel_flg' => $this->deal->status == DealStatus::CANCEL->value, // キャンセルフラグ
-            'trans_note' => $this->deal->reserve_memo, // 予約引継１システム用
 
             'goods' => $goods, // オプション商品
 
@@ -263,7 +262,8 @@ class SyncDealRecord
             'prepaid_state' => null, // 事前決済ステータス（2:与信完了等）
             'prepaid2_pay' => null, // 事前決済金額
             'prepaid2_jcb' => null, // 事前決済JCBフラグ
-            'trans_note' => null, // 備考（鍵・洗車・マイル等を結合）
+            // 'trans_note' => null, // 備考（鍵・洗車・マイル等を結合）
+            'trans_note' => $this->deal->reserve_memo, // 予約引継１システム用
             //
         ];
     }
