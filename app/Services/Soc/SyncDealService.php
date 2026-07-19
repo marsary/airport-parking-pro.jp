@@ -255,6 +255,7 @@ class SyncDealRecord
             // 'season_price' => $this->deal->season_price, // シーズン料金
             // 'season_price_tax' => $this->deal->season_price_tax, // シーズン料金消費税
             'cancel_flg' => $this->deal->status == DealStatus::CANCEL->value, // キャンセルフラグ
+            'trans_note' => $this->deal->reserve_memo, // 予約引継１システム用
 
             'goods' => $goods, // オプション商品
 
