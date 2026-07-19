@@ -82,10 +82,11 @@ document.addEventListener('DOMContentLoaded', function () {
       // ⑪	到着予定時間 を表示
       const loadTime = luxon.DateTime.fromISO(json.data.arrivalFlight.arriveTime);
       if(loadTime.isValid) {
-        arriveTimeElem.textContent = loadTime.toFormat("HH:mm")
-        unloadTimeElem.value = loadTime.toFormat("HH:mm")
+        arriveTimeElem.textContent = loadTime.toFormat("HH:mm");
+        unloadTimeElem.value = loadTime.toFormat("HH:mm");
       } else {
         arriveTimeElem.textContent = '';
+        unloadTimeElem.value = '';
       }
       flightNoNotFoundElem.classList.add('hidden')
     } else {
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
         arrAirportNameElem.textContent = '';
         // ⑪	到着予定時間 を表示
         arriveTimeElem.textContent = '';
+        unloadTimeElem.value = '';
     }
   }
 
