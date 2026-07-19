@@ -133,8 +133,6 @@ class ReservesController extends Controller
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
         
         $reserve->unload_time_plan = date('H:i', strtotime('+3 hours', strtotime($reserve->unload_time_plan)));
-error_log("unload_time_plan\n",3,"../storage/logs/test.log");
-error_log($reserve->unload_time_plan."\n",3,"../storage/logs/test.log");
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.option_select');
     }
@@ -150,11 +148,7 @@ error_log($reserve->unload_time_plan."\n",3,"../storage/logs/test.log");
 
     public function postOptionSelect(OptionSelectRequest $request)
     {
-// error_log("postOptionSelect\n",3,"../storage/logs/test.log");
-        // error_log(json_encode($request)."\n",3,"../storage/logs/test.log");
         $reserve = $this->getReserveForm();
-// error_log("reserve\n",3,"../storage/logs/test.log");
-//          error_log(json_encode($reserve)."\n",3,"../storage/logs/test.log");
 
         $reserve->fill($request->all());
         session()->put('reserve', $reserve);

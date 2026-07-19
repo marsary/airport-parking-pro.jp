@@ -128,6 +128,9 @@ class ReserveService
 
     private function createDeal()
     {
+        error_log("reserve\n",3,"../storage/logs/test.log");
+        error_log(json_encode($this->reserve)."\n",3,"../storage/logs/test.log");
+
         $this->deal = Deal::create([
             'member_id' => $this->reserve->member->id,
             'office_id' => config('const.commons.form_office_id'),
@@ -141,8 +144,8 @@ class ReserveService
             'reserve_date' => Carbon::now(),
             'load_date' => $this->reserve->load_date,
             'load_time' => $this->reserve->load_time,
-            'visit_date_plan' =>null,
-            'visit_time_plan' =>null,
+            'visit_date_plan' => $this->reserve->load_date,
+            'visit_time_plan' => $this->reserve->load_time,
             'unload_date_plan' => $this->reserve->unload_date_plan,
             'unload_date_plan' => $this->reserve->unload_time_plan,
             'overdue' => 0,
