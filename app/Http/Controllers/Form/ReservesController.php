@@ -131,7 +131,10 @@ class ReservesController extends Controller
         $reserve->fill($request->all());
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
-
+        
+        // $reserve->unload_time_plan
+error_log("unload_time_plan\n",3,"../storage/logs/test.log");
+error_log($reserve->unload_time_plan."\n",3,"../storage/logs/test.log");
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.option_select');
     }
