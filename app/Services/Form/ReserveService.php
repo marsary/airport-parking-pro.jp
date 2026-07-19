@@ -147,7 +147,7 @@ class ReserveService
             'visit_date_plan' => $this->reserve->load_date,
             'visit_time_plan' => $this->reserve->load_time,
             'unload_date_plan' => $this->reserve->unload_date_plan,
-            'unload_date_plan' => $this->reserve->unload_time_plan,
+            'unload_time_plan' => $this->reserve->unload_time_plan,
             'overdue' => 0,
             'arrival_flg' => $this->reserve->arrival_flg,
             'num_days' => $this->reserve->num_days,
