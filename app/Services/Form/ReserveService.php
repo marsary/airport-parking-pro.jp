@@ -23,10 +23,24 @@ class ReserveService
     /** @var Deal */
     public $deal;
 
+    /** @var Member */
+    private $member;
+    /** @var MemberCar */
+    private $memberCar;
+
 
     function __construct(ReserveForm $reserve)
     {
         $this->reserve = $reserve;
+        $memberExists = Member::where('email', $this->reserve->email)->exists();
+        if($memberExists) { //会員情報更新
+            $this->member = Member::where('email', $this->reserve->email)->first();
+            $this->memberCar = MemberCar::with('car.carMaker')->where('member_id', $this->member->id)
+                ->where('office_id', config('const.commons.form_office_id'))
+                ->orderBy('default_flg', 'desc')
+                ->orderBy('updated_at', 'desc')
+                ->first();
+        }
     }
 
     public function store()
@@ -43,20 +57,19 @@ class ReserveService
             throw new ErrorException("ウェブ予約では会員情報の登録は必須です。");
         }
         unset($this->reserve->member->tagMembers);
-        if(isset($this->reserve->member->id)) { //会員情報更新
-            $member = Member::findOrFail($this->reserve->member->id);
 
-            return $member->fill([
+        if($this->member) { //会員情報更新
+            return $this->member->fill([
                 'name' => $this->reserve->name,
                 'kana' => $this->reserve->kana,
                 'zip' => $this->reserve->zip,
                 'tel' => $this->reserve->tel,
                 'email' => $this->reserve->email,
-                'used_num' => 1 + $member->used_num,
+                'used_num' => 1 + $this->member->used_num,
             ])->save();
 
         } else { // 新規作成
-             $this->reserve->member->fill([
+            $this->reserve->member->fill([
                 'office_id' => config('const.commons.form_office_id'),
                 'status' => GeneralStatus::Enabled->value,
                 // 'member_code' => ,  // fillMember()で設定済み
@@ -82,20 +95,16 @@ class ReserveService
                 'created_by' => null,
                 'updated_by' => null,
             ])->save();
+            $this->member = $this->reserve->member;
         }
     }
 
     protected function saveMemberCar()
     {
-        $memberCar = null;
-        if($this->reserve->member_car_id) {
-            $memberCar = MemberCar::find($this->reserve->member_car_id);
-        }
-
-        if($memberCar) {
-            $memberCar->fill([
+        if($this->memberCar) {
+            $this->memberCar->fill([
                 'office_id' => config('const.commons.form_office_id'),
-                'member_id' => $this->reserve->member->id,
+                'member_id' => $this->member->id,
                 'car_id' => $this->reserve->car_id,
                 'car_color_id' => $this->reserve->car_color_id,
                 'number' => $this->reserve->car_number,
@@ -105,15 +114,15 @@ class ReserveService
             ])->save();
 
             // 予約で使用したもの以外をデフォルトから外す
-            DB::table('member_cars')->where('member_id', $this->reserve->member->id)
-                ->whereNot('id', $memberCar->id)
+            DB::table('member_cars')->where('member_id', $this->member->id)
+                ->whereNot('id', $this->memberCar->id)
                 ->where('office_id', config('const.commons.form_office_id'))
                 ->update(['default_flg' => false]);
 
         } else {
-            $memberCar = MemberCar::create([
+            $this->memberCar = MemberCar::create([
                 'office_id' => config('const.commons.form_office_id'),
-                'member_id' => $this->reserve->member->id,
+                'member_id' => $this->member->id,
                 'car_id' => $this->reserve->car_id,
                 'car_color_id' => $this->reserve->car_color_id,
                 'number' => $this->reserve->car_number,
@@ -121,8 +130,6 @@ class ReserveService
                 'created_by' => null,
                 'updated_by' => null,
             ]);
-
-            $this->reserve->member_car_id = $memberCar->id;
         }
     }
 
@@ -132,7 +139,7 @@ class ReserveService
         error_log(json_encode($this->reserve)."\n",3,"../storage/logs/test.log");
 
         $this->deal = Deal::create([
-            'member_id' => $this->reserve->member->id,
+            'member_id' => $this->member->id,
             'office_id' => config('const.commons.form_office_id'),
             'agency_id' => Agency::NARITA_PREMIUM_ID,
             'transaction_type' => TransactionType::PARKING->value,
@@ -168,7 +175,7 @@ class ReserveService
             'arr_flight_id' => $this->reserve->arr_flight_id,
             'flight_no' => $this->reserve->flight_no,
             'airline_id' => $this->reserve->airline_id,
-            'member_car_id' => $this->reserve->member_car_id,
+            'member_car_id' => $this->memberCar->id,
             'receipt_address' => null,
             'reserve_memo' => $this->setReserveMemoForOptionSelect($this->reserve->reserve_memo, $this->reserve->insurance, $this->reserve->carwash, $this->reserve->newsletter),
             'reception_memo' => null,
