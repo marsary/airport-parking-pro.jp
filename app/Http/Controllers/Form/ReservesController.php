@@ -80,12 +80,6 @@ class ReservesController extends Controller
     {
         $reserve = $this->getReserveForm();
 
-        $memberExists = Member::where('email', $request->email)->exists();
-
-        if($memberExists && !$reserve->member) {
-            $member = Member::where('email', $request->email)->first();
-            $reserve->setMember($member);
-        }
         $reserve->fill($request->all());
 
         if($reserve->registerMember) {
@@ -131,8 +125,10 @@ class ReservesController extends Controller
         $reserve->fill($request->all());
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
-        
-        $reserve->unload_time_plan = date('H:i', strtotime('+3 hours', strtotime($reserve->unload_time_plan)));
+
+        if($reserve->unload_time_plan) {
+            $reserve->unload_time_plan = date('H:i', strtotime('+3 hours', strtotime($reserve->unload_time_plan)));
+        }
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.option_select');
     }

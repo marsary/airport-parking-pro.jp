@@ -31,6 +31,7 @@ class EntryCarRequest extends FormRequest
             'flight_no' => 'nullable', // ['nullable', new FlightNoDateRule],
             'arrive_date' => 'nullable|date',
             'num_members' => 'nullable|numeric',
+            'unload_time_plan' => 'nullable|date_format:H:i',
         ];
     }
 
