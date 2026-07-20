@@ -102,7 +102,7 @@ class ReservesController extends Controller
         $carMakers = CarMaker::select('name', 'id')->orderBy('sort')->get();
         $cars = [];
         if(null != old('car_maker_id', $reserve->car_maker_id)) {
-            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->orderBy('sort')->get();
+            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->where ('size_type', 0)->select('name', 'id')->orderBy('sort')->get();
         }
         $carColors = CarColor::select('name', 'id')->get();
         $airlines = Airline::select('name', 'id')->orderBy('japan_flg', 'desc')->orderBy('kana')->get();
