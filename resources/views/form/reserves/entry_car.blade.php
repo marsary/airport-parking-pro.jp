@@ -92,7 +92,7 @@
           <label for="arrive_date">到着日</label>
           <input type="hidden" id="unload_date_plan" value="{{old('unload_date_plan', $reserve->unload_date_plan)}}">
           <input type="date" id="arrive_date" name="arrive_date" class="u-w-full-wide u-mb025" value="{{old('arrive_date', $reserve->arrive_date ?  $reserve->arrive_date->format('Y-m-d'): $reserve->unload_date_plan?->format('Y-m-d'))}}">
-          <p class="text-center arrival_flg hidden">到着日がお迎え日と異なる</p>
+          <p class="text-center arrival_flg hidden c-label--lg">到着日がお迎え日と異なる</p>
           <input type="hidden" id="unload_time_plan" name="unload_time_plan" value="{{old('unload_time_plan', $reserve->unload_time_plan)}}">
         </div>
         <div>
@@ -120,7 +120,7 @@
           <dt>到着予定時間</dt>
           <dd class="text-right" id="arrive_time"></dd>
         </dl>
-        <div class="arrival_flg hidden">到着日がお迎え日と異なる</div>
+        <div class="arrival_flg hidden c-label--lg">到着日がお迎え日と異なる</div>
       </div>
     </div>
 

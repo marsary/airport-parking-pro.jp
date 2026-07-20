@@ -12,7 +12,7 @@ class CarMakersController extends Controller
         if($carMakerId == 'all' && $request->query('default_all', false)) {
             $cars = Car::all();
         } else {
-            $cars = Car::where('car_maker_id', $carMakerId)->get();
+            $cars = Car::where('car_maker_id', $carMakerId)->where ('size_type', 0)->get();
         }
 
 

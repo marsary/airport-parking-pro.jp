@@ -96,7 +96,7 @@ class ReservesController extends Controller
         $carMakers = CarMaker::select('name', 'id')->orderBy('sort')->get();
         $cars = [];
         if(null != old('car_maker_id', $reserve->car_maker_id)) {
-            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->select('name', 'id')->orderBy('sort')->get();
+            $cars = Car::where('car_maker_id', old('car_maker_id', $reserve->car_maker_id))->where ('size_type', 0)->select('name', 'id')->orderBy('sort')->get();
         }
         $carColors = CarColor::select('name', 'id')->get();
         $airlines = Airline::select('name', 'id')->orderBy('japan_flg', 'desc')->orderBy('kana')->get();
@@ -126,9 +126,10 @@ class ReservesController extends Controller
         // 到着便の到着日と出庫日が異なる場合にチェック
         $reserve->arrival_flg = ($reserve->unload_date_plan == $reserve->arrive_date)? false : true;
 
-        if($reserve->unload_time_plan) {
-            $reserve->unload_time_plan = date('H:i', strtotime('+3 hours', strtotime($reserve->unload_time_plan)));
-        }
+        // 到着時間と出庫予定時間についてはどうするか？今後確認
+        // if($reserve->unload_time_plan) {
+        // $reserve->unload_time_plan = date('H:i', strtotime('+3 hours', strtotime($reserve->unload_time_plan)));
+        // }
         session()->put('reserve', $reserve);
         return redirect()->route('form.reserves.option_select');
     }
