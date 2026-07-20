@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Form\Forms;
 
 use App\Enums\DealStatus;
+use App\Enums\TaxType;
 use App\Http\Controllers\Forms\ReserveFormBase;
 use App\Models\Member;
 use App\Models\MemberCar;
@@ -68,5 +69,16 @@ class ReserveForm extends ReserveFormBase
         parent::handleGoodsAndTotals();
 
         // TODO クーポンの処理
+    }
+
+
+    public function getTaxTypeLabel($taxType)
+    {
+        return match ($taxType) {
+            TaxType::EIGHT_PERCENT->value => '税込' . TaxType::EIGHT_PERCENT->label(),
+            TaxType::TEN_PERCENT->value => '税込' . TaxType::TEN_PERCENT->label(),
+            TaxType::EXEMPT->value => TaxType::EXEMPT->label(),
+            default => "",
+        };
     }
 }
