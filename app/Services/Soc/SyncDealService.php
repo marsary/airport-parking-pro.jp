@@ -211,8 +211,8 @@ class SyncDealRecord
 
         return [
             'ambiguous_flg' => null, // あいまいフラグ（1で強制確認）
-            'rsv_id' => $this->deal->id, // SOC予約ID（rsv_id1と同じ）
-            'rsv_id1' => $this->deal->id, //
+            'rsv_id' => null, // SOC予約ID 新システム上では管理していない
+            'rsv_id1' => $this->deal->id, // 新システムの取引ID
             'group_type' => 0, // 0:非グループ固定 (0:非グループ, 1:代表, 2:メンバー)
             'rsv_id_group' => null , // グループID NULL固定
             'o_id' => $this->deal->office_id, // 事業所ID（1:成田, 2:レッド等）
@@ -232,7 +232,7 @@ class SyncDealRecord
             'ag_id1' => $this->agId1, // SOC用代理店ID（メイン）
             'ag_id2' => $this->agId2, // SOC用代理店ID（枝番）
             'visit_date_plan' => $this->formatDate($this->deal->load_date), // 来店予定日
-            'visit_time_plan' => $this->formatTime($this->deal->load_time   ), // 来店予定時間
+            'visit_time_plan' => $this->formatTime($this->deal->load_time), // 来店予定時間
             'load_date' => $this->formatDate($this->deal->load_date), // 入庫日
             'load_time' => $this->formatTime($this->deal->load_time), // 入庫時間
             'unload_date_plan' => $this->formatDate($this->deal->unload_date_plan), // 出庫予定日
@@ -263,9 +263,24 @@ class SyncDealRecord
             'prepaid2_pay' => null, // 事前決済金額
             'prepaid2_jcb' => null, // 事前決済JCBフラグ
             // 'trans_note' => null, // 備考（鍵・洗車・マイル等を結合）
-            'trans_note' => $this->deal->reserve_memo, // 予約引継１システム用
+            'trans_note' => $this->getOptionInfos($this->deal->reserve_memo), // 予約引継１システム用
             //
         ];
+    }
+
+
+    public function getOptionInfos(string|null $reserveMemo): string
+    {
+        if(!$reserveMemo || empty(trim($reserveMemo))) {
+            return '';
+        }
+
+        $optionValues = ['H', 'W', 'メ希'];
+        $parts = preg_split('/\s+/u', trim((string) $reserveMemo));
+        $filteredParts = array_values(array_filter($parts, static fn ($part) => in_array($part, $optionValues, true)));
+        $optionInfos = implode(' ', $filteredParts);
+
+        return trim($optionInfos);
     }
 
     public function getAppliedCoupon()

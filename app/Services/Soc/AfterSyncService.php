@@ -71,7 +71,6 @@ class AfterSyncService
         }
 
         if($sanitized['soc_member_id'] || $sanitized['soc_member_flg']) {
-            // TODO 要確認：会員登録せずに予約した場合は、新規会員を作成しても良いか？
             $member= $this->getOrNewMember($deal);
             if($sanitized['soc_member_id'] && $member) {
                 $member->soc_member_id = $sanitized['soc_member_id'];
