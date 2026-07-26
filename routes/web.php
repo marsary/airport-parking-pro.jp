@@ -86,6 +86,7 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::put('/season_price_settings/update_by_date', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'updateByDate'])->name('season_price_settings.update_by_date');
             Route::delete('/season_price_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'destroyByDate'])->name('season_price_settings.delete_by_date');
             Route::resource('/season_price_settings', \App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class);
+            Route::resource('/full_limit_settings', \App\Http\Controllers\Manage\Master\FullLimitSettingsController::class);
         });
 
         Route::get('/settings/daily_update', [\App\Http\Controllers\Manage\Settings\DailyUpdateController::class, 'index'])->name('daily_update');
