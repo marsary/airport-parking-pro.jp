@@ -443,8 +443,6 @@
   function handleDelete() {
     if(confirm("本当に削除しますか？")) {
       const deleteForm = document.getElementById('deleteForm');
-      // document.getElementById('delete_active_calendar_year').value = currentDisplayedYear;
-      // document.getElementById('delete_active_calendar_month1').value = currentDisplayedMonth1;
       deleteForm.submit();
     }
   }
@@ -473,21 +471,23 @@ function openPeriodModal() {
     if (stockEntry && stockEntry.stock) {
       const stock = stockEntry.stock;
       // フォームフィールドに値を設定
-      document.getElementById('edit_load_limit').value = stock.load_limit || '';
-      document.getElementById('edit_unload_limit').value = stock.unload_limit || '';
-      document.getElementById('edit_cross_time').value = stock.at_closing_time || '';
+      document.getElementById('edit_load_limit_symbol').value = stock.load_limit_symbol || '';
+      document.getElementById('edit_unload_limit_symbol').value = stock.unload_limit_symbol || '';
+      document.getElementById('edit_cross_time_symbol').value = stock.cross_time_symbol || '';
     } else {
       // データが見つからない場合、オプションでフォームをクリアするかデフォルト値を設定
-      document.getElementById('edit_load_limit').value = '';
-      document.getElementById('edit_unload_limit').value = '';
-      document.getElementById('edit_cross_time').value = '';
+      document.getElementById('edit_load_limit_symbol').value = '';
+      document.getElementById('edit_unload_limit_symbol').value = '';
+      document.getElementById('edit_cross_time_symbol').value = '';
       console.warn(`No stock data found for ${dateStr}`);
     }
     editModal.classList.add('is-active');
   }
+
   function closePeriodModal() {
     document.getElementById(`modalAreaOption_Period_`).classList.remove('is-active');
   }
+
   function closeEditModal() {
     document.getElementById(`modalAreaOption_edit_`).classList.remove('is-active');
   }
@@ -530,7 +530,7 @@ function openPeriodModal() {
       },
       events:
       function(info, successCallback, failureCallback) {
-        url = BASE_PATH +  '/manage/master/load_unload_full_limit_settings/calendar';
+        url = BASE_PATH +  '/manage/master/full_limit_settings/calendar';
 
         const response = apiRequest.get(url, {
           start: info.startStr,
@@ -544,10 +544,9 @@ function openPeriodModal() {
             calendar1StockData.set(row.start, row);
 
             const eventTitle = `
-            <div class="stock-item"><span>${row.stock.load_limit ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.unload_limit ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.at_closing_time ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.per_fifteen_munites ?? ''}</span></div>
+            <div class="stock-item"><span>${row.stock.load_limit_symbol_label ?? ''}</span></div>
+            <div class="stock-item"><span>${row.stock.unload_limit_symbol_label ?? ''}</span></div>
+            <div class="stock-item"><span>${row.stock.cross_time_symbol_label ?? ''}</span></div>
             `;
 
             eventData.push({
@@ -626,7 +625,7 @@ function openPeriodModal() {
       },
       events:
       function(info, successCallback, failureCallback) {
-        url = BASE_PATH +  '/manage/master/load_unload_full_limit_settings/calendar';
+        url = BASE_PATH +  '/manage/master/full_limit_settings/calendar';
 
         const response = apiRequest.get(url, {
           start: info.startStr,
@@ -640,10 +639,9 @@ function openPeriodModal() {
             calendar2StockData.set(row.start, row);
 
             const eventTitle = `
-            <div class="stock-item"><span>${row.stock.load_limit ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.unload_limit ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.at_closing_time ?? ''}</span></div>
-            <div class="stock-item"><span>${row.stock.per_fifteen_munites ?? ''}</span></div>
+            <div class="stock-item"><span>${row.stock.load_limit_symbol_label ?? ''}</span></div>
+            <div class="stock-item"><span>${row.stock.unload_limit_symbol_label ?? ''}</span></div>
+            <div class="stock-item"><span>${row.stock.cross_time_symbol_label ?? ''}</span></div>
             `;
 
             eventData.push({
