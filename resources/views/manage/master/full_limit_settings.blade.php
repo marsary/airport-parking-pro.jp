@@ -100,7 +100,7 @@
     <div class="l-modal__close modal_optionClose" onclick="closePeriodModal()">×</div>
     <div class="l-modal__content">
 
-      <form method="POST" action="{{route('manage.master.load_unload_full_limit_settings.store_all')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
+      <form method="POST" action="{{route('manage.master.full_limit_settings.store_all')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
         @csrf
         <!-- 開始日 -->
         <input type="hidden" name="active_calendar_year" id="period_active_calendar_year">
@@ -122,28 +122,43 @@
         <div class="l-grid--col5 l-grid--gap1">
           <!-- 入庫上限 -->
           <div class="form-item">
-            <label for="load_limit">入庫</label>
-            <select name="load_limit" id="load_limit" class="c-input u-w-full-wide" value="{{ old('load_limit') }}" required="">
-              <option value="" selected disabled>〇</option>
-              <option value="" selected>△</option>
-              <option value="" selected>×</option>
+            <label for="load_limit_symbol">入庫</label>
+            <select name="load_limit_symbol" id="load_limit_symbol" class="c-input u-w-full-wide" value="{{ old('load_limit_symbol') }}" required="">
+              @foreach(\App\Enums\LimitOverStatus::cases() as $status)
+              <option value="{{$status->value}}" {{old('load_limit_symbol')==$status->value ? 'selected':''}}>
+                {{$status->label()}}
+              </option>
+              @endforeach
+              {{--  <option value="" >〇</option>
+              <option value="" >△</option>
+              <option value="" >×</option>  --}}
             </select>
           </div>
           <!-- 出庫上限 -->
           <div class="form-item">
-            <label for="unload_limit">出庫</label>
-            <select name="unload_limit" id="unload_limit" class="c-input u-w-full-wide" value="{{ old('unload_limit') }}" required="">
-              <option value="" selected disabled>〇</option>
+            <label for="unload_limit_symbol">出庫</label>
+            <select name="unload_limit_symbol" id="unload_limit_symbol" class="c-input u-w-full-wide" value="{{ old('unload_limit_symbol') }}" required="">
+              @foreach(\App\Enums\LimitOverStatus::cases() as $status)
+              <option value="{{$status->value}}" {{old('unload_limit_symbol')==$status->value ? 'selected':''}}>
+                {{$status->label()}}
+              </option>
+              @endforeach
+              {{--  <option value="" selected disabled>〇</option>
               <option value="" selected>△</option>
-              <option value="" selected>×</option>
+              <option value="" selected>×</option>  --}}
             </select>
           </div>
           <div class="form-item">
-            <label for="at_closing_time">またぎ</label>
-            <select name="at_closing_time" id="at_closing_time" class="c-input u-w-full-wide" value="{{ old('at_closing_time') }}" required="">
-              <option value="" selected disabled>〇</option>
+            <label for="cross_time_symbol">またぎ</label>
+            <select name="cross_time_symbol" id="cross_time_symbol" class="c-input u-w-full-wide" value="{{ old('cross_time_symbol') }}" required="">
+              @foreach(\App\Enums\LimitOverStatus::cases() as $status)
+              <option value="{{$status->value}}" {{old('cross_time_symbol')==$status->value ? 'selected':''}}>
+                {{$status->label()}}
+              </option>
+              @endforeach
+              {{--  <option value="" selected disabled>〇</option>
               <option value="" selected>△</option>
-              <option value="" selected>×</option>
+              <option value="" selected>×</option>  --}}
             </select>
           </div>
         </div>
@@ -166,7 +181,7 @@
     <div class="l-modal__close modal_optionClose" onclick="closeEditModal()">×</div>
     <div class="l-modal__content">
 
-      <form  id="editForm" method="POST" action="{{route('manage.master.load_unload_full_limit_settings.update_by_date')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
+      <form  id="editForm" method="POST" action="{{route('manage.master.full_limit_settings.update_by_date')}}" class="l-grid--col2-1fr_160 l-grid--gap2 u-font--md l-grid--start">
         @csrf
         @method('PUT')
         <input type="hidden" name="active_calendar_year" id="edit_active_calendar_year">
@@ -184,28 +199,43 @@
         <div class="l-grid--col5 l-grid--gap1">
           <!-- 入庫上限 -->
           <div class="form-item">
-            <label for="edit_load_limit">入庫</label>
-            <select name="edit_load_limit" id="edit_load_limit" class="c-input u-w-full-wide" value="{{ old('edit_load_limit') }}" required="">
-              <option value="" selected disabled>〇</option>
+            <label for="edit_load_limit_symbol">入庫</label>
+            <select name="edit_load_limit_symbol" id="edit_load_limit_symbol" class="c-input u-w-full-wide" value="{{ old('edit_load_limit_symbol') }}" required="">
+              @foreach(\App\Enums\LimitOverStatus::cases() as $status)
+              <option value="{{$status->value}}" {{old('edit_load_limit_symbol')==$status->value ? 'selected':''}}>
+                {{$status->label()}}
+              </option>
+              @endforeach
+              {{--  <option value="" selected disabled>〇</option>
               <option value="" selected>△</option>
-              <option value="" selected>×</option>
+              <option value="" selected>×</option>  --}}
             </select>
           </div>
           <!-- 出庫上限 -->
           <div class="form-item">
-            <label for="edit_unload_limit">出庫</label>
-            <select name="edit_unload_limit" id="edit_unload_limit" class="c-input u-w-full-wide" value="{{ old('edit_unload_limit') }}" required="">
-              <option value="" selected disabled>〇</option>
+            <label for="edit_unload_limit_symbol">出庫</label>
+            <select name="edit_unload_limit_symbol" id="edit_unload_limit_symbol" class="c-input u-w-full-wide" value="{{ old('edit_unload_limit_symbol') }}" required="">
+              @foreach(\App\Enums\LimitOverStatus::cases() as $status)
+              <option value="{{$status->value}}" {{old('edit_unload_limit_symbol')==$status->value ? 'selected':''}}>
+                {{$status->label()}}
+              </option>
+              @endforeach
+              {{--  <option value="" selected disabled>〇</option>
               <option value="" selected>△</option>
-              <option value="" selected>×</option>
+              <option value="" selected>×</option>  --}}
             </select>
           </div>
           <div class="form-item">
-            <label for="edit_cross_time">またぎ</label>
-            <select name="edit_cross_time" id="edit_cross_time" class="c-input u-w-full-wide" value="{{ old('edit_cross_time') }}" required="">
-              <option value="" selected disabled>〇</option>
+            <label for="edit_cross_time_symbol">またぎ</label>
+            <select name="edit_cross_time_symbol" id="edit_cross_time_symbol" class="c-input u-w-full-wide" value="{{ old('edit_cross_time_symbol') }}" required="">
+              @foreach(\App\Enums\LimitOverStatus::cases() as $status)
+              <option value="{{$status->value}}" {{old('edit_cross_time_symbol')==$status->value ? 'selected':''}}>
+                {{$status->label()}}
+              </option>
+              @endforeach
+              {{--  <option value="" selected disabled>〇</option>
               <option value="" selected>△</option>
-              <option value="" selected>×</option>
+              <option value="" selected>×</option>  --}}
             </select>
           </div>
         </div>
@@ -217,7 +247,7 @@
     </div><!-- ./l-modal__content -->
 
     <!-- 編集の場合のデータ削除ボタン -->
-    <form id="deleteForm" action="{{route('manage.master.load_unload_full_limit_settings.delete_by_date')}}" method="post">
+    <form id="deleteForm" action="{{route('manage.master.full_limit_settings.delete_by_date')}}" method="post">
       @csrf
       @method('DELETE')
       <input type="hidden" name="active_calendar_year" id="delete_active_calendar_year">
