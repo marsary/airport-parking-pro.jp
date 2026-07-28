@@ -52,6 +52,9 @@ class FullLimitSettingsController extends Controller
             $dataToUpsert[] = [
                 'office_id' => config('const.commons.office_id'),
                 'target_date' => $date,
+                'load_limit_symbol' => $validated['load_limit_symbol'],
+                'unload_limit_symbol' => $validated['unload_limit_symbol'],
+                'cross_time_symbol' => $validated['cross_time_symbol'],
             ];
         }
         if (empty($dataToUpsert)) {
@@ -62,6 +65,8 @@ class FullLimitSettingsController extends Controller
                 // 'target_date' カラムをユニークキーとして、存在すれば更新、なければ新規作成
                 FullLimitSetting::withoutTrashed()->upsert(
                     $dataToUpsert,
+                    ['office_id', 'target_date'],
+                    ['load_limit_symbol', 'unload_limit_symbol', 'cross_time_symbol']
                 );
 
             });
@@ -87,6 +92,9 @@ class FullLimitSettingsController extends Controller
             $fullLimitSetting = FullLimitSetting::updateOrCreate(
                 ['target_date' => $targetDate, 'office_id' => config('const.commons.office_id')],
                 [
+                    'load_limit_symbol' => $validated['edit_load_limit_symbol'],
+                    'unload_limit_symbol' => $validated['edit_unload_limit_symbol'],
+                    'cross_time_symbol' => $validated['edit_cross_time_symbol'],
                 ]
             );
 
@@ -134,12 +142,14 @@ class FullLimitSettingsController extends Controller
         $results = []; // 結果を格納する配列を初期化
         foreach ($period as $date) {
             // $results[$date->format('Y-m-d')] = $this->getStockData($date->format('Y-m-d')); // デバッグ用
+            $results[$date->format('Y-m-d')] = $this->getStockData($date->format('Y-m-d'));
         }
 
         $eventData = []; // イベントデータを格納する配列を初期化
         foreach ($results as $date => $stock) {
             $eventData[] = [
                 'id' => $date,
+                'stock' =>$stock,
                 'start' => $date,
                 'end' => $date,
                 'allDay' => true,
@@ -156,6 +166,31 @@ class FullLimitSettingsController extends Controller
      */
     private function getStockData(string $dateStr)
     {
+        $fullLimitSetting = FullLimitSetting::where('office_id', config('const.commons.office_id'))
+            ->where('target_date', $dateStr)->first();
 
+        if ($fullLimitSetting) {
+            /**@var FullLimitSetting $fullLimitSetting */
+            return [
+                'target_date' => $fullLimitSetting->target_date->format('Y-m-d'),
+                'load_limit_symbol' => $fullLimitSetting->load_limit_symbol,
+                'unload_limit_symbol' => $fullLimitSetting->unload_limit_symbol,
+                'cross_time_symbol' => $fullLimitSetting->cross_time_symbol,
+                'load_limit_symbol_label' => $fullLimitSetting->limitOverStatus(FullLimitSetting::LOAD_LIMIT_SYMBOL)->label(),
+                'unload_limit_symbol_label' => $fullLimitSetting->limitOverStatus(FullLimitSetting::UNLOAD_LIMIT_SYMBOL)->label(),
+                'cross_time_symbol_label' => $fullLimitSetting->limitOverStatus(FullLimitSetting::CROSS_TIME_SYMBOL)->label(),
+            ];
+        }
+
+        // データが存在しない場合は、カレンダー表示のために全てのキーを返す
+        return [
+            'target_date' => $dateStr,
+            'load_limit_symbol' => null,
+            'unload_limit_symbol' => null,
+            'cross_time_symbol' => null,
+            'load_limit_symbol_label' => null,
+            'unload_limit_symbol_label' => null,
+            'cross_time_symbol_label' => null,
+        ];
     }
 }
