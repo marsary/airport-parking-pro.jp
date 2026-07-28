@@ -86,6 +86,10 @@ Route::prefix('manage')->name('manage.')->group(function () {
             Route::put('/season_price_settings/update_by_date', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'updateByDate'])->name('season_price_settings.update_by_date');
             Route::delete('/season_price_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class, 'destroyByDate'])->name('season_price_settings.delete_by_date');
             Route::resource('/season_price_settings', \App\Http\Controllers\Manage\Master\SeasonPriceSettingsController::class);
+            Route::get('/full_limit_settings/calendar', [\App\Http\Controllers\Manage\Master\FullLimitSettingsController::class, 'calendar'])->name('full_limit_settings.calendar');
+            Route::post('/full_limit_settings/store_all', [\App\Http\Controllers\Manage\Master\FullLimitSettingsController::class, 'storeAll'])->name('full_limit_settings.store_all');
+            Route::put('/full_limit_settings/update_by_date', [\App\Http\Controllers\Manage\Master\FullLimitSettingsController::class, 'updateByDate'])->name('full_limit_settings.update_by_date');
+            Route::delete('/full_limit_settings/delete_by_date', [\App\Http\Controllers\Manage\Master\FullLimitSettingsController::class, 'destroyByDate'])->name('full_limit_settings.delete_by_date');
             Route::resource('/full_limit_settings', \App\Http\Controllers\Manage\Master\FullLimitSettingsController::class);
         });
 
