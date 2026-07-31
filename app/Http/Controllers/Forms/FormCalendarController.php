@@ -3,40 +3,49 @@
 namespace App\Http\Controllers\Forms;
 
 use App\Http\Controllers\Controller;
-use App\Services\ParkingLimitDateChecker;
+use App\Services\FormCalendar\FullLimitDateService;
 use App\Services\ParkingLimitTimeChecker;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class FormCalendarController extends Controller
 {
-    public function loadDates(Request $request)
+    public function limitData(Request $request)
     {
         $params = $request->query();
 
         $startDate = Carbon::parse($params['start']);
-        $endDate = Carbon::parse($params['end']);
+        // $endDate = Carbon::parse($params['end'])->subDays(1);
+        $endDate = $startDate->copy()->addMonths(1)->subDay();
 
 
         $minDate = $this->getMinDate();
         $maxDate = $minDate->copy()->addMonths(config('const.commons.reserve_cal_month_periods'))->subDay();
 
-        $checker = new ParkingLimitDateChecker($startDate, $endDate);
+        $checker = new FullLimitDateService($startDate, $endDate);
         $eventData = [];
-        foreach ($checker->checkLoadDate() as $date => $limitOverStatus) {
+        foreach ($checker->getCalendar() as $date => $limitData) {
             $currentDate = Carbon::parse($date);
 
             // 23時までは、翌日の予約を可能とします。
             // ※当日予約はできません。
             // 選択できる日付は5か月先までになります。
             if($currentDate < $minDate || $currentDate > $maxDate) {
-                $eventTitle = '-';
+                $withinRange = false;
             } else {
-                $eventTitle = $limitOverStatus->label();
+                $withinRange = true;
             }
+            if($currentDate < $minDate) {
+                $beforeMinDate = true;
+            } else {
+                $beforeMinDate = false;
+            }
+
             $eventData[] = [
                 'id' => $date,
-                'title' =>$eventTitle,
+                'limitData' =>$limitData,
+                'within_range' => $withinRange,
+                'before_min_date' => $beforeMinDate,
                 'start' => $date,
                 'end' => $date,
                 'allDay' => true,
@@ -72,36 +81,36 @@ class FormCalendarController extends Controller
          ]);
     }
 
-    public function unloadDates(Request $request)
-    {
-        $params = $request->query();
+    // public function unloadDates(Request $request)
+    // {
+    //     $params = $request->query();
 
-        $startDate = Carbon::parse($params['start']);
-        $endDate = Carbon::parse($params['end']);
+    //     $startDate = Carbon::parse($params['start']);
+    //     $endDate = Carbon::parse($params['end']);
 
-        $minDate = $this->getMinDate();
+    //     $minDate = $this->getMinDate();
 
-        $checker = new ParkingLimitDateChecker($startDate, $endDate);
-        $eventData = [];
-        foreach ($checker->checkUnloadDate() as $date => $limitOverStatus) {
-            // 23時までは、翌日の予約を可能とします。
-            // ※当日予約はできません。
-            if(Carbon::parse($date) < $minDate) {
-                $eventTitle = '-';
-            } else {
-                $eventTitle = $limitOverStatus->label();
-            }
-            $eventData[] = [
-                'id' => $date,
-                'title' =>$eventTitle,
-                'start' => $date,
-                'end' => $date,
-                'allDay' => true,
-            ];
-        }
+    //     $checker = new ParkingLimitDateChecker($startDate, $endDate);
+    //     $eventData = [];
+    //     foreach ($checker->checkUnloadDate() as $date => $limitOverStatus) {
+    //         // 23時までは、翌日の予約を可能とします。
+    //         // ※当日予約はできません。
+    //         if(Carbon::parse($date) < $minDate) {
+    //             $eventTitle = '-';
+    //         } else {
+    //             $eventTitle = $limitOverStatus->label();
+    //         }
+    //         $eventData[] = [
+    //             'id' => $date,
+    //             'title' =>$eventTitle,
+    //             'start' => $date,
+    //             'end' => $date,
+    //             'allDay' => true,
+    //         ];
+    //     }
 
-        return response()->json($eventData);
-    }
+    //     return response()->json($eventData);
+    // }
 
 
     public function getMinDate(): Carbon
