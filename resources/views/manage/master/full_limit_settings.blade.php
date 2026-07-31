@@ -447,16 +447,26 @@
     }
   }
 
-function openPeriodModal() {
+  function openPeriodModal() {
     const modal = document.getElementById('modalAreaOption_Period_');
-    const inputs = modal.querySelectorAll('input[type="text"], input[type="date"]');
+    const yearStr = currentDisplayedYear.toString();
 
-    inputs.forEach(input => {
-        input.value = '';
-    });
+    const cal1CurrentLuxonDate = luxon.DateTime.fromJSDate(globalYearHandler.calendar1.getDate());
+    const cal2CurrentLuxonDate = luxon.DateTime.fromJSDate(globalYearHandler.calendar2.getDate());
+    const newCal2LuxonDate = cal2CurrentLuxonDate.endOf('month');
+
+    const month = cal1CurrentLuxonDate.month.toString().padStart(2, '0');
+    const month2 = newCal2LuxonDate.month.toString().padStart(2, '0');
+    const month2Day = newCal2LuxonDate.day.toString();
+    // console.log('year,month', yearStr, month1Str)
+    const startDateInput = document.getElementById('start_date');
+    startDateInput.value = `${yearStr}-${month}-01`;
+    const endDateInput = document.getElementById('end_date');
+    endDateInput.value = `${yearStr}-${month2}-${month2Day}`;
 
     modal.classList.add('is-active');
-}
+  }
+
   function openEditModal(selectedDate, calendarStockData) {
     const editModal = document.getElementById(`modalAreaOption_edit_`);
 
@@ -746,7 +756,7 @@ function openPeriodModal() {
     margin-top: 30px;
     display:flex;
     flex-direction: column;
-    gap: 68px;
+    gap: 88px;
     justify-content: space-between;
   }
 
