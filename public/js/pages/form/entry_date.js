@@ -189,8 +189,9 @@ document.addEventListener('DOMContentLoaded', function () {
     eventTextColor: '#5b915b',
     events:
     function(info, successCallback, failureCallback) {
-      url = BASE_PATH +  '/form/calendar/load_dates';
-
+      url = BASE_PATH +  '/form/calendar/limit_data';
+      const selectedDate = luxon.DateTime.fromISO(info.startStr);
+      const dateStr = selectedDate.toISODate();
       const response = apiRequest.get(url, {
         start: info.startStr,
         end: info.endStr,
@@ -198,11 +199,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
       response.then(data => {
         // console.log(data);
+          const eventData = [];
+          // console.log(data);
+          data.forEach(row => {
+            let eventTitle = '-';
+            if(row.within_range) {
+                eventTitle = row.limitData.load_date;
+            }
 
-        successCallback(
-          data
-        )
-      });
+            eventData.push({
+                id : row.start,
+                title :eventTitle,
+                start : row.start,
+                end : row.end,
+                allDay : true,
+            });
+
+          })
+
+          successCallback(
+            eventData
+          )
+      }).catch(failureCallback);
     },
     eventDidMount: function(e) {
       let el = e.el;
@@ -295,8 +313,9 @@ document.addEventListener('DOMContentLoaded', function () {
     eventTextColor: '#5b915b',
     events:
     function(info, successCallback, failureCallback) {
-      url = BASE_PATH +  '/form/calendar/unload_dates';
-
+      url = BASE_PATH +  '/form/calendar/limit_data';
+      const selectedDate = luxon.DateTime.fromISO(info.startStr);
+      const dateStr = selectedDate.toISODate();
       const response = apiRequest.get(url, {
         start: info.startStr,
         end: info.endStr,
@@ -304,11 +323,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
       response.then(data => {
         // console.log(data);
+          const eventData = [];
+          // console.log(data);
+          data.forEach(row => {
+            let eventTitle = '-';
+            if(!row.before_min_date) {
+                eventTitle = row.limitData.unload_date;
+            }
 
-        successCallback(
-          data
-        )
-      });
+            eventData.push({
+                id : row.start,
+                title :eventTitle,
+                start : row.start,
+                end : row.end,
+                allDay : true,
+            });
+
+          })
+
+          successCallback(
+            eventData
+          )
+      }).catch(failureCallback);
     },
     eventDidMount: function(e) {
       let el = e.el;
