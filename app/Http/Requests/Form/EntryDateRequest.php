@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Form;
 
+use App\Services\FormCalendar\FullLimitDateService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
@@ -80,6 +81,26 @@ class EntryDateRequest extends FormRequest
             }
         }
     }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $start = Carbon::parse($this->load_date);
+            $end   = Carbon::parse($this->unload_date_plan);
+
+            $checker = new FullLimitDateService($start, $end);
+
+            $result = $checker->canReserve();
+
+            if (!$result->result) {
+                $validator->errors()->add(
+                    'load_date',
+                    $result
+                );
+            }
+        });
+    }
+
 
     public function attributes()
     {
