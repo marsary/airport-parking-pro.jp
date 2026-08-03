@@ -14,6 +14,8 @@ class FullLimitDateService
      * @var Collection<string, FullLimitSetting>
      */
     private Collection $dateLimits;
+    private Carbon $startDate;
+    private Carbon $endDate;
     private CarbonPeriod $period;
 
 
@@ -84,4 +86,42 @@ class FullLimitDateService
         return $results;
     }
 
+    /**
+     * 予約可能判定
+     */
+    public function canReserve(): ReserveCheckResult
+    {
+        foreach ($this->period as $date) {
+            $limit = $this->getDateLimit($date);
+
+            if ($date->isSameDay($this->startDate)) {
+                if (!$limit['canCheckIn']) {
+                    return new ReserveCheckResult(
+                        false,
+                        $date->format('Y/m/d').'は入庫できません。'
+                    );
+                }
+                continue;
+            }
+
+            if ($date->isSameDay($this->endDate)) {
+                if (!$limit['canCheckOut']) {
+                    return new ReserveCheckResult(
+                        false,
+                        $date->format('Y/m/d').'は出庫できません。'
+                    );
+                }
+                continue;
+            }
+
+            if (!$limit['canCrossTime']) {
+                return new ReserveCheckResult(
+                    false,
+                    '満車のため、' . $date->format('Y/m/d').'をまたぐ予約はできません。'
+                );
+            }
+        }
+
+        return new ReserveCheckResult(true);
+    }
 }
