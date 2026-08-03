@@ -342,8 +342,8 @@
         right: -30px;
     }
 
+    {
         {
-            {
             -- 単数月用 --
         }
     }
@@ -367,14 +367,14 @@
         border-collapse: separate;
     }
 
+    {
         {
-            {
             -- 複数月用 --
         }
     }
 
+    {
         {
-            {
             -- .fc-multimonth-title {
                 display: none;
             }
@@ -383,8 +383,8 @@
         }
     }
 
+    {
         {
-            {
             -- div.fc-multimonth-month {
                 padding: 8px 10px 8px !important;
             }
@@ -393,8 +393,8 @@
         }
     }
 
+    {
         {
-            {
             -- table.fc-multimonth-daygrid-table {
                 border-spacing: 4px;
                 border-collapse: separate;
@@ -404,8 +404,8 @@
         }
     }
 
+    {
         {
-            {
             -- table.fc-multimonth-header-table {
                 border-spacing: 4px;
                 border-collapse: separate;
@@ -483,6 +483,12 @@
     /* 将来の日付 */
     .fc-day-future {
         background-color: #e3f2fd;
+    }
+    .fc-day-yellow {
+        background-color: #ffc107 !important;
+    }
+    .fc-day-red {
+        background-color: #dc3545 !important;
     }
 
     /* 選択された日付・時間 */
