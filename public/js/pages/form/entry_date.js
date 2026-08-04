@@ -133,6 +133,38 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   }
 
+  function filterMonthsDataFromCalenderData(startStr, titleColumn) {
+    // 開始日
+    const startDate = new Date(startStr);
+
+    // 終了日（末日）
+    const endDate = new Date(startDate);
+    // 例:
+    // 2025-07-01 → 2025-07-31
+    // 2025-12-01 → 2025-12-31
+
+    const eventData = [];
+
+    for (const [dateStr, row] of calendarData) {
+      const date = new Date(dateStr);
+
+      eventTitle = row.limitData[titleColumn];
+      eventData.push({
+        id : row.start,
+        title :eventTitle,
+        start : row.start,
+        end : row.end,
+        allDay : true,
+      });
+    }
+
+    return eventData;
+  }
+
+  function canReserveThisPeriod(startDate, endDate) {
+
+  }
+
   const now = luxon.DateTime.now();
   // 設定ファイルから取得した予約開始可能日を使用
   const displayStartDate = luxon.DateTime.fromISO(document.getElementById('reservable_start_date').value);
@@ -151,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const validEndDate = validStartDate.plus({ months: reserveCalMonthPeriods });
 
 
+  const calendarData = new Map();
 
   var calendar1 = new FullCalendar.Calendar(calendarEl1, {
     initialView: 'dayGridMonth',
@@ -194,7 +227,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const dateStr = selectedDate.toISODate();
       const response = apiRequest.get(url, {
         start: info.startStr,
-        end: info.endStr,
       })
 
       response.then(data => {
@@ -202,6 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const eventData = [];
           // console.log(data);
           data.forEach(row => {
+            calendarData.set(row.start, row);
             let eventTitle = '-';
             if(row.within_range) {
                 eventTitle = row.limitData.load_date;
@@ -247,8 +280,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       // alert(info.event.start);
-      const startDate = luxon.DateTime.fromJSDate(info.event.start);
-      loadDateInput.value = startDate.toISODate();
+      const calDate = luxon.DateTime.fromJSDate(info.event.start);
+      const unloadDate = parseDateInput(unloadDateInput.value)
+      const result = canReserve(calDate, unloadDate);
+
+      loadDateInput.value = calDate.toISODate();
       loadDateInput.dispatchEvent(new Event('change'));
       dispLoadHourTable()
       calcNumDays()
@@ -265,7 +301,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       // alert(info.date);
-      loadDateInput.value = luxon.DateTime.fromJSDate(info.date).toISODate();
+      const calDate = luxon.DateTime.fromJSDate(info.date);
+      const unloadDate = parseDateInput(unloadDateInput.value)
+      const result = canReserve(calDate, unloadDate);
+
+      loadDateInput.value = calDate.toISODate();
       loadDateInput.dispatchEvent(new Event('change'));
       dispLoadHourTable()
       calcNumDays()
@@ -573,6 +613,59 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+
+  /**
+   * 指定期間が予約可能か判定する
+   *
+   * @param {DateTime} startDate
+   * @param {DateTime} endDate
+   * @returns {{result: boolean, message: string}}
+   */
+  function canReserve(startDate, endDate) {
+
+    for (
+      let date = startDate;
+      date <= endDate;
+      date = date.plus({ days: 1 })
+    ) {
+      const dateStr = date.toFormat('yyyy-MM-dd');
+      const calendar = calendarData.get(dateStr);
+
+      const limit = calendar.limitData;
+
+      // 入庫日
+      if (date.hasSame(startDate, 'day')) {
+        if (!limit.canCheckIn) {
+          return {
+            result: false,
+            message: `${dateStr} は入庫できません。`
+          };
+        }
+      }
+
+      // 出庫日
+      if (date.hasSame(endDate, 'day')) {
+        if (!limit.canCheckOut) {
+          return {
+            result: false,
+            message: `${dateStr} は出庫できません。`
+          };
+        }
+      }
+
+      // 滞在中
+      if (!limit.canCrossTime) {
+        return {
+          result: false,
+          message: `満車のため、${dateStr} をまたぐ予約はできません。`
+        };
+      }
+    }
+
+    return {
+      result: true,
+    };
+  }
 
   // 初期表示
   updateDispLoadDate()
