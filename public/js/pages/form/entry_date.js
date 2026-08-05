@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 終了日（末日）
     const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 1, 0);
     // 例:
     // 2025-07-01 → 2025-07-31
     // 2025-12-01 → 2025-12-31
@@ -149,6 +150,16 @@ document.addEventListener('DOMContentLoaded', function () {
       const date = new Date(dateStr);
 
       eventTitle = row.limitData[titleColumn];
+      if (titleColumn == 'load_date' && date >= startDate && date <= endDate) {
+        if(!row.within_range) {
+          eventTitle = '-';
+        }
+      }
+      if (titleColumn == 'unload_date' && date >= startDate && date <= endDate) {
+        if(row.before_min_date) {
+          eventTitle = '-';
+        }
+      }
       eventData.push({
         id : row.start,
         title :eventTitle,
@@ -225,6 +236,14 @@ document.addEventListener('DOMContentLoaded', function () {
       url = BASE_PATH +  '/form/calendar/limit_data';
       const selectedDate = luxon.DateTime.fromISO(info.startStr);
       const dateStr = selectedDate.toISODate();
+      const monthData = calendarData.get(dateStr);
+      if(monthData) {
+        const eventData = filterMonthsDataFromCalenderData(dateStr, 'load_date');
+        successCallback(
+          eventData
+        )
+        return;
+      }
       const response = apiRequest.get(url, {
         start: info.startStr,
       })
@@ -283,6 +302,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const calDate = luxon.DateTime.fromJSDate(info.event.start);
       const unloadDate = parseDateInput(unloadDateInput.value)
       const result = canReserve(calDate, unloadDate);
+      if (!result.result) {
+        alert(result.message);
+        return;
+      }
 
       loadDateInput.value = calDate.toISODate();
       loadDateInput.dispatchEvent(new Event('change'));
@@ -304,6 +327,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const calDate = luxon.DateTime.fromJSDate(info.date);
       const unloadDate = parseDateInput(unloadDateInput.value)
       const result = canReserve(calDate, unloadDate);
+      if (!result.result) {
+        alert(result.message);
+        return;
+      }
 
       loadDateInput.value = calDate.toISODate();
       loadDateInput.dispatchEvent(new Event('change'));
@@ -356,9 +383,16 @@ document.addEventListener('DOMContentLoaded', function () {
       url = BASE_PATH +  '/form/calendar/limit_data';
       const selectedDate = luxon.DateTime.fromISO(info.startStr);
       const dateStr = selectedDate.toISODate();
+      const monthData = calendarData.get(dateStr);
+      if(monthData) {
+        const eventData = filterMonthsDataFromCalenderData(dateStr, 'unload_date');
+        successCallback(
+          eventData
+        )
+        return;
+      }
       const response = apiRequest.get(url, {
         start: info.startStr,
-        end: info.endStr,
       })
 
       response.then(data => {
@@ -366,6 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const eventData = [];
           // console.log(data);
           data.forEach(row => {
+            calendarData.set(row.start, row);
             let eventTitle = '-';
             if(!row.before_min_date) {
                 eventTitle = row.limitData.unload_date;
@@ -407,7 +442,15 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
       }
     //   alert(info.event.start);
-      unloadDateInput.value = luxon.DateTime.fromJSDate(info.event.start).toISODate();
+      const calDate = luxon.DateTime.fromJSDate(info.event.start);
+      const loadDate = parseDateInput(loadDateInput.value);
+      const result = canReserve(loadDate, calDate);
+      if (!result.result) {
+        alert(result.message);
+        return;
+      }
+
+      unloadDateInput.value = calDate.toISODate();
       unloadDateInput.dispatchEvent(new Event('change'));
       calcNumDays()
       // alert('Event: ' + info.event.title);
@@ -422,7 +465,15 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       // alert(info.date);
-      unloadDateInput.value = luxon.DateTime.fromJSDate(info.date).toISODate();
+      const calDate = luxon.DateTime.fromJSDate(info.date);
+      const loadDate = parseDateInput(loadDateInput.value);
+      const result = canReserve(loadDate, calDate);
+      if (!result.result) {
+        alert(result.message);
+        return;
+      }
+
+      unloadDateInput.value = calDate.toISODate();
       unloadDateInput.dispatchEvent(new Event('change'));
       calcNumDays()
       removeDaySelected(calendarEl2)
@@ -664,6 +715,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     return {
       result: true,
+      message: ''
     };
   }
 
