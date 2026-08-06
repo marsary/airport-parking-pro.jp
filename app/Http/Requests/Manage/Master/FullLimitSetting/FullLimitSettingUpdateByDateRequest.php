@@ -25,9 +25,9 @@ class FullLimitSettingUpdateByDateRequest extends FormRequest
     {
         return [
             'edit_target_date' => 'required|date',
-            'edit_load_limit_symbol' => 'nullable|integer|in:1,2,3',
-            'edit_unload_limit_symbol' => 'nullable|integer|in:1,2,3',
-            'edit_cross_time_symbol' => 'nullable|integer|in:1,2,3',
+            'edit_load_limit_symbol' => 'required|integer|in:1,2,3',
+            'edit_unload_limit_symbol' => 'required|integer|in:1,2,3',
+            'edit_cross_time_symbol' => 'required|integer|in:1,2,3',
         ];
     }
 

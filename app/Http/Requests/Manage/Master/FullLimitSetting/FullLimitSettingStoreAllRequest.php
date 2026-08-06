@@ -26,9 +26,9 @@ class FullLimitSettingStoreAllRequest extends FormRequest
         return [
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'load_limit_symbol' => 'nullable|integer|in:1,2,3',
-            'unload_limit_symbol' => 'nullable|integer|in:1,2,3',
-            'cross_time_symbol' => 'nullable|integer|in:1,2,3',
+            'load_limit_symbol' => 'required|integer|in:1,2,3',
+            'unload_limit_symbol' => 'required|integer|in:1,2,3',
+            'cross_time_symbol' => 'required|integer|in:1,2,3',
         ];
     }
 
