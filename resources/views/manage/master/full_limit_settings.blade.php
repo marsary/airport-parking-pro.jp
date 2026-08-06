@@ -481,14 +481,14 @@
     if (stockEntry && stockEntry.stock) {
       const stock = stockEntry.stock;
       // フォームフィールドに値を設定
-      document.getElementById('edit_load_limit_symbol').value = stock.load_limit_symbol || '';
-      document.getElementById('edit_unload_limit_symbol').value = stock.unload_limit_symbol || '';
-      document.getElementById('edit_cross_time_symbol').value = stock.cross_time_symbol || '';
+      document.getElementById('edit_load_limit_symbol').value = stock.load_limit_symbol || '{{\App\Enums\LimitOverStatus::VACANT->value}}';
+      document.getElementById('edit_unload_limit_symbol').value = stock.unload_limit_symbol || '{{\App\Enums\LimitOverStatus::VACANT->value}}';
+      document.getElementById('edit_cross_time_symbol').value = stock.cross_time_symbol || '{{\App\Enums\LimitOverStatus::VACANT->value}}';
     } else {
       // データが見つからない場合、オプションでフォームをクリアするかデフォルト値を設定
-      document.getElementById('edit_load_limit_symbol').value = '';
-      document.getElementById('edit_unload_limit_symbol').value = '';
-      document.getElementById('edit_cross_time_symbol').value = '';
+      document.getElementById('edit_load_limit_symbol').value = '{{\App\Enums\LimitOverStatus::VACANT->value}}';
+      document.getElementById('edit_unload_limit_symbol').value = '{{\App\Enums\LimitOverStatus::VACANT->value}}';
+      document.getElementById('edit_cross_time_symbol').value = '{{\App\Enums\LimitOverStatus::VACANT->value}}';
       console.warn(`No stock data found for ${dateStr}`);
     }
     editModal.classList.add('is-active');
