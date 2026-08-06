@@ -82,11 +82,15 @@ class EntryDateRequest extends FormRequest
         }
     }
 
-    public function withValidator($validator)
+    public function withValidator(\Illuminate\Contracts\Validation\Validator $validator)
     {
         $validator->after(function ($validator) {
-            $start = Carbon::parse($this->load_date);
-            $end   = Carbon::parse($this->unload_date_plan);
+            try {
+                $start = Carbon::parse($this->load_date);
+                $end   = Carbon::parse($this->unload_date_plan);
+            } catch (\Throwable $e) {
+                return;
+            }
 
             $checker = new FullLimitDateService($start, $end);
 
@@ -95,7 +99,7 @@ class EntryDateRequest extends FormRequest
             if (!$result->result) {
                 $validator->errors()->add(
                     'load_date',
-                    $result
+                    $result->message
                 );
             }
         });
