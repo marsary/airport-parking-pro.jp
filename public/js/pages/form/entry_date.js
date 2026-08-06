@@ -194,6 +194,23 @@ document.addEventListener('DOMContentLoaded', function () {
   const validEndDate = validStartDate.plus({ months: reserveCalMonthPeriods });
 
 
+  // calendarData Map
+//   ['YYYY-MM-DD' 形式 日付] : {
+        // id: string,
+        // limitData: {
+        //     load_date: '〇'|'△'|'×';
+        //     unload_date: '〇'|'△'|'×';
+        //     cross_time: '〇'|'△'|'×';
+        //     canCheckIn: boolean;
+        //     canCheckOut: boolean;
+        //     canCrossTime: boolean;
+        // }
+        // within_range: boolean;
+        // before_min_date: boolean;
+        // start: string,
+        // end: string,
+        // allDay: boolean;
+//   }
   const calendarData = new Map();
 
   var calendar1 = new FullCalendar.Calendar(calendarEl1, {
@@ -673,6 +690,13 @@ document.addEventListener('DOMContentLoaded', function () {
    * @returns {{result: boolean, message: string}}
    */
   function canReserve(startDate, endDate) {
+    // 日付の前後チェック
+    if (endDate < startDate) {
+      return {
+        result: false,
+        message: '出庫日は入庫日以降の日付を選択してください。'
+      };
+    }
 
     for (
       let date = startDate;
@@ -681,6 +705,14 @@ document.addEventListener('DOMContentLoaded', function () {
     ) {
       const dateStr = date.toFormat('yyyy-MM-dd');
       const calendar = calendarData.get(dateStr);
+
+      // データが存在しない
+      if (!calendar) {
+        return {
+          result: false,
+          message: `${dateStr} の空き情報を取得できませんでした。`
+        };
+      }
 
       const limit = calendar.limitData;
 
@@ -692,6 +724,7 @@ document.addEventListener('DOMContentLoaded', function () {
             message: `${dateStr} は入庫できません。`
           };
         }
+        continue;
       }
 
       // 出庫日
@@ -702,6 +735,7 @@ document.addEventListener('DOMContentLoaded', function () {
             message: `${dateStr} は出庫できません。`
           };
         }
+        continue;
       }
 
       // 滞在中
