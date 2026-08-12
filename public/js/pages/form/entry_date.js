@@ -310,6 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
         el.classList.add('event_full');
         el.closest('.fc-daygrid-day').classList.add('day_full');
       }
+      setDayBgColor(el, e.event);
     },
     eventClick: function(info) {
       if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full") || info.el.classList.contains("fc-event-today")) {
@@ -453,6 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
         el.classList.add('event_full');
         el.closest('.fc-daygrid-day').classList.add('day_full');
       }
+      setDayBgColor(el, e.event);
     },
     eventClick: function(info) {
       if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full") || info.el.classList.contains("fc-event-today")) {
@@ -677,6 +679,19 @@ document.addEventListener('DOMContentLoaded', function () {
         break;
 
       default:
+        break;
+    }
+  }
+
+  function setDayBgColor(el, status) {
+    switch (status) {
+    case '△':
+        el.closest('.fc-daygrid-day').classList.remove('fc-day-red');
+        el.closest('.fc-daygrid-day').classList.add('fc-day-yellow');
+        break;
+      case '×':
+        el.closest('.fc-daygrid-day').classList.remove('fc-day-yellow');
+        el.closest('.fc-daygrid-day').classList.add('fc-day-red');
         break;
     }
   }
