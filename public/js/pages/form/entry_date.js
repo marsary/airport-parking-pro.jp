@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
         el.classList.add('event_full');
         el.closest('.fc-daygrid-day').classList.add('day_full');
       }
-      setDayBgColor(el, e.event);
+      setDayBgColor(el, e.event.toPlainObject().title);
     },
     eventClick: function(info) {
       if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full") || info.el.classList.contains("fc-event-today")) {
@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
         el.classList.add('event_full');
         el.closest('.fc-daygrid-day').classList.add('day_full');
       }
-      setDayBgColor(el, e.event);
+      setDayBgColor(el, e.event.toPlainObject().title);
     },
     eventClick: function(info) {
       if(info.el.classList.contains("fc-event-past") || info.el.classList.contains("event_full") || info.el.classList.contains("fc-event-today")) {
@@ -692,6 +692,10 @@ document.addEventListener('DOMContentLoaded', function () {
       case '×':
         el.closest('.fc-daygrid-day').classList.remove('fc-day-yellow');
         el.closest('.fc-daygrid-day').classList.add('fc-day-red');
+        break;
+      default:
+        el.closest('.fc-daygrid-day').classList.remove('fc-day-yellow');
+        el.closest('.fc-daygrid-day').classList.remove('fc-day-red');
         break;
     }
   }
