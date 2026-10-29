@@ -29,10 +29,12 @@ class FullLimitDateService
 
         $this->dateLimits = FullLimitSetting::query()
             ->where('office_id', config('const.commons.office_id'))
-            ->whereBetween('target_date', [
-                $startDate->toDateString(),
-                $endDate->toDateString(),
-            ])
+            // ->whereBetween('target_date', [
+            //     $startDate->toDateString(),
+            //     $endDate->toDateString(),
+            // ])
+            ->where('target_date', '>=', $startDate->toDateString())
+            ->where('target_date', '<', $endDate->copy()->addDay()->toDateString())
             ->get()
             ->keyBy(function (FullLimitSetting $item) {
                 return Carbon::parse($item->target_date)->toDateString();
@@ -91,6 +93,8 @@ class FullLimitDateService
      */
     public function canReserve(): ReserveCheckResult
     {
+        $crossTimeLimitDates = [];
+        $crossTimeLimit = false;
         foreach ($this->period as $date) {
             $limit = $this->getDateLimit($date);
 
@@ -101,7 +105,7 @@ class FullLimitDateService
                         $date->format('Y/m/d').'は入庫できません。'
                     );
                 }
-                continue;
+                // continue;
             }
 
             if ($date->isSameDay($this->endDate)) {
@@ -120,6 +124,14 @@ class FullLimitDateService
                     '満車のため、' . $date->format('Y/m/d').'をまたぐ予約はできません。'
                 );
             }
+        }
+
+        if( !empty($crossTimeLimitDates) ) {
+            $limitDates = implode(', ', $crossTimeLimitDates);
+            return new ReserveCheckResult(
+                false,
+                "満車のため、" . $limitDates . "をまたぐ予約はできません。"
+            );
         }
 
         return new ReserveCheckResult(true);
