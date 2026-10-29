@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
     for (const [dateStr, row] of calendarData) {
       const date = new Date(dateStr);
 
-      eventTitle = row.limitData[titleColumn];
+      let eventTitle = row.limitData[titleColumn];
       if (titleColumn == 'load_date' && date >= startDate && date <= endDate) {
         if(!row.within_range) {
           eventTitle = '-';
@@ -170,10 +170,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     return eventData;
-  }
-
-  function canReserveThisPeriod(startDate, endDate) {
-
   }
 
   const now = luxon.DateTime.now();
@@ -250,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
     eventTextColor: '#5b915b',
     events:
     function(info, successCallback, failureCallback) {
-      url = BASE_PATH +  '/form/calendar/limit_data';
+      const url = BASE_PATH +  '/form/calendar/limit_data';
       const selectedDate = luxon.DateTime.fromISO(info.startStr);
       const dateStr = selectedDate.toISODate();
       const monthData = calendarData.get(dateStr);
@@ -398,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
     eventTextColor: '#5b915b',
     events:
     function(info, successCallback, failureCallback) {
-      url = BASE_PATH +  '/form/calendar/limit_data';
+      const url = BASE_PATH +  '/form/calendar/limit_data';
       const selectedDate = luxon.DateTime.fromISO(info.startStr);
       const dateStr = selectedDate.toISODate();
       const monthData = calendarData.get(dateStr);
