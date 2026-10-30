@@ -108,7 +108,7 @@ class FullLimitDateService
                 // continue;
             }
 
-            if ($date->isSameDay($this->endDate)) {
+            if ($date->isSameDay($this->endDate) && !$crossTimeLimit) {
                 if (!$limit['canCheckOut']) {
                     return new ReserveCheckResult(
                         false,
@@ -118,11 +118,13 @@ class FullLimitDateService
                 continue;
             }
 
-            if (!$limit['canCrossTime']) {
-                return new ReserveCheckResult(
-                    false,
-                    '満車のため、' . $date->format('Y/m/d').'をまたぐ予約はできません。'
-                );
+            if (!$date->isSameDay($this->endDate) && !$limit['canCrossTime']) {
+                $crossTimeLimit = true;
+                $crossTimeLimitDates[] = $date->format('Y/m/d');
+                // return new ReserveCheckResult(
+                //     false,
+                //     '満車のため、' . $date->format('Y/m/d').'をまたぐ予約はできません。'
+                // );
             }
         }
 
