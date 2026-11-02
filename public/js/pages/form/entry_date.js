@@ -1,3 +1,5 @@
+import { canReserve } from './can_reserve.js';
+
 let hourlyData = [];
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -315,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // alert(info.event.start);
       const calDate = luxon.DateTime.fromJSDate(info.event.start);
       const unloadDate = parseDateInput(unloadDateInput.value)
-      const result = canReserve(calDate, unloadDate);
+      const result = canReserve(calDate, unloadDate, calendarData);
       if (!result.result) {
         alert(result.message);
         return;
@@ -340,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // alert(info.date);
       const calDate = luxon.DateTime.fromJSDate(info.date);
       const unloadDate = parseDateInput(unloadDateInput.value)
-      const result = canReserve(calDate, unloadDate);
+      const result = canReserve(calDate, unloadDate, calendarData);
       if (!result.result) {
         alert(result.message);
         return;
@@ -459,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //   alert(info.event.start);
       const calDate = luxon.DateTime.fromJSDate(info.event.start);
       const loadDate = parseDateInput(loadDateInput.value);
-      const result = canReserve(loadDate, calDate);
+      const result = canReserve(loadDate, calDate, calendarData);
       if (!result.result) {
         alert(result.message);
         return;
@@ -482,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // alert(info.date);
       const calDate = luxon.DateTime.fromJSDate(info.date);
       const loadDate = parseDateInput(loadDateInput.value);
-      const result = canReserve(loadDate, calDate);
+      const result = canReserve(loadDate, calDate, calendarData);
       if (!result.result) {
         alert(result.message);
         return;
@@ -696,77 +698,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-
-  /**
-   * 指定期間が予約可能か判定する
-   *
-   * @param {DateTime} startDate
-   * @param {DateTime} endDate
-   * @returns {{result: boolean, message: string}}
-   */
-  function canReserve(startDate, endDate) {
-    // 日付の前後チェック
-    if (endDate < startDate) {
-      return {
-        result: false,
-        message: '出庫日は入庫日以降の日付を選択してください。'
-      };
-    }
-
-    for (
-      let date = startDate;
-      date <= endDate;
-      date = date.plus({ days: 1 })
-    ) {
-      const dateStr = date.toFormat('yyyy-MM-dd');
-      const calendar = calendarData.get(dateStr);
-
-      // データが存在しない
-      if (!calendar) {
-        return {
-          result: false,
-          message: `${dateStr} の空き情報を取得できませんでした。`
-        };
-      }
-
-      const limit = calendar.limitData;
-
-      // 入庫日
-      if (date.hasSame(startDate, 'day')) {
-        if (!limit.canCheckIn) {
-          return {
-            result: false,
-            message: `${dateStr} は入庫できません。`
-          };
-        }
-        continue;
-      }
-
-      // 出庫日
-      if (date.hasSame(endDate, 'day')) {
-        if (!limit.canCheckOut) {
-          return {
-            result: false,
-            message: `${dateStr} は出庫できません。`
-          };
-        }
-        continue;
-      }
-
-      // 滞在中
-      if (!limit.canCrossTime) {
-        return {
-          result: false,
-          message: `満車のため、${dateStr} をまたぐ予約はできません。`
-        };
-      }
-    }
-
-    return {
-      result: true,
-      message: ''
-    };
-  }
 
   // 初期表示
   updateDispLoadDate()
