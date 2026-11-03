@@ -320,7 +320,7 @@
 <!-- 表示非表示ボタン -->
 <script src="{{ asset('js/close_button_toggle.js') }}"></script>
 <script src="{{ asset('js/index.global.min.js') }}"></script>
-<script src="{{ asset('js/pages/form/entry_date.js') }}"></script>
+<script type="module" src="{{ asset('js/pages/form/entry_date.js') }}"></script>
 <script>
 </script>
 @endpush
