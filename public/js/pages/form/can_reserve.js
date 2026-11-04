@@ -7,6 +7,7 @@ export function canReserve(startDate, endDate, calendarData) {
     return { result: true, message: '出庫日は入庫日以降の日付を選択してください。' };
   }
 
+  let crossTimeLimitDates = [];
   let crossTimeLimit = false;
   for (let date = startDate; date <= endDate; date = date.plus({ days: 1 })) {
     const dateStr = date.toFormat('yyyy-MM-dd');
@@ -19,7 +20,7 @@ export function canReserve(startDate, endDate, calendarData) {
     if (date.hasSame(startDate, 'day') && !limit.canCheckIn) {
       return { result: false, message: `${dateStr} は入庫できません。` };
     }
-    if (date.hasSame(endDate, 'day')) {
+    if (date.hasSame(endDate, 'day') && !crossTimeLimit) {
       if (!limit.canCheckOut) {
         return { result: false, message: `${dateStr} は出庫できません。` };
       }
@@ -27,8 +28,14 @@ export function canReserve(startDate, endDate, calendarData) {
     }
     if (!date.hasSame(endDate, 'day') && !limit.canCrossTime) {
         crossTimeLimit = true;
-        return { result: false, message: `満車のため、${dateStr} をまたぐ予約はできません。` };
+        // return { result: false, message: `満車のため、${dateStr} をまたぐ予約はできません。` };
+        crossTimeLimitDates.push(dateStr);
     }
+  }
+
+  if( crossTimeLimitDates.length > 0) {
+    const limitDates = crossTimeLimitDates.join(', ');
+    return { result: false, message: `満車のため、${limitDates} をまたぐ予約はできません。` };
   }
 
   return { result: true, message: '' };
