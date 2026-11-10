@@ -24,7 +24,7 @@ class EntryInfoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'	=> 'nullable',
+            'name'	=> 'required',
             'kana'	=> 'required',
             'tel'	=> ['required','max:15', new PhoneRule],
             'zip'	=> ['nullable','max:8', new ZipcodeRule],
@@ -42,6 +42,7 @@ class EntryInfoRequest extends FormRequest
     public function messages()
     {
         return [
+            'name.required' => '氏名が設定されていません。',
             'kana.required' => 'ふりがなが設定されていません。',
             'tel.required'  => '電話番号が設定されていません。',
             'email.required'  => 'メールアドレスが設定されていません。',

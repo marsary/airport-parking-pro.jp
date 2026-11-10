@@ -120,7 +120,7 @@
           <dt>到着予定時間</dt>
           <dd class="text-right" id="arrive_time"></dd>
         </dl>
-        <div class="arrival_flg hidden c-label--lg">到着日がお迎え日と異なる</div>
+        {{-- <div class="arrival_flg hidden c-label--lg">到着日がお迎え日と異なる</div> --}}
       </div>
     </div>
 
