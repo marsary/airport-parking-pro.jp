@@ -7,9 +7,15 @@
   <div class="c-form__admin--title">ユーザーログイン</div>
   <form action="{{route('manage.login')}}" method="POST" class="c-form__admin">
     @csrf
+    @if (session('session_expired'))
+      <p class="p-auth-expired">{{ session('session_expired') }}</p>
+    @endif
+    @if (session('status'))
+      <p class="p-auth-status">{{ session('status') }}</p>
+    @endif
     <div>
       <label for="email">ユーザーID</label>
-      <input type="text" name="email" class="c-input__admin" />
+      <input type="text" name="email" value="{{ old('email') }}" class="c-input__admin" />
     </div>
     <div class="u-mb2">
       <label for="password">パスワード</label>
@@ -19,6 +25,7 @@
       <p style="color:red">{{ $message }}</p>
     @enderror
     <input type="submit" value="ログイン" class="c-button__submit u-horizontal-auto" />
+    <p class="p-auth-link"><a href="{{ route('manage.password.request') }}">パスワードを忘れた方</a></p>
   </form>
 </div>
 
@@ -29,7 +36,4 @@
 
 </script>
 @endpush
-@push('css')
-<style>
-</style>
-@endpush
+@include('manage.auth.partials.auth-style')

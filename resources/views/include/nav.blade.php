@@ -11,7 +11,7 @@
       <a href="{{route('manage.registers.index')}}" class="c-nav__link --en {{Request::routeIs('manage.registers.index') ? '--current' : '' }}">レジ</a>
     </li>
     <li class="c-nav__item">
-      <a href="{{route('manage.master')}}" class="c-nav__link --setting {{Request::routeIs('manage.master', 'manage.master.*') ? '--current' : '' }}">設定</a>
+      <a href="{{route('manage.master')}}" class="c-nav__link --setting {{Request::routeIs('manage.master', 'manage.master.*', 'manage.arrival_flights', 'manage.password.*') ? '--current' : '' }}">設定</a>
     </li>
     <li class="c-nav__item">
       <a href="{{route('manage.marketing')}}" class="c-nav__link --support {{Request::routeIs('manage.marketing', 'manage.marketing.*') ? '--current' : '' }}">営業支援</a>

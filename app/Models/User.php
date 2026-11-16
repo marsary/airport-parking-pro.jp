@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\ManagePasswordResetNotification;
 
 class User extends Authenticatable
 {
@@ -68,5 +69,13 @@ class User extends Authenticatable
     public function getRedirectRoute()
     {
         return 'manage.home';
+    }
+
+    /**
+     * パスワード再設定メール（管理画面用のURLで送信）
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ManagePasswordResetNotification($token));
     }
 }

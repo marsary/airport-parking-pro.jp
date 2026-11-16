@@ -4,6 +4,7 @@
 @section('content')
   <main class="l-wrap__main">
     <ul class="l-wrap__breadcrumb l-breadcrumb">
+      <li class="l-breadcrumb__list"><a href="{{ route('manage.master') }}">マスタ設定一覧</a></li>
       <li class="l-breadcrumb__list"><a href="{{ route('manage.arrival_flights') }}">到着便マスタ</a></li>
       <li class="l-breadcrumb__list">現行データと比較</li>
     </ul>

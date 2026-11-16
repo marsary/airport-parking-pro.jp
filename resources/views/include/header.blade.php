@@ -10,6 +10,7 @@
       <p class="l-header-logo--right">
         （事業再構築　R2128E00068000）
         <img src="{{ asset('images/icon/gear.svg') }}" width="14" height="14" alt="歯車">
+        <a href="{{ route('manage.password.edit') }}" class="l-header-logo__password-link" style="margin-left:12px;text-decoration:underline;white-space:nowrap;">パスワード変更</a>
       </p>
     </div>
   </div>

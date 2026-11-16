@@ -21,6 +21,8 @@
             <a href="{{route('manage.master.load_unload_full_limit_settings.index')}}" class="c-button--yellow c-link-no-border">上限設定マスタ</a>
             <a href="{{route('manage.master.season_price_settings.index')}}" class="c-button--yellow c-link-no-border">シーズン料金設定マスタ</a>
             <a href="{{route('manage.master.full_limit_settings.index')}}" class="c-button--yellow c-link-no-border">満車設定マスタ</a>
+            <a href="{{route('manage.arrival_flights')}}" class="c-button--yellow c-link-no-border">到着便マスタ</a>
+            <a href="{{route('manage.password.edit')}}" class="c-button--yellow c-link-no-border">パスワード変更</a>
         </div>
     </div><!-- ./l-container__inner -->
 </main>
