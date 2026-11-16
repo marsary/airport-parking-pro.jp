@@ -24,6 +24,7 @@ class ArrivalFlight extends Model
         'terminal_id',
         'arrive_date',
         'arrive_time',
+        'codeshare',
         'is_delayed',
     ];
 

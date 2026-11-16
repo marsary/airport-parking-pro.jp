@@ -66,6 +66,13 @@ Route::prefix('manage')->name('manage.')->group(function () {
         // Route::get('/master/coupons', [\App\Http\Controllers\Manage\Master\CouponsController::class, 'index'])->name('coupons');
         Route::get('/master/departure_flights', [\App\Http\Controllers\Manage\Master\DepartureFlightsController::class, 'index'])->name('departure_flights');
         Route::prefix('master')->name('master.')->group(function () {
+            Route::post('/arrival_flights/upload', [\App\Http\Controllers\Manage\Master\ArrivalFlightsController::class, 'upload'])->name('arrival_flights.upload');
+            Route::post('/arrival_flights/upload/force', [\App\Http\Controllers\Manage\Master\ArrivalFlightsController::class, 'forceImport'])->name('arrival_flights.upload.force');
+            Route::get('/arrival_flights/issues/download', [\App\Http\Controllers\Manage\Master\ArrivalFlightsController::class, 'downloadIssues'])->name('arrival_flights.issues.download');
+            Route::get('/arrival_flights/issues/sql', [\App\Http\Controllers\Manage\Master\ArrivalFlightsController::class, 'downloadMasterSql'])->name('arrival_flights.issues.sql');
+            Route::get('/arrival_flights/legacy', [\App\Http\Controllers\Manage\Master\LegacyCompareController::class, 'index'])->name('arrival_flights.legacy');
+            Route::post('/arrival_flights/legacy', [\App\Http\Controllers\Manage\Master\LegacyCompareController::class, 'compare'])->name('arrival_flights.legacy.compare');
+            Route::get('/arrival_flights/legacy/sql', [\App\Http\Controllers\Manage\Master\LegacyCompareController::class, 'downloadSql'])->name('arrival_flights.legacy.sql');
             Route::post('/agencies/upload', [\App\Http\Controllers\Manage\Master\AgenciesController::class, 'upload'])->name('agencies.upload');
             Route::get('/agencies/{agency}/download', [\App\Http\Controllers\Manage\Master\AgenciesController::class, 'download'])->name('agencies.download');
             Route::resource('/agencies', \App\Http\Controllers\Manage\Master\AgenciesController::class);
