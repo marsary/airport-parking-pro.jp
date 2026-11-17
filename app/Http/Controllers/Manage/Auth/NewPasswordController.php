@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -52,8 +53,13 @@ class NewPasswordController extends Controller
             : Password::INVALID_TOKEN;
 
         if ($status === Password::PASSWORD_RESET) {
-            return redirect()->route('manage.login')
-                ->with('status', 'パスワードを再設定しました。新しいパスワードでログインしてください。');
+            // 再設定した本人としてそのままログインし、管理画面TOPへ
+            $user = User::where('email', $data['email'])->first();
+            Auth::guard('web')->login($user);
+            $request->session()->regenerate();
+
+            return redirect()->route('manage.home')
+                ->with('success', 'パスワードを再設定しました。');
         }
 
         return back()

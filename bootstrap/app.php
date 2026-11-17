@@ -28,25 +28,49 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // 管理画面：セッション切れでCSRFトークンが一致しない（419 PAGE EXPIRED）場合は
-        // エラー画面を出さずに画面へ戻し、メッセージを表示する
+        // セッション切れでCSRFトークンが一致しない（419 PAGE EXPIRED）場合は
+        // エラー画面を出さずに各画面へ戻し、メッセージを表示する
         $exceptions->render(function (HttpException $e, Request $request) {
-            if ($e->getStatusCode() !== 419 || $request->expectsJson() || ! $request->is('manage', 'manage/*')) {
+            if ($e->getStatusCode() !== 419 || $request->expectsJson()) {
                 return null;
             }
 
-            $message = '一定時間操作がなかったため、画面の有効期限が切れました。もう一度入力してください。';
+            $except = ['_token', 'password', 'password_confirmation', 'current_password'];
 
-            // パスワードを忘れた方／パスワード再設定は同じ画面に戻す
-            if ($request->routeIs('manage.password.email', 'manage.password.store')) {
-                return redirect()->back()
-                    ->withInput($request->except('_token', 'password', 'password_confirmation'))
-                    ->with('session_expired', $message);
+            // 管理画面（/manage 配下）
+            if ($request->is('manage', 'manage/*')) {
+                // パスワードを忘れた方／パスワード再設定は同じ画面に戻す
+                if ($request->routeIs('manage.password.email', 'manage.password.store')) {
+                    return redirect()->back()
+                        ->withInput($request->except($except))
+                        ->with('session_expired', '一定時間操作がなかったため、画面の有効期限が切れました。もう一度入力してください。');
+                }
+
+                // それ以外（ログイン含む）は管理画面のログイン画面へ
+                return redirect()->route('manage.login')
+                    ->withInput($request->only('email'))
+                    ->with('session_expired', '一定時間操作がなかったため、画面の有効期限が切れました。もう一度ログインしてください。');
             }
 
-            // それ以外（ログイン含む）はログイン画面へ
-            return redirect()->route('manage.login')
-                ->withInput($request->only('email'))
-                ->with('session_expired', '一定時間操作がなかったため、画面の有効期限が切れました。もう一度ログインしてください。');
+            // 予約フォーム（/form 配下）・会員側の画面にはログイン画面へは遷移させない。
+            // 入力途中の予約内容はセッションと一緒に消えているため、予約の最初の画面へ戻す
+            $message = '一定時間操作がなかったため、画面の有効期限が切れました。お手数ですが、最初から入力してください。';
+
+            if ($request->is('form', 'form/*')) {
+                return redirect()->route('form.reserves.entry_date')->with('failure', $message);
+            }
+
+            if ($request->is('reserves', 'reserves/*')) {
+                return redirect()->route('reserves.entry_date')->with('failure', $message);
+            }
+
+            // その他の会員側の画面は元の画面へ戻す
+            $message = '一定時間操作がなかったため、画面の有効期限が切れました。もう一度操作してください。';
+            $response = redirect()->back()
+                ->withInput($request->except($except))
+                ->with('failure', $message);
+
+            // 会員ログイン画面はエラー表示が name 項目のみのため、そちらにも出す
+            return $request->is('login') ? $response->withErrors(['name' => $message]) : $response;
         });
     })->create();

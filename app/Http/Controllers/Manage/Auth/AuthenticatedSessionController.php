@@ -42,6 +42,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect(route('manage.login'));
+        return redirect(route('manage.login'))->with('status', 'ログアウトしました。');
     }
 }

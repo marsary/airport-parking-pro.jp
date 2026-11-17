@@ -7,6 +7,7 @@
     <ul class="l-wrap__breadcrumb l-breadcrumb">
       <li class="l-breadcrumb__list">取引管理TOP</li>
     </ul>
+    @include('include.messages.success')
     <div class="l-container__inner">
       <ul class="p-index__list">
         <li class="p-index__item">

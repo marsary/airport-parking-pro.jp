@@ -7,11 +7,48 @@
     <div class="l-header-logo__inner">
       <img src="{{ asset('images/logo/logo.png') }}" width="100%" alt="logo">
       <p class="u-font--medium u-font--14">{{$office->name}}</p>
-      <p class="l-header-logo--right">
-        （事業再構築　R2128E00068000）
-        <img src="{{ asset('images/icon/gear.svg') }}" width="14" height="14" alt="歯車">
-        <a href="{{ route('manage.password.edit') }}" class="l-header-logo__password-link" style="margin-left:12px;text-decoration:underline;white-space:nowrap;">パスワード変更</a>
-      </p>
+      <div class="l-header-logo--right">
+        <span>（事業再構築　R2128E00068000）</span>
+        <!-- 歯車メニュー（パスワード変更・ログアウト） -->
+        <details class="p-header-menu" id="headerMenu">
+          <summary class="p-header-menu__toggle" aria-label="メニュー">
+            <img src="{{ asset('images/icon/gear.svg') }}" width="14" height="14" alt="歯車">
+          </summary>
+          <ul class="p-header-menu__list">
+            <li class="p-header-menu__user">{{ $user->name }}</li>
+            <li><a href="{{ route('manage.password.edit') }}" class="p-header-menu__item">パスワード変更</a></li>
+            <li>
+              <form method="POST" action="{{ route('manage.logout') }}">
+                @csrf
+                <button type="submit" class="p-header-menu__item p-header-menu__item--logout">ログアウト</button>
+              </form>
+            </li>
+          </ul>
+        </details>
+      </div>
+      <style>
+        .p-header-menu { position: relative; display: inline-block; margin-left: 4px; }
+        .p-header-menu__toggle { list-style: none; cursor: pointer; display: flex; align-items: center; padding: 4px; border-radius: 4px; }
+        .p-header-menu__toggle::-webkit-details-marker { display: none; }
+        .p-header-menu__toggle:hover, .p-header-menu[open] .p-header-menu__toggle { background: rgba(255,255,255,.6); }
+        .p-header-menu__list { position: absolute; right: 0; top: calc(100% + 6px); z-index: 1000; min-width: 180px; margin: 0; padding: 6px 0; list-style: none; background: #fff; border: 1px solid #d8e6e3; border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,.15); text-align: left; animation: headerMenuOpen .15s ease-out; }
+        @keyframes headerMenuOpen { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+        .p-header-menu__user { padding: 6px 16px 8px; font-size: 12px; color: #777; border-bottom: 1px solid #eee; margin-bottom: 4px; white-space: nowrap; }
+        .p-header-menu__item { display: block; width: 100%; padding: 10px 16px; font-size: 14px; color: #333; text-decoration: none; background: none; border: 0; text-align: left; cursor: pointer; white-space: nowrap; font-family: inherit; }
+        .p-header-menu__item:hover { background: #eef8f6; }
+        .p-header-menu__item--logout { color: #c0392b; }
+      </style>
+      <script>
+        // メニューの外側をクリック、または Esc キーで閉じる
+        document.addEventListener('click', function (e) {
+          var menu = document.getElementById('headerMenu');
+          if (menu && menu.open && !menu.contains(e.target)) { menu.open = false; }
+        });
+        document.addEventListener('keydown', function (e) {
+          var menu = document.getElementById('headerMenu');
+          if (e.key === 'Escape' && menu) { menu.open = false; }
+        });
+      </script>
     </div>
   </div>
 
