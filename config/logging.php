@@ -134,6 +134,13 @@ return [
             'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
         ],
+
+        'test' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/test.log'),
+            'level' => 'debug',
+            'days' => env('LOG_DAILY_DAYS', 14),
+        ],
     ],
 
 ];

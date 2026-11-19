@@ -135,9 +135,8 @@ class ReserveService
 
     private function createDeal()
     {
-        error_log("reserve\n",3,"../storage/logs/test.log");
-        error_log(json_encode($this->reserve)."\n",3,"../storage/logs/test.log");
-
+        Log::channel('test')->debug('reserve', $this->reserve);
+        
         $this->deal = Deal::create([
             'member_id' => $this->member->id,
             'office_id' => config('const.commons.form_office_id'),
