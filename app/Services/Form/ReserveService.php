@@ -70,7 +70,14 @@ class ReserveService
             ])->save();
 
         } else { // 新規作成
-            $this->reserve->member->fill([
+            $member = $this->reserve->member;
+            // 前回の登録がロールバックされ、DBに存在しないIDを持っている場合は未保存状態に戻す
+            if ($member->exists && !Member::whereKey($member->getKey())->exists()) {
+                $member->exists = false;
+                unset($member->id);
+            }
+
+            $member->fill([
                 'office_id' => config('const.commons.form_office_id'),
                 'status' => GeneralStatus::Enabled->value,
                 // 'member_code' => ,  // fillMember()で設定済み
