@@ -14,6 +14,7 @@ use App\Models\MemberType;
 use Carbon\Carbon;
 use ErrorException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReserveService
 {
@@ -135,8 +136,13 @@ class ReserveService
 
     private function createDeal()
     {
-        Log::channel('test')->debug('reserve', $this->reserve);
-        
+        try {
+            Log::channel('test')->debug('reserve', $this->reserve->toArray());
+        } catch (\Throwable $e) {
+            // ログ出力の失敗はDEBUGで記録し、処理は続行する
+            Log::channel('test')->debug('reserveログ出力失敗：' . $e->getMessage());
+        }
+
         $this->deal = Deal::create([
             'member_id' => $this->member->id,
             'office_id' => config('const.commons.form_office_id'),
