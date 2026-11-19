@@ -318,6 +318,9 @@ class SyncDealRecord
 
     private function formatTime($time)
     {
+        if(empty($time)) {
+            $time = '00:00:00';
+        }
         if(! $time instanceof Carbon) {
             $time = Carbon::parse($time);
         }
