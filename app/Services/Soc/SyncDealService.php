@@ -24,7 +24,9 @@ class SyncDealService
     protected array $syncDealRecords = [];
     protected const AG_ID1 = 6033;
     protected const AG_ID2 = 500;
-    public const SEASON_PRICE_ID = 470;
+    public const SEASON_PRICE_ID_NORMAL = 470;
+    public const SEASON_PRICE_ID_1500 = 496;
+    public const SEASON_PRICE_ID_2000 = 498;
 
     public function setDeals(Collection $deals): self
     {
@@ -179,8 +181,16 @@ class SyncDealRecord
 
         // シーズン料金対応
         if (!empty($this->deal->season_price) && $this->deal->season_price > 0) {
+            $goods_id = SyncDealService::SEASON_PRICE_ID_NORMAL;
+            if ($$this->deal->season_price == 1500) {
+                $goods_id = SyncDealService::SEASON_PRICE_ID_1500;
+            }
+            if ($$this->deal->season_price == 2000) {
+                $goods_id = SyncDealService::SEASON_PRICE_ID_2000;
+            }
+            
             $goods[] = [
-                'g_id' => SyncDealService::SEASON_PRICE_ID,
+                'g_id' => $goods_id,
                 'price' => $this->deal->season_price, // 1個あたり税抜単価
                 'price_tax' => $this->deal->season_price_tax, // 1個あたり消費税
                 'total_price' => $this->deal->season_price + $this->deal->season_price_tax, // 単価（税込）× 数量
