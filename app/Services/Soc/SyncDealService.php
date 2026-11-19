@@ -182,10 +182,10 @@ class SyncDealRecord
         // シーズン料金対応
         if (!empty($this->deal->season_price) && $this->deal->season_price > 0) {
             $goods_id = SyncDealService::SEASON_PRICE_ID_NORMAL;
-            if ($$this->deal->season_price == 1500) {
+            if ($this->deal->season_price == 1500) {
                 $goods_id = SyncDealService::SEASON_PRICE_ID_1500;
             }
-            if ($$this->deal->season_price == 2000) {
+            if ($this->deal->season_price == 2000) {
                 $goods_id = SyncDealService::SEASON_PRICE_ID_2000;
             }
             
