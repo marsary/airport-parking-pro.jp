@@ -22,8 +22,10 @@ use App\Services\LabelTagManager;
 use App\Services\Form\ReserveService;
 use App\Services\PriceTable;
 use App\Services\Settings\SeasonPriceSettingService;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -205,28 +207,57 @@ class ReservesController extends Controller
     public function store()
     {
         $reserve = $this->getReserveForm();
-        $service = new ReserveService($reserve);
-        try {
-            DB::transaction(function () use($service){
-                $service->store();
-                // 現状SOCにデータを送る場合は、パスワード設定は行わない
-                // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
-                Mail::to(myOffice()->email)->send(new DealCreatedWebAdminMail($service->deal));
+        $code = (string) $reserve->reserve_code;
 
-                Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
-
-            });
-
-        } catch (TransportException $th) {
-            Log::error('エラー内容：' . $th->getMessage());
-            return redirect()->back()->with('failure', '予約完了メールの送信に失敗しました。正しいメールを入力してください。');
-        } catch (\Throwable $th) {
-            Log::error('エラー内容：' . $th->getMessage());
-            return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
+        // 二重送信対策：同じ予約コードの予約が登録済みなら、登録せず完了画面へ
+        if ($code !== '' && Deal::withTrashed()->where('reserve_code', $code)->exists()) {
+            session()->forget('reserve');
+            return redirect(route('form.reserves.complete', ['code' => $code]));
         }
+
+        // 二重送信対策：同じ予約コードの登録処理は同時に1つだけ実行する
+        // 後から来たリクエストは、先のリクエストの処理完了を最大30秒待つ
+        $lock = Cache::lock('form_reserve_store_' . $code, 60);
+        try {
+            $lock->block(30);
+        } catch (LockTimeoutException $e) {
+            Log::info('予約の二重送信を検知しました（ロック待ちタイムアウト）。reserve_code：' . $code);
+            return redirect()->back()->with('failure', '予約を処理中です。しばらく経ってから予約状況をご確認ください。');
+        }
+
+        try {
+            // ロック取得後に再確認（ロック待ちの間に先行リクエストが登録を完了していた場合）
+            if (Deal::withTrashed()->where('reserve_code', $code)->exists()) {
+                session()->forget('reserve');
+                return redirect(route('form.reserves.complete', ['code' => $code]));
+            }
+
+            $service = new ReserveService($reserve);
+            try {
+                DB::transaction(function () use($service){
+                    $service->store();
+                    // 現状SOCにデータを送る場合は、パスワード設定は行わない
+                    // 事業所のメールアドレスに「管理者宛メール」を、取引のメールアドレスに「サンキューメール」を送信
+                    Mail::to(myOffice()->email)->send(new DealCreatedWebAdminMail($service->deal));
+
+                    Mail::to($service->deal->email)->send(new DealCreatedThankyouMail($service->deal));
+
+                });
+
+            } catch (TransportException $th) {
+                Log::error('エラー内容：' . $th->getMessage());
+                return redirect()->back()->with('failure', '予約完了メールの送信に失敗しました。正しいメールを入力してください。');
+            } catch (\Throwable $th) {
+                Log::error('エラー内容：' . $th->getMessage());
+                return redirect()->back()->with('failure', '予約登録に失敗しました。予約をやり直してください。');
+            }
+        } finally {
+            $lock->release();
+        }
+
         session()->forget('reserve');
 
-        return redirect(route('form.reserves.complete', ['code' => (string) $service->deal->reserve_code]));
+        return redirect(route('form.reserves.complete', ['code' => $code]));
     }
 
 

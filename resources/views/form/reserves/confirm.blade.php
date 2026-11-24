@@ -7,7 +7,7 @@
 @include('include.messages.errors')
 
 <div class="p-user-input__inner">
-  <form action="{{route('form.reserves.store')}}" method="POST">
+  <form action="{{route('form.reserves.store')}}" method="POST" id="reserveForm">
     @csrf
     <div class="c-title__table">予約情報</div>
     <table class="l-table-confirm l-table-confirm--stable l-table-confirm--3pairs">
@@ -247,7 +247,7 @@
     <!--  -->
     <div class="c-button-group__form u-mt3">
     <button type="button" id="returnButton" onclick="location.href='{{route('form.reserves.option_select')}}';" class="c-button__pagination--return">前のページに戻る</button>
-      <button type="submit" class="c-button__pagination--next">予約を完了する</button>
+      <button type="submit" id="submitButton" class="c-button__pagination--next">予約を完了する</button>
     </div>
   </form>
 </div><!-- ./p-user-input__inner -->
@@ -255,6 +255,36 @@
 
 @endsection
 @push("scripts")
+<!-- 二重送信対策：送信後はボタンを無効化し、再送信させない -->
+<script>
+(function () {
+  const form = document.getElementById('reserveForm');
+  const submitButton = document.getElementById('submitButton');
+  const returnButton = document.getElementById('returnButton');
+  if (!form || !submitButton) return;
+
+  form.addEventListener('submit', function (event) {
+    if (form.dataset.submitted === '1') {
+      event.preventDefault();
+      return;
+    }
+    form.dataset.submitted = '1';
+    submitButton.disabled = true;
+    submitButton.textContent = '送信中...';
+    if (returnButton) returnButton.disabled = true;
+  });
+
+  // ブラウザの「戻る」でキャッシュから表示された場合は、ボタンを元に戻す
+  window.addEventListener('pageshow', function (event) {
+    if (event.persisted) {
+      form.dataset.submitted = '';
+      submitButton.disabled = false;
+      submitButton.textContent = '予約を完了する';
+      if (returnButton) returnButton.disabled = false;
+    }
+  });
+})();
+</script>
 <!-- Enterキーで「次の入力欄に移動」する（Tabキーの代わり） -->
 <script>
 document.querySelectorAll('input').forEach(function(input) {
