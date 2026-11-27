@@ -25,6 +25,7 @@
 
 @endsection
 @push("scripts")
+@include('include.form.gtm.reservation_complete')
 <script>
   function closeOrRedirect() {
     window.close(); // 画面を閉じる

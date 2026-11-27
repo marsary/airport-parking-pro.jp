@@ -46,6 +46,11 @@ return [
         ],
     ],
 
+    // Googleタグマネージャー（予約フォームの広告計測）。本番の .env にだけ GTM_ID を設定する
+    'gtm' => [
+        'id' => env('GTM_ID'),
+    ],
+
     'internal_api' => [
         'token' => env('INTERNAL_API_TOKEN'),
         'allowed_ips' => array_filter(explode(',', env('INTERNAL_API_ALLOWED_IPS', ''))),

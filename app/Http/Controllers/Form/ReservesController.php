@@ -257,7 +257,9 @@ class ReservesController extends Controller
 
         session()->forget('reserve');
 
-        return redirect(route('form.reserves.complete', ['code' => $code]));
+        // 予約完了ページで広告のCVデータを1回だけ送るための目印（次の1回の表示だけ有効）
+        return redirect(route('form.reserves.complete', ['code' => (string) $service->deal->reserve_code]))
+            ->with('gtm_reservation_complete', (string) $service->deal->reserve_code);
     }
 
 

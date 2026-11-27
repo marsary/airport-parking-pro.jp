@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <head>
     <meta charset="UTF-8">
+    @include('include.form.gtm.head')
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -33,6 +34,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
   </head>
   <body>
+    @include('include.form.gtm.body')
     @include('include.form.header')
     @yield('content')
     @include('include.form.footer')
